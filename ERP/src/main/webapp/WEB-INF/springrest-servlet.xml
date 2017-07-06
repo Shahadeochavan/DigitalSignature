@@ -1,0 +1,115 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.0.xsd">
+	<context:component-scan base-package="com.nextech.erp" />
+	<mvc:annotation-driven />
+	<bean id="validator"
+		class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
+	<bean id="dataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url"
+			value="jdbc:mysql://localhost:3306/ekerp?zeroDateTimeBehavior=convertToNull" />
+		<property name="username" value="root" />
+		<property name="password" value="root" />
+	</bean>
+
+	<mvc:interceptors>
+		<bean class="com.nextech.erp.filter.AjaxLoginProcessingFilter"></bean>
+	</mvc:interceptors>
+
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="annotatedClasses">
+			<list>
+				<value>com.nextech.erp.model.User</value>
+				<value>com.nextech.erp.model.Usertype</value>
+				<value>com.nextech.erp.model.Usertypepageassociation</value>
+				<value>com.nextech.erp.model.Page</value>
+				<value>com.nextech.erp.model.Vendor</value>
+				<value>com.nextech.erp.model.Statustransition</value>
+				<value>com.nextech.erp.model.Status</value>
+				<value>com.nextech.erp.model.Product</value>
+				<value>com.nextech.erp.model.Unit</value>
+				<value>com.nextech.erp.model.Rawmaterial</value>
+				<value>com.nextech.erp.model.Productrawmaterialassociation</value>
+				<value>com.nextech.erp.model.Rawmaterialorder</value>
+				<value>com.nextech.erp.model.Productinventory</value>
+				<value>com.nextech.erp.model.Productinventoryhistory</value>
+				<value>com.nextech.erp.model.Productorder</value>
+				<value>com.nextech.erp.model.Rawmaterialvendorassociation</value>
+				<value>com.nextech.erp.model.Rawmaterialinventory</value>
+				<value>com.nextech.erp.model.Rawmaterialorderhistory</value>
+				<value>com.nextech.erp.model.Rawmaterialinventoryhistory</value>
+				<value>com.nextech.erp.model.Client</value>
+				<value>com.nextech.erp.model.Bomrmvendorassociation</value>
+				<value>com.nextech.erp.model.Bom</value>
+				<value>com.nextech.erp.model.Dailyproduction</value>
+				<value>com.nextech.erp.model.Securitycheckout</value>
+				<value>com.nextech.erp.model.Productorderassociation</value>
+				<value>com.nextech.erp.model.Rawmaterialorderassociation</value>
+				<value>com.nextech.erp.model.Rawmaterialorderinvoice</value>
+				<value>com.nextech.erp.model.Rmorderinvoiceintakquantity</value>
+				<value>com.nextech.erp.model.Storeout</value>
+				<value>com.nextech.erp.model.Notification</value>
+				<value>com.nextech.erp.model.Notificationuserassociation</value>
+				<value>com.nextech.erp.model.Storeoutrm</value>
+				<value>com.nextech.erp.model.Storeoutrmassociation</value>
+				<value>com.nextech.erp.model.Report</value>
+				<value>com.nextech.erp.model.Reportinputassociation</value>
+				<value>com.nextech.erp.model.Reportinputparameter</value>
+				<value>com.nextech.erp.model.Reportoutputassociation</value>
+				<value>com.nextech.erp.model.Reportoutputparameter</value>
+				<value>com.nextech.erp.model.Reportusertypeassociation</value>
+				<value>com.nextech.erp.model.Rawmaterialorderinvoiceassociation
+				</value>
+				<value>com.nextech.erp.model.Qualitycheckrawmaterial</value>
+				<value>com.nextech.erp.model.Productionplanning</value>
+				<value>com.nextech.erp.model.Productquality</value>
+				<value>com.nextech.erp.model.Dispatch</value>
+			</list>
+		</property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</prop>
+				<prop key="hibernate.show_sql">true</prop>
+			</props>
+		</property>
+	</bean>
+	<task:annotation-driven/>
+	<bean id="transactionManager"
+		class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	<bean id="txManager"
+		class="org.springframework.context.support.ResourceBundleMessageSource">
+		<property name="basename" value="messages" />
+	</bean>
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="maxUploadSize" value="268435456" />
+	</bean>
+	<bean
+		class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+		<property name="exceptionMappings">
+			<props>
+				<prop key="java.lang.Exception">Error</prop>
+			</props>
+		</property>
+	</bean>
+	<bean id="messageSource"
+		class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+		<property name="basenames">
+			<list>
+				<value>classpath:properties/common</value>
+				<value>classpath:properties/email</value>
+				<value>classpath:properties/url</value>
+			</list>
+		</property>
+		<property name="defaultEncoding" value="UTF-8" />
+	</bean>
+	<bean id="superDao" class="com.nextech.erp.daoImpl.SuperDaoImpl" />
+</beans>

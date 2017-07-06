@@ -1,0 +1,121 @@
+<html>
+<head>
+</head>
+<body>
+	<table width="90%">
+		<tr>
+			<td>
+				<table>
+					<tr>
+						<td>
+							<p style="font-weight: bold;">Invoice Number
+								${invoiceNumber},</p>
+							<p style="font-weight: bold;">From :</p>
+							<div>${mailfrom},</div>
+							<div>Office:18,3rd Floor Vasantika Aparment</div>
+							<div>S.No,47/6B,Opp.yena Banglow beside,manglam chemmbers,</div>
+							<div>Paud Road,kothrud pune:411038</div>
+						</td>
+					</tr>
+				</table>
+			</td>
+			<td align="right">
+				<table>
+					<tr>
+						<td style="width: 400px;align="right";>
+							<p style="font-weight: bold;">To :</p>
+							<div>${companyName},</div>
+							<div>Address :${address},</div>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2"><hr /></td>
+		</tr>
+		<tr>
+			<td colspan="2" align="center">
+				<table width="70%">
+					<tr>
+						<td align="left">
+
+							<p style="font-weight: bold;">Hello ${companyName},</p>
+							<p>Greetings from Nextech Services!</p>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<table>
+								<tr>
+									<td colspan="2" align="left">
+										<table width="80%" bgcolor="#9EC5FF" border="1"
+											bordercolor="#888" cellspacing="0" cellpadding="4">
+											    <tr>
+                                                      <th align="left">Sr.No</th>
+                                                      <th align="left">RM NAME</th>
+                                                      <th align="left">DESCRIPTION</th>
+                                                       <th align="left">Quantity</th>
+                                                      <th align="left">PPU</th>
+                                                      <th align="left">Amount</th>
+                                              </tr>
+											#set ( $row = 1 ) 
+											#set ( $rmtotal = 0) 
+											#set($total=0)
+											#foreach ($rmOrderModelData in $rmOrderModelDatas ) 
+												#if ( $row % 2 == 0 ) 
+													#set ($color="#CBDCFF") 
+												#else 
+													#set ($color="#E3EEFF") 
+												#end
+										   <tr>
+                                       <tr bgcolor="$color">
+                                           <td align="left">$row</td>
+                                           <td align="left">$rmOrderModelData.rmName</td>
+                                           <td align="left">$rmOrderModelData.description</td>
+                                           <td align="center">$rmOrderModelData.quantity</td>
+                                           <td align="center">$rmOrderModelData.pricePerUnit</td>
+                                           <td align="center"> #set ( $rmOrderDataTotal = $rmOrderModelData.pricePerUnit * $rmOrderModelData.quantity )
+                                            $rmOrderDataTotal
+                                          </td>
+                                       </tr>
+												#set ( $rmtotal = $rmtotal + $rmOrderDataTotal ) 
+												  
+												#set ( $row = $row + 1 ) 
+											#end
+											<tr bgcolor="#E3EEFF">
+												<td colspan="4" align="left"><strong>Sub Total </strong> </td>
+												<td align="center">$rmtotal</td> 
+											</tr>
+											  <tr bgcolor="#E3EEFF">
+                                                <td colspan="4" align="left"><strong> Tax  </strong></td>
+                                               <td align="center">${tax}</td>
+                                             </tr>
+											  <tr bgcolor="#E3EEFF">
+											   #set ( $total = $rmtotal + $tax)
+                                                <td colspan="4" align="left"><strong> Total </strong></td>
+                                                <td align="center">$total</td>
+                                            </tr>
+										</table>
+										<div style align="left">
+											<div>In case of any further assistance or clarification
+												on this issue, please reply back to this email.</div>
+											<div>Assuring you of our best services always,</div>
+											<div>Yours sincerely</div>
+											<div>${signature}</div>
+											<div>${location}</div>
+										</div>
+									
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+
+</body>
+
+</html>
