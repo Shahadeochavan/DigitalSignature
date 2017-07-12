@@ -13,13 +13,13 @@ import com.nextech.erp.dao.ProductorderDao;
 import com.nextech.erp.model.Productorder;
 
 @Repository
-@Transactional
+
 public class ProductorderDaoImpl extends SuperDaoImpl<Productorder> implements
 		ProductorderDao {
 
 	@Override
 	public Productorder getProductorderByProductOrderId(long pOrderId)throws Exception {
-		session = sessionFactory.openSession();
+		session = sessionFactory.getCurrentSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Productorder.class);
 		criteria.add(Restrictions.eq("id", pOrderId));
@@ -31,7 +31,7 @@ public class ProductorderDaoImpl extends SuperDaoImpl<Productorder> implements
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Productorder> getPendingProductOrders(long statusId,long statusId1) {
-		session = sessionFactory.openSession();
+		session = sessionFactory.getCurrentSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Productorder.class);
 		criteria.add(Restrictions.eq("isactive", true));
@@ -44,7 +44,7 @@ public class ProductorderDaoImpl extends SuperDaoImpl<Productorder> implements
 	@Override
 	public List<Productorder> getInCompleteProductOrder(long clientId,long statusId,long statusId1) {
 		// TODO Auto-generated method stub
-		session = sessionFactory.openSession();
+		session = sessionFactory.getCurrentSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Productorder.class);
 		criteria.add(Restrictions.eq("client.id", clientId));

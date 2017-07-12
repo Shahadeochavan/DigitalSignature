@@ -7,7 +7,7 @@ import com.nextech.erp.dao.ReptOptParaDao;
 import com.nextech.erp.model.Reportoutputparameter;
 
 @Repository
-@Transactional
+
 public class ReptOptParaDaoImpl extends SuperDaoImpl<Reportoutputparameter> implements ReptOptParaDao {
 
 }

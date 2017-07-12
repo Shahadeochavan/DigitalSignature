@@ -15,7 +15,7 @@ import com.nextech.erp.dao.RawmaterialorderassociationDao;
 import com.nextech.erp.model.Rawmaterialorderassociation;
 
 @Repository
-@Transactional
+
 public class RawmaterialorderassociationDaoImpl extends SuperDaoImpl<Rawmaterialorderassociation> implements
 		RawmaterialorderassociationDao {
 	@Autowired
@@ -26,7 +26,7 @@ public class RawmaterialorderassociationDaoImpl extends SuperDaoImpl<Rawmaterial
 	@SuppressWarnings({ "deprecation", "unchecked" })
 	@Override
 	public List<Rawmaterialorderassociation> getRMOrderRMAssociationByRMOrderId(long id) throws Exception {
-		session = sessionFactory.openSession();
+		session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(Rawmaterialorderassociation.class);
 		criteria.add(Restrictions.eq("rawmaterialorder.id", id));
 		criteria.add(Restrictions.eq("isactive", true));
@@ -36,7 +36,7 @@ public class RawmaterialorderassociationDaoImpl extends SuperDaoImpl<Rawmaterial
 
 	@Override
 	public Rawmaterialorderassociation getRMOrderRMAssociationByRMOrderIdandRMId(long id, long rmId) throws Exception {
-		session = sessionFactory.openSession();
+		session = sessionFactory.getCurrentSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Rawmaterialorderassociation.class);
 		criteria.add(Restrictions.eq("rawmaterialorder.id", id));

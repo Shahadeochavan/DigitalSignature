@@ -1,5 +1,6 @@
 package com.nextech.erp.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.PersistenceException;
@@ -11,6 +12,7 @@ import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.nextech.erp.dto.QualityCheckRMDTO;
+import com.nextech.erp.factory.RawMaterialInvoiceRequestResponseFactory;
 import com.nextech.erp.model.Rawmaterialorderassociation;
 import com.nextech.erp.service.RawmaterialService;
 import com.nextech.erp.service.RawmaterialorderassociationService;
@@ -25,7 +29,7 @@ import com.nextech.erp.status.Response;
 import com.nextech.erp.status.UserStatus;
 
 @Controller
-@RequestMapping("/rawmaterialorderassociation")
+@Transactional @RequestMapping("/rawmaterialorderassociation")
 public class RawmaterialorderassociationController {
 
 	@Autowired
@@ -33,8 +37,7 @@ public class RawmaterialorderassociationController {
 
 	@Autowired
 	RawmaterialService rawmaterialService;
-
-	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addRawmaterialorderassociation(
 			@Valid @RequestBody Rawmaterialorderassociation rawmaterialorderassociation,
 			BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
@@ -59,7 +62,7 @@ public class RawmaterialorderassociationController {
 		}
 	}
 
-	@RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody Rawmaterialorderassociation getRawmaterialorderassociation(
 			@PathVariable("id") long id) {
 		Rawmaterialorderassociation rawmaterialorderassociation = null;
@@ -72,7 +75,7 @@ public class RawmaterialorderassociationController {
 		return rawmaterialorderassociation;
 	}
 
-	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
 	public @ResponseBody UserStatus updateRawmaterialorderassociation(
 			@RequestBody Rawmaterialorderassociation rawmaterialorderassociation,HttpServletRequest request,HttpServletResponse response) {
 		try {
@@ -87,7 +90,7 @@ public class RawmaterialorderassociationController {
 		}
 	}
 
-	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody List<Rawmaterialorderassociation> getRawmaterialorderassociation() {
 
 		List<Rawmaterialorderassociation> rawmaterialorderassociationList = null;
@@ -102,23 +105,28 @@ public class RawmaterialorderassociationController {
 		return rawmaterialorderassociationList;
 	}
 
-	@RequestMapping(value = "getRMForRMOrder/{RMOrderId}", method = RequestMethod.GET, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "getRMForRMOrder/{RMOrderId}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody Response getRawmaterialorderassociationByRMOId(
 			@PathVariable("RMOrderId") long id) throws Exception {
 		List<Rawmaterialorderassociation> rawmaterialorderassociations = null;
 		String message = "Success";
 		int code = 1;
+		List<QualityCheckRMDTO> qualityCheckRMDTO = new ArrayList<QualityCheckRMDTO>();
 		rawmaterialorderassociations = rawmaterialorderassociationService.getRMOrderRMAssociationByRMOrderId(id);
+		for (Rawmaterialorderassociation rawmaterialorderassociation2 : rawmaterialorderassociations) {
+			qualityCheckRMDTO.add(RawMaterialInvoiceRequestResponseFactory.setRMOrderAsso(new QualityCheckRMDTO(), rawmaterialorderassociation2));
+		}
+		
 		if(rawmaterialorderassociations == null || rawmaterialorderassociations.size() == 0){
 			 message = "Invalid RM Order Data";
 			 code = 0;
 			 System.out.println("There are no raw materials for the RM Order. Hence this RM Order is invalid");
 		}
-		Response response = new Response(code, message, rawmaterialorderassociations);
+		Response response = new Response(code, message, qualityCheckRMDTO);
 		return response;
 	}
 
-	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus deleteRawmaterialorderassociation(
 			@PathVariable("id") long id) {
 

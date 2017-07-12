@@ -12,13 +12,13 @@ import com.nextech.erp.model.Reportusertypeassociation;
 import com.nextech.erp.model.Usertypepageassociation;
 
 @Repository
-@Transactional
+
 public class ReportusertypeassociationDaoImpl extends SuperDaoImpl<Reportusertypeassociation> implements ReportusertypeassociationDao {
 
 	@Override
 	public List<Reportusertypeassociation> getReportByUsertype(long usertypeId) {
 		// TODO Auto-generated method stub
-		session = sessionFactory.openSession();
+		session = sessionFactory.getCurrentSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Reportusertypeassociation.class);
 		criteria.add(Restrictions.eq("isactive", true));

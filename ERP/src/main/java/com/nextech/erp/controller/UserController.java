@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,7 +29,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.dto.Mail;
-import com.nextech.erp.factory.UserFactory;
 import com.nextech.erp.filter.TokenFactory;
 import com.nextech.erp.model.Authorization;
 import com.nextech.erp.model.Notification;
@@ -39,7 +39,6 @@ import com.nextech.erp.model.Reportusertypeassociation;
 import com.nextech.erp.model.User;
 import com.nextech.erp.model.Usertype;
 import com.nextech.erp.model.Usertypepageassociation;
-import com.nextech.erp.newDTO.UserDTO;
 import com.nextech.erp.service.MailService;
 import com.nextech.erp.service.NotificationService;
 import com.nextech.erp.service.NotificationUserAssociationService;
@@ -50,6 +49,7 @@ import com.nextech.erp.service.UsertypepageassociationService;
 import com.nextech.erp.status.UserStatus;
 
 @RestController
+@Transactional
 @RequestMapping("/user")
 public class UserController {
 
@@ -84,7 +84,7 @@ public class UserController {
 	MailService mailService;
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus addUser(@Valid @RequestBody UserDTO userDTO,
+	public @ResponseBody UserStatus addUser(@Valid @RequestBody User user,
 			BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			if (bindingResult.hasErrors()) {
@@ -92,25 +92,28 @@ public class UserController {
 						.getDefaultMessage());
 			}
 			if ((Boolean) request.getAttribute("auth_token")) {
-				if (userservice.getUserByUserId(userDTO.getUserid()) == null) {
+				if (userservice.getUserByUserId(user.getUserid()) == null) {
 
 				} else {
 					return new UserStatus(2, messageSource.getMessage(
 							ERPConstants.USER_ID, null, null));
 				}
-				if (userservice.getUserByEmail(userDTO.getEmail()) == null) {
+				if (userservice.getUserByEmail(user.getEmail()) == null) {
 				} else {
 					return new UserStatus(2, messageSource.getMessage(
 							ERPConstants.EMAIL_ALREADY_EXIT, null, null));
 				}
-				if (userservice.getUserByMobile(userDTO.getMobile()) == null) {
+				if (userservice.getUserByMobile(user.getMobile()) == null) {
 				} else {
 					return new UserStatus(2, messageSource.getMessage(
 							ERPConstants.CONTACT_NUMBER_EXIT, null, null));
 				}
-				//UserFactory.saveUser(userDTO);
-				userservice.saveUser(userDTO,request);
-           //  mailSending(user, request, response);
+				user.setIsactive(true);
+				user.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+				userservice.addEntity(user);
+
+				//TODO sending the email for new user from admin
+             mailSending(user, request, response);
 				return new UserStatus(1, "User added Successfully !");
 			} else {
 				new UserStatus(0, "User is not authenticated.");
@@ -290,7 +293,7 @@ public class UserController {
 	}
 
 
-	public void mailSending(User user,HttpServletRequest request,HttpServletResponse response) throws NumberFormatException, Exception{
+	private void mailSending(User user,HttpServletRequest request,HttpServletResponse response) throws NumberFormatException, Exception{
 			  Mail mail = new Mail();
 
 			  Notification notification = notificationService.getEntityById(Notification.class,5);
@@ -346,5 +349,5 @@ public class UserController {
 		        model.put("signature", "www.NextechServices.in");
 		        mail.setModel(model);
 		        mailService.sendEmailWithoutPdF(mail, notification);
-    }
+}
 }

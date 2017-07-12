@@ -13,7 +13,7 @@ import com.nextech.erp.model.Productionplanning;
 import com.nextech.erp.model.Productorderassociation;
 
 @Repository
-@Transactional
+
 public class ProductorderassociationDaoImpl extends
 		SuperDaoImpl<Productorderassociation> implements
 		ProductorderassociationDao {
@@ -21,7 +21,7 @@ public class ProductorderassociationDaoImpl extends
 	@Override
 	public Productorderassociation getProductorderassociationByProdcutOrderIdandProdcutId(
 			long pOrderId, long pId) throws Exception {
-		session = sessionFactory.openSession();
+		session = sessionFactory.getCurrentSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Productorderassociation.class);
 		criteria.add(Restrictions.eq("productorder.id", pOrderId));
@@ -35,7 +35,7 @@ public class ProductorderassociationDaoImpl extends
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Productorderassociation> getProductorderassociationByProdcutId(long pId) throws Exception {
-		session = sessionFactory.openSession();
+		session = sessionFactory.getCurrentSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Productorderassociation.class);
 		criteria.add(Restrictions.eq("product.id", pId));
@@ -48,7 +48,7 @@ public class ProductorderassociationDaoImpl extends
 	@Override
 	public List<Productorderassociation> getProductorderassociationByOrderId(
 			long oderID) throws Exception {
-		session = sessionFactory.openSession();
+		session = sessionFactory.getCurrentSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Productorderassociation.class);
 		criteria.add(Restrictions.eq("productorder.id", oderID));
@@ -61,7 +61,7 @@ public class ProductorderassociationDaoImpl extends
 	@Override
 	public List<Productorderassociation> getIncompleteProductOrderAssoByProdutId(long productId)
 			throws Exception {
-		session = sessionFactory.openSession();
+		session = sessionFactory.getCurrentSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session
 				.createCriteria(Productorderassociation.class);
@@ -76,7 +76,7 @@ public class ProductorderassociationDaoImpl extends
 	@Override
 	public Productionplanning getProductionPlanningforCurrentMonthByProductIdAndDate(
 			long pId, Date date) throws Exception {
-		session = sessionFactory.openSession();
+		session = sessionFactory.getCurrentSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Productionplanning.class);
 		criteria.add(Restrictions.eq("isactive", true));
@@ -91,7 +91,7 @@ public class ProductorderassociationDaoImpl extends
 	@Override
 	public List<Productorderassociation> getProductOrderAssoByOrderId(
 			long orderId) throws Exception {
-		session = sessionFactory.openSession();
+		session = sessionFactory.getCurrentSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Productorderassociation.class);
 		criteria.add(Restrictions.eq("productorder.id", orderId));
@@ -103,7 +103,7 @@ public class ProductorderassociationDaoImpl extends
 	public Productorderassociation getProdcutAssoByProdcutId(long prodcutId)
 			throws Exception {
 		// TODO Auto-generated method stub
-		session = sessionFactory.openSession();
+		session = sessionFactory.getCurrentSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Productorderassociation.class);
 		criteria.add(Restrictions.eq("product.id", prodcutId));
@@ -116,7 +116,7 @@ public class ProductorderassociationDaoImpl extends
 	public Productorderassociation getProdcutAssoByOrder(long orderId)
 			throws Exception {
 		// TODO Auto-generated method stub
-		session = sessionFactory.openSession();
+		session = sessionFactory.getCurrentSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Productorderassociation.class);
 		criteria.add(Restrictions.eq("productorder.id", orderId));

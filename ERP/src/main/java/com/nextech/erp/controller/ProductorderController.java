@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -61,7 +62,7 @@ import com.nextech.erp.service.UserService;
 import com.nextech.erp.status.UserStatus;
 
 @Controller
-@RequestMapping("/productorder")
+@Transactional @RequestMapping("/productorder")
 public class ProductorderController {
 
 	@Autowired
@@ -100,7 +101,7 @@ public class ProductorderController {
 	@Autowired
 	RawmaterialinventoryService rawMaterialInventoryService;
 
-	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addProductorder(
 			@Valid @RequestBody Productorder productorder,
 			BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
@@ -129,7 +130,7 @@ public class ProductorderController {
 		}
 	}
 
-	@RequestMapping(value = "/createmultiple", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/createmultiple", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addMultipleProductorder(
 			@Valid @RequestBody ProductOrderAssociationModel productOrderAssociationModel,
 			BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
@@ -200,7 +201,7 @@ public class ProductorderController {
 		
 	}
 
-	@RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody Productorder getProductorder(
 			@PathVariable("id") long id) {
 		Productorder productorder = null;
@@ -213,7 +214,7 @@ public class ProductorderController {
 		return productorder;
 	}
 
-	@RequestMapping(value = "productorderId/{orderId}", method = RequestMethod.GET, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "productorderId/{orderId}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody List<Productorderassociation> getProductOrder(
 			@PathVariable("orderId") long id) {
 		List<Productorderassociation> productorderassociations = null;
@@ -225,7 +226,7 @@ public class ProductorderController {
 		return productorderassociations;
 	}
 
-	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
 	public @ResponseBody UserStatus updateProductorder(
 			@RequestBody Productorder productorder,HttpServletRequest request,HttpServletResponse response) {
 		try {
@@ -241,7 +242,7 @@ public class ProductorderController {
 		}
 	}
 
-	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody List<Productorder> getProductorder() {
 
 		List<Productorder> productorderList = null;
@@ -256,7 +257,7 @@ public class ProductorderController {
 		return productorderList;
 	}
 
-	@RequestMapping(value = "/pendingList", method = RequestMethod.GET, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/pendingList", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody List<Productorder> getPendingsProductorders() {
 
 		List<Productorder> productorderList = null;
@@ -273,7 +274,7 @@ public class ProductorderController {
 	}
 
 
-	@RequestMapping(value = "incompleteProductOrder/{CLIENT-ID}", method = RequestMethod.GET, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "incompleteProductOrder/{CLIENT-ID}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody List<Productorder> getInCompleteProductOrder(@PathVariable("CLIENT-ID") long clientId) {
 
 		List<Productorder> productorderList = null;
@@ -289,7 +290,7 @@ public class ProductorderController {
 		return productorderList;
 	}
 
-	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus deleteProductorder(
 			@PathVariable("id") long id) {
 
@@ -355,7 +356,7 @@ public class ProductorderController {
 	    final File tempDirectory = (File) servletContext.getAttribute("javax.servlet.context.tempdir");
 	    final String temperotyFilePath = tempDirectory.getAbsolutePath();
 
-	    String fileName = "Productorder.pdf";
+	    String fileName = "ProductOrder.pdf";
 	    response.setContentType("application/pdf");
 	    response.setHeader("Content-disposition", "attachment; filename="+ fileName);
 

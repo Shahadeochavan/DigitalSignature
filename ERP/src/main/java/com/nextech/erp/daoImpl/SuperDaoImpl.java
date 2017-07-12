@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.nextech.erp.dao.SuperDao;
 
-@Transactional
+
 public class SuperDaoImpl<T> implements SuperDao<T>{
 
 	@Autowired
@@ -22,17 +22,17 @@ public class SuperDaoImpl<T> implements SuperDao<T>{
 	
 	@Override
 	public Long add(T bean) throws Exception {
-		session = sessionFactory.openSession();
-		tx = session.beginTransaction();
+		session = sessionFactory.getCurrentSession();
+		////tx = session.beginTransaction();
 		Long id = (Long) session.save(bean);
-		tx.commit();
+		//tx.commit();
 		return id;
 	}
 
 	@SuppressWarnings({ "deprecation", "unchecked" })
 	@Override
 	public T getById(Class<T> z,long id) throws Exception {
-		session = sessionFactory.openSession();
+		session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(z);
 		criteria.add(Restrictions.eq("isactive", true));
 		criteria.add(Restrictions.eq("id", id));
@@ -43,7 +43,7 @@ public class SuperDaoImpl<T> implements SuperDao<T>{
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<T> getList(Class<T> z) throws Exception {
-		session = sessionFactory.openSession();
+		session = sessionFactory.getCurrentSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(z);
 		criteria.add(Restrictions.eq("isactive", true));
@@ -53,21 +53,21 @@ public class SuperDaoImpl<T> implements SuperDao<T>{
 
 	@Override
 	public boolean delete(Class<T> z,long id) throws Exception {
-		session = sessionFactory.openSession();
+		session = sessionFactory.getCurrentSession();
 		Object o = session.load(z, id);
 		tx = session.getTransaction();
 		session.beginTransaction();
 		session.delete(o);
-		tx.commit();
+		//tx.commit();
 		return true;
 	}
 
 	@Override
 	public T update(T bean) throws Exception {
-		session = sessionFactory.openSession();
-		tx = session.beginTransaction();
+		session = sessionFactory.getCurrentSession();
+		////tx = session.beginTransaction();
 		session.merge(bean);
-		tx.commit();
+		//tx.commit();
 		return bean;
 	}
 

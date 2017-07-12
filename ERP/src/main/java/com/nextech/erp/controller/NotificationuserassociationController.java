@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,7 +24,7 @@ import com.nextech.erp.service.NotificationUserAssociationService;
 import com.nextech.erp.status.UserStatus;
 
 @Controller
-@RequestMapping("/notificationuserassociation")
+@Transactional @RequestMapping("/notificationuserassociation")
 public class NotificationuserassociationController {
 
 	@Autowired
@@ -32,7 +33,7 @@ public class NotificationuserassociationController {
 	@Autowired
 	private MessageSource messageSource;
 
-	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addNotification(@Valid @RequestBody Notificationuserassociation notificationuserassociation,
 			BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
 		try {
@@ -59,7 +60,7 @@ public class NotificationuserassociationController {
 		}
 	}
 
-	@RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody Notificationuserassociation getNotification(@PathVariable("id") long id) {
 		Notificationuserassociation notification = null;
 		try {
@@ -70,7 +71,7 @@ public class NotificationuserassociationController {
 		return notification;
 	}
 
-	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
 	public @ResponseBody UserStatus updateNotification(@RequestBody Notificationuserassociation notification,
 			HttpServletRequest request, HttpServletResponse response) {
 		try {
@@ -84,7 +85,7 @@ public class NotificationuserassociationController {
 		}
 	}
 
-	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody List<Notificationuserassociation> getNotification() {
 
 		List<Notificationuserassociation> notificationList = null;
@@ -98,7 +99,7 @@ public class NotificationuserassociationController {
 		return notificationList;
 	}
 
-	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus deleteNotification(@PathVariable("id") long id) {
 
 		try {

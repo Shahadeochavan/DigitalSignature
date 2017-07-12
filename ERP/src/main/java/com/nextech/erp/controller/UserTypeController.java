@@ -11,6 +11,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,27 +20,28 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nextech.erp.model.Usertype;
-import com.nextech.erp.newDTO.UserTypeDTO;
 import com.nextech.erp.service.UserTypeService;
 import com.nextech.erp.status.UserStatus;
 
 @Controller
-@RequestMapping("/usertype")
+@Transactional @RequestMapping("/usertype")
 public class UserTypeController {
 	@Autowired
 	UserTypeService userTypeService;
 	
 	
 
-	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus addUserType(@Valid @RequestBody UserTypeDTO userTypeDTO,
+	@Transactional @RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
+	public @ResponseBody UserStatus addUserType(@Valid @RequestBody Usertype usertype,
 			BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			if (bindingResult.hasErrors()) {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
-			userTypeService.saveUserType(userTypeDTO,request);
+			usertype.setIsactive(true);
+			usertype.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+			userTypeService.addEntity(usertype);
 			return new UserStatus(1, "Usertype added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			System.out.println("Inside ConstraintViolationException");
@@ -56,7 +58,7 @@ public class UserTypeController {
 		}
 	}
 
-	@RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody Usertype getUserType(@PathVariable("id") long id) {
 		Usertype userType = null;
 		try {
@@ -67,10 +69,13 @@ public class UserTypeController {
 		return userType;
 	}
 
-	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
-	public @ResponseBody UserStatus updateUserType(@RequestBody UserTypeDTO userTypeDTO,HttpServletRequest request,HttpServletResponse response) {
+	@Transactional @RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
+	public @ResponseBody UserStatus updateUserType(
+			@RequestBody Usertype userType,HttpServletRequest request,HttpServletResponse response) {
 		try {
-			userTypeService.updateUserType(userTypeDTO, request);
+			userType.setIsactive(true);
+			userType.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+			userTypeService.updateEntity(userType);
 			return new UserStatus(1, "UserType update Successfully !");
 		} catch (Exception e) {
 			 e.printStackTrace();
@@ -78,7 +83,7 @@ public class UserTypeController {
 		}
 	}
 
-	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody List<Usertype> getUserType() {
 
 		List<Usertype> userList = null;
@@ -92,7 +97,7 @@ public class UserTypeController {
 		return userList;
 	}
 
-	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus deleteUserType(@PathVariable("id") long id) {
 
 		try {

@@ -7,7 +7,7 @@ import com.nextech.erp.dao.StoreoutrmassociationDao;
 import com.nextech.erp.model.Storeoutrmassociation;
 
 @Repository
-@Transactional
+
 public class StoreoutrmassociationDaoImpl extends SuperDaoImpl<Storeoutrmassociation> implements StoreoutrmassociationDao{
 
 }

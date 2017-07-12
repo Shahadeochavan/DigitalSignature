@@ -32,9 +32,9 @@ public class Qualitycheckrawmaterial implements Serializable {
 	@Column(name="created_date")
 	private Timestamp createdDate;
 
-	private int goodQuantity;
+	private long goodQuantity;
 
-	private int intakeQuantity;
+	private long intakeQuantity;
 
 	private boolean isactive;
 
@@ -99,19 +99,19 @@ public class Qualitycheckrawmaterial implements Serializable {
 		this.createdDate = createdDate;
 	}
 
-	public int getGoodQuantity() {
+	public long getGoodQuantity() {
 		return this.goodQuantity;
 	}
 
-	public void setGoodQuantity(int goodQuantity) {
+	public void setGoodQuantity(long goodQuantity) {
 		this.goodQuantity = goodQuantity;
 	}
 
-	public int getIntakeQuantity() {
+	public long getIntakeQuantity() {
 		return this.intakeQuantity;
 	}
 
-	public void setIntakeQuantity(int intakeQuantity) {
+	public void setIntakeQuantity(long intakeQuantity) {
 		this.intakeQuantity = intakeQuantity;
 	}
 

@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -43,7 +44,7 @@ import com.nextech.erp.status.Response;
 import com.nextech.erp.status.UserStatus;
 import com.nextech.erp.util.DateUtil;
 @Controller
-@RequestMapping("/productionplanning")
+@Transactional @RequestMapping("/productionplanning")
 public class ProductionplanningController {
 
 
@@ -79,7 +80,7 @@ public class ProductionplanningController {
 	
 	private static final int PRODUCTION_PLAN_READY_TO_START = 46;
 	
-	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addProductionplanning(@Valid @RequestBody Productionplanning productionplanning,
 			BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
 		try {
@@ -104,7 +105,7 @@ public class ProductionplanningController {
 			return new UserStatus(0, e.getCause().getMessage());
 		}
 	}
-	@RequestMapping(value = "/createProductionForCurrentMonth", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/createProductionForCurrentMonth", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus createProductionPlanningForCurrentMonth(@Valid @RequestBody Productionplanning productionplanning,
 			BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
 		try {
@@ -138,7 +139,7 @@ public class ProductionplanningController {
 		}
 	}
 
-	@RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody Productionplanning getProductionplanning(@PathVariable("id") long id) {
 		Productionplanning productionplanning = null;
 		try {
@@ -148,7 +149,7 @@ public class ProductionplanningController {
 		}
 		return productionplanning;
 	}
-	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
 	public @ResponseBody UserStatus updateProductionplanning(@RequestBody Productionplanning productionplanning,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			productionplanning.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
@@ -161,7 +162,7 @@ public class ProductionplanningController {
 		}
 	}
 
-	@RequestMapping(value = "/updateProductionPlan", method = RequestMethod.PUT, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/updateProductionPlan", method = RequestMethod.PUT, headers = "Accept=application/json")
 	public @ResponseBody UserStatus updateProductionplanningForCurrentMonth(@RequestBody List<ProductionPlan> productionplanningList,HttpServletRequest request,HttpServletResponse response) {
 		
 		try {
@@ -174,7 +175,7 @@ public class ProductionplanningController {
 		}
 	}
 
-	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody List<Productionplanning> getProductionplanning() {
 
 		List<Productionplanning> productionplanningList = null;
@@ -188,7 +189,7 @@ public class ProductionplanningController {
 		return productionplanningList;
 	}
 
-	@RequestMapping(value = "getProductionplanningByMonth/{month}", method = RequestMethod.GET, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "getProductionplanningByMonth/{month}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody List<Productionplanning> getProductionplanningByMonth(@PathVariable("month") Date month) {
 
 		List<Productionplanning> productionplanningList = null;
@@ -202,7 +203,7 @@ public class ProductionplanningController {
 		return productionplanningList;
 	}
 
-	@RequestMapping(value = "getProductionPlanForCurrentMonth", method = RequestMethod.GET, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "getProductionPlanForCurrentMonth", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody List<ProductionPlan> getProductionPlanMonthYear() {
 
 		List<ProductionPlan> productionplanningList = null;
@@ -215,7 +216,7 @@ public class ProductionplanningController {
 
 		return productionplanningList;
 	}
-	@RequestMapping(value = "updateProductionPlanMonthYear/{MONTH-YEAR}", method = RequestMethod.PUT, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "updateProductionPlanMonthYear/{MONTH-YEAR}", method = RequestMethod.PUT, headers = "Accept=application/json")
 	public @ResponseBody List<Productionplanning> updateProductionPlanMonthYear(@PathVariable("MONTH-YEAR") String month_year) {
 
 		List<Productionplanning> productionplanningList = null;
@@ -230,7 +231,7 @@ public class ProductionplanningController {
 		return productionplanningList;
 	}
 
-	@RequestMapping(value = "createProductionPlanMonthYear/{MONTH-YEAR}", method = RequestMethod.POST, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "createProductionPlanMonthYear/{MONTH-YEAR}", method = RequestMethod.POST, headers = "Accept=application/json")
 	public @ResponseBody List<Productionplanning> createProductionPlanMonthYear(@PathVariable("MONTH-YEAR") String month_year,HttpServletRequest request,HttpServletResponse response) {
 		List<Productionplanning> productionplanningList = null;
 		List<Product> productList = null;
@@ -245,7 +246,7 @@ public class ProductionplanningController {
 		return productionplanningList;
 	}
 
-	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus deleteProductionplanning(@PathVariable("id") long id) {
 
 		try {
@@ -259,7 +260,7 @@ public class ProductionplanningController {
 
 	}
 
-	@RequestMapping(value = "getProductionPlanByDateAndPId/{date}/{pID}", method = RequestMethod.GET, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "getProductionPlanByDateAndPId/{date}/{pID}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody Productionplanning getProductionPlanDateAndProductId(@PathVariable("date") String date,@PathVariable("pID")long pId) {
 
 		Productionplanning productionplanning = null;
@@ -272,7 +273,7 @@ public class ProductionplanningController {
 		return productionplanning;
 	}
 
-	@RequestMapping(value = "getProductionPlanReadyListByDate/{date}", method = RequestMethod.GET, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "getProductionPlanReadyListByDate/{date}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody Response getProductionPlanReadyDate(@PathVariable("date") String date) {
 
 		List<Productionplanning> productionplanningFinalList = new ArrayList<Productionplanning>();
@@ -294,9 +295,9 @@ public class ProductionplanningController {
 							}
 						}
 					}
-				}/*else{
+				}else{
 					return new Response(101,"Please get RM from RM Store Out. So that Today's Production Plan will be generated.",productionplanningFinalList);
-				}*/
+				}
 				if(isProductRemaining)
 					productionplanningFinalList.add(productionplanning);
 			}
@@ -309,7 +310,7 @@ public class ProductionplanningController {
 	}
 	
 	
-	@RequestMapping(value = "getProductionPlanListByDate/{date}", method = RequestMethod.GET, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "getProductionPlanListByDate/{date}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody List<Productionplanning> getProductionPlanDate1(@PathVariable("date") String date) {
 
 		List<Productionplanning> productionplanningFinalList = new ArrayList<Productionplanning>();
@@ -342,7 +343,7 @@ public class ProductionplanningController {
 	}
 	
 
-	@RequestMapping(value = "getProductionPlanByDate/{date}", method = RequestMethod.GET, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "getProductionPlanByDate/{date}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody List<Productionplanning> getProductionPlanDate(@PathVariable("date") String date) {
 
 		List<Productionplanning> productionplanningFinalList = new ArrayList<Productionplanning>();
@@ -372,7 +373,7 @@ public class ProductionplanningController {
 	}
 
 
-	@RequestMapping(value = "getProductionPlanListForStoreOutByDateAndPId/{date}/{productID}", method = RequestMethod.GET, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "getProductionPlanListForStoreOutByDateAndPId/{date}/{productID}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody Response getProductionPlanListByDate(@PathVariable("date") String date,@PathVariable("productID") long productID) {
 
 		List<Productionplanning> productionplanningList = null;

@@ -39,7 +39,7 @@
 						<td align="left">
 
 							<p style="font-weight: bold;">Hello ${companyName},</p>
-							   <p>Greetings from E.K. ELECTRONICS PVT.LTD!</p>
+							<p>Greetings from Nextech Services!</p>
 						</td>
 					</tr>
 					<tr>
@@ -69,7 +69,7 @@
 										   <tr>
                                        <tr bgcolor="$color">
                                            <td align="left">$row</td>
-                                          <td align="left">$rmOrderModelData.rmName</td>
+                                           <td align="left">$rmOrderModelData.rmName</td>
                                            <td align="left">$rmOrderModelData.description</td>
                                            <td align="center">$rmOrderModelData.quantity</td>
                                            <td align="center">$rmOrderModelData.pricePerUnit</td>

@@ -57,7 +57,7 @@ import net.sf.dynamicreports.report.exception.DRException;
 
 @SuppressWarnings("deprecation")
 @RestController
-@RequestMapping("/report")
+@Transactional @RequestMapping("/report")
 public class ReportController {
 
 	private static final String APPLICATION_XLS = "application/xls";
@@ -87,8 +87,8 @@ public class ReportController {
 	@Autowired
 	ReptOptParaService reptOptParaService;
 	
-	@Transactional
-	@RequestMapping(value = "/query", method = RequestMethod.POST , produces = APPLICATION_JSON, headers = "Accept=application/json")
+	
+	@Transactional @RequestMapping(value = "/query", method = RequestMethod.POST , produces = APPLICATION_JSON, headers = "Accept=application/json")
 	public List<ReportInputDTO> fetchReport( @RequestBody ReportQueryDataDTO reportQueryDataDTO, final HttpServletRequest request,
 			final HttpServletResponse response) throws Exception {
 		Report report = reportService.getEntityById(Report.class, reportQueryDataDTO.getReportId());
@@ -135,9 +135,9 @@ public class ReportController {
 		return null;
 	}
 
-	@Transactional
+	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	@RequestMapping(value = "/inputParameters/{id}", method = RequestMethod.GET, produces = APPLICATION_SCV, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/inputParameters/{id}", method = RequestMethod.GET, produces = APPLICATION_SCV, headers = "Accept=application/json")
 	public List<ReportInputDTO> inputParameters(@PathVariable("id") long id, final HttpServletRequest request,
 			final HttpServletResponse response) throws Exception {
 		List<Reportinputassociation> list = reptInpAssoService.getReportInputParametersByReportId(id);
@@ -147,7 +147,7 @@ public class ReportController {
 				ReportInputDTO inputDTO = new ReportInputDTO();
 				Reportinputparameter reportinputparameter = reportinputassociation.getReportinputparameter();
 				if (reportinputparameter != null && reportinputparameter.isQueryParameter()) {
-					Query query1 = sessionFactory.openSession().createSQLQuery(reportinputparameter.getQuery());
+					Query query1 = sessionFactory.getCurrentSession().createSQLQuery(reportinputparameter.getQuery());
 					query1.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
 					List results = query1.list();
 					List<ReportInputDataDTO> dataDTOs = new ArrayList<ReportInputDataDTO>();
@@ -169,7 +169,7 @@ public class ReportController {
 		return reprtInputList;
 	}
 
-	@RequestMapping(value = "/users/{id}", method = RequestMethod.GET, produces = APPLICATION_SCV, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/users/{id}", method = RequestMethod.GET, produces = APPLICATION_SCV, headers = "Accept=application/json")
 	public UserStatus login(@PathVariable("id") long id, final HttpServletRequest request,
 			final HttpServletResponse response) throws Exception {
 		Connection connection = null;
@@ -191,7 +191,7 @@ public class ReportController {
 		return null;
 	}
 
-	@Scheduled(initialDelay=10000, fixedRate=60000)
+	//@Scheduled(initialDelay=10000, fixedRate=60000)
 	private void executeSchedular(){
 		System.out.println("Executed Scheduled method.");
 	}

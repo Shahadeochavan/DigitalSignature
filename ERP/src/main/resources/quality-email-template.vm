@@ -39,7 +39,7 @@
 						<td align="left">
 
 							<p style="font-weight: bold;">Hello ${firstName} ${lastName},</p>
-							   <p>Greetings from E.K. ELECTRONICS PVT.LTD!</p>
+							<p>Greetings from Nextech Services!</p>
 						</td>
 					</tr>
 					<tr>

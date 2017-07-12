@@ -17,7 +17,7 @@ import com.nextech.erp.model.Rawmaterial;
 import com.nextech.erp.model.Rawmaterialvendorassociation;
 
 @Repository
-@Transactional
+
 public class RawmaterialDaoImpl extends SuperDaoImpl<Rawmaterial> implements RawmaterialDao{
 	
 	@Autowired
@@ -30,7 +30,7 @@ public class RawmaterialDaoImpl extends SuperDaoImpl<Rawmaterial> implements Raw
 	public List<Rawmaterialvendorassociation> getRawmaterialByVenodrId(long id)
 			throws Exception {
 		// TODO Auto-generated method stub
-		session = sessionFactory.openSession();
+		session = sessionFactory.getCurrentSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Rawmaterialvendorassociation.class);
 		criteria.add(Restrictions.eq("vendor.id", id));
@@ -40,7 +40,7 @@ public class RawmaterialDaoImpl extends SuperDaoImpl<Rawmaterial> implements Raw
 	@Override
 	public Rawmaterial getRMByRMId(long id) throws Exception {
 		// TODO Auto-generated method stub
-		session = sessionFactory.openSession();
+		session = sessionFactory.getCurrentSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Rawmaterial.class);
 		criteria.add(Restrictions.eq("isactive", true));

@@ -25,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -60,7 +61,7 @@ import com.nextech.erp.status.UserStatus;
 import com.sun.corba.se.spi.servicecontext.UEInfoServiceContext;
 
 @Controller
-@RequestMapping("/rawmaterialorder")
+@Transactional @RequestMapping("/rawmaterialorder")
 public class RawmaterialorderController {
 
 	@Autowired
@@ -114,7 +115,7 @@ public class RawmaterialorderController {
 		return year;
 	}
 	String s;
-	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addRawmaterialorder(
 			@Valid @RequestBody Rawmaterialorder rawmaterialorder,
 			BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
@@ -146,7 +147,7 @@ public class RawmaterialorderController {
 		}
 	}
 
-	@RequestMapping(value = "/createmultiple", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/createmultiple", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addMultipleRawmaterialorder(
 			@Valid @RequestBody RawmaterialOrderAssociationModel rawmaterialOrderAssociationModel, BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
 		try {
@@ -177,7 +178,7 @@ public class RawmaterialorderController {
 		}
 	}
 
-	@RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody Rawmaterialorder getRawmaterialorder(
 			@PathVariable("id") long id) {
 		Rawmaterialorder rawmaterialorder = null;
@@ -190,7 +191,7 @@ public class RawmaterialorderController {
 		return rawmaterialorder;
 	}
 
-	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
 	public @ResponseBody UserStatus updateRawmaterialorder(
 			@RequestBody Rawmaterialorder rawmaterialorder,HttpServletRequest request,HttpServletResponse response) {
 		try {
@@ -205,7 +206,7 @@ public class RawmaterialorderController {
 		}
 	}
 
-	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody List<Rawmaterialorder> getRawmaterialorder() {
 
 		List<Rawmaterialorder> rawmaterialorderList = null;
@@ -219,7 +220,7 @@ public class RawmaterialorderController {
 
 		return rawmaterialorderList;
 	}
-	@RequestMapping(value = "/list/securityCheck", method = RequestMethod.GET, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/list/securityCheck", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody List<Rawmaterialorder> getRMOrderForSecurityCheck() {
 
 		List<Rawmaterialorder> rawmaterialorderList = null;
@@ -236,7 +237,7 @@ public class RawmaterialorderController {
 		return rawmaterialorderList;
 	}
 
-	@RequestMapping(value = "/list/qualityCheck", method = RequestMethod.GET, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/list/qualityCheck", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody List<Rawmaterialorder> getRMOrderForQualityCheck() {
 
 		List<Rawmaterialorder> rawmaterialorderList = null;
@@ -251,7 +252,7 @@ public class RawmaterialorderController {
 		return rawmaterialorderList;
 	}
 
-	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus deleteRawmaterialorder(
 			@PathVariable("id") long id) {
 
@@ -266,7 +267,7 @@ public class RawmaterialorderController {
 		}
 
 	}
-	@RequestMapping(value = "getVendorOrder/{VENDOR-ID}", method = RequestMethod.GET, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "getVendorOrder/{VENDOR-ID}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody List<Rawmaterialorder> getRawmaterialorderVendor(@PathVariable("VENDOR-ID") long vendorId) {
 
 		List<Rawmaterialorder> rawmaterialorderList = null;

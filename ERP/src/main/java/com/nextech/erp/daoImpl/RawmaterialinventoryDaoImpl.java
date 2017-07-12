@@ -9,12 +9,12 @@ import com.nextech.erp.dao.RawmaterialinventoryDao;
 import com.nextech.erp.model.Rawmaterialinventory;
 
 @Repository
-@Transactional
+
 public class RawmaterialinventoryDaoImpl extends SuperDaoImpl<Rawmaterialinventory>implements RawmaterialinventoryDao {
 	
 	@Override
 	public Rawmaterialinventory getByRMId(long id) throws Exception {
-		session = sessionFactory.openSession();
+		session = sessionFactory.getCurrentSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Rawmaterialinventory.class);
 		criteria.add(Restrictions.eq("rawmaterial.id",id));

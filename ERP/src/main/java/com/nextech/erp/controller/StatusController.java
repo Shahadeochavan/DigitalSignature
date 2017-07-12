@@ -10,6 +10,7 @@ import javax.validation.Valid;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,13 +24,13 @@ import com.nextech.erp.service.StatusService;
 import com.nextech.erp.status.UserStatus;
 
 @RestController
-@RequestMapping("/status")
+@Transactional @RequestMapping("/status")
 public class StatusController {
 
 	@Autowired
 	StatusService statusService;
 
-	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addStatustransition(
 			@Valid @RequestBody Status status, BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
 		try {
@@ -55,7 +56,7 @@ public class StatusController {
 		}
 	}
 
-	@RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody Status getStatus(@PathVariable("id") long id) {
 		Status status = null;
 		try {
@@ -66,7 +67,7 @@ public class StatusController {
 		return status;
 	}
 
-	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
 	public @ResponseBody UserStatus updateStatus(@RequestBody Status status,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			status.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
@@ -79,7 +80,7 @@ public class StatusController {
 		}
 	}
 
-	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody List<Status> getStatus() {
 
 		List<Status> statusList = null;
@@ -93,7 +94,7 @@ public class StatusController {
 		return statusList;
 	}
 
-	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus deleteStatus(@PathVariable("id") long id) {
 
 		try {

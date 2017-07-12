@@ -11,7 +11,7 @@ import com.nextech.erp.dao.ProductqualityDao;
 import com.nextech.erp.model.Productquality;
 
 @Repository
-@Transactional
+
 public class ProductqualityDaoImpl extends SuperDaoImpl<Productquality> implements ProductqualityDao{
 
 	@SuppressWarnings("unchecked")
@@ -19,7 +19,7 @@ public class ProductqualityDaoImpl extends SuperDaoImpl<Productquality> implemen
 	public List<Productquality> getProductqualityListByProductId(long productId)
 			throws Exception {
 		// TODO Auto-generated method stub
-		session = sessionFactory.openSession();
+		session = sessionFactory.getCurrentSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Productquality.class);
 		criteria.add(Restrictions.eq("product.id", productId));

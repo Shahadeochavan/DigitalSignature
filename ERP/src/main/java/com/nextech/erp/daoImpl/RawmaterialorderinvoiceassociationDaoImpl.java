@@ -7,7 +7,7 @@ import com.nextech.erp.dao.RawmaterialorderinvoiceassociationDao;
 import com.nextech.erp.model.Rawmaterialorderinvoiceassociation;
 
 @Repository
-@Transactional
+
 public class RawmaterialorderinvoiceassociationDaoImpl extends SuperDaoImpl<Rawmaterialorderinvoiceassociation> implements RawmaterialorderinvoiceassociationDao{
 	
 }

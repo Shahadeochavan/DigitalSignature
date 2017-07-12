@@ -29,7 +29,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.dto.Mail;
 import com.nextech.erp.dto.QualityCheckRMDTO;
+import com.nextech.erp.dto.RawMaterialInvoiceDTO;
+import com.nextech.erp.dto.StoreInDTO;
 import com.nextech.erp.exceptions.InvalidRMQuantityInQC;
+import com.nextech.erp.factory.QualityRequestResponseFactory;
+import com.nextech.erp.factory.StoreRequestResponseFactory;
 import com.nextech.erp.model.Notification;
 import com.nextech.erp.model.Notificationuserassociation;
 import com.nextech.erp.model.Qualitycheckrawmaterial;
@@ -63,6 +67,7 @@ import com.nextech.erp.service.VendorService;
 import com.nextech.erp.status.UserStatus;
 
 @Controller
+@Transactional
 @RequestMapping("/qualitycheckrawmaterial")
 public class QualitycheckrawmaterialController {
 	@Autowired
@@ -115,11 +120,8 @@ public class QualitycheckrawmaterialController {
 
 	@Autowired
 	private MessageSource messageSource;
-	
-	@Autowired
-	private QualitycheckrawmaterialService qcRMService;
 
-	private HashMap<Long,Integer> rmIdQuantityMap;
+	private HashMap<Long,Long> rmIdQuantityMap;
 
 	private static final int STATUS_RAW_MATERIAL_ORDER_INCOMPLETE=2;
 	private static final int STATUS_RAW_MATERIAL_ORDER_COMPLETE=3;
@@ -127,78 +129,33 @@ public class QualitycheckrawmaterialController {
 	@RequestMapping(value = "/qualitycheck", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	@Transactional
 	public @ResponseBody UserStatus addRawmaterialorderinvoice(
-			@Valid @RequestBody Rawmaterialorderinvoice rawmaterialorderinvoice,
+			@Valid @RequestBody RawMaterialInvoiceDTO rawMaterialInvoiceDTO,
 			BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			if (bindingResult.hasErrors()) {
 				return new UserStatus(0, bindingResult.getFieldError().getDefaultMessage());
 			}
 			String message = "";
-			Rawmaterialorderinvoice rawmaterialorderinvoiceNew = rawmaterialorderinvoiceService.getEntityById(Rawmaterialorderinvoice.class,rawmaterialorderinvoice.getId());
+			Rawmaterialorderinvoice rawmaterialorderinvoiceNew = rawmaterialorderinvoiceService.getEntityById(Rawmaterialorderinvoice.class,rawMaterialInvoiceDTO.getId());
 			Rawmaterialorder rawmaterialorder = rawmaterialorderService.getEntityById(Rawmaterialorder.class, rawmaterialorderinvoiceNew.getPo_No());
-			List<Qualitycheckrawmaterial> qualitycheckrawmaterials = rawmaterialorderinvoice.getQualitycheckrawmaterials();
-			List<QualityCheckRMDTO>  qualityCheckRMDTOs = new ArrayList<QualityCheckRMDTO>();
-			if( rawmaterialorder == null ){
-				System.out.println("==== RM Order not found for this Invoice : " + rawmaterialorderinvoiceNew.getInvoice_No() + " . So need to clear out this Invoice");
-				for (Qualitycheckrawmaterial qualitycheckrawmaterial : qualitycheckrawmaterials) {
-					qcRMService.deleteEntity(Qualitycheckrawmaterial.class, qualitycheckrawmaterial.getRawmaterial().getId());
+			List<QualityCheckRMDTO> qualityCheckRMDTOs = rawMaterialInvoiceDTO.getQualityCheckRMDTOs();
+			if (qualityCheckRMDTOs != null && !qualityCheckRMDTOs.isEmpty()) {
+				for (QualityCheckRMDTO qualityCheckRMDTO : qualityCheckRMDTOs) {
+					Rawmaterial rawmaterial = rawmaterialService.getEntityById(Rawmaterial.class, qualityCheckRMDTO.getId());
+					saveQualityCheckRawMaterial(new Qualitycheckrawmaterial(), qualityCheckRMDTO,rawmaterialorderinvoiceNew, rawmaterial, request, response);
+					updateRawMaterialInvoice(ERPConstants.STATUS_READY_STORE_IN,rawmaterialorderinvoiceNew, request, response);
+					updateRMOrderRemainingQuantity(qualityCheckRMDTO, rawmaterialorder, request, response);
+					updateRMIdQuantityMap(qualityCheckRMDTO.getId(), qualityCheckRMDTO.getIntakeQuantity() - qualityCheckRMDTO.getGoodQuantity());
+					message = messageSource.getMessage(ERPConstants.RM_QUALITY_CHECK, null, null);
 				}
-				rawmaterialorderinvoiceService.deleteEntity(Rawmaterialorderinvoice.class,rawmaterialorderinvoice.getId());
-				return new UserStatus(0, messageSource.getMessage(ERPConstants.QC_RM_ORDER_NOT_FOUND, null, null));
-			}else if (qualitycheckrawmaterials != null && !qualitycheckrawmaterials.isEmpty()) {
-				for (Qualitycheckrawmaterial qualitycheckrawmaterial : qualitycheckrawmaterials) {
-					//TODO why are we getting raw material from Raw Material service
-					Rawmaterial rawmaterial = rawmaterialService.getEntityById(Rawmaterial.class, qualitycheckrawmaterial.getRawmaterial().getId());
-					//TODO save Quality check
-					long qualityCheckId = saveQualityCheckRawMaterial(qualitycheckrawmaterial, rawmaterialorderinvoiceNew, rawmaterial, request, response);
-					QualityCheckRMDTO qualityCheckRMDTO = new QualityCheckRMDTO();
-					qualityCheckRMDTO.setDescription(rawmaterial.getDescription());
-					qualityCheckRMDTO.setGoodQuantity(qualitycheckrawmaterial.getGoodQuantity());
-					qualityCheckRMDTO.setIntakeQuantity(qualitycheckrawmaterial.getIntakeQuantity());
-					qualityCheckRMDTOs.add(qualityCheckRMDTO);
-					//if qualityCheckId value is 0 that means this is duplicate entry
-					if(qualityCheckId != 0 ){
-						//TODO update raw material invoice
-						updateRawMaterialInvoice(ERPConstants.STATUS_READY_STORE_IN,rawmaterialorderinvoiceNew, request, response);
-						//TODO update raw material order
-						updateRMOrderRemainingQuantity(qualitycheckrawmaterial, rawmaterialorder, request, response);
-						updateRMIdQuantityMap(qualitycheckrawmaterial.getRawmaterial().getId(), qualitycheckrawmaterial.getIntakeQuantity() - qualitycheckrawmaterial.getGoodQuantity());
-						message = messageSource.getMessage(ERPConstants.RM_QUALITY_CHECK, null, null);
-					}else{
-						System.out.println("==== Invoice id = " + rawmaterialorderinvoiceNew.getId() + " raw material id = " + qualitycheckrawmaterial.getRawmaterial().getId() + " already exists ====");
-						message += " Invoice id = " + rawmaterialorderinvoiceNew.getId() + " raw material id = " + qualitycheckrawmaterial.getRawmaterial().getId() + " already exists";
-					}
-				}
-			}else{
-				System.out.println("==== This is blank invoice as there are no RMs present in Quality Check RM Table. So need to clear out this Invoice : " + rawmaterialorderinvoiceNew.getInvoice_No());
-				rawmaterialorderinvoiceService.deleteEntity(Rawmaterialorderinvoice.class,rawmaterialorderinvoice.getId());
-				return new UserStatus(0, messageSource.getMessage(ERPConstants.INFO_QUALITY_CHECK, null, null));
 			}
-			// TODO  call to order history
 			addOrderHistory(rawmaterialorderinvoiceNew, rawmaterialorder, request, response);
-			//TODO Update Raw Material Order Status
 			updateRawMaterialOrderStatus(rawmaterialorder);
-			
 			Status status = statusService.getEntityById(Status.class, rawmaterialorderinvoiceNew.getStatus().getId());
-
 			Vendor vendor = vendorService.getEntityById(Vendor.class, Long.parseLong(rawmaterialorderinvoiceNew.getVendorname()));
-
 			Notification notification = notificationService.getNotifiactionByStatus(status.getId());
 			mailSending(notification, vendor,qualityCheckRMDTOs,rawmaterialorder);
-
-
-			// TODO  call to trigger notification (will do it later )
-			return new UserStatus(1,
-					message);
-		} catch(InvalidRMQuantityInQC invalidRMQuantityInQC){
-			invalidRMQuantityInQC.printStackTrace();
-			return new UserStatus(0, invalidRMQuantityInQC.getCause().getMessage());
-		}catch (ConstraintViolationException cve) {
-			cve.printStackTrace();
-			return new UserStatus(0, cve.getCause().getMessage());
-		} catch (PersistenceException pe) {
-			pe.printStackTrace();
-			return new UserStatus(0, pe.getCause().getMessage());
+			return new UserStatus(1,message);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new UserStatus(0, e.getCause().getMessage());
@@ -208,29 +165,22 @@ public class QualitycheckrawmaterialController {
 	@RequestMapping(value = "/qualityCheckInReadyStore", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	@Transactional
 	public @ResponseBody UserStatus addRawmaterialorderinvoiceReadyStore(
-			@Valid @RequestBody Rawmaterialorderinvoice rawmaterialorderinvoice,
+			@Valid @RequestBody RawMaterialInvoiceDTO materialInvoiceDTO,
 			BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			if (bindingResult.hasErrors()) {
 				return new UserStatus(0, bindingResult.getFieldError().getDefaultMessage());
 			}
-			Rawmaterialorderinvoice rawmaterialorderinvoiceNew = rawmaterialorderinvoiceService.getEntityById(Rawmaterialorderinvoice.class,rawmaterialorderinvoice.getId());
-			Rawmaterialorder rawmaterialorder = rawmaterialorderService.getEntityById(Rawmaterialorder.class, rawmaterialorderinvoiceNew.getPo_No());
+			Rawmaterialorderinvoice rawmaterialorderinvoiceNew = rawmaterialorderinvoiceService.getEntityById(Rawmaterialorderinvoice.class,materialInvoiceDTO.getId());
 			List<Qualitycheckrawmaterial> qualitycheckrawmaterials = qualitycheckrawmaterialService.getQualitycheckrawmaterialByInvoiceId(rawmaterialorderinvoiceNew.getId());
 			if (qualitycheckrawmaterials != null&& !qualitycheckrawmaterials.isEmpty()) {
 				for (Qualitycheckrawmaterial qualitycheckrawmaterial : qualitycheckrawmaterials) {
 					Rawmaterial rawmaterial = rawmaterialService.getRMByRMId(qualitycheckrawmaterial.getRawmaterial().getId());
-					//TODO save Quality check
-					//if qualityCheckId value is 0 that means this is duplicate entry
-					// TODO  update inventory
 					Rawmaterialinventory rawmaterialinventory = updateInventory(qualitycheckrawmaterial, rawmaterial, request, response);
-					// TODO  call to inventory history
 					addRMInventoryHistory(qualitycheckrawmaterial, rawmaterialinventory, request, response);
-					//TODO update raw material invoice
 					updateRawMaterialInvoice(ERPConstants.STATUS_RAW_MATERIAL_INVENTORY_ADD,rawmaterialorderinvoiceNew, request, response);
 				}
 			}
-			// TODO  call to trigger notification (will do it later )
 			return new UserStatus(1,"Store Quality Check information save succesfully");
 		} catch (ConstraintViolationException cve) {
 			cve.printStackTrace();
@@ -270,43 +220,20 @@ public class QualitycheckrawmaterialController {
 	}
 
 	private void updateRawMaterialInvoice(String invoiceStatus,Rawmaterialorderinvoice rawmaterialorderinvoice,HttpServletRequest request,HttpServletResponse response) throws Exception{
-		
-		//TODO why status RM ADD? Why can't we update status as RM Order Invoice QC Complete?
 		Status statusInventoryAdd = statusService.getEntityById(Status.class,Long.parseLong(messageSource.getMessage(invoiceStatus, null, null)));
 		rawmaterialorderinvoice.setStatus(statusInventoryAdd);
 		rawmaterialorderinvoice.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 		rawmaterialorderinvoiceService.updateEntity(rawmaterialorderinvoice);
-
-		//TODO Mail Sending
-		Status status = statusService.getEntityById(Status.class, rawmaterialorderinvoice.getStatus().getId());
-		Vendor vendor = vendorService.getEntityById(Vendor.class, Long.parseLong(rawmaterialorderinvoice.getVendorname()));
-		Notification notification = notificationService.getNotifiactionByStatus(status.getId());
-		//mailSending(notification, vendor);
 	}
 
-	private long saveQualityCheckRawMaterial(Qualitycheckrawmaterial qualitycheckrawmaterial,Rawmaterialorderinvoice rawmaterialorderinvoiceNew,Rawmaterial rawmaterial,HttpServletRequest request,HttpServletResponse response) throws Exception{
-		String message = "";
+	private long saveQualityCheckRawMaterial(Qualitycheckrawmaterial qualitycheckrawmaterial,QualityCheckRMDTO qualityCheckRMDTO,Rawmaterialorderinvoice rawmaterialorderinvoiceNew,Rawmaterial rawmaterial,HttpServletRequest request,HttpServletResponse response) throws Exception{
 		qualitycheckrawmaterial.setRawmaterialorderinvoice(rawmaterialorderinvoiceNew);
 		qualitycheckrawmaterial.setRawmaterial(rawmaterial);
-		qualitycheckrawmaterial.setGoodQuantity(qualitycheckrawmaterial.getGoodQuantity());
-		qualitycheckrawmaterial.setIntakeQuantity(qualitycheckrawmaterial.getIntakeQuantity());
+		qualitycheckrawmaterial.setGoodQuantity(qualityCheckRMDTO.getGoodQuantity());
+		qualitycheckrawmaterial.setIntakeQuantity(qualityCheckRMDTO.getIntakeQuantity());
 		qualitycheckrawmaterial.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-		long rmOrderInvoiceId = qualitycheckrawmaterial.getRawmaterialorderinvoice().getId();
-		long qcRMId = qualitycheckrawmaterial.getRawmaterial().getId();
-		if(qualitycheckrawmaterialService.getQualitycheckrawmaterialByInvoiceIdAndRMId(rmOrderInvoiceId, qcRMId) == null){
-			System.out.println("====== Creating Entry Qualitycheckrawmaterial Invoice id = " + rawmaterialorderinvoiceNew.getId() + " raw material id = " + qualitycheckrawmaterial.getRawmaterial().getId() + " =====");
-			qualitycheckrawmaterial.setIsactive(true);
-			qualitycheckrawmaterialService.addEntity(qualitycheckrawmaterial);
-			Status status = statusService.getEntityById(Status.class, rawmaterialorderinvoiceNew.getStatus().getId());
-			Vendor vendor = vendorService.getEntityById(Vendor.class, Long.parseLong(rawmaterialorderinvoiceNew.getVendorname()));
-			Notification notification = notificationService.getNotifiactionByStatus(status.getId());
-
-			//TODO Mail Sending to Vendor when quality check or rm order
-			//mailSending(notification, vendor);
-		}else {
-			message += " Invoice id = " + rawmaterialorderinvoiceNew.getId() + " raw material id = " + qualitycheckrawmaterial.getRawmaterial().getId() + " already exists";
-			System.out.println("====== Invoice id = " + rawmaterialorderinvoiceNew.getId() + " raw material id = " + qualitycheckrawmaterial.getRawmaterial().getId() + " already exists =====");
-		}
+		qualitycheckrawmaterial.setIsactive(true);
+		qualitycheckrawmaterialService.addEntity(qualitycheckrawmaterial);
 		return qualitycheckrawmaterial.getId();
 	}
 
@@ -328,10 +255,10 @@ public class QualitycheckrawmaterialController {
 		}
 		return rawmaterialinventory;
 	}
-	private void  updateRMOrderRemainingQuantity(Qualitycheckrawmaterial qualitycheckrawmaterial ,Rawmaterialorder rawmaterialorder,HttpServletRequest request,HttpServletResponse response) throws InvalidRMQuantityInQC,Exception{
-		Rawmaterialorderassociation rawmaterialorderassociation = rawmaterialorderassociationService.getRMOrderRMAssociationByRMOrderIdandRMId(rawmaterialorder.getId(),qualitycheckrawmaterial.getRawmaterial().getId());
-		if(rawmaterialorderassociation.getRemainingQuantity()-qualitycheckrawmaterial.getGoodQuantity() >= 0){
-			rawmaterialorderassociation.setRemainingQuantity(rawmaterialorderassociation.getRemainingQuantity()-qualitycheckrawmaterial.getGoodQuantity());
+	private void  updateRMOrderRemainingQuantity(QualityCheckRMDTO qualityCheckRMDTO ,Rawmaterialorder rawmaterialorder,HttpServletRequest request,HttpServletResponse response) throws InvalidRMQuantityInQC,Exception{
+		Rawmaterialorderassociation rawmaterialorderassociation = rawmaterialorderassociationService.getRMOrderRMAssociationByRMOrderIdandRMId(rawmaterialorder.getId(),qualityCheckRMDTO.getId());
+		if(rawmaterialorderassociation.getRemainingQuantity()-qualityCheckRMDTO.getGoodQuantity() >= 0){
+			rawmaterialorderassociation.setRemainingQuantity(rawmaterialorderassociation.getRemainingQuantity()-qualityCheckRMDTO.getGoodQuantity());
 		}else{
 			throw new InvalidRMQuantityInQC("Good quantity exceeded than Remaining Quantity");
 		}
@@ -364,53 +291,43 @@ public class QualitycheckrawmaterialController {
 		rawmaterialorderhistory.setCreatedBy(3);
 		rawmaterialorderhistoryService.addEntity(rawmaterialorderhistory);
 	}
-	private void updateRMIdQuantityMap(long rmId,int quantity){
+	private void updateRMIdQuantityMap(long rmId,long quantity){
 		if(rmIdQuantityMap == null){
-			rmIdQuantityMap = new HashMap<Long, Integer>();
+			rmIdQuantityMap = new HashMap<Long, Long>();
 		}
 		rmIdQuantityMap.put(rmId, quantity);
 
 	}
 	@RequestMapping(value = "listrm/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<Rmorderinvoiceintakquantity> getRmorderinvoiceintakquantityByRMOInvoiceId(
+	public @ResponseBody List<QualityCheckRMDTO> getRmorderinvoiceintakquantityByRMOInvoiceId(
 			@PathVariable("id") long id) {
-		List<Rmorderinvoiceintakquantity> rmorderinvoiceintakquantities = null;
+		List<QualityCheckRMDTO> qualityCheckRMDTOs = new ArrayList<QualityCheckRMDTO>();
 		try {
-			rmorderinvoiceintakquantities = rmorderinvoiceintakquantityService.getRmorderinvoiceintakquantityByRMOInvoiceId(id);
-			System.out.println("list size "
-					+ rmorderinvoiceintakquantities.size());
+			List<Rmorderinvoiceintakquantity> rmorderinvoiceintakquantities = rmorderinvoiceintakquantityService.getRmorderinvoiceintakquantityByRMOInvoiceId(id);
 			for (Rmorderinvoiceintakquantity rmorderinvoiceintakquantity : rmorderinvoiceintakquantities) {
-				Rawmaterial rawmaterial = rawmaterialService.getEntityById(
-						Rawmaterial.class, rmorderinvoiceintakquantity
-								.getRawmaterial().getId());
+				QualityCheckRMDTO qualityCheckRMDTO = QualityRequestResponseFactory.createQualityResonse(rmorderinvoiceintakquantity);
+				qualityCheckRMDTO.setId(rmorderinvoiceintakquantity.getRawmaterial().getId());
+				qualityCheckRMDTOs.add(qualityCheckRMDTO);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		//TODO Some meaningful message needs to be provided when rmorderinvoiceintakquantities is empty
-//		(rmorderinvoiceintakquantities == null || rmorderinvoiceintakquantities.size() == 0) ? 
-//				"Invoice is generated but due to some issues there are not"
-//		return new Response(1,"Success", rmorderinvoiceintakquantities);
-		return rmorderinvoiceintakquantities;
+		return qualityCheckRMDTOs;
 	}
 	
 	@RequestMapping(value = "listrmGoodQuantity/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<Qualitycheckrawmaterial> getRmorderinvoiceintakquantity(
+	public @ResponseBody List<StoreInDTO> getRmorderinvoiceintakquantity(
 			@PathVariable("id") long id) {
-		List<Qualitycheckrawmaterial> qualitycheckrawmaterials = null;
+		List<StoreInDTO> storeInDTOs = new ArrayList<StoreInDTO>();
 		try {
-			qualitycheckrawmaterials = qualitycheckrawmaterialService.getQualitycheckrawmaterialByInvoiceId(id);
-			System.out.println("list size "
-					+ qualitycheckrawmaterials.size());
+			List<Qualitycheckrawmaterial> qualitycheckrawmaterials = qualitycheckrawmaterialService.getQualitycheckrawmaterialByInvoiceId(id);
 			for (Qualitycheckrawmaterial qualitycheckrawmaterial : qualitycheckrawmaterials) {
-				Rawmaterial rawmaterial = rawmaterialService.getEntityById(
-						Rawmaterial.class, qualitycheckrawmaterial
-								.getRawmaterial().getId());
+				storeInDTOs.add(StoreRequestResponseFactory.createStoreInResonse(qualitycheckrawmaterial));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return qualitycheckrawmaterials;
+		return storeInDTOs;
 	}
 	private void mailSending(Notification notification,Vendor vendor,List<QualityCheckRMDTO> qualityCheckRMDTOs,Rawmaterialorder rawmaterialorder) throws Exception{
 		  Mail mail = new Mail();

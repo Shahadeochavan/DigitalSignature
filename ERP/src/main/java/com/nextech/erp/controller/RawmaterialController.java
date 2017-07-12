@@ -12,7 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,11 +27,12 @@ import com.nextech.erp.model.Productinventory;
 import com.nextech.erp.model.Rawmaterial;
 import com.nextech.erp.model.Rawmaterialinventory;
 import com.nextech.erp.model.Rawmaterialvendorassociation;
+import com.nextech.erp.model.User;
 import com.nextech.erp.service.RawmaterialService;
 import com.nextech.erp.service.RawmaterialinventoryService;
 import com.nextech.erp.status.UserStatus;
 @Controller
-@RequestMapping("/rawmaterial")
+@Transactional @RequestMapping("/rawmaterial")
 public class RawmaterialController {
 
 	@Autowired
@@ -41,7 +44,9 @@ public class RawmaterialController {
 	@Autowired
 	private MessageSource messageSource;
 
-	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
+	@SuppressWarnings("null")
+	@ExceptionHandler(Exception.class)
+	@Transactional @RequestMapping(value = "/create", method = RequestMethod.POST)
 	public @ResponseBody UserStatus addRawmaterial(
 			@Valid @RequestBody Rawmaterial rawmaterial, BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
 		try {
@@ -66,7 +71,7 @@ public class RawmaterialController {
 		}
 	}
 
-	@RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody Rawmaterial getRawmaterial(@PathVariable("id") long id) {
 		Rawmaterial rawmaterial = null;
 		try {
@@ -77,7 +82,7 @@ public class RawmaterialController {
 		return rawmaterial;
 	}
 
-	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
 	public @ResponseBody UserStatus updateRawmaterial(@RequestBody Rawmaterial rawmaterial,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			rawmaterial.setIsactive(true);
@@ -90,7 +95,7 @@ public class RawmaterialController {
 		}
 	}
 
-	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody List<Rawmaterial> getRawmaterial() {
 
 		List<Rawmaterial> rawmaterialList = null;
@@ -104,7 +109,7 @@ public class RawmaterialController {
 		return rawmaterialList;
 	}
 
-	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus deleteRawmaterial(@PathVariable("id") long id) {
 
 		try {
@@ -118,7 +123,7 @@ public class RawmaterialController {
 
 	}
 
-	@RequestMapping(value = "/getRMaterial/{VendorId}", method = RequestMethod.GET, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/getRMaterial/{VendorId}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody List<Rawmaterialvendorassociation> getRawmaterialForVendor(@PathVariable("VendorId") long id) {
 
 		List<Rawmaterialvendorassociation> rawmaterialvendorassociationList = null;
@@ -130,7 +135,7 @@ public class RawmaterialController {
 		return rawmaterialvendorassociationList;
 	}
 
-	@RequestMapping(value = "/getRMForRMOrder/{RMOrderId}", method = RequestMethod.GET, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/getRMForRMOrder/{RMOrderId}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody List<Rawmaterial> getRawmaterialForRMOrder(@PathVariable("RMOrderId") long id) {
 
 		List<Rawmaterial> rawmaterialList = null;

@@ -11,7 +11,7 @@ import com.nextech.erp.dao.BOMRMVendorAssociationDao;
 import com.nextech.erp.model.Bomrmvendorassociation;
 
 @Repository
-@Transactional
+
 public class BOMRMVendorAssociationDaoImpl extends
 		SuperDaoImpl<Bomrmvendorassociation> implements
 		BOMRMVendorAssociationDao {
@@ -21,7 +21,7 @@ public class BOMRMVendorAssociationDaoImpl extends
 	public List<Bomrmvendorassociation> getBomRMVendorByBomId(long bomId)
 			throws Exception {
 		// TODO Auto-generated method stub
-		session = sessionFactory.openSession();
+		session = sessionFactory.getCurrentSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session
 				.createCriteria(Bomrmvendorassociation.class);

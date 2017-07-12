@@ -13,7 +13,7 @@ import com.nextech.erp.dao.PageDao;
 import com.nextech.erp.model.Page;
 
 @Repository
-@Transactional
+
 public class PageDaoImpl extends SuperDaoImpl<Page> implements PageDao{
 	
 	@Autowired
@@ -23,7 +23,7 @@ public class PageDaoImpl extends SuperDaoImpl<Page> implements PageDao{
 
 	@Override
 	public Page getPageByUrl(String url) throws Exception {
-		session = sessionFactory.openSession();
+		session = sessionFactory.getCurrentSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Page.class);
 		criteria.add(Restrictions.eq("isactive", true));

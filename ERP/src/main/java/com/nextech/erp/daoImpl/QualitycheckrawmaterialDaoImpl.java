@@ -13,14 +13,14 @@ import com.nextech.erp.model.Productrawmaterialassociation;
 import com.nextech.erp.model.Qualitycheckrawmaterial;
 
 @Repository
-@Transactional
+
 public class QualitycheckrawmaterialDaoImpl extends
 		SuperDaoImpl<Qualitycheckrawmaterial> implements
 		QualitycheckrawmaterialDao {
 
 	@Override
 	public Qualitycheckrawmaterial getQualitycheckrawmaterialByInvoiceIdAndRMId(long invoiceId,long rmId) throws Exception {
-		session = sessionFactory.openSession();
+		session = sessionFactory.getCurrentSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Qualitycheckrawmaterial.class);
 		criteria.add(Restrictions.eq("isactive", true));
@@ -34,7 +34,7 @@ public class QualitycheckrawmaterialDaoImpl extends
 	public List<Qualitycheckrawmaterial> getQualitycheckrawmaterialByInvoiceId(
 			long invoiceId) throws Exception {
 		// TODO Auto-generated method stub
-		session = sessionFactory.openSession();
+		session = sessionFactory.getCurrentSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Qualitycheckrawmaterial.class);
 		criteria.add(Restrictions.eq("rawmaterialorderinvoice.id", invoiceId));

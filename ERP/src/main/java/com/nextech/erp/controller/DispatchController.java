@@ -26,6 +26,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -71,6 +72,7 @@ import com.nextech.erp.service.UserService;
 import com.nextech.erp.status.UserStatus;
 
 @Controller
+@Transactional
 @RequestMapping("/dispatch")
 public class DispatchController {
 
@@ -193,7 +195,6 @@ public class DispatchController {
 											null, null))));
 							Product product = productService.getEntityById(Product.class,productorderassociation.getProduct().getId());
 							Bom bom = bomService.getBomByProductId(product.getId());
-							if(bom !=null){
 							List<Bomrmvendorassociation> bomrmvendorassociations = bomRMVendorAssociationService.getBomRMVendorByBomId(bom.getId());
 							float totalCost = 0;
 							DispatchProductDTO  dispatchProductDTO = new DispatchProductDTO();
@@ -207,9 +208,6 @@ public class DispatchController {
 							}
 							dispatchProductDTOs.add(dispatchProductDTO);
 							dispatchservice.addEntity(dispatch);
-							}else{
-								return new UserStatus(1, "If you want  Pdf for Dispatch Please Make BOM");
-							}
 						}
 					}
 				}

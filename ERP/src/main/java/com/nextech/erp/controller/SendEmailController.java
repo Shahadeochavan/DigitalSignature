@@ -11,6 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,11 +22,11 @@ import com.nextech.erp.dto.EmailSend;
 import com.nextech.erp.status.UserStatus;
 
 @Controller
-@RequestMapping("/mail")
+@Transactional @RequestMapping("/mail")
 public class SendEmailController {
 	@Autowired
 	private JavaMailSender mailSender;
-	@RequestMapping(value = "/send", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/send", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus doSendEmail(
 			@Valid @RequestBody EmailSend emailSend,
 			BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {

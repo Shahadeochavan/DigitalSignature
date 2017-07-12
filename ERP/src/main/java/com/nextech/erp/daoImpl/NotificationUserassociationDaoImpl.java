@@ -11,7 +11,7 @@ import com.nextech.erp.dao.NotificationUserassociationDao;
 import com.nextech.erp.model.Notificationuserassociation;
 
 @Repository
-@Transactional
+
 public class NotificationUserassociationDaoImpl extends
 		SuperDaoImpl<Notificationuserassociation> implements
 		NotificationUserassociationDao {
@@ -20,7 +20,7 @@ public class NotificationUserassociationDaoImpl extends
 	public Notificationuserassociation getNotifiactionByUserId(long userId)
 			throws Exception {
 		// TODO Auto-generated method stub
-		session = sessionFactory.openSession();
+		session = sessionFactory.getCurrentSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session
 				.createCriteria(Notificationuserassociation.class);
@@ -37,7 +37,7 @@ public class NotificationUserassociationDaoImpl extends
 	public List<Notificationuserassociation> getNotificationuserassociationByUserId(
 			long userId) throws Exception {
 		// TODO Auto-generated method stub
-		session = sessionFactory.openSession();
+		session = sessionFactory.getCurrentSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session
 				.createCriteria(Notificationuserassociation.class);
@@ -51,7 +51,7 @@ public class NotificationUserassociationDaoImpl extends
 	@Override
 	public List<Notificationuserassociation> getNotificationuserassociationBynotificationId(
 			long notificationId) throws Exception {
-		session = sessionFactory.openSession();
+		session = sessionFactory.getCurrentSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session
 				.createCriteria(Notificationuserassociation.class);

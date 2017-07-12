@@ -20,6 +20,7 @@ import javax.validation.Valid;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -58,7 +59,7 @@ import com.nextech.erp.status.Response;
 import com.nextech.erp.status.UserStatus;
 
 @RestController
-@RequestMapping("/bom")
+@Transactional @RequestMapping("/bom")
 public class BomController {
 
 	@Autowired
@@ -79,10 +80,7 @@ public class BomController {
 	@Autowired
 	RMVAssoService rMVAssoService;
 	
-	
-	
-
-	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addUnit(@Valid @RequestBody Bom bom,HttpServletRequest request,HttpServletResponse response,
 			BindingResult bindingResult) {
 		try {
@@ -109,7 +107,7 @@ public class BomController {
 		}
 	}
 	
-	@RequestMapping(value = "/createmultiple", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/createmultiple", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addMultipleBom(
 			@Valid @RequestBody BomDTO bomDTO, BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
 		try {
@@ -144,7 +142,7 @@ public class BomController {
 		}
 	}
 
-	@RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody Bom getUnit(@PathVariable("id") long id) {
 		Bom bom = null;
 		try {
@@ -155,7 +153,7 @@ public class BomController {
 		return bom;
 	}
 
-	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
 	public @ResponseBody UserStatus updateUnit(@RequestBody Bom bom,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			bom.setUpdatedBy(request.getAttribute("current_user").toString());
@@ -168,7 +166,7 @@ public class BomController {
 		}
 	}
 
-	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody List<Bom> getBom(HttpServletRequest request,HttpServletResponse response) throws IOException {
 
 		List<Bom> bomList = null;
@@ -182,7 +180,7 @@ public class BomController {
 		return bomList;
 	}
 	
-	@RequestMapping(value = "/BomCompletedList", method = RequestMethod.GET, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/BomCompletedList", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody Response getBomCompleted(HttpServletRequest request,HttpServletResponse response) throws IOException {
 
 		List<Bom> bomList = null;
@@ -204,7 +202,7 @@ public class BomController {
 		return new Response(1, bomModelDatas);
 	}
 	
-	@RequestMapping(value = "/getProductList", method = RequestMethod.GET, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/getProductList", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody Response getProductList() throws IOException {
 
 		List<Product> products = null;
@@ -225,7 +223,7 @@ public class BomController {
 		return response;
 	}
 
-	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus deleteClient(@PathVariable("id") long id) {
 
 		try {
@@ -239,7 +237,7 @@ public class BomController {
 
 	}
 	
-	@RequestMapping(value = "bomList/{PRODUCT-ID}", method = RequestMethod.GET, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "bomList/{PRODUCT-ID}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody List<Bom> getBomByProductId(@PathVariable("PRODUCT-ID") long productId) {
 
 		List<Bom> boList = null;
@@ -253,7 +251,7 @@ public class BomController {
 
 		return boList;
 	}
-	@RequestMapping(value = "downloadBomPdf/{PRODUCT-ID}/{BOM-ID}", method = RequestMethod.GET, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "downloadBomPdf/{PRODUCT-ID}/{BOM-ID}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody void getBomPdfByProductIdAndBomId(@PathVariable("PRODUCT-ID") long productId,@PathVariable("BOM-ID") long bomId,HttpServletRequest request, HttpServletResponse response) throws IOException {
 
 		List<Bom> boList = null;

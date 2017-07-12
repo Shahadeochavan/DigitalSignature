@@ -11,14 +11,14 @@ import com.nextech.erp.dao.DispatchDao;
 import com.nextech.erp.model.Dispatch;
 
 @Repository
-@Transactional
+
 public class DispatchDaoImpl extends SuperDaoImpl<Dispatch> implements DispatchDao {
 
 	@Override
 	public Dispatch getDispatchByProductOrderIdAndProductId(long orderID,
 			long productID) throws Exception {
 		// TODO Auto-generated method stub
-		session = sessionFactory.openSession();
+		session = sessionFactory.getCurrentSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Dispatch.class);
 		criteria.add(Restrictions.eq("isactive", true));
@@ -32,7 +32,7 @@ public class DispatchDaoImpl extends SuperDaoImpl<Dispatch> implements DispatchD
 	public List<Dispatch> getDispatchByProductOrderId(long productOrderId)
 			throws Exception {
 		// TODO Auto-generated method stub
-		session = sessionFactory.openSession();
+		session = sessionFactory.getCurrentSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Dispatch.class);
 		criteria.add(Restrictions.eq("isactive", true));

@@ -17,12 +17,15 @@ import com.nextech.erp.model.Productorder;
 import com.nextech.erp.model.User;
 
 @Repository
-@Transactional
+
 public class UserDaoImpl extends SuperDaoImpl<User> implements UserDao {
 
 	@Override
 	public User getUserByUserId(String userid) throws Exception {
-		session = sessionFactory.openSession();
+		if(sessionFactory.isClosed())
+			session = sessionFactory.openSession();
+		else
+			session = sessionFactory.getCurrentSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(User.class);
 		criteria.add(Restrictions.eq("isactive", true));
@@ -34,7 +37,7 @@ public class UserDaoImpl extends SuperDaoImpl<User> implements UserDao {
 
 	@Override
 	public User getUserByEmail(String email) throws Exception {
-		session = sessionFactory.openSession();
+		session = sessionFactory.getCurrentSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(User.class);
 		criteria.add(Restrictions.eq("isactive", true));
@@ -45,7 +48,7 @@ public class UserDaoImpl extends SuperDaoImpl<User> implements UserDao {
 
 	@Override
 	public User getUserByMobile(String mobile) throws Exception {
-		session = sessionFactory.openSession();
+		session = sessionFactory.getCurrentSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(User.class);
 		criteria.add(Restrictions.eq("isactive", true));
@@ -58,7 +61,7 @@ public class UserDaoImpl extends SuperDaoImpl<User> implements UserDao {
 	@Override
 	public List<User> getUserProfileByUserId(long id) throws Exception {
 		// TODO Auto-generated method stub
-		session = sessionFactory.openSession();
+		session = sessionFactory.getCurrentSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(User.class);
 		criteria.add(Restrictions.eq("id", id));
@@ -68,7 +71,7 @@ public class UserDaoImpl extends SuperDaoImpl<User> implements UserDao {
 
 	@Override
 	public User getUserByFirstNamLastName(String firstName, String lastName)throws Exception {
-		session = sessionFactory.openSession();
+		session = sessionFactory.getCurrentSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(User.class);
 		criteria.add(Restrictions.eq("isactive", true));
@@ -82,7 +85,7 @@ public class UserDaoImpl extends SuperDaoImpl<User> implements UserDao {
 	@Override
 	public User getEmailUserById(long id) throws Exception {
 		// TODO Auto-generated method stub
-		session = sessionFactory.openSession();
+		session = sessionFactory.getCurrentSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(User.class);
 		criteria.add(Restrictions.eq("isactive", true));
@@ -98,7 +101,7 @@ public class UserDaoImpl extends SuperDaoImpl<User> implements UserDao {
 	@Override
 	public User getUserByContact(String contact) throws Exception {
 		// TODO Auto-generated method stub
-		session = sessionFactory.openSession();
+		session = sessionFactory.getCurrentSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(User.class);
 		criteria.add(Restrictions.eq("isactive", true));

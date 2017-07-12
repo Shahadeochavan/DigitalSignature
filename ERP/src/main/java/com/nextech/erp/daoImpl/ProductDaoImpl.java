@@ -11,12 +11,12 @@ import com.nextech.erp.dao.ProductDao;
 import com.nextech.erp.model.Product;
 
 @Repository
-@Transactional
+
 public class ProductDaoImpl extends SuperDaoImpl<Product> implements ProductDao {
 
 	@Override
 	public Product getProductByName(String productname) throws Exception {
-		session = sessionFactory.openSession();
+		session = sessionFactory.getCurrentSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Product.class);
 		criteria.add(Restrictions.eq("isactive", true));
@@ -27,7 +27,7 @@ public class ProductDaoImpl extends SuperDaoImpl<Product> implements ProductDao 
 
 	@Override
 	public Product getProductByPartNumber(String partNumber) throws Exception {
-		session = sessionFactory.openSession();
+		session = sessionFactory.getCurrentSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Product.class);
 		criteria.add(Restrictions.eq("isactive", true));
@@ -38,7 +38,7 @@ public class ProductDaoImpl extends SuperDaoImpl<Product> implements ProductDao 
 
 	@Override
 	public List<Product> getProductList(List<Long> productIdList) {
-		session = sessionFactory.openSession();
+		session = sessionFactory.getCurrentSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Product.class);
 		criteria.add(Restrictions.eq("isactive", true));

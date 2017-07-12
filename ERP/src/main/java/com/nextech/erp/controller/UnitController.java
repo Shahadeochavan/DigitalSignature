@@ -10,6 +10,7 @@ import javax.validation.Valid;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,31 +19,29 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.nextech.erp.dao.UnitDao;
 import com.nextech.erp.model.Unit;
-import com.nextech.erp.newDTO.UnitDTO;
 import com.nextech.erp.service.UnitService;
 import com.nextech.erp.status.UserStatus;
 
 @RestController
-@RequestMapping("/unit")
+@Transactional @RequestMapping("/unit")
 public class UnitController {
 
 	@Autowired
 	UnitService unitservice;
 
-	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus addUnit(@Valid @RequestBody UnitDTO unitDTO,HttpServletRequest request,HttpServletResponse response,
+	@Transactional @RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
+	public @ResponseBody UserStatus addUnit(@Valid @RequestBody Unit unit,HttpServletRequest request,HttpServletResponse response,
 			BindingResult bindingResult) {
 		try {
 			if (bindingResult.hasErrors()) {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
-		/*	unit.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-			 unit.setIsactive(true);
-		     unitservice.addEntity(unit);*/
-			unitservice.saveUnit(unitDTO, request);
+			unit.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+			unit.setIsactive(true);
+		long id=	unitservice.addEntity(unit);
+			System.out.println("id is"+id);
 			return new UserStatus(1, "Unit added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			cve.printStackTrace();
@@ -58,7 +57,7 @@ public class UnitController {
 		}
 	}
 
-	@RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody Unit getUnit(@PathVariable("id") long id) {
 		Unit unit = null;
 		try {
@@ -69,13 +68,12 @@ public class UnitController {
 		return unit;
 	}
 
-	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
-	public @ResponseBody UserStatus updateUnit(@RequestBody UnitDTO unitDTO,HttpServletRequest request,HttpServletResponse response) {
+	@Transactional @RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
+	public @ResponseBody UserStatus updateUnit(@RequestBody Unit unit,HttpServletRequest request,HttpServletResponse response) {
 		try {
-//			unit.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-//			unit.setIsactive(true);
-//			unitservice.updateEntity(unit);
-			unitservice.updateUnit(unitDTO, request);
+			unit.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+			unit.setIsactive(true);
+			unitservice.updateEntity(unit);
 			return new UserStatus(1, "Unit update Successfully !");
 		} catch (Exception e) {
 			 e.printStackTrace();
@@ -83,7 +81,7 @@ public class UnitController {
 		}
 	}
 
-	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody List<Unit> getUnit() {
 
 		List<Unit> unitList = null;
@@ -97,7 +95,7 @@ public class UnitController {
 		return unitList;
 	}
 
-	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus deleteUnit(@PathVariable("id") long id) {
 
 		try {

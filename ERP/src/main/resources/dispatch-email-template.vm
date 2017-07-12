@@ -9,7 +9,7 @@
 					<tr>
 						<td>
 							<p style="font-weight: bold;">Invoice Number
-								${invoiceNo},</p>
+								${invoiceNumber},</p>
 							<p style="font-weight: bold;">From :</p>
 							<div>${mailfrom},</div>
 							<div>Office:18,3rd Floor Vasantika Aparment</div>
@@ -41,7 +41,7 @@
 						<td align="left">
 
 							<p style="font-weight: bold;">Hello ${firstName},</p>
-						    <p>Greetings from E.K. ELECTRONICS PVT.LTD!</p>
+							<p>Greetings from Nextech Services!</p>
 							<p style="font-weight: bold;">Invoice Number: ${invoiceNo},</p>
 							<p style="font-weight: bold;">Description : ${discription},</p>
 						</td>

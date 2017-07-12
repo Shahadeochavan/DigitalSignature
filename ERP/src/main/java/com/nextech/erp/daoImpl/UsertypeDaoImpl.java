@@ -7,7 +7,7 @@ import com.nextech.erp.dao.UserTypeDao;
 import com.nextech.erp.model.Usertype;
 
 @Repository
-@Transactional
+
 public class UsertypeDaoImpl extends SuperDaoImpl<Usertype> implements UserTypeDao {
 	
 }

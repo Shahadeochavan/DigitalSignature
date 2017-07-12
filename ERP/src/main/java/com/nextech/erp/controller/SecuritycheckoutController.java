@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -33,7 +34,7 @@ import com.nextech.erp.status.UserStatus;
 
 
 @Controller
-@RequestMapping("/securitycheckout")
+@Transactional @RequestMapping("/securitycheckout")
 public class SecuritycheckoutController {
 
 	@Autowired
@@ -57,7 +58,7 @@ public class SecuritycheckoutController {
 
 
 
-	@RequestMapping(value = "/productOrderCheckOut", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/productOrderCheckOut", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addSecuritycheckout(@Valid @RequestBody SecurityCheckOutDTO securityCheckOutDTO,
 			BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
 		try {
@@ -120,7 +121,7 @@ public class SecuritycheckoutController {
 		}
 	}
 
-	@RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody Securitycheckout getSecuritycheckout(@PathVariable("id") long id) {
 		Securitycheckout securitycheckout = null;
 		try {
@@ -131,7 +132,7 @@ public class SecuritycheckoutController {
 		return securitycheckout;
 	}
 
-	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
 	public @ResponseBody UserStatus updateSecuritycheckout(
 			@RequestBody Securitycheckout securitycheckout,HttpServletRequest request,HttpServletResponse response) {
 		try {
@@ -145,7 +146,7 @@ public class SecuritycheckoutController {
 		}
 	}
 
-	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody List<Securitycheckout> getSecuritycheckout() {
 
 		List<Securitycheckout> securitycheckoutList = null;
@@ -159,7 +160,7 @@ public class SecuritycheckoutController {
 		return securitycheckoutList;
 	}
 
-	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus deleteSecuritycheckout(@PathVariable("id") long id) {
 
 		try {

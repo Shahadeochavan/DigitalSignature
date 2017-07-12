@@ -11,14 +11,14 @@ import com.nextech.erp.dao.ReptInpAssoDao;
 import com.nextech.erp.model.Reportinputassociation;
 
 @Repository
-@Transactional
+
 public class ReptInpAssoDaoImpl extends SuperDaoImpl<Reportinputassociation> implements ReptInpAssoDao {
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Reportinputassociation> getListByReportId(long id) {
 		try {
-			session = sessionFactory.openSession();
+			session = sessionFactory.getCurrentSession();
 			@SuppressWarnings("deprecation")
 			Criteria criteria = session.createCriteria(Reportinputassociation.class);
 			criteria.add(Restrictions.eq("report.id",id));

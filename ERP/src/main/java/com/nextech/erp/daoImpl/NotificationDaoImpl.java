@@ -9,13 +9,13 @@ import com.nextech.erp.dao.NotificationDao;
 import com.nextech.erp.model.Notification;
 
 @Repository
-@Transactional
+
 public class NotificationDaoImpl extends SuperDaoImpl<Notification> implements NotificationDao{
 
 	@Override
 	public Notification getNotifiactionByStatus(long statusId) throws Exception {
 		// TODO Auto-generated method stub
-		session = sessionFactory.openSession();
+		session = sessionFactory.getCurrentSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Notification.class);
 		criteria.add(Restrictions.eq("status1.id",statusId));

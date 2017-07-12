@@ -11,12 +11,12 @@ import com.nextech.erp.dao.ReptOptAssoDao;
 import com.nextech.erp.model.Reportoutputassociation;
 
 @Repository
-@Transactional
+
 public class ReptOptAssoDaoImpl extends SuperDaoImpl<Reportoutputassociation> implements ReptOptAssoDao {
 
 	@Override
 	public List<Reportoutputassociation> getListByReportId(long id) {
-		session = sessionFactory.openSession();
+		session = sessionFactory.getCurrentSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Reportoutputassociation.class);
 		criteria.add(Restrictions.eq("isactive", true));

@@ -13,7 +13,7 @@ import com.nextech.erp.dao.ClientDao;
 import com.nextech.erp.model.Client;
 
 @Repository
-@Transactional
+
 public class ClientDaoImpl extends SuperDaoImpl<Client> implements ClientDao {
 	@Autowired
 	SessionFactory sessionFactory;
@@ -21,7 +21,7 @@ public class ClientDaoImpl extends SuperDaoImpl<Client> implements ClientDao {
 	Transaction tx = null;
 	@Override
 	public Client getClientByCompanyName(String companyname) throws Exception {
-		session = sessionFactory.openSession();
+		session = sessionFactory.getCurrentSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Client.class);
 		criteria.add(Restrictions.eq("isactive", true));
@@ -34,7 +34,7 @@ public class ClientDaoImpl extends SuperDaoImpl<Client> implements ClientDao {
 
 	@Override
 	public Client getClientByEmail(String emailid) throws Exception {
-		session = sessionFactory.openSession();
+		session = sessionFactory.getCurrentSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Client.class);
 		criteria.add(Restrictions.eq("isactive", true));

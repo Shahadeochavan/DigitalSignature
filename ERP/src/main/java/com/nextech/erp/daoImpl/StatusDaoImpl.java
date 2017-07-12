@@ -7,7 +7,7 @@ import com.nextech.erp.dao.StatusDao;
 import com.nextech.erp.model.Status;
 
 @Repository
-@Transactional
+
 public class StatusDaoImpl extends SuperDaoImpl<Status> implements StatusDao{
 
 }

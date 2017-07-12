@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,7 +26,6 @@ import com.nextech.erp.dto.ProductNewAssoicatedList;
 import com.nextech.erp.model.Product;
 import com.nextech.erp.model.Productinventory;
 import com.nextech.erp.model.Productrawmaterialassociation;
-import com.nextech.erp.newDTO.ProductDTO;
 import com.nextech.erp.service.ProductRMAssoService;
 import com.nextech.erp.service.ProductService;
 import com.nextech.erp.service.ProductinventoryService;
@@ -33,7 +33,7 @@ import com.nextech.erp.status.Response;
 import com.nextech.erp.status.UserStatus;
 
 @Controller
-@RequestMapping("/product")
+@Transactional @RequestMapping("/product")
 public class ProductController {
 
 	@Autowired
@@ -48,28 +48,27 @@ public class ProductController {
 	@Autowired
 	ProductRMAssoService productRMAssoService;
 
-	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addProduct(
-			@Valid @RequestBody ProductDTO productDTO, BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
+			@Valid @RequestBody Product product, BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			if (bindingResult.hasErrors()) {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
-			if (productService.getProductByName(productDTO.getName()) == null) {
+			if (productService.getProductByName(product.getName()) == null) {
 
 			} else {
 				return new UserStatus(0, messageSource.getMessage(ERPConstants.PRODUCT_NAME, null, null));
 			}
-			if (productService.getProductByPartNumber(productDTO.getPartNumber()) == null) {
+			if (productService.getProductByPartNumber(product.getPartNumber()) == null) {
 			} else {
 				return new UserStatus(0, messageSource.getMessage(ERPConstants.PART_NUMBER, null, null));
 			}
-			//product.setIsactive(true);
-		//	product.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-			//productService.addEntity(product);
-		Product product =	productService.saveProduct(productDTO, request);
-		addProductInventory(product, Long.parseLong(request.getAttribute("current_user").toString()));
+			product.setIsactive(true);
+			product.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+			productService.addEntity(product);
+			addProductInventory(product, Long.parseLong(request.getAttribute("current_user").toString()));
 			return new UserStatus(1, "product added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			cve.printStackTrace();
@@ -85,7 +84,7 @@ public class ProductController {
 		}
 	}
 
-	@RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody Product getProduct(@PathVariable("id") long id) {
 		Product product = null;
 		try {
@@ -96,25 +95,27 @@ public class ProductController {
 		return product;
 	}
 
-	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
-	public @ResponseBody UserStatus updateProduct(@RequestBody ProductDTO productDTO,HttpServletRequest request,HttpServletResponse response) {
+	@Transactional @RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
+	public @ResponseBody UserStatus updateProduct(@RequestBody Product product,HttpServletRequest request,HttpServletResponse response) {
 		try {
-			Product oldProductInfo = productService.getEntityById(Product.class, productDTO.getId());
-			if(productDTO.getName().equals(oldProductInfo.getName())){ 	
+			Product oldProductInfo = productService.getEntityById(Product.class, product.getId());
+			if(product.getName().equals(oldProductInfo.getName())){ 	
 				} else { 
-					if (productService.getProductByName(productDTO.getName()) == null) {
+					if (productService.getProductByName(product.getName()) == null) {
 				    }else{  
 				    	return new UserStatus(0, messageSource.getMessage(ERPConstants.PRODUCT_NAME, null, null));
 					}
 				 }
-	            if(productDTO.getPartNumber().equals(oldProductInfo.getPartNumber())){  			
+	            if(product.getPartNumber().equals(oldProductInfo.getPartNumber())){  			
 				} else { 
-					if (productService.getProductByPartNumber(productDTO.getPartNumber()) == null) {
+					if (productService.getProductByPartNumber(product.getPartNumber()) == null) {
 				    }else{  
 				    	return new UserStatus(0, messageSource.getMessage(ERPConstants.PART_NUMBER, null, null));
 					}
 				 }
-			productService.updateProduct(productDTO, request);
+			product.setIsactive(true);
+			product.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+			productService.updateEntity(product);
 			return new UserStatus(1, "Product update Successfully !");
 		} catch (Exception e) {
 			 e.printStackTrace();
@@ -122,7 +123,7 @@ public class ProductController {
 		}
 	}
 
-	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody List<Product> getProduct() {
 
 		List<Product> ProductList = null;
@@ -135,7 +136,7 @@ public class ProductController {
 
 		return ProductList;
 	}
-	@RequestMapping(value = "/list/newProductRMAssociation", method = RequestMethod.GET, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/list/newProductRMAssociation", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody Response getNewProductRMAsso() {
 
 		List<Product> productList = null;
@@ -160,7 +161,7 @@ public class ProductController {
 		return new Response(1,"New Productrawmaterialassociation List",productNewAssoicatedLists);
 	}
 
-	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus deleteProduct(@PathVariable("id") long id) {
 
 		try {

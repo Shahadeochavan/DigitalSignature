@@ -16,6 +16,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.NoSuchMessageException;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -48,6 +49,7 @@ import com.nextech.erp.util.DateUtil;
 
 
 @Controller
+@Transactional
 @RequestMapping("/productquality")
 public class ProductqualityController {
 	@Autowired

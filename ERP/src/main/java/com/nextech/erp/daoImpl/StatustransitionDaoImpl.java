@@ -13,7 +13,7 @@ import com.nextech.erp.dao.StatustransitionDao;
 import com.nextech.erp.model.Statustransition;
 
 @Repository
-@Transactional
+
 public class StatustransitionDaoImpl extends SuperDaoImpl<Statustransition> implements StatustransitionDao {
 	@Autowired
 	SessionFactory sessionFactory;
@@ -22,7 +22,7 @@ public class StatustransitionDaoImpl extends SuperDaoImpl<Statustransition> impl
 
 	@Override
 	public Statustransition getStatustransitionByEmail(String email) throws Exception{
-		session = sessionFactory.openSession();
+		session = sessionFactory.getCurrentSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Statustransition.class);
 		criteria.add(Restrictions.eq("isactive", true));

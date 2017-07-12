@@ -16,6 +16,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -31,7 +32,6 @@ import com.nextech.erp.model.Notificationuserassociation;
 import com.nextech.erp.model.Product;
 import com.nextech.erp.model.Productinventory;
 import com.nextech.erp.model.User;
-import com.nextech.erp.model.Vendor;
 import com.nextech.erp.service.MailService;
 import com.nextech.erp.service.NotificationService;
 import com.nextech.erp.service.NotificationUserAssociationService;
@@ -41,6 +41,7 @@ import com.nextech.erp.service.UserService;
 import com.nextech.erp.status.Response;
 import com.nextech.erp.status.UserStatus;
 @Controller
+@Transactional
 @RequestMapping("/productinventory")
 public class ProductinventoryController {
 
@@ -157,8 +158,8 @@ public class ProductinventoryController {
 
 	}
 
-	@Scheduled(initialDelay=600000, fixedRate=600000)
-	private void executeSchedular() throws Exception{
+	//@Scheduled(initialDelay=600000, fixedRate=600000)
+	public void executeSchedular() throws Exception{
 		System.out.println("Product Inventory Check");
 		List<Productinventory> productinventoryList = null;
 		List<ProductInventoryDTO> productInventoryDTOs = new ArrayList<ProductInventoryDTO>();

@@ -15,7 +15,7 @@ import com.nextech.erp.dao.RmorderinvoiceintakquantityDao;
 import com.nextech.erp.model.Rmorderinvoiceintakquantity;
 
 @Repository
-@Transactional
+
 public class RmorderinvoiceintakquantityDaoImpl extends
 		SuperDaoImpl<Rmorderinvoiceintakquantity> implements
 		RmorderinvoiceintakquantityDao {
@@ -27,7 +27,7 @@ public class RmorderinvoiceintakquantityDaoImpl extends
 	@SuppressWarnings({ "deprecation", "unchecked" })
 	@Override
 	public List<Rmorderinvoiceintakquantity> getRmorderinvoiceintakquantityByRMOInvoiceId(long id) throws Exception {
-		session = sessionFactory.openSession();
+		session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(Rmorderinvoiceintakquantity.class);
 		criteria.add(Restrictions.eq("rawmaterialorderinvoice.id", id));
 		return criteria.list();

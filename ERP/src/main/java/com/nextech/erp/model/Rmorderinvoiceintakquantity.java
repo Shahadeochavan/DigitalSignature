@@ -130,8 +130,9 @@ public class Rmorderinvoiceintakquantity implements Serializable {
 	public void setRawmaterial(Rawmaterial rawmaterial) {
 		this.rawmaterial = rawmaterial;
 	}
-	   @JsonIgnore
-	    @JsonProperty(value = "rmorderinvoiceid")
+	
+	@JsonIgnore
+	@JsonProperty(value = "rmorderinvoiceid")
 	public Rawmaterialorderinvoice getRawmaterialorderinvoice() {
 		return this.rawmaterialorderinvoice;
 	}

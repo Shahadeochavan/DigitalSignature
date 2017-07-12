@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -46,7 +47,7 @@ import com.nextech.erp.status.Response;
 import com.nextech.erp.status.UserStatus;
 
 @Controller
-@RequestMapping("/productRMAsso")
+@Transactional @RequestMapping("/productRMAsso")
 public class ProductRMAssoController {
 
 	@Autowired
@@ -71,7 +72,7 @@ public class ProductRMAssoController {
 	@Autowired
 	ProductionplanningService productionplanningService;
 
-	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addProductrawmaterialassociation(
 			@Valid @RequestBody Productrawmaterialassociation productrawmaterialassociation,
 			BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
@@ -108,7 +109,7 @@ public class ProductRMAssoController {
 		}
 	}
 
-	@RequestMapping(value = "/createmultiple", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/createmultiple", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addMultipleRawmaterialorder(
 			@Valid @RequestBody ProductRMAssociationModel productRMAssociationModel, BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
 		try {
@@ -142,7 +143,7 @@ public class ProductRMAssoController {
 		}
 	}
 
-	@RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody Productrawmaterialassociation getProductrawmaterialassociation(
 			@PathVariable("id") long id) {
 		Productrawmaterialassociation productrawmaterialassociation = null;
@@ -155,7 +156,7 @@ public class ProductRMAssoController {
 		return productrawmaterialassociation;
 	}
 
-	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
 	public @ResponseBody UserStatus updateProductrawmaterialassociation(
 			@RequestBody Productrawmaterialassociation productrawmaterialassociation,HttpServletRequest request,HttpServletResponse response) {
 		try {
@@ -169,7 +170,7 @@ public class ProductRMAssoController {
 		}
 	}
 
-	@RequestMapping(value = "/update/multipleProductRMAssociation", method = RequestMethod.PUT, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/update/multipleProductRMAssociation", method = RequestMethod.PUT, headers = "Accept=application/json")
 	public @ResponseBody UserStatus updateProductRMAssociation(
 			@RequestBody ProductRMAssociationModel productRMAssociationModel,HttpServletRequest request,HttpServletResponse response) {
 		try {
@@ -189,7 +190,7 @@ public class ProductRMAssoController {
 		}
 	}
 
-	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody List<Productrawmaterialassociation> getProductrawmaterialassociation() {
 
 		List<Productrawmaterialassociation> productrawmaterialassociationList = null;
@@ -204,7 +205,7 @@ public class ProductRMAssoController {
 		return productrawmaterialassociationList;
 	}
 	
-	@RequestMapping(value = "getRMVendorData/{productId}", method = RequestMethod.GET, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "getRMVendorData/{productId}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody Response getRMVendorList(@PathVariable("productId") long productId) {
 
 		List<Productrawmaterialassociation> productrawmaterialassociations = null;
@@ -232,7 +233,7 @@ public class ProductRMAssoController {
 		return new Response(1,"RMList and VendorList",rmVendorDatas);
 	}
 
-	@RequestMapping(value = "/list/multiple", method = RequestMethod.GET, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/list/multiple", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody List<ProductRMAssociationModel> getMultipleProductrawmaterialassociation() {
 
 
@@ -275,7 +276,7 @@ public class ProductRMAssoController {
 		return productRMAssociationModels;
 	}
 
-	@RequestMapping(value = "productRMAssoList/{productId}", method = RequestMethod.GET, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "productRMAssoList/{productId}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody Response getProductRMAssoList(@PathVariable("productId") long productId) {
 
 		List<Productrawmaterialassociation> productrawmaterialassociationList = null;
@@ -289,7 +290,7 @@ public class ProductRMAssoController {
 		return new Response(1,"Productionplanning List and Productrawmaterialassociation List",productrawmaterialassociationList);
 	}
 	
-	@RequestMapping(value = "getProductList", method = RequestMethod.GET, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "getProductList", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody Response getProductList() {
 
 		List<Long> productIdList = new ArrayList<Long>();
@@ -311,7 +312,7 @@ public class ProductRMAssoController {
 	
 	
 
-	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus deleteProductrawmaterialassociation(
 			@PathVariable("id") long id) {
 
@@ -329,7 +330,7 @@ public class ProductRMAssoController {
 
 	}
 	
-	@RequestMapping(value = "delete/multiple/{productId}", method = RequestMethod.DELETE, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "delete/multiple/{productId}", method = RequestMethod.DELETE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus deleteProductrawmaterialassociationByProductId(
 			@PathVariable("productId") long productId) {
 

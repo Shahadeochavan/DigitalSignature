@@ -15,7 +15,7 @@ import com.nextech.erp.dao.UsertypepageassociationDao;
 import com.nextech.erp.model.Usertypepageassociation;
 
 @Repository
-@Transactional
+
 public class UsertypepageassociationDaoImpl extends SuperDaoImpl<Usertypepageassociation> implements UsertypepageassociationDao {
 
 	@Autowired
@@ -26,7 +26,7 @@ public class UsertypepageassociationDaoImpl extends SuperDaoImpl<Usertypepageass
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Usertypepageassociation> getPagesByUsertype(long usertypeId) {
-		session = sessionFactory.openSession();
+		session = sessionFactory.getCurrentSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Usertypepageassociation.class);
 		criteria.add(Restrictions.eq("isactive", true));
@@ -37,7 +37,7 @@ public class UsertypepageassociationDaoImpl extends SuperDaoImpl<Usertypepageass
 
 	@Override
 	public boolean checkPageAccess(long usertypeId, long pageId) {
-		session = sessionFactory.openSession();
+		session = sessionFactory.getCurrentSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Usertypepageassociation.class);
 		criteria.add(Restrictions.eq("isactive", true));

@@ -12,6 +12,7 @@ import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,7 +31,7 @@ import com.nextech.erp.status.Response;
 import com.nextech.erp.status.UserStatus;
 
 @Controller
-@RequestMapping("/productorderassociation")
+@Transactional @RequestMapping("/productorderassociation")
 public class ProductorderassociationController {
 
 	@Autowired
@@ -42,7 +43,7 @@ public class ProductorderassociationController {
 	@Autowired
 	ProductService productService;
 
-	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addProductorderassociation(
 			@Valid @RequestBody Productorderassociation productorderassociation, BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
 		try {
@@ -68,7 +69,7 @@ public class ProductorderassociationController {
 		}
 	}
 
-	@RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody Productorderassociation getProductorderassociation(@PathVariable("id") long id) {
 		Productorderassociation productorderassociation = null;
 		try {
@@ -79,7 +80,7 @@ public class ProductorderassociationController {
 		return productorderassociation;
 	}
 
-	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
 	public @ResponseBody UserStatus updateProductorderassociation(@RequestBody Productorderassociation productorderassociation,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			productorderassociation.setIsactive(true);
@@ -92,7 +93,7 @@ public class ProductorderassociationController {
 		}
 	}
 
-	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody List<Productorderassociation> getProductorderassociation() {
 
 		List<Productorderassociation> productorderassociationList = null;
@@ -105,7 +106,7 @@ public class ProductorderassociationController {
 
 		return productorderassociationList;
 	}
-	@RequestMapping(value = "getProductOrderInventoryData/{orderId}", method = RequestMethod.GET, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "getProductOrderInventoryData/{orderId}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody Response getProductorderassociationList(@PathVariable("orderId") long orderId) {
 
 		List<Productorderassociation> productorderassociationList = null;
@@ -114,8 +115,8 @@ public class ProductorderassociationController {
 			productorderassociationList = productorderassociationService.getProductorderassociationByOrderId(orderId);
 			for(Productorderassociation productorderassociation : productorderassociationList){
 				List<Productinventory> productinventories = productinventoryService.getProductinventoryListByProductId(productorderassociation.getProduct().getId());
-				if(productinventories != null && ! productinventories.isEmpty()){
 				for(Productinventory productinventory : productinventories){
+
 						ProductOrderInventoryData productOrderInventoryData = new ProductOrderInventoryData();
 						Product product = productService.getEntityById(Product.class, productorderassociation.getProduct().getId());
 						productOrderInventoryData.setPartNumber(product.getPartNumber());
@@ -124,9 +125,7 @@ public class ProductorderassociationController {
 						productOrderInventoryData.setRemainingQuantity(productorderassociation.getRemainingQuantity());
 						productOrderInventoryList.add(productOrderInventoryData);
 
-				}
-				}else{
-					return new Response(0,"Your Product Inventory is Empty ! Please make product for this order");
+
 				}
 			}
 
@@ -137,7 +136,7 @@ public class ProductorderassociationController {
 		return new Response(1,"ProductorderList and ProductInventoryList",productOrderInventoryList);
 	}
 
-	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus deleteProductorderassociation(@PathVariable("id") long id) {
 
 		try {

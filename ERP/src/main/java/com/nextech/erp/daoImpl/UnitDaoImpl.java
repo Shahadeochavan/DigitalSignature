@@ -7,6 +7,6 @@ import com.nextech.erp.dao.UnitDao;
 import com.nextech.erp.model.Unit;
 
 @Repository
-@Transactional
+
 public class UnitDaoImpl extends SuperDaoImpl<Unit> implements UnitDao {
 }

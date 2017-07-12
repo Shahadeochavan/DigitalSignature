@@ -11,6 +11,7 @@ import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,7 +26,7 @@ import com.nextech.erp.service.StatustransitionService;
 import com.nextech.erp.status.UserStatus;
 
 @RestController
-@RequestMapping("/statustransition")
+@Transactional @RequestMapping("/statustransition")
 public class StatustransitionController {
 
 	@Autowired
@@ -34,7 +35,7 @@ public class StatustransitionController {
 	@Autowired
 	private MessageSource messageSource;
 
-	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addStatustransition(
 			@Valid @RequestBody Statustransition statustransition,
 			BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
@@ -68,7 +69,7 @@ public class StatustransitionController {
 		}
 	}
 
-	@RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody Statustransition getStatustransition(
 			@PathVariable("id") long id) {
 		Statustransition statustransition = null;
@@ -81,7 +82,7 @@ public class StatustransitionController {
 		return statustransition;
 	}
 
-	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
 	public @ResponseBody UserStatus updateStatustransition(
 			@RequestBody Statustransition statustransition,HttpServletRequest request,HttpServletResponse response) {
 		try {
@@ -95,7 +96,7 @@ public class StatustransitionController {
 		}
 	}
 
-	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody List<Statustransition> getStatustransition() {
 
 		List<Statustransition> statustransitionList = null;
@@ -110,7 +111,7 @@ public class StatustransitionController {
 		return statustransitionList;
 	}
 
-	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus deleteStatustransition(
 			@PathVariable("id") long id) {
 

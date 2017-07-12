@@ -13,7 +13,7 @@ import com.nextech.erp.dao.VendorDao;
 import com.nextech.erp.model.Vendor;
 
 @Repository
-@Transactional
+
 public class VendorDaoImpl extends SuperDaoImpl<Vendor> implements VendorDao {
 	@Autowired
 	SessionFactory sessionFactory;
@@ -22,7 +22,7 @@ public class VendorDaoImpl extends SuperDaoImpl<Vendor> implements VendorDao {
 
 	@Override
 	public Vendor getVendorByCompanyName(String companyName) throws Exception {
-		session = sessionFactory.openSession();
+		session = sessionFactory.getCurrentSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Vendor.class);
 		criteria.add(Restrictions.eq("isactive", true));
@@ -34,7 +34,7 @@ public class VendorDaoImpl extends SuperDaoImpl<Vendor> implements VendorDao {
 
 	@Override
 	public Vendor getVendorByEmail(String email) throws Exception {
-		session = sessionFactory.openSession();
+		session = sessionFactory.getCurrentSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Vendor.class);
 		criteria.add(Restrictions.eq("isactive", true));
@@ -46,7 +46,7 @@ public class VendorDaoImpl extends SuperDaoImpl<Vendor> implements VendorDao {
 
 	@Override
 	public Vendor getVendorByName(String vendorName) throws Exception {
-		session = sessionFactory.openSession();
+		session = sessionFactory.getCurrentSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Vendor.class);
 		criteria.add(Restrictions.eq("isactive", true));

@@ -14,7 +14,7 @@ import com.nextech.erp.dao.DailyproductionDao;
 import com.nextech.erp.model.Dailyproduction;
 
 @Repository
-@Transactional
+
 public class DailyproductionDaoImpl extends SuperDaoImpl<Dailyproduction> implements DailyproductionDao{
 
 	@Autowired
@@ -22,7 +22,7 @@ public class DailyproductionDaoImpl extends SuperDaoImpl<Dailyproduction> implem
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Dailyproduction> getDailyProdPendingForQualityCheckByPlanningId(long planningId) {
-		session = sessionFactory.openSession();
+		session = sessionFactory.getCurrentSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Dailyproduction.class);
 		criteria.add(Restrictions.eq("isactive", true));

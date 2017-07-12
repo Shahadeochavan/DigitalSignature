@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,7 +25,7 @@ import com.nextech.erp.service.UsertypepageassociationService;
 import com.nextech.erp.status.UserStatus;
 
 @Controller
-@RequestMapping("/usertypepageassociation")
+@Transactional @RequestMapping("/usertypepageassociation")
 public class UsertypepageassociationController {
 
 	@Autowired
@@ -33,7 +34,7 @@ public class UsertypepageassociationController {
 	@Autowired
 	private MessageSource messageSource;
 
-	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addPageAss(
 			@Valid @RequestBody Usertypepageassociation usertypepageassociation,
 			BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
@@ -59,7 +60,7 @@ public class UsertypepageassociationController {
 		}
 	}
 
-	@RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody Usertypepageassociation getPageAss(
 			@PathVariable("id") long id) {
 		Usertypepageassociation usertypepageassociation = null;
@@ -72,7 +73,7 @@ public class UsertypepageassociationController {
 		return usertypepageassociation;
 	}
 
-	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
 	public @ResponseBody UserStatus updatePageAss(
 			@RequestBody Usertypepageassociation usertypepageassociation,HttpServletRequest request,HttpServletResponse response) {
 		try {
@@ -88,7 +89,7 @@ public class UsertypepageassociationController {
 		}
 	}
 
-	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody List<Usertypepageassociation> getPageAss() {
 
 		List<Usertypepageassociation> UsertypepageassociationList = null;
@@ -104,7 +105,7 @@ public class UsertypepageassociationController {
 	}
 
 	/* Delete an object from DB in Spring Restful Services */
-	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus deletePageAss(@PathVariable("id") long id) {
 
 		try {

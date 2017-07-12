@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,16 +20,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.model.Notification;
-import com.nextech.erp.model.Status;
 import com.nextech.erp.service.NotificationService;
-import com.nextech.erp.service.StatusService;
 import com.nextech.erp.status.UserStatus;
 
 
 @Controller
-@RequestMapping("/notification")
+@Transactional @RequestMapping("/notification")
 public class NotificationController {
 
 	@Autowired
@@ -36,10 +34,8 @@ public class NotificationController {
 	
 	@Autowired
 	private MessageSource messageSource;
-	@Autowired
-	StatusService statusService;
 
-	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addNotification(@Valid @RequestBody Notification notification,
 			BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
 		try {
@@ -47,8 +43,6 @@ public class NotificationController {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
-			Status status = statusService.getEntityById(Status.class, 1);
-			notification.setStatus2(status);
 			notification.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			notification.setIsactive(true);
 			notificationservice.addEntity(notification);
@@ -68,7 +62,7 @@ public class NotificationController {
 		}
 	}
 
-	@RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody Notification getNotification(@PathVariable("id") long id) {
 		Notification notification = null;
 		try {
@@ -79,7 +73,7 @@ public class NotificationController {
 		return notification;
 	}
 
-	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
 	public @ResponseBody UserStatus updateNotification(@RequestBody Notification notification,
 			HttpServletRequest request, HttpServletResponse response) {
 		try {
@@ -93,7 +87,7 @@ public class NotificationController {
 		}
 	}
 
-	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody List<Notification> getNotification() {
 
 		List<Notification> notificationList = null;
@@ -107,7 +101,7 @@ public class NotificationController {
 		return notificationList;
 	}
 
-	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus deleteNotification(@PathVariable("id") long id) {
 
 		try {

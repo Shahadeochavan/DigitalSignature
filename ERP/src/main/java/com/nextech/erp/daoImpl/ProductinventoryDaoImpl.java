@@ -11,14 +11,14 @@ import com.nextech.erp.dao.ProductinventoryDao;
 import com.nextech.erp.model.Productinventory;
 
 @Repository
-@Transactional
+
 public class ProductinventoryDaoImpl extends SuperDaoImpl<Productinventory>
 		implements ProductinventoryDao {
 
 	@Override
 	public Productinventory getProductinventoryByProductId(long productId)
 			throws Exception {
-		session = sessionFactory.openSession();
+		session = sessionFactory.getCurrentSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Productinventory.class);
 		criteria.add(Restrictions.eq("product.id", productId));
@@ -32,7 +32,7 @@ public class ProductinventoryDaoImpl extends SuperDaoImpl<Productinventory>
 	public List<Productinventory> getProductinventoryListByProductId(
 			long productId) throws Exception {
 		// TODO Auto-generated method stub
-		session = sessionFactory.openSession();
+		session = sessionFactory.getCurrentSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Productinventory.class);
 		criteria.add(Restrictions.eq("product.id", productId));

@@ -15,7 +15,7 @@ import com.nextech.erp.dao.RMVAssoDao;
 import com.nextech.erp.model.Rawmaterialvendorassociation;
 
 @Repository
-@Transactional
+
 public class RMVAssoDaoImpl extends SuperDaoImpl<Rawmaterialvendorassociation>
 		implements RMVAssoDao {
 
@@ -27,7 +27,7 @@ public class RMVAssoDaoImpl extends SuperDaoImpl<Rawmaterialvendorassociation>
 	@Override
 	public Rawmaterialvendorassociation getRMVAssoByVendorIdRMId(long vendorId,
 			long rmId) throws Exception {
-		session = sessionFactory.openSession();
+		session = sessionFactory.getCurrentSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Rawmaterialvendorassociation.class);
 		criteria.add(Restrictions.eq("rawmaterial.id", rmId));
@@ -39,7 +39,7 @@ public class RMVAssoDaoImpl extends SuperDaoImpl<Rawmaterialvendorassociation>
 	@Override
 	public List<Rawmaterialvendorassociation> getRawmaterialvendorassociationListByRMId(long id) {
 		// TODO Auto-generated method stub
-		session = sessionFactory.openSession();
+		session = sessionFactory.getCurrentSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Rawmaterialvendorassociation.class);
 		criteria.add(Restrictions.eq("isactive", true));
@@ -51,7 +51,7 @@ public class RMVAssoDaoImpl extends SuperDaoImpl<Rawmaterialvendorassociation>
 	public Rawmaterialvendorassociation getRMVAssoByRMId(long rmId)
 			throws Exception {
 		// TODO Auto-generated method stub
-		session = sessionFactory.openSession();
+		session = sessionFactory.getCurrentSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Rawmaterialvendorassociation.class);
 		criteria.add(Restrictions.eq("rawmaterial.id", rmId));

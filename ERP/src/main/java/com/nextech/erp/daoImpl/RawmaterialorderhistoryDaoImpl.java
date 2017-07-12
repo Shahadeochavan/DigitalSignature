@@ -7,7 +7,7 @@ import com.nextech.erp.dao.RawmaterialorderhistoryDao;
 import com.nextech.erp.model.Rawmaterialorderhistory;
 
 @Repository
-@Transactional
+
 public class RawmaterialorderhistoryDaoImpl extends SuperDaoImpl<Rawmaterialorderhistory> implements RawmaterialorderhistoryDao{
 	
 }

@@ -13,6 +13,7 @@ import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -34,7 +35,7 @@ import com.nextech.erp.service.StatusService;
 import com.nextech.erp.status.UserStatus;
 
 @RestController
-@RequestMapping("/dailyproduction")
+@Transactional @RequestMapping("/dailyproduction")
 public class DailyproductionController {
 	
 	@Autowired

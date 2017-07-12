@@ -16,7 +16,7 @@ import com.nextech.erp.dao.ProductionplanningDao;
 import com.nextech.erp.model.Productionplanning;
 
 @Repository
-@Transactional
+
 public class ProductionplanningDaoImpl extends SuperDaoImpl<Productionplanning>
 		implements ProductionplanningDao {
 
@@ -27,7 +27,7 @@ public class ProductionplanningDaoImpl extends SuperDaoImpl<Productionplanning>
 
 	@Override
 	public Productionplanning getProductionPlanningforCurrentMonthByProductIdAndDate(long pId, Date date) throws Exception {
-		session = sessionFactory.openSession();
+		session = sessionFactory.getCurrentSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Productionplanning.class);
 		criteria.add(Restrictions.eq("isactive", true));
@@ -42,7 +42,7 @@ public class ProductionplanningDaoImpl extends SuperDaoImpl<Productionplanning>
 	public List<Productionplanning> getProductionplanningByCurrentMonth(
 			Date month) throws Exception {
 		// TODO Auto-generated method stub
-		session = sessionFactory.openSession();
+		session = sessionFactory.getCurrentSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Productionplanning.class);
 		criteria.add(Restrictions.eq("date", month));
@@ -53,7 +53,7 @@ public class ProductionplanningDaoImpl extends SuperDaoImpl<Productionplanning>
 	@Override
 	public List<Productionplanning> getProductionPlanByMonthYear(
 			Date startDate, Date endDate) throws Exception {
-		session = sessionFactory.openSession();
+		session = sessionFactory.getCurrentSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Productionplanning.class);
 		criteria.add(Restrictions.between("date", startDate, endDate));
@@ -65,7 +65,7 @@ public class ProductionplanningDaoImpl extends SuperDaoImpl<Productionplanning>
 	public List<Productionplanning> updateProductionPlanByMonthYear(
 			String month_year) throws Exception {
 		// TODO Auto-generated method stub
-		session = sessionFactory.openSession();
+		session = sessionFactory.getCurrentSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Productionplanning.class);
 		criteria.add(Restrictions.eq("date", month_year));
@@ -75,7 +75,7 @@ public class ProductionplanningDaoImpl extends SuperDaoImpl<Productionplanning>
 	@Override
 	public Productionplanning getProductionPlanningByDateAndProductId(
 			Date productionDateStart, Date productionDateEnd, long product_id) {
-		session = sessionFactory.openSession();
+		session = sessionFactory.getCurrentSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Productionplanning.class);
 		// criteria.add(Restrictions.eq("isactive", true));
@@ -91,7 +91,7 @@ public class ProductionplanningDaoImpl extends SuperDaoImpl<Productionplanning>
 	@Override
 	public Productionplanning getProductionplanByDateAndProductId(Date date,
 			long pId) throws Exception {
-		session = sessionFactory.openSession();
+		session = sessionFactory.getCurrentSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Productionplanning.class);
 		criteria.add(Restrictions.eq("isactive", true));
@@ -106,7 +106,7 @@ public class ProductionplanningDaoImpl extends SuperDaoImpl<Productionplanning>
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Productionplanning> getProductionplanByDate(Date date)throws Exception {
-		session = sessionFactory.openSession();
+		session = sessionFactory.getCurrentSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Productionplanning.class);
 		criteria.add(Restrictions.eq("date", date));
@@ -118,7 +118,7 @@ public class ProductionplanningDaoImpl extends SuperDaoImpl<Productionplanning>
 	public List<Productionplanning> getProductionplanByProdutId(Date date,long productID)
 			throws Exception {
 		// TODO Auto-generated method stub
-		session = sessionFactory.openSession();
+		session = sessionFactory.getCurrentSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Productionplanning.class);
 		criteria.add(Restrictions.eq("product.id", productID));

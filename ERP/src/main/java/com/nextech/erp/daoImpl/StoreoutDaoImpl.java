@@ -7,7 +7,7 @@ import com.nextech.erp.dao.StoreoutDao;
 import com.nextech.erp.model.Storeout;
 
 @Repository
-@Transactional
+
 public class StoreoutDaoImpl extends SuperDaoImpl<Storeout> implements StoreoutDao {
 
 }

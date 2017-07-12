@@ -14,14 +14,14 @@ import com.nextech.erp.model.Product;
 import com.nextech.erp.model.Productrawmaterialassociation;
 
 @Repository
-@Transactional
+
 public class BomDaoImpl extends SuperDaoImpl<Bom> implements BomDao{
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Bom> getBomListByProductId(long productID) throws Exception {
 		// TODO Auto-generated method stub
-		session = sessionFactory.openSession();
+		session = sessionFactory.getCurrentSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Bom.class);
 		criteria.add(Restrictions.eq("product.id", productID));
@@ -34,7 +34,7 @@ public class BomDaoImpl extends SuperDaoImpl<Bom> implements BomDao{
 	public List<Bom> getBomListByProductIdAndBomId(long productId, long bomId)
 			throws Exception {
 		// TODO Auto-generated method stub
-		session = sessionFactory.openSession();
+		session = sessionFactory.getCurrentSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Bom.class);
 		criteria.add(Restrictions.eq("product.id", productId));
@@ -47,7 +47,7 @@ public class BomDaoImpl extends SuperDaoImpl<Bom> implements BomDao{
 	@Override
 	public List<Long> getProductList() {
 		// TODO Auto-generated method stub
-		session = sessionFactory.openSession();
+		session = sessionFactory.getCurrentSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Productrawmaterialassociation.class);
 		
@@ -59,7 +59,7 @@ public class BomDaoImpl extends SuperDaoImpl<Bom> implements BomDao{
 	@Override
 	public Bom getBomByProductId(long productID) throws Exception {
 		// TODO Auto-generated method stub
-		session = sessionFactory.openSession();
+		session = sessionFactory.getCurrentSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Bom.class);
 		criteria.add(Restrictions.eq("isactive", true));

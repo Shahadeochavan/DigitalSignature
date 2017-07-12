@@ -11,6 +11,7 @@ import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,14 +24,14 @@ import com.nextech.erp.service.ProductinventoryhistoryService;
 import com.nextech.erp.status.UserStatus;
 
 @Controller
-@RequestMapping("/productinventoryhistory")
+@Transactional @RequestMapping("/productinventoryhistory")
 public class ProductinventoryhistoryController {
 
 
 	@Autowired
 	ProductinventoryhistoryService productinventoryhistoryService;
 
-	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addProductinventoryhistory(
 			@Valid @RequestBody Productinventoryhistory productinventoryhistory, BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
 		try {
@@ -58,7 +59,7 @@ public class ProductinventoryhistoryController {
 		}
 	}
 
-	@RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody Productinventoryhistory getProductinventoryhistory(@PathVariable("id") long id) {
 		Productinventoryhistory productinventoryhistory = null;
 		try {
@@ -69,7 +70,7 @@ public class ProductinventoryhistoryController {
 		return productinventoryhistory;
 	}
 
-	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
 	public @ResponseBody UserStatus updateProductinventoryhistory(@RequestBody Productinventoryhistory productinventoryhistory,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			productinventoryhistory.setIsactive(true);
@@ -82,7 +83,7 @@ public class ProductinventoryhistoryController {
 		}
 	}
 
-	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody List<Productinventoryhistory> getProductinventoryhistory() {
 
 		List<Productinventoryhistory> productinventoryhistoryList = null;
@@ -96,7 +97,7 @@ public class ProductinventoryhistoryController {
 		return productinventoryhistoryList;
 	}
 
-	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus deleteProductinventoryhistory(@PathVariable("id") long id) {
 
 		try {

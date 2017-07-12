@@ -15,7 +15,7 @@ import com.nextech.erp.dao.RawmaterialorderinvoiceDao;
 import com.nextech.erp.model.Rawmaterialorderinvoice;
 
 @Repository
-@Transactional
+
 public class RawmaterialorderinvoiceDaoImpl extends
 		SuperDaoImpl<Rawmaterialorderinvoice> implements
 		RawmaterialorderinvoiceDao {
@@ -28,7 +28,7 @@ public class RawmaterialorderinvoiceDaoImpl extends
 	@Override
 	public List<Rawmaterialorderinvoice> getRawmaterialorderinvoiceByStatusId(
 			long id) throws Exception {
-		session = sessionFactory.openSession();
+		session = sessionFactory.getCurrentSession();
 		Criteria criteria = session
 				.createCriteria(Rawmaterialorderinvoice.class);
 		criteria.add(Restrictions.eq("status.id", id));
@@ -36,7 +36,7 @@ public class RawmaterialorderinvoiceDaoImpl extends
 	}
 	@Override
 	public Rawmaterialorderinvoice getRMOrderInvoiceByInVoiceNoVendorNameAndPoNo(String invoiceNo,String vendorName,int poNO) throws Exception {
-		session = sessionFactory.openSession();
+		session = sessionFactory.getCurrentSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Rawmaterialorderinvoice.class);
 		criteria.add(Restrictions.eq("isactive", true));

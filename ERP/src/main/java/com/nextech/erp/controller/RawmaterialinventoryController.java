@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -40,6 +41,7 @@ import com.nextech.erp.service.UserService;
 import com.nextech.erp.status.UserStatus;
 
 @RestController
+@Transactional
 @RequestMapping("/rawmaterialinventory")
 public class RawmaterialinventoryController {
 
@@ -144,8 +146,8 @@ public class RawmaterialinventoryController {
 		}
 
 	}
-	@Scheduled(initialDelay=600000, fixedRate=600000)
-	private void executeSchedular() throws Exception{
+	//@Scheduled(initialDelay=60000, fixedRate=60000)
+	public void executeSchedular() throws Exception{
 		List<Rawmaterialinventory> rawmaterialinventoryList = null;
 		System.out.println("RM Inventory Check");
 		List<RMInventoryDTO> rmInventoryDTOs = new ArrayList<RMInventoryDTO>();

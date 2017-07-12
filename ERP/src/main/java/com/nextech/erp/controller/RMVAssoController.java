@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,14 +24,14 @@ import com.nextech.erp.service.RMVAssoService;
 import com.nextech.erp.status.UserStatus;
 
 @Controller
-@RequestMapping("/rmvendorasso")
+@Transactional @RequestMapping("/rmvendorasso")
 public class RMVAssoController {
 	@Autowired
 	RMVAssoService rmvAssoService;
 	@Autowired
 	private MessageSource messageSource;
 
-	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addRawmaterialvendorassociation(
 			@Valid @RequestBody Rawmaterialvendorassociation rawmaterialvendorassociation,
 			BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
@@ -66,7 +67,7 @@ public class RMVAssoController {
 		}
 	}
 
-	@RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody Rawmaterialvendorassociation getRawmaterialvendorassociation(
 			@PathVariable("id") long id) {
 		Rawmaterialvendorassociation rawmaterialvendorassociation = null;
@@ -79,7 +80,7 @@ public class RMVAssoController {
 		return rawmaterialvendorassociation;
 	}
 
-	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
 	public @ResponseBody UserStatus updateRawmaterialvendorassociation(
 			@RequestBody Rawmaterialvendorassociation rawmaterialvendorassociation,HttpServletRequest request,HttpServletResponse response) {
 		try {
@@ -94,7 +95,7 @@ public class RMVAssoController {
 		}
 	}
 
-	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody List<Rawmaterialvendorassociation> getRawmaterialvendorassociation() {
 
 		List<Rawmaterialvendorassociation> rawmaterialvendorassociationList = null;
@@ -108,7 +109,8 @@ public class RMVAssoController {
 
 		return rawmaterialvendorassociationList;
 	}
-	@RequestMapping(value = "rmVendorList/{rmId}", method = RequestMethod.GET, headers = "Accept=application/json")
+	
+	@Transactional @RequestMapping(value = "rmVendorList/{rmId}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody List<Rawmaterialvendorassociation> getRMVendorList(@PathVariable("rmId") long rmId) {
 		List<Rawmaterialvendorassociation> rmRawmaterialvendorassociations = null;
 		try {
@@ -116,9 +118,10 @@ public class RMVAssoController {
 		} catch (Exception e) {
 			
 		}
-    return rmRawmaterialvendorassociations;
+		return rmRawmaterialvendorassociations;
 	}
-	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
+	
+	@Transactional @RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus deleteRawmaterialvendorassociation(
 			@PathVariable("id") long id) {
 
@@ -132,6 +135,5 @@ public class RMVAssoController {
 		} catch (Exception e) {
 			return new UserStatus(0, e.toString());
 		}
-
 	}
 }

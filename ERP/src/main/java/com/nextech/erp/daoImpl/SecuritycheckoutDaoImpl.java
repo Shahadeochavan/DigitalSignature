@@ -7,7 +7,7 @@ import com.nextech.erp.dao.SecuritycheckoutDao;
 import com.nextech.erp.model.Securitycheckout;
 
 @Repository
-@Transactional
+
 public class SecuritycheckoutDaoImpl extends SuperDaoImpl<Securitycheckout> implements SecuritycheckoutDao{
 
 }

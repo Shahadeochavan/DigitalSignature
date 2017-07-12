@@ -18,7 +18,7 @@ import com.nextech.erp.dao.ProductRMAssoDao;
 import com.nextech.erp.model.Productrawmaterialassociation;
 
 @Repository
-@Transactional
+
 public class ProductRMAssoDaoImpl extends SuperDaoImpl<Productrawmaterialassociation> implements ProductRMAssoDao {
 
 	@Autowired
@@ -28,7 +28,7 @@ public class ProductRMAssoDaoImpl extends SuperDaoImpl<Productrawmaterialassocia
 
 	@Override
 	public Productrawmaterialassociation getPRMAssociationByPidRmid(long pid, long rmid) throws Exception{
- 		session = sessionFactory.openSession();
+ 		session = sessionFactory.getCurrentSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Productrawmaterialassociation.class);
 		criteria.add(Restrictions.eq("isactive", true));
@@ -42,7 +42,7 @@ public class ProductRMAssoDaoImpl extends SuperDaoImpl<Productrawmaterialassocia
 	@Override
 	public List<Productrawmaterialassociation> getProductRMAssoListByProductId(
 			long productID) throws Exception {
-		session = sessionFactory.openSession();
+		session = sessionFactory.getCurrentSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Productrawmaterialassociation.class);
 		criteria.add(Restrictions.eq("product.id", productID));
@@ -54,7 +54,7 @@ public class ProductRMAssoDaoImpl extends SuperDaoImpl<Productrawmaterialassocia
 	@Override
 	public List<Long> getProductList()
 			throws Exception {
-		session = sessionFactory.openSession();
+		session = sessionFactory.getCurrentSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Productrawmaterialassociation.class);
 		
