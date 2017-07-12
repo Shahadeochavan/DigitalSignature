@@ -5,16 +5,15 @@ import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.nextech.erp.dao.ReportusertypeassociationDao;
 import com.nextech.erp.model.Reportusertypeassociation;
-import com.nextech.erp.model.Usertypepageassociation;
 
 @Repository
 
 public class ReportusertypeassociationDaoImpl extends SuperDaoImpl<Reportusertypeassociation> implements ReportusertypeassociationDao {
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Reportusertypeassociation> getReportByUsertype(long usertypeId) {
 		// TODO Auto-generated method stub

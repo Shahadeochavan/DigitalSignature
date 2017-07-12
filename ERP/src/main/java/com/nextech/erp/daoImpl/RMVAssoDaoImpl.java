@@ -9,7 +9,6 @@ import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.nextech.erp.dao.RMVAssoDao;
 import com.nextech.erp.model.Rawmaterialvendorassociation;
@@ -36,9 +35,9 @@ public class RMVAssoDaoImpl extends SuperDaoImpl<Rawmaterialvendorassociation>
 		return rawmaterialorderassociation;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Rawmaterialvendorassociation> getRawmaterialvendorassociationListByRMId(long id) {
-		// TODO Auto-generated method stub
 		session = sessionFactory.getCurrentSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Rawmaterialvendorassociation.class);
@@ -50,7 +49,6 @@ public class RMVAssoDaoImpl extends SuperDaoImpl<Rawmaterialvendorassociation>
 	@Override
 	public Rawmaterialvendorassociation getRMVAssoByRMId(long rmId)
 			throws Exception {
-		// TODO Auto-generated method stub
 		session = sessionFactory.getCurrentSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Rawmaterialvendorassociation.class);

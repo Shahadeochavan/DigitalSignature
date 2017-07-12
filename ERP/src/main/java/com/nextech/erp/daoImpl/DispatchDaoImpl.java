@@ -5,7 +5,6 @@ import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.nextech.erp.dao.DispatchDao;
 import com.nextech.erp.model.Dispatch;
@@ -28,6 +27,7 @@ public class DispatchDaoImpl extends SuperDaoImpl<Dispatch> implements DispatchD
 		return dispatch;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Dispatch> getDispatchByProductOrderId(long productOrderId)
 			throws Exception {

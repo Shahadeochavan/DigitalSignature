@@ -1,19 +1,14 @@
 package com.nextech.erp.daoImpl;
 
-import java.util.Arrays;
 import java.util.List;
 
 import org.hibernate.Criteria;
-import org.hibernate.criterion.Criterion;
-import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.transform.Transformers;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.nextech.erp.dao.UserDao;
-import com.nextech.erp.model.Productorder;
 import com.nextech.erp.model.User;
 
 @Repository

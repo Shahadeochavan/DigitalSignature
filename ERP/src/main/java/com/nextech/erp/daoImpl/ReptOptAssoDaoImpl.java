@@ -5,7 +5,6 @@ import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.nextech.erp.dao.ReptOptAssoDao;
 import com.nextech.erp.model.Reportoutputassociation;
@@ -14,6 +13,7 @@ import com.nextech.erp.model.Reportoutputassociation;
 
 public class ReptOptAssoDaoImpl extends SuperDaoImpl<Reportoutputassociation> implements ReptOptAssoDao {
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Reportoutputassociation> getListByReportId(long id) {
 		session = sessionFactory.getCurrentSession();

@@ -6,10 +6,8 @@ import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.nextech.erp.dao.QualitycheckrawmaterialDao;
-import com.nextech.erp.model.Productrawmaterialassociation;
 import com.nextech.erp.model.Qualitycheckrawmaterial;
 
 @Repository
@@ -30,6 +28,7 @@ public class QualitycheckrawmaterialDaoImpl extends
 		return qualitycheckrawmaterial;
 }
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Qualitycheckrawmaterial> getQualitycheckrawmaterialByInvoiceId(
 			long invoiceId) throws Exception {
