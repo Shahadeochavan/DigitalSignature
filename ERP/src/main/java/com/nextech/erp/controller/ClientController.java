@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,11 +23,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.dto.Mail;
+import com.nextech.erp.factory.ClientFactory;
 import com.nextech.erp.model.Client;
 import com.nextech.erp.model.Notification;
 import com.nextech.erp.model.Notificationuserassociation;
 import com.nextech.erp.model.User;
-import com.nextech.erp.model.Vendor;
+import com.nextech.erp.newDTO.ClientDTO;
 import com.nextech.erp.service.ClientService;
 import com.nextech.erp.service.MailService;
 import com.nextech.erp.service.NotificationService;
@@ -37,7 +37,7 @@ import com.nextech.erp.service.UserService;
 import com.nextech.erp.status.UserStatus;
 
 @Controller
-@Transactional @RequestMapping("/client")
+@RequestMapping("/client")
 public class ClientController {
 
 	@Autowired
@@ -59,34 +59,31 @@ public class ClientController {
 	@Autowired
 	MailService mailService;
 
-	@Transactional @RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
+	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addClient(
-			@Valid @RequestBody Client client, BindingResult bindingResult,
+			@Valid @RequestBody ClientDTO clientDTO, BindingResult bindingResult,
 			HttpServletRequest request, HttpServletResponse response) {
 		try {
 			if (bindingResult.hasErrors()) {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
-			if (clientService.getClientByCompanyName(client.getCompanyname()) == null) {
+			if (clientService.getClientByCompanyName(clientDTO.getCompanyName()) == null) {
 
 			} else {
 				return new UserStatus(2, messageSource.getMessage(
 						ERPConstants.COMPANY_NAME_EXIT, null, null));
 
 			}
-			if (clientService.getClientByEmail(client.getEmailid()) == null) {
+			if (clientService.getClientByEmail(clientDTO.getEmailId()) == null) {
 			} else {
 				return new UserStatus(2, messageSource.getMessage(
 						ERPConstants.EMAIL_ALREADY_EXIT, null, null));
 			}
-			client.setCreatedBy(Long.parseLong(request.getAttribute(
-					"current_user").toString()));
-			client.setIsactive(true);
-
-			//TODO sending the email to the client
-			mailSending(client, request, response);
-			clientService.addEntity(client);
+           Client client = ClientFactory.setClient(clientDTO, request);
+           client.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+		    	clientService.addEntity(client);
+		        mailSending(client, request, response);
 			return new UserStatus(1, messageSource.getMessage(
 					ERPConstants.CLIENT_ADDED, null, null));
 		} catch (ConstraintViolationException cve) {
@@ -103,7 +100,7 @@ public class ClientController {
 		}
 	}
 
-	@Transactional @RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
+	@RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody Client getClient(@PathVariable("id") long id) {
 		Client client = null;
 		try {
@@ -114,33 +111,31 @@ public class ClientController {
 		return client;
 	}
 
-	@Transactional @RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
-	public @ResponseBody UserStatus updateClient(@RequestBody Client client,
+	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
+	public @ResponseBody UserStatus updateClient(@RequestBody ClientDTO clientDTO,
 			HttpServletRequest request, HttpServletResponse response) {
 		try {
 			
-			Client oldClientInfo = clientService.getEntityById(Client.class, client.getId());
+			Client oldClientInfo = clientService.getEntityById(Client.class, clientDTO.getId());
 			System.out.println(oldClientInfo);
-			if(client.getCompanyname().equals(oldClientInfo.getCompanyname())){  	
+			if(clientDTO.getCompanyName().equals(oldClientInfo.getCompanyname())){  	
 			} else { 
-				if (clientService.getClientByCompanyName(client.getCompanyname()) == null) {
+				if (clientService.getClientByCompanyName(clientDTO.getCompanyName()) == null) {
 			    }else{  
 				return new UserStatus(2, messageSource.getMessage(ERPConstants.COMPANY_NAME_EXIT, null, null));
 				}
 			 }
-            if(client.getEmailid().equals(oldClientInfo.getEmailid())){  			
+            if(clientDTO.getEmailId().equals(oldClientInfo.getEmailid())){  			
 			} else { 
-				if (clientService.getClientByEmail(client.getEmailid()) == null) {
+				if (clientService.getClientByEmail(clientDTO.getEmailId()) == null) {
 			    }else{  
 				return new UserStatus(2, messageSource.getMessage(ERPConstants.EMAIL_ALREADY_EXIT, null, null));
 				}
 			 }
-			client.setUpdatedBy(Long.parseLong(request.getAttribute(
-					"current_user").toString()));
-			client.setIsactive(true);
-			
-			clientService.updateEntity(client);
-			mailSendingUpdate(client, request, response);
+            Client client = ClientFactory.setClient(clientDTO, request);
+        	client.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+	    	clientService.updateEntity(client);
+	        mailSendingUpdate(client, request, response);
 			return new UserStatus(1, messageSource.getMessage(
 					ERPConstants.CLIENT_UPDATE, null, null));
 		} catch (Exception e) {
@@ -149,7 +144,7 @@ public class ClientController {
 		}
 	}
 
-	@Transactional @RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
+	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody List<Client> getClient() {
 
 		List<Client> clientList = null;
@@ -163,7 +158,7 @@ public class ClientController {
 		return clientList;
 	}
 
-	@Transactional @RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
+	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus deleteClient(@PathVariable("id") long id) {
 
 		try {

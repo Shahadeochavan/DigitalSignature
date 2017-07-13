@@ -116,7 +116,7 @@ public class RawmaterialorderinvoiceController {
 		try {
 			if (bindingResult.hasErrors()) {
 				return new UserStatus(0, bindingResult.getFieldError().getDefaultMessage());
-			}
+			} 
 			
 			Long userID = Long.parseLong(request.getAttribute("current_user").toString());
 			rawMaterialInvoiceDTO.setCreatedBy(userID);

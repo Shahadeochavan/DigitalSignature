@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.persistence.PersistenceException;
@@ -20,7 +19,6 @@ import javax.validation.Valid;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,25 +27,18 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.dto.BOMModelData;
 import com.nextech.erp.dto.BomDTO;
 import com.nextech.erp.dto.BomModelPart;
 import com.nextech.erp.dto.BomRMVendorModel;
-import com.nextech.erp.dto.CreatePDFProductOrder;
 import com.nextech.erp.dto.CreatePdfForBomProduct;
 import com.nextech.erp.dto.ProductBomDTO;
-import com.nextech.erp.dto.ProductOrderAssociationModel;
+import com.nextech.erp.factory.BOMFactory;
 import com.nextech.erp.model.Bomrmvendorassociation;
 import com.nextech.erp.model.Bom;
-import com.nextech.erp.model.Client;
-import com.nextech.erp.model.Notification;
 import com.nextech.erp.model.Product;
-import com.nextech.erp.model.Productorder;
-import com.nextech.erp.model.Productorderassociation;
 import com.nextech.erp.model.Rawmaterial;
 import com.nextech.erp.model.Rawmaterialvendorassociation;
-import com.nextech.erp.model.Status;
 import com.nextech.erp.model.Vendor;
 import com.nextech.erp.service.BOMRMVendorAssociationService;
 import com.nextech.erp.service.BomService;
@@ -59,7 +50,7 @@ import com.nextech.erp.status.Response;
 import com.nextech.erp.status.UserStatus;
 
 @RestController
-@Transactional @RequestMapping("/bom")
+@RequestMapping("/bom")
 public class BomController {
 
 	@Autowired
@@ -80,7 +71,10 @@ public class BomController {
 	@Autowired
 	RMVAssoService rMVAssoService;
 	
-	@Transactional @RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
+	
+	
+
+	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addUnit(@Valid @RequestBody Bom bom,HttpServletRequest request,HttpServletResponse response,
 			BindingResult bindingResult) {
 		try {
@@ -107,7 +101,7 @@ public class BomController {
 		}
 	}
 	
-	@Transactional @RequestMapping(value = "/createmultiple", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
+	@RequestMapping(value = "/createmultiple", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addMultipleBom(
 			@Valid @RequestBody BomDTO bomDTO, BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
 		try {
@@ -115,12 +109,12 @@ public class BomController {
 				return new UserStatus(0, bindingResult.getFieldError().getDefaultMessage());
 			}
 			
-			// TODO save call bom
-						Bom bom = saveBom(bomDTO, request, response);
-						
+			           // TODO save call bom
+			  Bom bom = BOMFactory.setBom(bomDTO);
+			    bom	 = saveBom(bomDTO, request, response);
 						String bomId = generateBomId()+bom.getId();
 						bom.setBomId(bomId);
-						bomService.updateEntity(bom);
+						bomService.updateEntity(BOMFactory.setBom(bomDTO));
 
 						// TODO add product order association
 						addBomRMVendorAsso(bomDTO, bom, request, response);
@@ -142,7 +136,7 @@ public class BomController {
 		}
 	}
 
-	@Transactional @RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
+	@RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody Bom getUnit(@PathVariable("id") long id) {
 		Bom bom = null;
 		try {
@@ -153,12 +147,11 @@ public class BomController {
 		return bom;
 	}
 
-	@Transactional @RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
-	public @ResponseBody UserStatus updateUnit(@RequestBody Bom bom,HttpServletRequest request,HttpServletResponse response) {
+	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
+	public @ResponseBody UserStatus updateUnit(@RequestBody BomDTO bomDTO,HttpServletRequest request,HttpServletResponse response) {
 		try {
-			bom.setUpdatedBy(request.getAttribute("current_user").toString());
-			bom.setIsactive(true);
-			bomService.updateEntity(bom);
+			bomDTO.setUpdatedBy((long) request.getAttribute("current_user"));
+			bomService.updateEntity(BOMFactory.setBom(bomDTO));
 			return new UserStatus(1, "Bom update Successfully !");
 		} catch (Exception e) {
 			 e.printStackTrace();
@@ -166,7 +159,7 @@ public class BomController {
 		}
 	}
 
-	@Transactional @RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
+	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody List<Bom> getBom(HttpServletRequest request,HttpServletResponse response) throws IOException {
 
 		List<Bom> bomList = null;
@@ -180,7 +173,7 @@ public class BomController {
 		return bomList;
 	}
 	
-	@Transactional @RequestMapping(value = "/BomCompletedList", method = RequestMethod.GET, headers = "Accept=application/json")
+	@RequestMapping(value = "/BomCompletedList", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody Response getBomCompleted(HttpServletRequest request,HttpServletResponse response) throws IOException {
 
 		List<Bom> bomList = null;
@@ -202,7 +195,7 @@ public class BomController {
 		return new Response(1, bomModelDatas);
 	}
 	
-	@Transactional @RequestMapping(value = "/getProductList", method = RequestMethod.GET, headers = "Accept=application/json")
+	@RequestMapping(value = "/getProductList", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody Response getProductList() throws IOException {
 
 		List<Product> products = null;
@@ -223,7 +216,7 @@ public class BomController {
 		return response;
 	}
 
-	@Transactional @RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
+	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus deleteClient(@PathVariable("id") long id) {
 
 		try {
@@ -237,7 +230,7 @@ public class BomController {
 
 	}
 	
-	@Transactional @RequestMapping(value = "bomList/{PRODUCT-ID}", method = RequestMethod.GET, headers = "Accept=application/json")
+	@RequestMapping(value = "bomList/{PRODUCT-ID}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody List<Bom> getBomByProductId(@PathVariable("PRODUCT-ID") long productId) {
 
 		List<Bom> boList = null;
@@ -251,7 +244,7 @@ public class BomController {
 
 		return boList;
 	}
-	@Transactional @RequestMapping(value = "downloadBomPdf/{PRODUCT-ID}/{BOM-ID}", method = RequestMethod.GET, headers = "Accept=application/json")
+	@RequestMapping(value = "downloadBomPdf/{PRODUCT-ID}/{BOM-ID}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody void getBomPdfByProductIdAndBomId(@PathVariable("PRODUCT-ID") long productId,@PathVariable("BOM-ID") long bomId,HttpServletRequest request, HttpServletResponse response) throws IOException {
 
 		List<Bom> boList = null;
@@ -295,7 +288,7 @@ public class BomController {
 			throws Exception {
 		Bom bom = new Bom();
 		bom.setBomId(bomDTO.getBomId());
-		bom.setProduct(productService.getEntityById(Product.class,bomDTO.getProduct()));
+		bom.setProduct(productService.getEntityById(Product.class,bomDTO.getProduct().getId()));
 		bom.setIsactive(true);
 		bom.setCreatedBy(request.getAttribute("current_user").toString());
 		bomService.addEntity(bom);

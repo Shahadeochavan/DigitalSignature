@@ -40,7 +40,7 @@ public class CreatePDFProductOrder {
 	@Autowired
 	ProductorderService productorderService;
 
-	public Document createPDF(String file,Rawmaterialorder rawmaterialorder,List<RMOrderModelData> rmOrderModelDatas,Vendor vendor)
+	public Document createPDF(String file,RawmaterialOrderDTO rawmaterialOrderDTO,List<RMOrderModelData> rmOrderModelDatas,Vendor vendor)
 			throws Exception {
 
 		Document document = null;
@@ -52,9 +52,9 @@ public class CreatePDFProductOrder {
 
 			addMetaData(document);
 
-			addTitlePage(document,vendor,rawmaterialorder);
+			addTitlePage(document,vendor,rawmaterialOrderDTO);
 
-			createTable(document, rawmaterialorder,rmOrderModelDatas);
+			createTable(document, rawmaterialOrderDTO,rmOrderModelDatas);
 
 			document.close();
 
@@ -75,7 +75,7 @@ public class CreatePDFProductOrder {
 		document.addCreator("Java Honk");
 	}
 
-	private  void addTitlePage(Document document,Vendor vendor,Rawmaterialorder rawmaterialorder)
+	private  void addTitlePage(Document document,Vendor vendor,RawmaterialOrderDTO rawmaterialOrderDTO)
 			throws DocumentException {
 		Paragraph preface = new Paragraph();
 		   Font bf12 = new Font(FontFamily.TIMES_ROMAN, 20,Font.BOLD); 
@@ -117,7 +117,7 @@ public class CreatePDFProductOrder {
 		     String ecc =vendor.getCustomerEccNumber();
 		     PdfPTable table6 = new PdfPTable(1);
 		     table6.setWidthPercentage(100);
-		     table6.addCell(getCell2("P.O.No:"+rawmaterialorder.getName(), PdfPCell.ALIGN_LEFT,bf));
+		     table6.addCell(getCell2("P.O.No:"+rawmaterialOrderDTO.getName(), PdfPCell.ALIGN_LEFT,bf));
 		     table6.addCell(getCell2("Date :"+ simpleDateFormat.format(new Date()), PdfPCell.ALIGN_LEFT,bf));
 		     table6.addCell(getCell2("VAT TIN NO :"+vat, PdfPCell.ALIGN_LEFT,bf));
 		     table6.addCell(getCell2("CST TIN NO :"+cst, PdfPCell.ALIGN_LEFT,bf));
@@ -137,7 +137,7 @@ public class CreatePDFProductOrder {
 		}
 	}
 
-	private void createTable(Document document,Rawmaterialorder rawmaterialorder,List<RMOrderModelData> rmOrderModelDatas)
+	private void createTable(Document document,RawmaterialOrderDTO RawmaterialOrderDTO,List<RMOrderModelData> rmOrderModelDatas)
 			throws Exception {
 
 		  Paragraph paragraph = new Paragraph();

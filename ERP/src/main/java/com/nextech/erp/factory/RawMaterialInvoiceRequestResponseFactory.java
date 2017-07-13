@@ -15,7 +15,8 @@ public class RawMaterialInvoiceRequestResponseFactory {
 		rawmaterialorderinvoice.setInvoice_No(rawMaterialInvoiceDTO.getInvoiceNo());
 		rawmaterialorderinvoice.setVendorname(rawMaterialInvoiceDTO.getVendorName());
 		rawmaterialorderinvoice.setVehicleNo(rawMaterialInvoiceDTO.getVehicleNo());
-		rawmaterialorderinvoice.setDriver_Name(rawMaterialInvoiceDTO.getDriverFirstName() +" " + rawMaterialInvoiceDTO.getDriverLastName());
+		rawmaterialorderinvoice.setFirstName(rawMaterialInvoiceDTO.getDriverFirstName());
+		rawmaterialorderinvoice.setLastName(rawMaterialInvoiceDTO.getDriverLastName());
 		rawmaterialorderinvoice.setIntime(rawMaterialInvoiceDTO.getInTime());
 		rawmaterialorderinvoice.setOuttime(rawMaterialInvoiceDTO.getOutTime());
 		rawmaterialorderinvoice.setPo_No(rawMaterialInvoiceDTO.getPoNo());

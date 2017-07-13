@@ -10,7 +10,6 @@ import javax.validation.Valid;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,29 +18,29 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.nextech.erp.factory.UnitFactory;
 import com.nextech.erp.model.Unit;
+import com.nextech.erp.newDTO.UnitDTO;
 import com.nextech.erp.service.UnitService;
 import com.nextech.erp.status.UserStatus;
 
 @RestController
-@Transactional @RequestMapping("/unit")
+@RequestMapping("/unit")
 public class UnitController {
 
 	@Autowired
 	UnitService unitservice;
 
-	@Transactional @RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus addUnit(@Valid @RequestBody Unit unit,HttpServletRequest request,HttpServletResponse response,
+	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
+	public @ResponseBody UserStatus addUnit(@Valid @RequestBody UnitDTO unitDTO,HttpServletRequest request,HttpServletResponse response,
 			BindingResult bindingResult) {
 		try {
 			if (bindingResult.hasErrors()) {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
-			unit.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-			unit.setIsactive(true);
-		long id=	unitservice.addEntity(unit);
-			System.out.println("id is"+id);
+		     unitDTO.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+		 	unitservice.addEntity(UnitFactory.setUnit(unitDTO, request));
 			return new UserStatus(1, "Unit added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			cve.printStackTrace();
@@ -57,7 +56,7 @@ public class UnitController {
 		}
 	}
 
-	@Transactional @RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
+	@RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody Unit getUnit(@PathVariable("id") long id) {
 		Unit unit = null;
 		try {
@@ -68,12 +67,11 @@ public class UnitController {
 		return unit;
 	}
 
-	@Transactional @RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
-	public @ResponseBody UserStatus updateUnit(@RequestBody Unit unit,HttpServletRequest request,HttpServletResponse response) {
+	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
+	public @ResponseBody UserStatus updateUnit(@RequestBody UnitDTO unitDTO,HttpServletRequest request,HttpServletResponse response) {
 		try {
-			unit.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-			unit.setIsactive(true);
-			unitservice.updateEntity(unit);
+			unitDTO.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+			unitservice.updateEntity(UnitFactory.setUnit(unitDTO, request));
 			return new UserStatus(1, "Unit update Successfully !");
 		} catch (Exception e) {
 			 e.printStackTrace();
@@ -81,7 +79,7 @@ public class UnitController {
 		}
 	}
 
-	@Transactional @RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
+	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody List<Unit> getUnit() {
 
 		List<Unit> unitList = null;
@@ -95,7 +93,7 @@ public class UnitController {
 		return unitList;
 	}
 
-	@Transactional @RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
+	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus deleteUnit(@PathVariable("id") long id) {
 
 		try {

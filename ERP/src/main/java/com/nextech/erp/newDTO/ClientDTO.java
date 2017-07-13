@@ -1,175 +1,85 @@
 package com.nextech.erp.newDTO;
 
-import java.sql.Timestamp;
+
+import com.nextech.erp.dto.AbstractDTO;
 
 
-public class ClientDTO {
-
-	private long id;
+public class ClientDTO extends AbstractDTO{
 
 	private String address;
-
 	private String commisionerate;
-
-	private String companyname;
-
-	private String contactnumber;
-
-	private String contactpersonname;
-
-	private long createdBy;
-
+	private String companyName;
+	private String contactNumber;
+	private String contactPersonName;
 	private String cst;
-
 	private String customerEccNumber;
-
-	private String description;
-
 	private String division;
-
-	private String emailid;
-
-	private boolean isactive;
+	private String emailId;
 	private String  renge;
-
-	private long updatedBy;
-
-	private Timestamp updatedDate;
-
 	private String vatNo;
-
-	public long getId() {
-		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
-	}
-
 	public String getAddress() {
 		return address;
 	}
-
 	public void setAddress(String address) {
 		this.address = address;
 	}
-
 	public String getCommisionerate() {
 		return commisionerate;
 	}
-
 	public void setCommisionerate(String commisionerate) {
 		this.commisionerate = commisionerate;
 	}
-
-	public String getCompanyname() {
-		return companyname;
+	public String getCompanyName() {
+		return companyName;
 	}
-
-	public void setCompanyname(String companyname) {
-		this.companyname = companyname;
+	public void setCompanyName(String companyName) {
+		this.companyName = companyName;
 	}
-
-	public String getContactnumber() {
-		return contactnumber;
+	public String getContactNumber() {
+		return contactNumber;
 	}
-
-	public void setContactnumber(String contactnumber) {
-		this.contactnumber = contactnumber;
+	public void setContactNumber(String contactNumber) {
+		this.contactNumber = contactNumber;
 	}
-
-	public String getContactpersonname() {
-		return contactpersonname;
+	public String getContactPersonName() {
+		return contactPersonName;
 	}
-
-	public void setContactpersonname(String contactpersonname) {
-		this.contactpersonname = contactpersonname;
+	public void setContactPersonName(String contactPersonName) {
+		this.contactPersonName = contactPersonName;
 	}
-
-	public long getCreatedBy() {
-		return createdBy;
-	}
-
-	public void setCreatedBy(long createdBy) {
-		this.createdBy = createdBy;
-	}
-
 	public String getCst() {
 		return cst;
 	}
-
 	public void setCst(String cst) {
 		this.cst = cst;
 	}
-
 	public String getCustomerEccNumber() {
 		return customerEccNumber;
 	}
-
 	public void setCustomerEccNumber(String customerEccNumber) {
 		this.customerEccNumber = customerEccNumber;
 	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
 	public String getDivision() {
 		return division;
 	}
-
 	public void setDivision(String division) {
 		this.division = division;
 	}
-
-	public String getEmailid() {
-		return emailid;
+	public String getEmailId() {
+		return emailId;
 	}
-
-	public void setEmailid(String emailid) {
-		this.emailid = emailid;
+	public void setEmailId(String emailId) {
+		this.emailId = emailId;
 	}
-
-	public boolean isIsactive() {
-		return isactive;
-	}
-
-	public void setIsactive(boolean isactive) {
-		this.isactive = isactive;
-	}
-
 	public String getRenge() {
 		return renge;
 	}
-
 	public void setRenge(String renge) {
 		this.renge = renge;
 	}
-
-	public long getUpdatedBy() {
-		return updatedBy;
-	}
-
-	public void setUpdatedBy(long updatedBy) {
-		this.updatedBy = updatedBy;
-	}
-
-	public Timestamp getUpdatedDate() {
-		return updatedDate;
-	}
-
-	public void setUpdatedDate(Timestamp updatedDate) {
-		this.updatedDate = updatedDate;
-	}
-
 	public String getVatNo() {
 		return vatNo;
 	}
-
 	public void setVatNo(String vatNo) {
 		this.vatNo = vatNo;
 	}

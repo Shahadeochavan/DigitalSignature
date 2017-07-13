@@ -6,24 +6,27 @@ import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.nextech.erp.factory.PageFactory;
 import com.nextech.erp.model.Page;
+import com.nextech.erp.newDTO.PageDTO;
 import com.nextech.erp.service.PageService;
 import com.nextech.erp.status.UserStatus;
 
 @Controller
-@Transactional @RequestMapping("/page")
+@RequestMapping("/page")
 public class PageController {
 
 	@Autowired
@@ -32,16 +35,16 @@ public class PageController {
 	@Autowired
 	private MessageSource messageSource;
 
-	@Transactional @RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus addPage(@Valid @RequestBody Page page,
+	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
+	public @ResponseBody UserStatus addPage(@Valid @RequestBody PageDTO pageDTO,
 			BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			if (bindingResult.hasErrors()) {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
+			Page page = PageFactory.setPage(pageDTO);
 			page.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-			page.setIsactive(true);
 			pageservice.addEntity(page);
 			return new UserStatus(1, "Page added Successfully !");
 		} catch (ConstraintViolationException cve) {
@@ -59,7 +62,7 @@ public class PageController {
 		}
 	}
 
-	@Transactional @RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
+	@RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody Page getPage(@PathVariable("id") long id) {
 		Page page = null;
 		try {
@@ -70,12 +73,12 @@ public class PageController {
 		return page;
 	}
 
-	@Transactional @RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
-	public @ResponseBody UserStatus updatePage(@RequestBody Page page,
+	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
+	public @ResponseBody UserStatus updatePage(@RequestBody PageDTO pageDTO,
 			HttpServletRequest request, HttpServletResponse response) {
 		try {
+			Page page = PageFactory.setPage(pageDTO);
 			page.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-			page.setIsactive(true);
 			pageservice.updateEntity(page);
 			return new UserStatus(1, "Page update Successfully !");
 		} catch (Exception e) {
@@ -84,7 +87,7 @@ public class PageController {
 		}
 	}
 
-	@Transactional @RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
+	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody List<Page> getPage() {
 
 		List<Page> PageList = null;
@@ -98,7 +101,7 @@ public class PageController {
 		return PageList;
 	}
 
-	@Transactional @RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
+	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus deletePage(@PathVariable("id") long id) {
 
 		try {

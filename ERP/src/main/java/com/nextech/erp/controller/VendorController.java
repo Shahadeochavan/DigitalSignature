@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,10 +24,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.dto.Mail;
+import com.nextech.erp.factory.VendorFactory;
 import com.nextech.erp.model.Notification;
 import com.nextech.erp.model.Notificationuserassociation;
 import com.nextech.erp.model.User;
 import com.nextech.erp.model.Vendor;
+import com.nextech.erp.newDTO.VendorDTO;
 import com.nextech.erp.service.MailService;
 import com.nextech.erp.service.NotificationService;
 import com.nextech.erp.service.NotificationUserAssociationService;
@@ -37,7 +38,7 @@ import com.nextech.erp.service.VendorService;
 import com.nextech.erp.status.UserStatus;
 
 @Controller
-@Transactional @RequestMapping("/vendor")
+@RequestMapping("/vendor")
 public class VendorController {
 
 	@Autowired
@@ -58,29 +59,30 @@ public class VendorController {
 	@Autowired
 	MailService mailService;
 
-	@Transactional @RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
+
+	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addVendor(Model model,
-			@Valid @RequestBody Vendor vendor, BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
+			@Valid @RequestBody VendorDTO  vendorDTO, BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			if (bindingResult.hasErrors()) {
-				model.addAttribute("vendor", vendor);
+				model.addAttribute("vendor", vendorDTO);
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
 
-			if (vendorService.getVendorByCompanyName(vendor.getCompanyName()) == null) {
+			if (vendorService.getVendorByCompanyName(vendorDTO.getCompanyName()) == null) {
 
 			} else {
 				return new UserStatus(2, messageSource.getMessage(ERPConstants.COMPANY_NAME_EXIT, null, null));
 			}
-			if (vendorService.getVendorByEmail(vendor.getEmail()) == null) {
+			if (vendorService.getVendorByEmail(vendorDTO.getEmail()) == null) {
 			} else {
 				return new UserStatus(2,messageSource.getMessage(ERPConstants.EMAIL_ALREADY_EXIT, null, null));
 			}
-			vendor.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-			vendor.setIsactive(true);
-			vendorService.addEntity(vendor);
-			mailSending(vendor, request, response);
+              Vendor  vendor = VendorFactory.setVendor(vendorDTO, request);
+              vendor.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+              vendorService.addEntity(vendor);
+		      mailSending(vendor, request, response);
 			return new UserStatus(1, "vendor added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			cve.printStackTrace();
@@ -94,7 +96,7 @@ public class VendorController {
 		}
 	}
 
-	@Transactional @RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
+	@RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody Vendor getVendor(@PathVariable("id") long id) {
 		Vendor vendor = null;
 		try {
@@ -105,29 +107,29 @@ public class VendorController {
 		return vendor;
 	}
 
-	@Transactional @RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
-	public @ResponseBody UserStatus updateVendor(@RequestBody Vendor vendor,HttpServletRequest request,HttpServletResponse response) {
+	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
+	public @ResponseBody UserStatus updateVendor(@RequestBody VendorDTO vendorDTO,HttpServletRequest request,HttpServletResponse response) {
 		try {
-			Vendor oldVendorInfo = vendorService.getEntityById(Vendor.class, vendor.getId());
+			Vendor oldVendorInfo = vendorService.getEntityById(Vendor.class, vendorDTO.getId());
 			System.out.println(oldVendorInfo);
-			if(vendor.getCompanyName().equals(oldVendorInfo.getCompanyName())){  	
+			if(vendorDTO.getCompanyName().equals(oldVendorInfo.getCompanyName())){  	
 			} else { 
-				if (vendorService.getVendorByCompanyName(vendor.getCompanyName()) == null) {
+				if (vendorService.getVendorByCompanyName(vendorDTO.getCompanyName()) == null) {
 			    }else{  
 				return new UserStatus(2, messageSource.getMessage(ERPConstants.COMPANY_NAME_EXIT, null, null));
 				}
 			 }
-            if(vendor.getEmail().equals(oldVendorInfo.getEmail())){  	
+            if(vendorDTO.getEmail().equals(oldVendorInfo.getEmail())){  	
 			} else { 
-				if (vendorService.getVendorByEmail(vendor.getEmail()) == null) {
+				if (vendorService.getVendorByEmail(vendorDTO.getEmail()) == null) {
 			    }else{  
 				return new UserStatus(2, messageSource.getMessage(ERPConstants.EMAIL_ALREADY_EXIT, null, null));
 				}
 			 }
-			vendor.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-			vendor.setIsactive(true);
-			vendorService.updateEntity(vendor);
-			mailSendingUpdate(vendor, request, response);
+            Vendor  vendor = VendorFactory.setVendor(vendorDTO, request);
+            vendor.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+            vendorService.updateEntity(vendor);
+		   mailSendingUpdate(vendor, request, response);
 			return new UserStatus(1, "Vendor update Successfully !");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -135,7 +137,7 @@ public class VendorController {
 		}
 	}
 
-	@Transactional @RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
+	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody List<Vendor> getVendor() {
 
 		List<Vendor> userList = null;
@@ -149,7 +151,7 @@ public class VendorController {
 		return userList;
 	}
 
-	@Transactional @RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
+	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus deleteVendor(@PathVariable("id") long id) {
 
 		try {
@@ -221,4 +223,6 @@ public class VendorController {
 
 		mailService.sendEmailWithoutPdF(mail, notification);
 	}
+
+
 }

@@ -4,10 +4,10 @@ import java.sql.Date;
 import java.util.List;
 
 import com.nextech.erp.model.Rawmaterialorderassociation;
+import com.nextech.erp.newDTO.RMOrderAssociationDTO;
 
-public class RawmaterialOrderAssociationModel {
+public class RawmaterialOrderDTO extends AbstractDTO{
 	
-	private String description;
 	private Date expecteddeliveryDate;	
 	private Date createDate;
 	private long Vendor;
@@ -17,13 +17,8 @@ public class RawmaterialOrderAssociationModel {
 	private float tax;
 	private float totalprice;
 	private float actualPrice;
-	private List<Rawmaterialorderassociation> rawmaterialorderassociations;
-	public String getDescription() {
-		return description;
-	}
-	public void setDescription(String description) {
-		this.description = description;
-	}
+	private int quantity;
+	List<RMOrderAssociationDTO> rmOrderAssociationDTOs;
 
 	public Date getExpecteddeliveryDate() {
 		return expecteddeliveryDate;
@@ -37,13 +32,7 @@ public class RawmaterialOrderAssociationModel {
 	public void setCreateDate(Date createDate) {
 		this.createDate = createDate;
 	}
-	public List<Rawmaterialorderassociation> getRawmaterialorderassociations() {
-		return rawmaterialorderassociations;
-	}
-	public void setRawmaterialorderassociations(
-			List<Rawmaterialorderassociation> rawmaterialorderassociations) {
-		this.rawmaterialorderassociations = rawmaterialorderassociations;
-	}
+
 	public long getVendor() {
 		return Vendor;
 	}
@@ -85,6 +74,19 @@ public class RawmaterialOrderAssociationModel {
 	}
 	public void setActualPrice(float actualPrice) {
 		this.actualPrice = actualPrice;
+	}
+	public int getQuantity() {
+		return quantity;
+	}
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
+	}
+	public List<RMOrderAssociationDTO> getRmOrderAssociationDTOs() {
+		return rmOrderAssociationDTOs;
+	}
+	public void setRmOrderAssociationDTOs(
+			List<RMOrderAssociationDTO> rmOrderAssociationDTOs) {
+		this.rmOrderAssociationDTOs = rmOrderAssociationDTOs;
 	}
 
 }

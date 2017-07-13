@@ -37,7 +37,9 @@ import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.dto.CreatePDFProductOrder;
 import com.nextech.erp.dto.Mail;
 import com.nextech.erp.dto.RMOrderModelData;
-import com.nextech.erp.dto.RawmaterialOrderAssociationModel;
+import com.nextech.erp.dto.RawmaterialOrderDTO;
+import com.nextech.erp.factory.RMOrdeInvoiceFactory;
+import com.nextech.erp.factory.RMOrderRequestResponseFactory;
 import com.nextech.erp.model.Notification;
 import com.nextech.erp.model.Notificationuserassociation;
 import com.nextech.erp.model.Rawmaterial;
@@ -47,6 +49,7 @@ import com.nextech.erp.model.Rawmaterialvendorassociation;
 import com.nextech.erp.model.Status;
 import com.nextech.erp.model.User;
 import com.nextech.erp.model.Vendor;
+import com.nextech.erp.newDTO.RMOrderAssociationDTO;
 import com.nextech.erp.service.MailService;
 import com.nextech.erp.service.NotificationService;
 import com.nextech.erp.service.NotificationUserAssociationService;
@@ -117,20 +120,19 @@ public class RawmaterialorderController {
 	String s;
 	@Transactional @RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addRawmaterialorder(
-			@Valid @RequestBody Rawmaterialorder rawmaterialorder,
+			@Valid @RequestBody RawmaterialOrderDTO rawmaterialOrderDTO,
 			BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			if (bindingResult.hasErrors()) {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
-			rawmaterialorder.setIsactive(true);
-			rawmaterialorder.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+			rawmaterialOrderDTO.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			
-			Long id = rawmaterialorderService.addEntity(rawmaterialorder);
+			Long id = rawmaterialorderService.addEntity(RMOrderRequestResponseFactory.setRMOrder(rawmaterialOrderDTO));
 			String invoiceId = generateInvoiceId()+id;
-			rawmaterialorder.setName(invoiceId);
-			rawmaterialorderService.updateEntity(rawmaterialorder);
+			rawmaterialOrderDTO.setName(invoiceId);
+			rawmaterialorderService.updateEntity(RMOrderRequestResponseFactory.setRMOrder(rawmaterialOrderDTO));
 			return new UserStatus(1, "Rawmaterialorder added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			System.out.println("Inside ConstraintViolationException");
@@ -149,18 +151,18 @@ public class RawmaterialorderController {
 
 	@Transactional @RequestMapping(value = "/createmultiple", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addMultipleRawmaterialorder(
-			@Valid @RequestBody RawmaterialOrderAssociationModel rawmaterialOrderAssociationModel, BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
+			@Valid @RequestBody RawmaterialOrderDTO rawmaterialOrderDTO, BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			if (bindingResult.hasErrors()) {
 				return new UserStatus(0, bindingResult.getFieldError().getDefaultMessage());
 			}
 			//TODO save call raw material order
-			Rawmaterialorder rawmaterialorder = saveRMOrder(rawmaterialOrderAssociationModel, request, response);
-			String invoiceId = generateInvoiceId()+rawmaterialorder.getId();
-			rawmaterialorder.setName(invoiceId);
-			rawmaterialorderService.updateEntity(rawmaterialorder);
+			 rawmaterialOrderDTO = saveRMOrder(rawmaterialOrderDTO, request, response);
+			String invoiceId = generateInvoiceId()+rawmaterialOrderDTO.getId();
+			rawmaterialOrderDTO.setName(invoiceId);
+			rawmaterialorderService.updateEntity(RMOrderRequestResponseFactory.setRMOrder(rawmaterialOrderDTO));
 			//TODO add raw material association
-			addRMOrderAsso(rawmaterialorder,rawmaterialOrderAssociationModel, request, response);
+			addRMOrderAsso(rawmaterialOrderDTO, request, response);
 
 			return new UserStatus(1, "Multiple Rawmaterial Order added Successfully !");
 		} catch (ConstraintViolationException cve) {
@@ -193,12 +195,11 @@ public class RawmaterialorderController {
 
 	@Transactional @RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
 	public @ResponseBody UserStatus updateRawmaterialorder(
-			@RequestBody Rawmaterialorder rawmaterialorder,HttpServletRequest request,HttpServletResponse response) {
+			@RequestBody RawmaterialOrderDTO rawmaterialOrderDTO,HttpServletRequest request,HttpServletResponse response) {
 		try {
-			rawmaterialorder.setStatus(statusService.getEntityById(Status.class,Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_NEW_RM_ORDER, null, null))));
-			rawmaterialorder.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-			rawmaterialorder.setIsactive(true);
-			rawmaterialorderService.updateEntity(rawmaterialorder);
+			rawmaterialOrderDTO.setStatus(statusService.getEntityById(Status.class,Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_NEW_RM_ORDER, null, null))).getId());
+			rawmaterialOrderDTO.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+			rawmaterialorderService.updateEntity(RMOrderRequestResponseFactory.setRMOrder(rawmaterialOrderDTO));
 			return new UserStatus(1, "Rawmaterial Order update Successfully !");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -280,61 +281,44 @@ public class RawmaterialorderController {
 		return rawmaterialorderList;
 	}
 
-	private Rawmaterialorder  saveRMOrder(RawmaterialOrderAssociationModel rawmaterialOrderAssociationModel,HttpServletRequest request,HttpServletResponse response) throws Exception{
-		Rawmaterialorder rawmaterialorder= new Rawmaterialorder();
-		rawmaterialorder.setCreateDate(new Date());
-		rawmaterialorder.setDescription(rawmaterialOrderAssociationModel.getDescription());
-    	rawmaterialorder.setExpectedDeliveryDate(rawmaterialOrderAssociationModel.getExpecteddeliveryDate());
-		rawmaterialorder.setQuantity(rawmaterialOrderAssociationModel.getRawmaterialorderassociations().size());
-		rawmaterialorder.setStatus(statusService.getEntityById(Status.class,Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_NEW_RM_ORDER, null, null))));
-		rawmaterialorder.setVendor(vendorService.getEntityById(Vendor.class,rawmaterialOrderAssociationModel.getVendor()));
-		rawmaterialorder.setName(rawmaterialOrderAssociationModel.getName());
-		rawmaterialorder.setActualPrice(rawmaterialOrderAssociationModel.getActualPrice());
-		rawmaterialorder.setOtherCharges(rawmaterialOrderAssociationModel.getOtherCharges());
-		rawmaterialorder.setTax(rawmaterialOrderAssociationModel.getTax());
-		rawmaterialorder.setTotalprice(rawmaterialOrderAssociationModel.getTotalprice());
-		//rawmaterialorder.setRemainingQuantity(rawmaterialOrderAssociationModel.getRawmaterialorderassociations());
-		rawmaterialorder.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-		rawmaterialorder.setIsactive(true);
-		long id=rawmaterialorderService.addEntity(rawmaterialorder);
+	private RawmaterialOrderDTO  saveRMOrder(RawmaterialOrderDTO rawmaterialOrderDTO,HttpServletRequest request,HttpServletResponse response) throws Exception{
+		
+		rawmaterialOrderDTO.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+		long id=rawmaterialorderService.addEntity(RMOrderRequestResponseFactory.setRMOrder(rawmaterialOrderDTO));
 		System.out.println("id is"+id);
 		//TODO Create PDF file
 		//downloadPDF(request, response, rawmaterialorder);
-
-		return rawmaterialorder;
+		return rawmaterialOrderDTO;
 	}
 
-	private void addRMOrderAsso(Rawmaterialorder rawmaterialorder,RawmaterialOrderAssociationModel rawmaterialOrderAssociationModel,HttpServletRequest request,HttpServletResponse response) throws Exception{
-		List<Rawmaterialorderassociation> rawmaterialorderassociations = rawmaterialOrderAssociationModel.getRawmaterialorderassociations();
+	private void addRMOrderAsso(RawmaterialOrderDTO rawmaterialOrderDTO,HttpServletRequest request,HttpServletResponse response) throws Exception{
+		List<RMOrderAssociationDTO> rmOrderAssociationDTOs = rawmaterialOrderDTO.getRmOrderAssociationDTOs();
 		List<RMOrderModelData> rmOrderModelDatas = new ArrayList<RMOrderModelData>();
 		
-		Vendor vendor = vendorService.getEntityById(Vendor.class, rawmaterialOrderAssociationModel.getVendor());
+		Vendor vendor = vendorService.getEntityById(Vendor.class, rawmaterialOrderDTO.getVendor());
 		
-		if(rawmaterialorderassociations !=null && !rawmaterialorderassociations.isEmpty()){
-			for (Rawmaterialorderassociation rawmaterialorderassociation : rawmaterialorderassociations) {
-				rawmaterialorderassociation.setRawmaterialorder(rawmaterialorder);
-				rawmaterialorderassociation.setIsactive(true);
-				rawmaterialorderassociation.setRemainingQuantity(rawmaterialorderassociation.getQuantity());
-				rawmaterialorderassociation.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-				rawmaterialorderassociationService.addEntity(rawmaterialorderassociation);
+		if(rmOrderAssociationDTOs !=null && !rmOrderAssociationDTOs.isEmpty()){
+			for (RMOrderAssociationDTO rmOrderAssociationDTO : rmOrderAssociationDTOs) {
+				rmOrderAssociationDTO.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+				rawmaterialorderassociationService.addEntity(RMOrderRequestResponseFactory.setRMOrderAssociation(rawmaterialOrderDTO, rmOrderAssociationDTO));
 			}
 		}
 		
-		for (Rawmaterialorderassociation rawmaterialorderassociation : rawmaterialorderassociations){
+		for (RMOrderAssociationDTO rmOrderAssociationDTO : rmOrderAssociationDTOs){
 			RMOrderModelData rmOrderModelData = new RMOrderModelData();
-			Rawmaterial rawmaterial = rawmaterialService.getEntityById(Rawmaterial.class, rawmaterialorderassociation.getRawmaterial().getId());
+			Rawmaterial rawmaterial = rawmaterialService.getEntityById(Rawmaterial.class, rmOrderAssociationDTO.getRawmaterialId().getId());
 			Rawmaterialvendorassociation rawmaterialvendorassociation = rmvAssoService.getRMVAssoByRMId(rawmaterial.getId());
 			rmOrderModelData.setRmName(rawmaterial.getPartNumber());
-			rmOrderModelData.setQuantity(rawmaterialorderassociation.getQuantity());
+			rmOrderModelData.setQuantity(rmOrderAssociationDTO.getQuantity());
 			rmOrderModelData.setPricePerUnit(rawmaterialvendorassociation.getPricePerUnit());
-			rmOrderModelData.setAmount(rawmaterialvendorassociation.getPricePerUnit()*rawmaterialorderassociation.getQuantity());
-			rmOrderModelData.setTax(rawmaterialorder.getTax());
-			rmOrderModelData.setDescription(rawmaterialorder.getName());
+			rmOrderModelData.setAmount(rawmaterialvendorassociation.getPricePerUnit()*rmOrderAssociationDTO.getQuantity());
+			rmOrderModelData.setTax(rawmaterialOrderDTO.getTax());
+			rmOrderModelData.setDescription(rawmaterialOrderDTO.getName());
 			rmOrderModelDatas.add(rmOrderModelData);
 		}
-		downloadPDF(request, response, rawmaterialorder,rmOrderModelDatas,vendor);
+		downloadPDF(request, response, rawmaterialOrderDTO,rmOrderModelDatas,vendor);
 	}
-	public void downloadPDF(HttpServletRequest request, HttpServletResponse response,Rawmaterialorder rawmaterialorder,List<RMOrderModelData> rmOrderModelDatas,Vendor vendor) throws IOException {
+	public void downloadPDF(HttpServletRequest request, HttpServletResponse response,RawmaterialOrderDTO rawmaterialOrderDTO,List<RMOrderModelData> rmOrderModelDatas,Vendor vendor) throws IOException {
 
 		final ServletContext servletContext = request.getSession().getServletContext();
 	    final File tempDirectory = (File) servletContext.getAttribute("javax.servlet.context.tempdir");
@@ -347,9 +331,9 @@ public class RawmaterialorderController {
 	    try {
 
 	   CreatePDFProductOrder createPDF = new CreatePDFProductOrder();
-	   createPDF.createPDF(temperotyFilePath+"\\"+fileName,rawmaterialorder,rmOrderModelDatas,vendor);
+	   createPDF.createPDF(temperotyFilePath+"\\"+fileName,rawmaterialOrderDTO,rmOrderModelDatas,vendor);
 	        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-	        baos = convertPDFToByteArrayOutputStream(temperotyFilePath+"\\"+fileName,rawmaterialorder,rmOrderModelDatas);
+	        baos = convertPDFToByteArrayOutputStream(temperotyFilePath+"\\"+fileName,rawmaterialOrderDTO,rmOrderModelDatas);
 	        OutputStream os = response.getOutputStream();
 	        baos.writeTo(os);
 	        os.flush();
@@ -365,13 +349,13 @@ public class RawmaterialorderController {
 
 	}
 	
-	private ByteArrayOutputStream convertPDFToByteArrayOutputStream(String fileName,Rawmaterialorder rawmaterialorder,List<RMOrderModelData> rmOrderModelDatas) throws Exception {
+	private ByteArrayOutputStream convertPDFToByteArrayOutputStream(String fileName,RawmaterialOrderDTO rawmaterialOrderDTO,List<RMOrderModelData> rmOrderModelDatas) throws Exception {
 
-		Status status = statusService.getEntityById(Status.class, rawmaterialorder.getStatus().getId());
+		Status status = statusService.getEntityById(Status.class, rawmaterialOrderDTO.getStatus());
 		Notification notification = notificationService.getNotifiactionByStatus(status.getId());
-		Vendor vendor = vendorService.getEntityById(Vendor.class,rawmaterialorder.getVendor().getId());
+		Vendor vendor = vendorService.getEntityById(Vendor.class,rawmaterialOrderDTO.getVendor());
 		//TODO mail sending
-        mailSending(notification, rawmaterialorder, vendor,fileName,rmOrderModelDatas);
+        mailSending(notification, rawmaterialOrderDTO, vendor,fileName,rmOrderModelDatas);
 
 		InputStream inputStream = null;
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -402,7 +386,7 @@ public class RawmaterialorderController {
 		return baos;
 	}
 
-	private void mailSending(Notification notification,Rawmaterialorder rawmaterialorder,Vendor vendor,String fileName,List<RMOrderModelData> rmOrderModelDatas) throws Exception{
+	private void mailSending(Notification notification,RawmaterialOrderDTO rawmaterialOrderDTO,Vendor vendor,String fileName,List<RMOrderModelData> rmOrderModelDatas) throws Exception{
 		List<Notificationuserassociation> notificationuserassociations = notificationUserAssociationService.getNotificationuserassociationBynotificationId(notification.getId());
 		  Mail mail = new Mail();
 		  for (Notificationuserassociation notificationuserassociation : notificationuserassociations) {
@@ -425,7 +409,7 @@ public class RawmaterialorderController {
 	        model.put("rmOrderModelDatas",rmOrderModelDatas);
 	        model.put("address", vendor.getAddress());
 	        model.put("companyName", vendor.getCompanyName());
-	        model.put("tax", rawmaterialorder.getTax());
+	        model.put("tax", rawmaterialOrderDTO.getTax());
 	        model.put("mailFrom", notification.getName());
 	        model.put("signature", "www.NextechServices.in");
 	        mail.setModel(model);

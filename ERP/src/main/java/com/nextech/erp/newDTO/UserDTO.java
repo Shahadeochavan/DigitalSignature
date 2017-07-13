@@ -1,25 +1,26 @@
 package com.nextech.erp.newDTO;
 import java.util.Date;
+import java.util.List;
 
+import com.nextech.erp.dto.AbstractDTO;
 import com.nextech.erp.model.Usertype;
 
-public class UserDTO {
-	private String userid;
+public class UserDTO extends AbstractDTO {
+	private String userId;
 	private String password;
 	private String firstName;
 	private String lastName;
-	private String mobile;
-	private Usertype usertype;
+	private String mobileNo;
+	private Usertype userType;
 	private Date dob;
 	private Date doj;
-	private String email;
-
-
-	public String getUserid() {
-		return userid;
+	private String emailId;
+	private List<NotificationUserAssociatinsDTO> notificationUserAssociatinsDTOs;
+	public String getUserId() {
+		return userId;
 	}
-	public void setUserid(String userid) {
-		this.userid = userid;
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 	public String getPassword() {
 		return password;
@@ -39,17 +40,17 @@ public class UserDTO {
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
-	public String getMobile() {
-		return mobile;
+	public String getMobileNo() {
+		return mobileNo;
 	}
-	public void setMobile(String mobile) {
-		this.mobile = mobile;
+	public void setMobileNo(String mobileNo) {
+		this.mobileNo = mobileNo;
 	}
-	public Usertype getUsertype() {
-		return usertype;
+	public Usertype getUserType() {
+		return userType;
 	}
-	public void setUsertype(Usertype usertype) {
-		this.usertype = usertype;
+	public void setUserType(Usertype userType) {
+		this.userType = userType;
 	}
 	public Date getDob() {
 		return dob;
@@ -63,11 +64,19 @@ public class UserDTO {
 	public void setDoj(Date doj) {
 		this.doj = doj;
 	}
-	public String getEmail() {
-		return email;
+	public String getEmailId() {
+		return emailId;
 	}
-	public void setEmail(String email) {
-		this.email = email;
+	public void setEmailId(String emailId) {
+		this.emailId = emailId;
 	}
+	public List<NotificationUserAssociatinsDTO> getNotificationUserAssociatinsDTOs() {
+		return notificationUserAssociatinsDTOs;
+	}
+	public void setNotificationUserAssociatinsDTOs(
+			List<NotificationUserAssociatinsDTO> notificationUserAssociatinsDTOs) {
+		this.notificationUserAssociatinsDTOs = notificationUserAssociatinsDTOs;
+	}
+	
 	
 }

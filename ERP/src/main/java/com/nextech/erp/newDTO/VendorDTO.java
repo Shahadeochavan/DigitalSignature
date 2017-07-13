@@ -1,62 +1,33 @@
 package com.nextech.erp.newDTO;
 
-import java.sql.Timestamp;
 
+import java.util.List;
 
-public class VendorDTO {
+import com.nextech.erp.dto.AbstractDTO;
+import com.nextech.erp.dto.RawmaterialOrderDTO;
 
-	
-	private long id;
+public class VendorDTO extends AbstractDTO{
 
 	private String address;
-
 	private String city;
-
 	private String commisionerate;
-
 	private String companyName;
-
 	private String contactNumberMobile;
-
 	private String contactNumberOffice;
-
-	private Timestamp createdDate;
-
 	private String cst;
-
 	private String customerEccNumber;
-
-	private String description;
-
 	private String divison;
-
 	private String email;
-
 	private String firstName;
-
 	private boolean isactive;
-
 	private String lastName;
-
 	private String postalcode;
-
 	private String renge; 
-	
 	private String state;
-
-	private long updatedBy;
-
-	private Timestamp updatedDate;
-
 	private String vatNo;
-
-	public long getId() {
-		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
-	}
+	private List<BomRMVendorAssociationsDTO> bomRMVendorAssociationsDTOs;
+	private List<RMVendorAssociationDTO> rawmaterialvendorassociations;
+	private List<RawmaterialOrderDTO> rawmaterialOrderDTOs;
 
 	public String getAddress() {
 		return address;
@@ -106,14 +77,6 @@ public class VendorDTO {
 		this.contactNumberOffice = contactNumberOffice;
 	}
 
-	public Timestamp getCreatedDate() {
-		return createdDate;
-	}
-
-	public void setCreatedDate(Timestamp createdDate) {
-		this.createdDate = createdDate;
-	}
-
 	public String getCst() {
 		return cst;
 	}
@@ -128,14 +91,6 @@ public class VendorDTO {
 
 	public void setCustomerEccNumber(String customerEccNumber) {
 		this.customerEccNumber = customerEccNumber;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
 	}
 
 	public String getDivison() {
@@ -202,28 +157,39 @@ public class VendorDTO {
 		this.state = state;
 	}
 
-	public long getUpdatedBy() {
-		return updatedBy;
-	}
-
-	public void setUpdatedBy(long updatedBy) {
-		this.updatedBy = updatedBy;
-	}
-
-	public Timestamp getUpdatedDate() {
-		return updatedDate;
-	}
-
-	public void setUpdatedDate(Timestamp updatedDate) {
-		this.updatedDate = updatedDate;
-	}
-
 	public String getVatNo() {
 		return vatNo;
 	}
 
 	public void setVatNo(String vatNo) {
 		this.vatNo = vatNo;
+	}
+
+	public List<BomRMVendorAssociationsDTO> getBomRMVendorAssociationsDTOs() {
+		return bomRMVendorAssociationsDTOs;
+	}
+
+	public void setBomRMVendorAssociationsDTOs(
+			List<BomRMVendorAssociationsDTO> bomRMVendorAssociationsDTOs) {
+		this.bomRMVendorAssociationsDTOs = bomRMVendorAssociationsDTOs;
+	}
+
+	public List<RMVendorAssociationDTO> getRawmaterialvendorassociations() {
+		return rawmaterialvendorassociations;
+	}
+
+	public void setRawmaterialvendorassociations(
+			List<RMVendorAssociationDTO> rawmaterialvendorassociations) {
+		this.rawmaterialvendorassociations = rawmaterialvendorassociations;
+	}
+
+	public List<RawmaterialOrderDTO> getRawmaterialOrderDTOs() {
+		return rawmaterialOrderDTOs;
+	}
+
+	public void setRawmaterialOrderDTOs(
+			List<RawmaterialOrderDTO> rawmaterialOrderDTOs) {
+		this.rawmaterialOrderDTOs = rawmaterialOrderDTOs;
 	}
 	
 }
