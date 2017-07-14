@@ -16,17 +16,23 @@ public class RMOrderRequestResponseFactory {
 		rawmaterialorder.setIsactive(true);
 		rawmaterialorder.setName(rawmaterialOrderDTO.getName());
 		rawmaterialorder.setOtherCharges(rawmaterialOrderDTO.getOtherCharges());
-		rawmaterialorder.setQuantity(rawmaterialOrderDTO.getQuantity());
+		rawmaterialorder.setQuantity(rawmaterialOrderDTO.getRmOrderAssociationDTOs().size());
 		rawmaterialorder.setTax(rawmaterialOrderDTO.getTax());
-		rawmaterialorder.setTotalprice(rawmaterialOrderDTO.getTotalprice());
+		rawmaterialorder.setVendor(rawmaterialOrderDTO.getVendorId());
+		rawmaterialorder.setExpectedDeliveryDate(rawmaterialOrderDTO.getExpectedDeliveryDate());
+		rawmaterialorder.setCreateDate(rawmaterialOrderDTO.getCreateDate());
+		rawmaterialorder.setTotalprice(rawmaterialOrderDTO.getTotalPrice());
 		return rawmaterialorder;
 	}
 	
 	public static Rawmaterialorderassociation setRMOrderAssociation(RawmaterialOrderDTO rawmaterialOrderDTO,RMOrderAssociationDTO rawAssociationDTO){
 		Rawmaterialorderassociation rawmaterialorderassociation = new Rawmaterialorderassociation();
+		Rawmaterialorder rawmaterialorder = new Rawmaterialorder();
+		rawmaterialorder.setId(rawmaterialOrderDTO.getId());
 		rawmaterialorderassociation.setQuantity(rawAssociationDTO.getQuantity());
 		rawmaterialorderassociation.setRawmaterial(rawAssociationDTO.getRawmaterialId());
-		rawmaterialorderassociation.setRawmaterialorder(rawAssociationDTO.getRawmaterialorderId());
+		rawmaterialorderassociation.setRawmaterialorder(rawmaterialorder);
+		rawmaterialorderassociation.setRemainingQuantity(rawAssociationDTO.getQuantity());
 		rawmaterialorderassociation.setIsactive(true);
 		return rawmaterialorderassociation;
 	}

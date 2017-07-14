@@ -154,10 +154,12 @@ public class RawmaterialorderController {
 				return new UserStatus(0, bindingResult.getFieldError().getDefaultMessage());
 			}
 			//TODO save call raw material order
-			 rawmaterialOrderDTO = saveRMOrder(rawmaterialOrderDTO, request, response);
-			String invoiceId = generateInvoiceId()+rawmaterialOrderDTO.getId();
-			rawmaterialOrderDTO.setName(invoiceId);
-			rawmaterialorderService.updateEntity(RMOrderRequestResponseFactory.setRMOrder(rawmaterialOrderDTO));
+		Rawmaterialorder	rawmaterialorder = saveRMOrder(rawmaterialOrderDTO, request, response);
+			String invoiceId = generateInvoiceId()+rawmaterialorder.getId();
+			rawmaterialorder.setName(invoiceId);
+			rawmaterialorderService.updateEntity(rawmaterialorder);
+			rawmaterialOrderDTO.setId(rawmaterialorder.getId());
+			rawmaterialOrderDTO.setStatusId(rawmaterialorder.getStatus());
 			//TODO add raw material association
 			addRMOrderAsso(rawmaterialOrderDTO, request, response);
 
@@ -194,7 +196,7 @@ public class RawmaterialorderController {
 	public @ResponseBody UserStatus updateRawmaterialorder(
 			@RequestBody RawmaterialOrderDTO rawmaterialOrderDTO,HttpServletRequest request,HttpServletResponse response) {
 		try {
-			rawmaterialOrderDTO.setStatus(statusService.getEntityById(Status.class,Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_NEW_RM_ORDER, null, null))).getId());
+			rawmaterialOrderDTO.setStatusId(statusService.getEntityById(Status.class,11));
 			rawmaterialOrderDTO.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			rawmaterialorderService.updateEntity(RMOrderRequestResponseFactory.setRMOrder(rawmaterialOrderDTO));
 			return new UserStatus(1, "Rawmaterial Order update Successfully !");
@@ -278,21 +280,22 @@ public class RawmaterialorderController {
 		return rawmaterialorderList;
 	}
 
-	private RawmaterialOrderDTO  saveRMOrder(RawmaterialOrderDTO rawmaterialOrderDTO,HttpServletRequest request,HttpServletResponse response) throws Exception{
-		
-		rawmaterialOrderDTO.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+	private Rawmaterialorder  saveRMOrder(RawmaterialOrderDTO rawmaterialOrderDTO,HttpServletRequest request,HttpServletResponse response) throws Exception{
+		Rawmaterialorder  rawmaterialorder = RMOrderRequestResponseFactory.setRMOrder(rawmaterialOrderDTO);
+		rawmaterialorder.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+		rawmaterialorder.setStatus(statusService.getEntityById(Status.class,Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_NEW_RM_ORDER, null, null))));
 		long id=rawmaterialorderService.addEntity(RMOrderRequestResponseFactory.setRMOrder(rawmaterialOrderDTO));
 		System.out.println("id is"+id);
 		//TODO Create PDF file
 		//downloadPDF(request, response, rawmaterialorder);
-		return rawmaterialOrderDTO;
+		return rawmaterialorder;
 	}
 
 	private void addRMOrderAsso(RawmaterialOrderDTO rawmaterialOrderDTO,HttpServletRequest request,HttpServletResponse response) throws Exception{
 		List<RMOrderAssociationDTO> rmOrderAssociationDTOs = rawmaterialOrderDTO.getRmOrderAssociationDTOs();
 		List<RMOrderModelData> rmOrderModelDatas = new ArrayList<RMOrderModelData>();
 		
-		Vendor vendor = vendorService.getEntityById(Vendor.class, rawmaterialOrderDTO.getVendor());
+		Vendor vendor = vendorService.getEntityById(Vendor.class, rawmaterialOrderDTO.getVendorId().getId());
 		
 		if(rmOrderAssociationDTOs !=null && !rmOrderAssociationDTOs.isEmpty()){
 			for (RMOrderAssociationDTO rmOrderAssociationDTO : rmOrderAssociationDTOs) {
@@ -348,9 +351,9 @@ public class RawmaterialorderController {
 	
 	private ByteArrayOutputStream convertPDFToByteArrayOutputStream(String fileName,RawmaterialOrderDTO rawmaterialOrderDTO,List<RMOrderModelData> rmOrderModelDatas) throws Exception {
 
-		Status status = statusService.getEntityById(Status.class, rawmaterialOrderDTO.getStatus());
+		Status status = statusService.getEntityById(Status.class, rawmaterialOrderDTO.getStatusId().getId());
 		Notification notification = notificationService.getNotifiactionByStatus(status.getId());
-		Vendor vendor = vendorService.getEntityById(Vendor.class,rawmaterialOrderDTO.getVendor());
+		Vendor vendor = vendorService.getEntityById(Vendor.class,rawmaterialOrderDTO.getVendorId().getId());
 		//TODO mail sending
         mailSending(notification, rawmaterialOrderDTO, vendor,fileName,rmOrderModelDatas);
 

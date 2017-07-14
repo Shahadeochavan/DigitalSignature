@@ -4,28 +4,25 @@ import java.sql.Date;
 import java.util.List;
 
 import com.nextech.erp.model.Rawmaterialorderassociation;
+import com.nextech.erp.model.Status;
+import com.nextech.erp.model.Vendor;
 import com.nextech.erp.newDTO.RMOrderAssociationDTO;
 
 public class RawmaterialOrderDTO extends AbstractDTO{
 	
-	private Date expecteddeliveryDate;	
+	private Date expectedDeliveryDate;	
 	private Date createDate;
-	private long Vendor;
-	private long status;
+	private Vendor vendorId;
+	private Status statusId;
 	private String name;
 	private float otherCharges;
 	private float tax;
-	private float totalprice;
+	private float totalPrice;
 	private float actualPrice;
 	private int quantity;
 	List<RMOrderAssociationDTO> rmOrderAssociationDTOs;
 
-	public Date getExpecteddeliveryDate() {
-		return expecteddeliveryDate;
-	}
-	public void setExpecteddeliveryDate(Date expecteddeliveryDate) {
-		this.expecteddeliveryDate = expecteddeliveryDate;
-	}
+
 	public Date getCreateDate() {
 		return createDate;
 	}
@@ -33,17 +30,17 @@ public class RawmaterialOrderDTO extends AbstractDTO{
 		this.createDate = createDate;
 	}
 
-	public long getVendor() {
-		return Vendor;
+	public Vendor getVendorId() {
+		return vendorId;
 	}
-	public void setVendor(long vendor) {
-		Vendor = vendor;
+	public void setVendorId(Vendor vendorId) {
+		this.vendorId = vendorId;
 	}
-	public long getStatus() {
-		return status;
+	public Status getStatusId() {
+		return statusId;
 	}
-	public void setStatus(long status) {
-		this.status = status;
+	public void setStatusId(Status statusId) {
+		this.statusId = statusId;
 	}
 	public String getName() {
 		return name;
@@ -63,12 +60,7 @@ public class RawmaterialOrderDTO extends AbstractDTO{
 	public void setTax(float tax) {
 		this.tax = tax;
 	}
-	public float getTotalprice() {
-		return totalprice;
-	}
-	public void setTotalprice(float totalprice) {
-		this.totalprice = totalprice;
-	}
+
 	public float getActualPrice() {
 		return actualPrice;
 	}
@@ -81,12 +73,26 @@ public class RawmaterialOrderDTO extends AbstractDTO{
 	public void setQuantity(int quantity) {
 		this.quantity = quantity;
 	}
+	
+	
+	public Date getExpectedDeliveryDate() {
+		return expectedDeliveryDate;
+	}
+	public void setExpectedDeliveryDate(Date expectedDeliveryDate) {
+		this.expectedDeliveryDate = expectedDeliveryDate;
+	}
 	public List<RMOrderAssociationDTO> getRmOrderAssociationDTOs() {
 		return rmOrderAssociationDTOs;
 	}
 	public void setRmOrderAssociationDTOs(
 			List<RMOrderAssociationDTO> rmOrderAssociationDTOs) {
 		this.rmOrderAssociationDTOs = rmOrderAssociationDTOs;
+	}
+	public float getTotalPrice() {
+		return totalPrice;
+	}
+	public void setTotalPrice(float totalPrice) {
+		this.totalPrice = totalPrice;
 	}
 
 }

@@ -5,7 +5,7 @@ import java.util.List;
 public class DispatchDTO {
 	private long orderId;
 	private String invoiceNo;
-	private List<Part> parts;
+	private List<DispatchPartDTO> dispatchPartDTOs;
 	private String description;
 	
 	public long getOrderId() {
@@ -20,17 +20,17 @@ public class DispatchDTO {
 	public void setInvoiceNo(String invoiceNo) {
 		this.invoiceNo = invoiceNo;
 	}
-	public List<Part> getParts() {
-		return parts;
-	}
-	public void setParts(List<Part> parts) {
-		this.parts = parts;
-	}
 	public String getDescription() {
 		return description;
 	}
 	public void setDescription(String description) {
 		this.description = description;
+	}
+	public List<DispatchPartDTO> getDispatchPartDTOs() {
+		return dispatchPartDTOs;
+	}
+	public void setDispatchPartDTOs(List<DispatchPartDTO> dispatchPartDTOs) {
+		this.dispatchPartDTOs = dispatchPartDTOs;
 	}
 	
 }

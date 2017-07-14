@@ -19,7 +19,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.nextech.erp.factory.StatusRequestResponseFactory;
 import com.nextech.erp.model.Status;
+import com.nextech.erp.newDTO.StatusDTO;
 import com.nextech.erp.service.StatusService;
 import com.nextech.erp.status.UserStatus;
 
@@ -32,15 +34,14 @@ public class StatusController {
 
 	@Transactional @RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addStatustransition(
-			@Valid @RequestBody Status status, BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
+			@Valid @RequestBody StatusDTO statusDTO, BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			if (bindingResult.hasErrors()) {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
-			status.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-			status.setIsactive(true);
-			statusService.addEntity(status);
+			statusDTO.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+			statusService.addEntity(StatusRequestResponseFactory.setStatsu(statusDTO));
 			return new UserStatus(1, "Status added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			cve.printStackTrace();
@@ -68,11 +69,10 @@ public class StatusController {
 	}
 
 	@Transactional @RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
-	public @ResponseBody UserStatus updateStatus(@RequestBody Status status,HttpServletRequest request,HttpServletResponse response) {
+	public @ResponseBody UserStatus updateStatus(@RequestBody StatusDTO statusDTO,HttpServletRequest request,HttpServletResponse response) {
 		try {
-			status.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-			status.setIsactive(true);
-			statusService.updateEntity(status);
+			statusDTO.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+			statusService.updateEntity(StatusRequestResponseFactory.setStatsu(statusDTO));
 			return new UserStatus(1, "Status update Successfully !");
 		} catch (Exception e) {
 			// e.printStackTrace();

@@ -116,7 +116,6 @@ public class ProductorderassociationController {
 			for(Productorderassociation productorderassociation : productorderassociationList){
 				List<Productinventory> productinventories = productinventoryService.getProductinventoryListByProductId(productorderassociation.getProduct().getId());
 				for(Productinventory productinventory : productinventories){
-
 						ProductOrderInventoryData productOrderInventoryData = new ProductOrderInventoryData();
 						Product product = productService.getEntityById(Product.class, productorderassociation.getProduct().getId());
 						productOrderInventoryData.setPartNumber(product.getPartNumber());

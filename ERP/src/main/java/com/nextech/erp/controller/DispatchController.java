@@ -40,7 +40,7 @@ import com.nextech.erp.dto.CreatePdfForDispatchProduct;
 import com.nextech.erp.dto.DispatchDTO;
 import com.nextech.erp.dto.DispatchProductDTO;
 import com.nextech.erp.dto.Mail;
-import com.nextech.erp.dto.Part;
+import com.nextech.erp.dto.DispatchPartDTO;
 import com.nextech.erp.dto.ProductOrderData;
 import com.nextech.erp.model.Bom;
 import com.nextech.erp.model.Bomrmvendorassociation;
@@ -165,8 +165,8 @@ public class DispatchController {
 						.getDefaultMessage());
 			}
 			List<DispatchProductDTO> dispatchProductDTOs = new ArrayList<DispatchProductDTO>();
-			for (Part part : dispatchDTO.getParts()) {
-				Dispatch dispatch = setPart(part);
+			for (DispatchPartDTO dispatchPartDTO : dispatchDTO.getDispatchPartDTOs()) {
+				Dispatch dispatch = setDispatchPart(dispatchPartDTO);
 				Productinventory productinventory = productinventoryService
 						.getProductinventoryByProductId(dispatch.getProduct()
 								.getId());
@@ -411,11 +411,11 @@ public class DispatchController {
 		productinventoryhistoryService.addEntity(productinventoryhistory);
 	}
 	
-	private Dispatch setPart(Part part) throws Exception {
+	private Dispatch setDispatchPart(DispatchPartDTO dispatchPartDTO) throws Exception {
 		Dispatch dispatch = new Dispatch();
 		dispatch.setProduct(productService.getEntityById(Product.class,
-				part.getProductId()));
-		dispatch.setQuantity(part.getQuantity());
+				dispatchPartDTO.getProductId()));
+		dispatch.setQuantity(dispatchPartDTO.getQuantity());
 		dispatch.setIsactive(true);
 		return dispatch;
 	}

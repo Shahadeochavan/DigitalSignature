@@ -10,7 +10,7 @@ public class RMOrderAssociationDTO extends AbstractDTO {
 	private int quantity;
 	private long remainingQuantity;
 	private Rawmaterial rawmaterialId;
-	private Rawmaterialorder rawmaterialorderId;
+	private Rawmaterialorder rawmaterialOrderId;
 	public int getQuantity() {
 		return quantity;
 	}
@@ -29,11 +29,12 @@ public class RMOrderAssociationDTO extends AbstractDTO {
 	public void setRawmaterialId(Rawmaterial rawmaterialId) {
 		this.rawmaterialId = rawmaterialId;
 	}
-	public Rawmaterialorder getRawmaterialorderId() {
-		return rawmaterialorderId;
+	public Rawmaterialorder getRawmaterialOrderId() {
+		return rawmaterialOrderId;
 	}
-	public void setRawmaterialorderId(Rawmaterialorder rawmaterialorderId) {
-		this.rawmaterialorderId = rawmaterialorderId;
+	public void setRawmaterialOrderId(Rawmaterialorder rawmaterialOrderId) {
+		this.rawmaterialOrderId = rawmaterialOrderId;
 	}
+
 	
 }

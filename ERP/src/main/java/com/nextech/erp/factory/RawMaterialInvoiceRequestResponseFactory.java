@@ -40,6 +40,7 @@ public class RawMaterialInvoiceRequestResponseFactory {
 		qualityCheckRMDTO.setQuantity(rawmaterialorderassociation.getQuantity());
 		qualityCheckRMDTO.setRemainingQuantity(rawmaterialorderassociation.getRemainingQuantity());
 		qualityCheckRMDTO.setRmPartNo(rawmaterialorderassociation.getRawmaterial().getPartNumber());
+		qualityCheckRMDTO.setDescription(rawmaterialorderassociation.getRawmaterial().getDescription());
 		qualityCheckRMDTO.setId(rawmaterialorderassociation.getRawmaterial().getId());
 		return qualityCheckRMDTO;
 	}

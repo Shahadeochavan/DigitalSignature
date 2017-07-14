@@ -1,6 +1,6 @@
 package com.nextech.erp.dto;
 
-public class Part {
+public class DispatchPartDTO {
 	private long productId;
 	private long quantity;
 	

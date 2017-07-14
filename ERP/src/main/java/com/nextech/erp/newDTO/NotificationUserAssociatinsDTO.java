@@ -2,6 +2,7 @@ package com.nextech.erp.newDTO;
 
 
 
+
 import com.nextech.erp.dto.AbstractDTO;
 import com.nextech.erp.model.Notification;
 import com.nextech.erp.model.User;
@@ -42,6 +43,17 @@ public class NotificationUserAssociatinsDTO extends AbstractDTO {
 	}
 	public void setUserId(User userId) {
 		this.userId = userId;
+	}
+	public boolean getBcc() {
+		return this.bcc;
+	}
+
+	public boolean getCc() {
+		return this.cc;
+	}
+
+	public boolean getTo() {
+		return this.to;
 	}
 	
 	

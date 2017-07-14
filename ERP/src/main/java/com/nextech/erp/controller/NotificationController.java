@@ -20,7 +20,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.nextech.erp.factory.NotificationRequestResponseFactory;
 import com.nextech.erp.model.Notification;
+import com.nextech.erp.newDTO.NotificationDTO;
 import com.nextech.erp.service.NotificationService;
 import com.nextech.erp.status.UserStatus;
 
@@ -36,16 +38,15 @@ public class NotificationController {
 	private MessageSource messageSource;
 
 	@Transactional @RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus addNotification(@Valid @RequestBody Notification notification,
+	public @ResponseBody UserStatus addNotification(@Valid @RequestBody NotificationDTO notificationDTO,
 			BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			if (bindingResult.hasErrors()) {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
-			notification.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-			notification.setIsactive(true);
-			notificationservice.addEntity(notification);
+			notificationDTO.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+			notificationservice.addEntity(NotificationRequestResponseFactory.setNotification(notificationDTO));
 			return new UserStatus(1, "Notification added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			System.out.println("Inside ConstraintViolationException");
@@ -74,12 +75,11 @@ public class NotificationController {
 	}
 
 	@Transactional @RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
-	public @ResponseBody UserStatus updateNotification(@RequestBody Notification notification,
+	public @ResponseBody UserStatus updateNotification(@RequestBody NotificationDTO notificationDTO,
 			HttpServletRequest request, HttpServletResponse response) {
 		try {
-			notification.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-			notification.setIsactive(true);
-			notificationservice.updateEntity(notification);
+			notificationDTO.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+			notificationservice.updateEntity(NotificationRequestResponseFactory.setNotification(notificationDTO));
 			return new UserStatus(1, "Notification update Successfully !");
 		} catch (Exception e) {
 			// e.printStackTrace();
