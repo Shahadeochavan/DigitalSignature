@@ -6,7 +6,6 @@ import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -18,9 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.nextech.erp.factory.PageFactory;
-import com.nextech.erp.model.Page;
 import com.nextech.erp.newDTO.PageDTO;
 import com.nextech.erp.service.PageService;
 import com.nextech.erp.status.UserStatus;
@@ -43,9 +40,7 @@ public class PageController {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
-			Page page = PageFactory.setPage(pageDTO);
-			page.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-			pageservice.addEntity(page);
+			pageservice.addEntity(PageFactory.setPage(pageDTO, request));
 			return new UserStatus(1, "Page added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			System.out.println("Inside ConstraintViolationException");
@@ -63,23 +58,21 @@ public class PageController {
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody Page getPage(@PathVariable("id") long id) {
-		Page page = null;
+	public @ResponseBody PageDTO getPage(@PathVariable("id") long id) {
+		PageDTO pageDTO = null;
 		try {
-			page = pageservice.getEntityById(Page.class, id);
+			pageDTO = pageservice.getPageDTOById(id);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return page;
+		return pageDTO;
 	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
 	public @ResponseBody UserStatus updatePage(@RequestBody PageDTO pageDTO,
 			HttpServletRequest request, HttpServletResponse response) {
 		try {
-			Page page = PageFactory.setPage(pageDTO);
-			page.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-			pageservice.updateEntity(page);
+			pageservice.updateEntity(PageFactory.setPageUpdate(pageDTO, request));
 			return new UserStatus(1, "Page update Successfully !");
 		} catch (Exception e) {
 			// e.printStackTrace();
@@ -88,11 +81,11 @@ public class PageController {
 	}
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<Page> getPage() {
+	public @ResponseBody List<PageDTO> getPage() {
 
-		List<Page> PageList = null;
+		List<PageDTO> PageList = null;
 		try {
-			PageList = pageservice.getEntityList(Page.class);
+			PageList = pageservice.getPageDTOList(PageList);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -105,9 +98,7 @@ public class PageController {
 	public @ResponseBody UserStatus deletePage(@PathVariable("id") long id) {
 
 		try {
-			Page page = pageservice.getEntityById(Page.class,id);
-			page.setIsactive(false);
-			pageservice.updateEntity(page);
+			PageDTO pageDTO = pageservice.getPageById(id);
 			return new UserStatus(1, "Page deleted Successfully !");
 		} catch (Exception e) {
 			return new UserStatus(0, e.toString());

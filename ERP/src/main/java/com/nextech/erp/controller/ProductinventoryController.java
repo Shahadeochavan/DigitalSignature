@@ -4,17 +4,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
@@ -23,10 +20,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.dto.Mail;
 import com.nextech.erp.dto.ProductInventoryDTO;
+import com.nextech.erp.factory.ProductInventoryRequestResponseFactory;
 import com.nextech.erp.model.Notification;
 import com.nextech.erp.model.Notificationuserassociation;
 import com.nextech.erp.model.Product;
@@ -70,17 +67,15 @@ public class ProductinventoryController {
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addProductinventory(
-			@Valid @RequestBody Productinventory productinventory, BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
+			@Valid @RequestBody ProductInventoryDTO productInventoryDTO, BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			if (bindingResult.hasErrors()) {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
 			if (productinventoryService.getProductinventoryByProductId(
-				productinventory.getProduct().getId()) == null){
-				productinventory.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-				productinventory.setIsactive(true);
-				productinventoryService.addEntity(productinventory);
+					productInventoryDTO.getProductId().getId()) == null){
+				productinventoryService.addEntity(ProductInventoryRequestResponseFactory.setProductInventory(productInventoryDTO, request));
 			}	
 			else
 				return new UserStatus(0, messageSource.getMessage(
@@ -113,11 +108,9 @@ public class ProductinventoryController {
 	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
-	public @ResponseBody UserStatus updateProductinventory(@RequestBody Productinventory productinventory,HttpServletRequest request,HttpServletResponse response) {
+	public @ResponseBody UserStatus updateProductinventory(@RequestBody ProductInventoryDTO productInventoryDTO,HttpServletRequest request,HttpServletResponse response) {
 		try {
-			productinventory.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-			productinventory.setIsactive(true);
-			productinventoryService.updateEntity(productinventory);
+			productinventoryService.updateEntity(ProductInventoryRequestResponseFactory.setProductInventoryUpdate(productInventoryDTO, request));
 			return new UserStatus(1, "Productinventory update Successfully !");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -172,7 +165,7 @@ public class ProductinventoryController {
 				}else{
 					productInventoryDTO.setInventoryQuantity(productinventory.getQuantityavailable());
 					productInventoryDTO.setProductPartNumber(product.getPartNumber());
-					productInventoryDTO.setMinimum_quantity(productinventory.getMinimum_quantity());
+					productInventoryDTO.setMinimumQuantity(productinventory.getMinimum_quantity());
 					productInventoryDTOs.add(productInventoryDTO);
 				}
 				

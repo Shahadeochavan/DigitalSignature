@@ -4,97 +4,89 @@ import java.sql.Date;
 import java.sql.Time;
 import java.util.List;
 
-public class SecurityCheckOutDTO {
+public class SecurityCheckOutDTO  extends AbstractDTO{
 
-	private String description;
-	private String driver_Name;
+	private String driverFirstName;
+	private String driverLastName;
 	private Date createDate;
-	private Time intime;
-	private String invoice_No;
-	private Time outtime;
+	private Time inTime;
+	private String invoiceNo;
+	private String licenceNo;
+	private Time outTime;
 	private int poNo;
 	private String vehicleNo;
-	private String clientname;
+	private String clientName;
 	private List<SecurityCheckOutPart> securityCheckOutParts;
-
-	public String getDescription() {
-		return description;
+	public String getDriverFirstName() {
+		return driverFirstName;
 	}
-
-	public void setDescription(String description) {
-		this.description = description;
+	public void setDriverFirstName(String driverFirstName) {
+		this.driverFirstName = driverFirstName;
 	}
-
-	public String getDriver_Name() {
-		return driver_Name;
+	public String getDriverLastName() {
+		return driverLastName;
 	}
-
-	public void setDriver_Name(String driver_Name) {
-		this.driver_Name = driver_Name;
+	public void setDriverLastName(String driverLastName) {
+		this.driverLastName = driverLastName;
 	}
-
-	public Time getIntime() {
-		return intime;
+	public Date getCreateDate() {
+		return createDate;
 	}
-
-	public void setIntime(Time intime) {
-		this.intime = intime;
+	public void setCreateDate(Date createDate) {
+		this.createDate = createDate;
 	}
-	public Time getOuttime() {
-		return outtime;
+	public Time getInTime() {
+		return inTime;
 	}
-
-	public void setOuttime(Time outtime) {
-		this.outtime = outtime;
+	public void setInTime(Time inTime) {
+		this.inTime = inTime;
 	}
-
+	public String getInvoiceNo() {
+		return invoiceNo;
+	}
+	public void setInvoiceNo(String invoiceNo) {
+		this.invoiceNo = invoiceNo;
+	}
+	public String getLicenceNo() {
+		return licenceNo;
+	}
+	public void setLicenceNo(String licenceNo) {
+		this.licenceNo = licenceNo;
+	}
+	public Time getOutTime() {
+		return outTime;
+	}
+	public void setOutTime(Time outTime) {
+		this.outTime = outTime;
+	}
 	public int getPoNo() {
 		return poNo;
 	}
-
 	public void setPoNo(int poNo) {
 		this.poNo = poNo;
 	}
-
 	public String getVehicleNo() {
 		return vehicleNo;
 	}
-
 	public void setVehicleNo(String vehicleNo) {
 		this.vehicleNo = vehicleNo;
 	}
-
-	public String getClientname() {
-		return clientname;
+	public String getClientName() {
+		return clientName;
 	}
-
-	public void setClientname(String clientname) {
-		this.clientname = clientname;
+	public void setClientName(String clientName) {
+		this.clientName = clientName;
 	}
-
 	public List<SecurityCheckOutPart> getSecurityCheckOutParts() {
 		return securityCheckOutParts;
 	}
-
 	public void setSecurityCheckOutParts(
 			List<SecurityCheckOutPart> securityCheckOutParts) {
 		this.securityCheckOutParts = securityCheckOutParts;
 	}
 
-	public Date getCreateDate() {
-		return createDate;
-	}
+	
+	
 
-	public void setCreateDate(Date createDate) {
-		this.createDate = createDate;
-	}
-
-	public String getInvoice_No() {
-		return invoice_No;
-	}
-
-	public void setInvoice_No(String invoice_No) {
-		this.invoice_No = invoice_No;
-	}
 
 }

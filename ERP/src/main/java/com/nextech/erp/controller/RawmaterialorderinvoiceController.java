@@ -120,7 +120,7 @@ public class RawmaterialorderinvoiceController {
 			
 			Long userID = Long.parseLong(request.getAttribute("current_user").toString());
 			rawMaterialInvoiceDTO.setCreatedBy(userID);
-			rawMaterialInvoiceDTO.setActive(true);
+			rawMaterialInvoiceDTO.setActive(true);	
 			
 			Rawmaterialorderinvoice rawmaterialorderinvoice = RawMaterialInvoiceRequestResponseFactory.setRMInvoice(rawMaterialInvoiceDTO);
 

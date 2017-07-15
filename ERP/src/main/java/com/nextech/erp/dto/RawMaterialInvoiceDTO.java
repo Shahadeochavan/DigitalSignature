@@ -20,6 +20,7 @@ public class RawMaterialInvoiceDTO extends AbstractDTO{
 	private Date createDate;
 	private int poNo;
 	private String vendorName;
+	private String licenceNo;
 	private List<QualityCheckRMDTO> qualityCheckRMDTOs;
 	
 	public String getInvoiceNo() {
@@ -119,4 +120,11 @@ public class RawMaterialInvoiceDTO extends AbstractDTO{
 	public void setDriverLastName(String driverLastName) {
 		this.driverLastName = driverLastName;
 	}
+	public String getLicenceNo() {
+		return licenceNo;
+	}
+	public void setLicenceNo(String licenceNo) {
+		this.licenceNo = licenceNo;
+	}
+	
 }

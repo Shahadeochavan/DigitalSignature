@@ -19,11 +19,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.dto.StoreOutDTO;
 import com.nextech.erp.dto.StoreOutPart;
-import com.nextech.erp.model.Product;
+import com.nextech.erp.factory.StoreoutRequestResponseFactory;
 import com.nextech.erp.model.Productionplanning;
 import com.nextech.erp.model.Rawmaterial;
 import com.nextech.erp.model.Rawmaterialinventory;
@@ -81,26 +80,15 @@ public class StoreoutController {
 				return new UserStatus(0, bindingResult.getFieldError().getDefaultMessage());
 			}
 			Productionplanning productionplanning = productionplanningService.getEntityById(Productionplanning.class,
-					storeOutDTO.getProductionPlanId());
-			Storeout storeout = new Storeout();
-			storeout.setQuantityRequired(storeOutDTO.getQuantityRequired());
-			storeout.setDescription(storeOutDTO.getDescription());
-			storeout.setProduct(productService.getEntityById(Product.class, storeOutDTO.getProductId()));
-			storeout.setProductionplanning(productionplanningService.getEntityById(Productionplanning.class,
-					storeOutDTO.getProductionPlanId()));
-			storeout.setStatus(statusService.getEntityById(Status.class,
-					Long.parseLong(messageSource.getMessage(ERPConstants.ADDED_STORE_OUT, null, null))));
-			storeout.setIsactive(true);
-			storeout.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-			storeout.setSelectedStoreOut(storeOutDTO.isSelectedStoreOut());
+					storeOutDTO.getProductionPlanId().getId());
+			Storeout storeout = StoreoutRequestResponseFactory.setStoreOut(storeOutDTO, request);
+			storeout.setStatus(statusService.getEntityById(Status.class,Long.parseLong(messageSource.getMessage(ERPConstants.ADDED_STORE_OUT, null, null))));
 			storeoutService.addEntity(storeout);
 
 			for (StoreOutPart storeOutPart : storeOutDTO.getStoreOutParts()) {
-
 				Storeoutrm storeoutrm = setStoreParts(storeOutPart);
 				Rawmaterialinventory rawmaterialinventory = rawmaterialinventoryService.getByRMId(storeoutrm.getRawmaterial().getId());
 				if (rawmaterialinventory.getRawmaterial().getId() == storeoutrm.getRawmaterial().getId()) {
-
 					// to check RM inventory quantity and storeout quantity
 					if (rawmaterialinventory.getQuantityAvailable() >= storeoutrm.getQuantityDispatched()) {
 						storeoutrm.setDescription(storeOutDTO.getDescription());
@@ -208,20 +196,5 @@ public class StoreoutController {
 		storeoutrm.setQuantityDispatched(storeOutPart.getQuantityDispatched());
 		storeoutrm.setIsactive(true);
 		return storeoutrm;
-	}
-
-	private void saveStoreOut(StoreOutDTO storeOutDTO, HttpServletRequest request) throws Exception {
-		Productionplanning productionplanning = productionplanningService.getEntityById(Productionplanning.class,
-				storeOutDTO.getProductId());
-		Storeout storeout = new Storeout();
-		storeout.setQuantityRequired(storeOutDTO.getQuantityRequired());
-		storeout.setDescription(storeOutDTO.getDescription());
-		storeout.setProduct(productService.getEntityById(Product.class, productionplanning.getProduct().getId()));
-		storeout.setProductionplanning(productionplanning);
-		storeout.setStatus(statusService.getEntityById(Status.class,
-				Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_NEW_PRODUCT_ORDER, null, null))));
-		storeout.setIsactive(true);
-		storeout.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-		storeoutService.addEntity(storeout);
 	}
 }

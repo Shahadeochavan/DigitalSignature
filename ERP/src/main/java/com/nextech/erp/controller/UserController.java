@@ -195,14 +195,14 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody User getUser(@PathVariable("id") long id) {
-		User user = null;
+	public @ResponseBody UserDTO getUser(@PathVariable("id") long id) {
+		UserDTO userDTO = null;
 		try {
-			user = userservice.getEntityById(User.class, id);
+			userDTO = userservice.getUserDTO(id);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return user;
+		return userDTO;
 	}
 
 	@CrossOrigin(origins = "http://localhost:8080")
@@ -232,8 +232,7 @@ public class UserController {
 							ERPConstants.CONTACT_NUMBER_EXIT, null, null));
 				}
 			}
-		userDTO.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-		userservice.updateEntity(UserFactory.setUser(userDTO, request));
+		userservice.updateEntity(UserFactory.setUserUpdate(userDTO, request));
 		mailSendingUpdate(userDTO, request);
 		return new UserStatus(1, "User update Successfully !");
 		} catch (Exception e) {
@@ -245,12 +244,11 @@ public class UserController {
 	/* @CrossOrigin(origins = "http://localhost:8080") */
 	/* Getting List of objects in Json format in Spring Restful Services */
 	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<User> getUser() {
+	public @ResponseBody List<UserDTO> getUser() {
 
-		List<User> userList = null;
+		List<UserDTO> userList = null;
 		try {
-			userList = userservice.getEntityList(User.class);
-
+			userList = userservice.getUserList(userList);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -277,9 +275,7 @@ public class UserController {
 	public @ResponseBody UserStatus deleteEmployee(@PathVariable("id") long id) {
 
 		try {
-			User user = userservice.getEntityById(User.class, id);
-			user.setIsactive(false);
-			userservice.updateEntity(user);
+			 userservice.getUserDTOByid(id);
 			return new UserStatus(1, "User deleted Successfully !");
 		} catch (Exception e) {
 			return new UserStatus(0, e.toString());

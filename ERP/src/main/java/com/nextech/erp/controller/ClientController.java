@@ -132,8 +132,7 @@ public class ClientController {
 				return new UserStatus(2, messageSource.getMessage(ERPConstants.EMAIL_ALREADY_EXIT, null, null));
 				}
 			 }
-            Client client = ClientFactory.setClient(clientDTO, request);
-        	client.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+            Client client = ClientFactory.setClientUpdate(clientDTO, request);
 	    	clientService.updateEntity(client);
 	        mailSendingUpdate(client, request, response);
 			return new UserStatus(1, messageSource.getMessage(

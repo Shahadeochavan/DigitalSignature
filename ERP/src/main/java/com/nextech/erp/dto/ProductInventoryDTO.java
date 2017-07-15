@@ -2,17 +2,15 @@ package com.nextech.erp.dto;
 
 import com.nextech.erp.model.Product;
 
-public class ProductInventoryDTO {
+public class ProductInventoryDTO extends AbstractDTO{
 	private String productPartNumber;
 	private long inventoryQuantity;
-	private long minimum_quantity;
-	private long id;
-	private String description;
-	private long maximum_quantity;
+	private long minimumQuantity;
+	private long maximumQuantity;
 	private String name;
-	private long quantityavailable;
-	private long racknumber;
-	private Product product;
+	private long quantityAvailable;
+	private long rackNumber;
+	private Product productId;
 	public String getProductPartNumber() {
 		return productPartNumber;
 	}
@@ -25,29 +23,17 @@ public class ProductInventoryDTO {
 	public void setInventoryQuantity(long inventoryQuantity) {
 		this.inventoryQuantity = inventoryQuantity;
 	}
-	public long getMinimum_quantity() {
-		return minimum_quantity;
+	public long getMinimumQuantity() {
+		return minimumQuantity;
 	}
-	public void setMinimum_quantity(long minimum_quantity) {
-		this.minimum_quantity = minimum_quantity;
+	public void setMinimumQuantity(long minimumQuantity) {
+		this.minimumQuantity = minimumQuantity;
 	}
-	public long getId() {
-		return id;
+	public long getMaximumQuantity() {
+		return maximumQuantity;
 	}
-	public void setId(long id) {
-		this.id = id;
-	}
-	public String getDescription() {
-		return description;
-	}
-	public void setDescription(String description) {
-		this.description = description;
-	}
-	public long getMaximum_quantity() {
-		return maximum_quantity;
-	}
-	public void setMaximum_quantity(long maximum_quantity) {
-		this.maximum_quantity = maximum_quantity;
+	public void setMaximumQuantity(long maximumQuantity) {
+		this.maximumQuantity = maximumQuantity;
 	}
 	public String getName() {
 		return name;
@@ -55,23 +41,24 @@ public class ProductInventoryDTO {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public long getQuantityavailable() {
-		return quantityavailable;
+	public long getQuantityAvailable() {
+		return quantityAvailable;
 	}
-	public void setQuantityavailable(long quantityavailable) {
-		this.quantityavailable = quantityavailable;
+	public void setQuantityAvailable(long quantityAvailable) {
+		this.quantityAvailable = quantityAvailable;
 	}
-	public long getRacknumber() {
-		return racknumber;
+	public long getRackNumber() {
+		return rackNumber;
 	}
-	public void setRacknumber(long racknumber) {
-		this.racknumber = racknumber;
+	public void setRackNumber(long rackNumber) {
+		this.rackNumber = rackNumber;
 	}
-	public Product getProduct() {
-		return product;
+	public Product getProductId() {
+		return productId;
 	}
-	public void setProduct(Product product) {
-		this.product = product;
+	public void setProductId(Product productId) {
+		this.productId = productId;
 	}
+
 
 }

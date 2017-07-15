@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
@@ -18,9 +19,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.dto.SecurityCheckOutDTO;
 import com.nextech.erp.dto.SecurityCheckOutPart;
+import com.nextech.erp.factory.SecurityCheckOutRequestResponseFactory;
 import com.nextech.erp.model.Dispatch;
 import com.nextech.erp.model.Productorderassociation;
 import com.nextech.erp.model.Securitycheckout;
@@ -67,17 +70,7 @@ public class SecuritycheckoutController {
 						.getDefaultMessage());
 			}
 
-			Securitycheckout securitycheckout = new Securitycheckout();
-			securitycheckout.setClientname(securityCheckOutDTO.getClientname());
-			securitycheckout.setDescription(securityCheckOutDTO.getDescription());
-			securitycheckout.setDriver_Name(securityCheckOutDTO.getDriver_Name());
-			securitycheckout.setCreateDate(securityCheckOutDTO.getCreateDate());
-			securitycheckout.setPoNo(securityCheckOutDTO.getPoNo());
-			securitycheckout.setIntime(securityCheckOutDTO.getIntime());
-			securitycheckout.setOuttime(securityCheckOutDTO.getOuttime());
-			securitycheckout.setVehicleNo(securityCheckOutDTO.getVehicleNo());
-			securitycheckout.setInvoice_No(securityCheckOutDTO.getInvoice_No());
-			securitycheckout.setIsactive(true);
+			Securitycheckout securitycheckout = SecurityCheckOutRequestResponseFactory.setSecrityCheckOut(securityCheckOutDTO, request);
 			securitycheckout.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			securitycheckout.setStatus(statusService.getEntityById(Status.class, Long.parseLong(messageSource.getMessage(ERPConstants.SECURITY_CHECK_COMPLETE, null, null))));
 			securitycheckoutService.addEntity(securitycheckout);
@@ -134,11 +127,9 @@ public class SecuritycheckoutController {
 
 	@Transactional @RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
 	public @ResponseBody UserStatus updateSecuritycheckout(
-			@RequestBody Securitycheckout securitycheckout,HttpServletRequest request,HttpServletResponse response) {
+			@RequestBody SecurityCheckOutDTO securityCheckOutDTO,HttpServletRequest request,HttpServletResponse response) {
 		try {
-			securitycheckout.setIsactive(true);
-			securitycheckout.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-			securitycheckoutService.updateEntity(securitycheckout);
+			securitycheckoutService.updateEntity(SecurityCheckOutRequestResponseFactory.setSecrityCheckOutUpdate(securityCheckOutDTO, request));
 			return new UserStatus(1, "Securitycheckout update Successfully !");
 		} catch (Exception e) {
 			 e.printStackTrace();

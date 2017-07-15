@@ -2,22 +2,18 @@ package com.nextech.erp.dto;
 
 import java.util.List;
 
-public class StoreOutDTO {
-	private long productionPlanId;
-	private long productId;
+import com.nextech.erp.model.Product;
+import com.nextech.erp.model.Productionplanning;
+
+public class StoreOutDTO  extends AbstractDTO{
+	private Productionplanning productionPlanId;
+	private Product productId;
 	private long statusId;
 	private long quantityRequired;
 	private boolean isSelectedStoreOut;
 	private List<StoreOutPart> storeOutParts;
-	private String description;
 
-	public long getProductionPlanId() {
-		return productionPlanId;
-	}
 
-	public void setProductionPlanId(long productionPlanId) {
-		this.productionPlanId = productionPlanId;
-	}
 
 	public long getStatusId() {
 		return statusId;
@@ -35,19 +31,20 @@ public class StoreOutDTO {
 		this.storeOutParts = storeOutParts;
 	}
 
-	public String getDescription() {
-		return description;
+
+	public Productionplanning getProductionPlanId() {
+		return productionPlanId;
 	}
 
-	public void setDescription(String description) {
-		this.description = description;
+	public void setProductionPlanId(Productionplanning productionPlanId) {
+		this.productionPlanId = productionPlanId;
 	}
 
-	public long getProductId() {
+	public Product getProductId() {
 		return productId;
 	}
 
-	public void setProductId(long productId) {
+	public void setProductId(Product productId) {
 		this.productId = productId;
 	}
 
