@@ -98,7 +98,7 @@ public class PageController {
 	public @ResponseBody UserStatus deletePage(@PathVariable("id") long id) {
 
 		try {
-			PageDTO pageDTO = pageservice.getPageById(id);
+			 pageservice.getPageById(id);
 			return new UserStatus(1, "Page deleted Successfully !");
 		} catch (Exception e) {
 			return new UserStatus(0, e.toString());

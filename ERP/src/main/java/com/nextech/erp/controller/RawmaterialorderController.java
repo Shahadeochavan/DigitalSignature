@@ -47,7 +47,10 @@ import com.nextech.erp.model.Rawmaterialvendorassociation;
 import com.nextech.erp.model.Status;
 import com.nextech.erp.model.User;
 import com.nextech.erp.model.Vendor;
+import com.nextech.erp.newDTO.NotificationDTO;
+import com.nextech.erp.newDTO.NotificationUserAssociatinsDTO;
 import com.nextech.erp.newDTO.RMOrderAssociationDTO;
+import com.nextech.erp.newDTO.UserDTO;
 import com.nextech.erp.service.MailService;
 import com.nextech.erp.service.NotificationService;
 import com.nextech.erp.service.NotificationUserAssociationService;
@@ -284,7 +287,7 @@ public class RawmaterialorderController {
 		Rawmaterialorder  rawmaterialorder = RMOrderRequestResponseFactory.setRMOrder(rawmaterialOrderDTO);
 		rawmaterialorder.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 		rawmaterialorder.setStatus(statusService.getEntityById(Status.class,Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_NEW_RM_ORDER, null, null))));
-		long id=rawmaterialorderService.addEntity(RMOrderRequestResponseFactory.setRMOrder(rawmaterialOrderDTO));
+		long id=rawmaterialorderService.addEntity(rawmaterialorder);
 		System.out.println("id is"+id);
 		//TODO Create PDF file
 		//downloadPDF(request, response, rawmaterialorder);
@@ -352,7 +355,7 @@ public class RawmaterialorderController {
 	private ByteArrayOutputStream convertPDFToByteArrayOutputStream(String fileName,RawmaterialOrderDTO rawmaterialOrderDTO,List<RMOrderModelData> rmOrderModelDatas) throws Exception {
 
 		Status status = statusService.getEntityById(Status.class, rawmaterialOrderDTO.getStatusId().getId());
-		Notification notification = notificationService.getNotifiactionByStatus(status.getId());
+		NotificationDTO notification = notificationService.getNotificationDTOById(status.getId());
 		Vendor vendor = vendorService.getEntityById(Vendor.class,rawmaterialOrderDTO.getVendorId().getId());
 		//TODO mail sending
         mailSending(notification, rawmaterialOrderDTO, vendor,fileName,rmOrderModelDatas);
@@ -386,17 +389,17 @@ public class RawmaterialorderController {
 		return baos;
 	}
 
-	private void mailSending(Notification notification,RawmaterialOrderDTO rawmaterialOrderDTO,Vendor vendor,String fileName,List<RMOrderModelData> rmOrderModelDatas) throws Exception{
-		List<Notificationuserassociation> notificationuserassociations = notificationUserAssociationService.getNotificationuserassociationBynotificationId(notification.getId());
+	private void mailSending(NotificationDTO notification,RawmaterialOrderDTO rawmaterialOrderDTO,Vendor vendor,String fileName,List<RMOrderModelData> rmOrderModelDatas) throws Exception{
+		List<NotificationUserAssociatinsDTO> notificationuserassociations = notificationUserAssociationService.getNotificationUserAssociatinsDTOs(notification.getId());
 		  Mail mail = new Mail();
-		  for (Notificationuserassociation notificationuserassociation : notificationuserassociations) {
-			  User user = userService.getEmailUserById(notificationuserassociation.getUser().getId());
+		  for (NotificationUserAssociatinsDTO notificationuserassociation : notificationuserassociations) {
+			  UserDTO user = userService.getUserDTO(notificationuserassociation.getUserId().getId());
 			  if(notificationuserassociation.getTo()==true){
 				   mail.setMailTo(vendor.getEmail());
 			  }else if(notificationuserassociation.getBcc()==true){
-				  mail.setMailBcc(user.getEmail());
+				  mail.setMailBcc(user.getEmailId());
 			  }else if(notificationuserassociation.getCc()==true){
-				  mail.setMailCc(user.getEmail());
+				  mail.setMailCc(user.getEmailId());
 			  }
 			  
 		}

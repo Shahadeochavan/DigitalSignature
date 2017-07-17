@@ -41,13 +41,11 @@ public class PageServiceImpl extends CRUDServiceImpl<Page> implements PageServic
 		return pageDTO;
 	}
 	@Override
-	public PageDTO getPageById(long id) throws Exception {
+	public void getPageById(long id) throws Exception {
 		// TODO Auto-generated method stub
 		Page page = pageDao.getById(Page.class, id);
-		PageDTO pageDTO = new PageDTO();
 		page.setIsactive(false);
 		pageDao.update(page);
-		return pageDTO;
 	}
 	
 }

@@ -44,6 +44,9 @@ import com.nextech.erp.model.Rmorderinvoiceintakquantity;
 import com.nextech.erp.model.Status;
 import com.nextech.erp.model.User;
 import com.nextech.erp.model.Vendor;
+import com.nextech.erp.newDTO.NotificationDTO;
+import com.nextech.erp.newDTO.NotificationUserAssociatinsDTO;
+import com.nextech.erp.newDTO.UserDTO;
 import com.nextech.erp.service.MailService;
 import com.nextech.erp.service.NotificationService;
 import com.nextech.erp.service.NotificationUserAssociationService;
@@ -242,7 +245,7 @@ public class RawmaterialorderinvoiceController {
 			Rawmaterialorder rawmaterialorder = rawmaterialorderService.getEntityById(Rawmaterialorder.class, rawmaterialorderinvoice.getPo_No());
 
 			Status status = statusService.getEntityById(Status.class, rawmaterialorderinvoice.getStatus().getId());
-			Notification notification = notificationService.getNotifiactionByStatus(status.getId());
+			NotificationDTO notification = notificationService.getNotificationDTOById(status.getId());
 			Vendor vendor = vendorService.getEntityById(Vendor.class, Long.parseLong(rawmaterialorderinvoice.getVendorname()));
 	        mailSending(notification, rawmaterialorder, vendor);
 
@@ -287,18 +290,18 @@ public class RawmaterialorderinvoiceController {
 		rawmaterialorderService.updateEntity(rawmaterialorder);
 	}
 	
-	private void mailSending(Notification notification,Rawmaterialorder rawmaterialorder,Vendor vendor) throws Exception{
-		List<Notificationuserassociation> notificationuserassociations = notificationUserAssociationService.getNotificationuserassociationBynotificationId(notification.getId());
+	private void mailSending(NotificationDTO notification,Rawmaterialorder rawmaterialorder,Vendor vendor) throws Exception{
+		List<NotificationUserAssociatinsDTO> notificationuserassociations = notificationUserAssociationService.getNotificationUserAssociatinsDTOs(notification.getId());
 		List<RMOrderModelData> rmOrderModelDatas = new ArrayList<RMOrderModelData>();
 		  Mail mail = new Mail();
-		  for (Notificationuserassociation notificationuserassociation : notificationuserassociations) {
-			  User user = userService.getEmailUserById(notificationuserassociation.getUser().getId());
+		  for (NotificationUserAssociatinsDTO notificationuserassociation : notificationuserassociations) {
+			  UserDTO user = userService.getUserDTO(notificationuserassociation.getUserId().getId());
 			  if(notificationuserassociation.getTo()==true){
 				   mail.setMailTo(vendor.getEmail());
 			  }else if(notificationuserassociation.getBcc()==true){
-				  mail.setMailBcc(user.getEmail());
+				  mail.setMailBcc(user.getEmailId());
 			  }else if(notificationuserassociation.getCc()==true){
-				  mail.setMailCc(user.getEmail());
+				  mail.setMailCc(user.getEmailId());
 			  }
 			  
 		} 

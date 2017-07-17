@@ -44,9 +44,7 @@ public class UsertypepageassociationController {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
-			Usertypepageassociation usertypepageassociation = UserTypePageAssoFactory.setUserTypePageAss(userTypePageAssoDTO, request);
-			usertypepageassociation.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-			usertypepageassociationService.addEntity(usertypepageassociation);
+			usertypepageassociationService.addEntity(UserTypePageAssoFactory.setUserTypePageAss(userTypePageAssoDTO, request));
 			return new UserStatus(1,
 					"Usertypepageassociation added Successfully !");
 		} catch (ConstraintViolationException cve) {
@@ -62,27 +60,23 @@ public class UsertypepageassociationController {
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody Usertypepageassociation getPageAss(
+	public @ResponseBody UserTypePageAssoDTO getPageAss(
 			@PathVariable("id") long id) {
-		Usertypepageassociation usertypepageassociation = null;
+		UserTypePageAssoDTO userTypePageAssoDTO = null;
 		try {
-			usertypepageassociation = usertypepageassociationService
-					.getEntityById(Usertypepageassociation.class, id);
+			userTypePageAssoDTO = usertypepageassociationService.getUserTypeDto(id);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return usertypepageassociation;
+		return userTypePageAssoDTO;
 	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
 	public @ResponseBody UserStatus updatePageAss(
 			@RequestBody UserTypePageAssoDTO userTypePageAssoDTO,HttpServletRequest request,HttpServletResponse response) {
 		try {
-			Usertypepageassociation usertypepageassociation = UserTypePageAssoFactory.setUserTypePageAss(userTypePageAssoDTO, request);
-			usertypepageassociation.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-			usertypepageassociationService.addEntity(usertypepageassociation);
-			return new UserStatus(1,
-					"Usertypepageassociation update Successfully !");
+			usertypepageassociationService.addEntity(UserTypePageAssoFactory.setUserTypePageAssUpdate(userTypePageAssoDTO, request));
+			return new UserStatus(1,"Usertypepageassociation update Successfully !");
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new UserStatus(0, e.toString());
@@ -90,18 +84,17 @@ public class UsertypepageassociationController {
 	}
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<Usertypepageassociation> getPageAss() {
+	public @ResponseBody List<UserTypePageAssoDTO> getPageAss() {
 
-		List<Usertypepageassociation> UsertypepageassociationList = null;
+		List<UserTypePageAssoDTO> UserTypePageAssoDTO = null;
 		try {
-			UsertypepageassociationList = usertypepageassociationService
-					.getEntityList(Usertypepageassociation.class);
+			UserTypePageAssoDTO = usertypepageassociationService.getUserTypePageAssList();
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		return UsertypepageassociationList;
+		return UserTypePageAssoDTO;
 	}
 
 	/* Delete an object from DB in Spring Restful Services */

@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.dto.Mail;
 import com.nextech.erp.dto.RMInventoryDTO;
@@ -32,6 +33,9 @@ import com.nextech.erp.model.Notificationuserassociation;
 import com.nextech.erp.model.Rawmaterial;
 import com.nextech.erp.model.Rawmaterialinventory;
 import com.nextech.erp.model.User;
+import com.nextech.erp.newDTO.NotificationDTO;
+import com.nextech.erp.newDTO.NotificationUserAssociatinsDTO;
+import com.nextech.erp.newDTO.UserDTO;
 import com.nextech.erp.service.MailService;
 import com.nextech.erp.service.NotificationService;
 import com.nextech.erp.service.NotificationUserAssociationService;
@@ -78,7 +82,7 @@ public class RawmaterialinventoryController {
 				rawmaterialinventoryService.addEntity(RMInventoryRequestResponseFactory.setRMInventory(rmInventoryDTO, request));
 			}
 			else
-				return new UserStatus(0, messageSource.getMessage(
+				return new UserStatus(1, messageSource.getMessage(
 						ERPConstants.RAW_MATERIAL_INVENTORY, null, null));
 			return new UserStatus(1, "Rawmaterialinventory added Successfully !");
 		} catch (ConstraintViolationException cve) {
@@ -142,7 +146,7 @@ public class RawmaterialinventoryController {
 		}
 
 	}
-	@Scheduled(initialDelay=60000, fixedRate=60000)
+	//@Scheduled(initialDelay=60000, fixedRate=60000)
 	public void executeSchedular() throws Exception{
 		List<Rawmaterialinventory> rawmaterialinventoryList = null;
 		System.out.println("RM Inventory Check");
@@ -172,26 +176,26 @@ public class RawmaterialinventoryController {
 	
 	private void mailSendingRMInventroy(List<RMInventoryDTO> rmInventoryDTOs) throws Exception{
 		  Mail mail = new Mail();
-		  Notification notification = notificationService.getEntityById(Notification.class,18);
-		  List<Notificationuserassociation> notificationuserassociations = notificationUserAssociationService.getNotificationuserassociationBynotificationId(notification.getId());
-		  for (Notificationuserassociation notificationuserassociation : notificationuserassociations) {
-			  User   user = userService.getEmailUserById(notificationuserassociation.getUser().getId());
+		  NotificationDTO  notificationDTO = notificationService.getNotificationDTOById(Long.parseLong(messageSource.getMessage(ERPConstants.RM_INVENTORY_NOTIFICATION, null, null)));
+		  List<NotificationUserAssociatinsDTO> notificationUserAssociatinsDTOs = notificationUserAssociationService.getNotificationUserAssociatinsDTOs(notificationDTO.getId());
+		  for (NotificationUserAssociatinsDTO notificationuserassociation : notificationUserAssociatinsDTOs) {
+			  UserDTO userDTO = userService.getUserDTO(notificationuserassociation.getId());
 			  if(notificationuserassociation.getTo()==true){
-				  mail.setMailTo(user.getEmail()); 
+				  mail.setMailTo(userDTO.getEmailId()); 
 			  }else if(notificationuserassociation.getBcc()==true){
-				  mail.setMailBcc(user.getEmail());
+				  mail.setMailBcc(userDTO.getEmailId());
 			  }else if(notificationuserassociation.getCc()==true){
-				  mail.setMailCc(user.getEmail());
+				  mail.setMailCc(userDTO.getEmailId());
 			  }
 			
 		}
-	        mail.setMailSubject(notification.getSubject());
+	        mail.setMailSubject(notificationDTO.getSubject());
 	        Map < String, Object > model = new HashMap < String, Object > ();
 	        model.put("firstName", "Prashant");
 	        model.put("rmInventoryDTOs", rmInventoryDTOs);
 	        model.put("location", "Pune");
 	        model.put("signature", "www.NextechServices.in");
 	        mail.setModel(model);
-		mailService.sendEmailWithoutPdF(mail, notification);
+		mailService.sendEmailWithoutPdF(mail, notificationDTO);
 	}
 }

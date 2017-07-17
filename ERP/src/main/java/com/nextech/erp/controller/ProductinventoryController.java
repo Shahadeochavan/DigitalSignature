@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.dto.Mail;
 import com.nextech.erp.dto.ProductInventoryDTO;
@@ -29,6 +32,9 @@ import com.nextech.erp.model.Notificationuserassociation;
 import com.nextech.erp.model.Product;
 import com.nextech.erp.model.Productinventory;
 import com.nextech.erp.model.User;
+import com.nextech.erp.newDTO.NotificationDTO;
+import com.nextech.erp.newDTO.NotificationUserAssociatinsDTO;
+import com.nextech.erp.newDTO.UserDTO;
 import com.nextech.erp.service.MailService;
 import com.nextech.erp.service.NotificationService;
 import com.nextech.erp.service.NotificationUserAssociationService;
@@ -183,20 +189,20 @@ public class ProductinventoryController {
 	}
 	private void mailSendingProductInventroy(List<ProductInventoryDTO> productInventoryDTOs) throws Exception{
 		  Mail mail = new Mail();
-		  Notification notification = notificationService.getEntityById(Notification.class,17);
-		  List<Notificationuserassociation> notificationuserassociations = notificationUserAssociationService.getNotificationuserassociationBynotificationId(notification.getId());
-		  for (Notificationuserassociation notificationuserassociation : notificationuserassociations) {
-			  User  user = userService.getEmailUserById(notificationuserassociation.getUser().getId());
+		  NotificationDTO  notificationDTO = notificationService.getNotificationDTOById(Long.parseLong(messageSource.getMessage(ERPConstants.PRODUCT_INVENTORY_NOTIFICATION, null, null)));
+		  List<NotificationUserAssociatinsDTO> notificationUserAssociatinsDTOs = notificationUserAssociationService.getNotificationUserAssociatinsDTOs(notificationDTO.getId());
+		  for (NotificationUserAssociatinsDTO notificationuserassociation : notificationUserAssociatinsDTOs) {
+			  UserDTO userDTO = userService.getUserDTO(notificationuserassociation.getId());
 			  if(notificationuserassociation.getTo()==true){
-				  mail.setMailTo(user.getEmail()); 
+				  mail.setMailTo(userDTO.getEmailId()); 
 			  }else if(notificationuserassociation.getBcc()==true){
-				  mail.setMailBcc(user.getEmail());
+				  mail.setMailBcc(userDTO.getEmailId());
 			  }else if(notificationuserassociation.getCc()==true){
-				  mail.setMailCc(user.getEmail());
+				  mail.setMailCc(userDTO.getEmailId());
 			  }
 			
 		}
-	        mail.setMailSubject(notification.getSubject());
+	        mail.setMailSubject(notificationDTO.getSubject());
 	        Map < String, Object > model = new HashMap < String, Object > ();
 	        model.put("firstName", "Prashant");
 	        model.put("lastName", "Raskar");
@@ -204,6 +210,6 @@ public class ProductinventoryController {
 	        model.put("location", "Pune");
 	        model.put("signature", "www.NextechServices.in");
 	        mail.setModel(model);
-		mailService.sendEmailWithoutPdF(mail, notification);
+		mailService.sendEmailWithoutPdF(mail, notificationDTO);
 	}
 }

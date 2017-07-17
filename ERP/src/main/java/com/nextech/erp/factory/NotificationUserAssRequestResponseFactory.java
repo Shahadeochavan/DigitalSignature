@@ -16,5 +16,16 @@ public class NotificationUserAssRequestResponseFactory {
 		notificationuserassociation.setIsactive(true);
 		return notificationuserassociation;
 	}
+	public static NotificationUserAssociatinsDTO setNotifiactionDTO(Notificationuserassociation notificationuserassociation){
+		NotificationUserAssociatinsDTO notificationUserAssociatinsDTO = new NotificationUserAssociatinsDTO();
+		notificationUserAssociatinsDTO.setBcc(notificationuserassociation.getBcc());
+		notificationUserAssociatinsDTO.setCc(notificationuserassociation.getCc());
+		notificationUserAssociatinsDTO.setTo(notificationuserassociation.getTo());
+		notificationUserAssociatinsDTO.setId(notificationuserassociation.getId());
+		notificationUserAssociatinsDTO.setUserId(notificationuserassociation.getUser());
+		notificationUserAssociatinsDTO.setNotificationId(notificationuserassociation.getNotification());
+		notificationUserAssociatinsDTO.setActive(true);
+		return notificationUserAssociatinsDTO;
+	}
 
 }

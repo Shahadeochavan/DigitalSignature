@@ -12,6 +12,8 @@ public class ERPConstants {
     public static String VENDOR_ADDED_SUCCESSFULLY="vendorAddedSuccessfully";
     public static String VENDOR_UPDATE_SUCCESSFULLY="vendorUpdateSuccessfully";
     public static String CLIENT_ADDED_SUCCESSFULLY="clientAddedSuccessfully";
+    public static String RM_INVENTORY_NOTIFICATION="rmInventoryNotifiaction";
+    public static String PRODUCT_INVENTORY_NOTIFICATION="productInventoryNotifiaction";
     public static String CLIENT_UPDATE_SUCCESSFULLY="clientUpdateSuccessfully";
     public static String DISPATCHED_SUCCESSFULLY="dispatchedSuccessfully";
     public static String COMPANY_NAME_EXIT="companyName";

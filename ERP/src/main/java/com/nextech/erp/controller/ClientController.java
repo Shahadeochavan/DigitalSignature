@@ -20,15 +20,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.dto.Mail;
 import com.nextech.erp.factory.ClientFactory;
-import com.nextech.erp.model.Client;
-import com.nextech.erp.model.Notification;
-import com.nextech.erp.model.Notificationuserassociation;
-import com.nextech.erp.model.User;
 import com.nextech.erp.newDTO.ClientDTO;
+import com.nextech.erp.newDTO.NotificationDTO;
+import com.nextech.erp.newDTO.NotificationUserAssociatinsDTO;
+import com.nextech.erp.newDTO.UserDTO;
 import com.nextech.erp.service.ClientService;
 import com.nextech.erp.service.MailService;
 import com.nextech.erp.service.NotificationService;
@@ -80,10 +78,9 @@ public class ClientController {
 				return new UserStatus(2, messageSource.getMessage(
 						ERPConstants.EMAIL_ALREADY_EXIT, null, null));
 			}
-           Client client = ClientFactory.setClient(clientDTO, request);
-           client.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-		    	clientService.addEntity(client);
-		        mailSending(client, request, response);
+       
+		    	clientService.addEntity(ClientFactory.setClient(clientDTO, request));
+		        mailSending(clientDTO, request, response);
 			return new UserStatus(1, messageSource.getMessage(
 					ERPConstants.CLIENT_ADDED, null, null));
 		} catch (ConstraintViolationException cve) {
@@ -101,14 +98,14 @@ public class ClientController {
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody Client getClient(@PathVariable("id") long id) {
-		Client client = null;
+	public @ResponseBody ClientDTO getClient(@PathVariable("id") long id) {
+		ClientDTO clientDTO = null;
 		try {
-			client = clientService.getEntityById(Client.class, id);
+			clientDTO = clientService.getClientDTOById(id);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return client;
+		return clientDTO;
 	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
@@ -116,25 +113,24 @@ public class ClientController {
 			HttpServletRequest request, HttpServletResponse response) {
 		try {
 			
-			Client oldClientInfo = clientService.getEntityById(Client.class, clientDTO.getId());
+			ClientDTO oldClientInfo = clientService.getClientDTOById(clientDTO.getId());
 			System.out.println(oldClientInfo);
-			if(clientDTO.getCompanyName().equals(oldClientInfo.getCompanyname())){  	
+			if(clientDTO.getCompanyName().equals(oldClientInfo.getCompanyName())){  	
 			} else { 
 				if (clientService.getClientByCompanyName(clientDTO.getCompanyName()) == null) {
 			    }else{  
 				return new UserStatus(2, messageSource.getMessage(ERPConstants.COMPANY_NAME_EXIT, null, null));
 				}
 			 }
-            if(clientDTO.getEmailId().equals(oldClientInfo.getEmailid())){  			
+            if(clientDTO.getEmailId().equals(oldClientInfo.getEmailId())){  			
 			} else { 
 				if (clientService.getClientByEmail(clientDTO.getEmailId()) == null) {
 			    }else{  
 				return new UserStatus(2, messageSource.getMessage(ERPConstants.EMAIL_ALREADY_EXIT, null, null));
 				}
 			 }
-            Client client = ClientFactory.setClientUpdate(clientDTO, request);
-	    	clientService.updateEntity(client);
-	        mailSendingUpdate(client, request, response);
+	    	clientService.updateEntity(ClientFactory.setClientUpdate(clientDTO, request));
+	        mailSendingUpdate(clientDTO, request, response);
 			return new UserStatus(1, messageSource.getMessage(
 					ERPConstants.CLIENT_UPDATE, null, null));
 		} catch (Exception e) {
@@ -144,11 +140,11 @@ public class ClientController {
 	}
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<Client> getClient() {
+	public @ResponseBody List<ClientDTO> getClient() {
 
-		List<Client> clientList = null;
+		List<ClientDTO> clientList = null;
 		try {
-			clientList = clientService.getEntityList(Client.class);
+			clientList = clientService.getClientList(clientList);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -161,9 +157,7 @@ public class ClientController {
 	public @ResponseBody UserStatus deleteClient(@PathVariable("id") long id) {
 
 		try {
-			Client client = clientService.getEntityById(Client.class, id);
-			client.setIsactive(false);
-			clientService.updateEntity(client);
+		    clientService.deleteClient(id);
 			return new UserStatus(1, messageSource.getMessage(
 					ERPConstants.CLIENT_DELETE, null, null));
 		} catch (Exception e) {
@@ -171,63 +165,63 @@ public class ClientController {
 		}
 
 	}
-	private void mailSending(Client client,HttpServletRequest request, HttpServletResponse response) throws Exception{
+	private void mailSending(ClientDTO client,HttpServletRequest request, HttpServletResponse response) throws Exception{
 		  Mail mail = new Mail();
 
-		  Notification notification = notificationService.getEntityById(Notification.class,Long.parseLong(messageSource.getMessage(ERPConstants.CLIENT_ADDED_SUCCESSFULLY, null, null)));
-		  List<Notificationuserassociation> notificationuserassociations = notificationUserAssService.getNotificationuserassociationBynotificationId(notification.getId());
-		  for (Notificationuserassociation notificationuserassociation : notificationuserassociations) {
-			  User user = userService.getEmailUserById(notificationuserassociation.getUser().getId());
+		  NotificationDTO  notificationDTO = notificationService.getNotificationDTOById(Long.parseLong(messageSource.getMessage(ERPConstants.CLIENT_ADDED_SUCCESSFULLY, null, null)));
+		  List<NotificationUserAssociatinsDTO> notificationUserAssociatinsDTOs = notificationUserAssService.getNotificationUserAssociatinsDTOs(notificationDTO.getId());
+		  for (NotificationUserAssociatinsDTO notificationuserassociation : notificationUserAssociatinsDTOs) {
+			  UserDTO userDTO = userService.getUserDTO(notificationuserassociation.getId());
 			  if(notificationuserassociation.getTo()==true){
-				   mail.setMailTo(client.getEmailid()); 
+				   mail.setMailTo(client.getEmailId()); 
 			  }else if(notificationuserassociation.getBcc()==true){
-				  mail.setMailBcc(user.getEmail());
+				  mail.setMailBcc(userDTO.getEmailId());
 			  }else if(notificationuserassociation.getCc()==true){
-				  mail.setMailCc(user.getEmail());
+				  mail.setMailCc(userDTO.getEmailId());
 			  }
 			
 		}
 	     
-	        mail.setMailSubject(notification.getSubject());
+	        mail.setMailSubject(notificationDTO.getSubject());
 
 	        Map < String, Object > model = new HashMap < String, Object > ();
-	        model.put("firstName", client.getCompanyname());
-	        model.put("email", client.getEmailid());
-	        model.put("contactNumber", client.getContactnumber());
+	        model.put("firstName", client.getCompanyName());
+	        model.put("email", client.getEmailId());
+	        model.put("contactNumber", client.getContactNumber());
 	        model.put("location", "Pune");
 	        model.put("signature", "www.NextechServices.in");
 	        mail.setModel(model);
 
-		mailService.sendEmailWithoutPdF(mail, notification);
+		mailService.sendEmailWithoutPdF(mail, notificationDTO);
 	}
 	
-	private void mailSendingUpdate(Client client,HttpServletRequest request, HttpServletResponse response) throws Exception{
+	private void mailSendingUpdate(ClientDTO client,HttpServletRequest request, HttpServletResponse response) throws Exception{
 		  Mail mail = new Mail();
 
-		  Notification notification = notificationService.getEntityById(Notification.class,Long.parseLong(messageSource.getMessage(ERPConstants.CLIENT_UPDATE_SUCCESSFULLY, null, null)));
-		  List<Notificationuserassociation> notificationuserassociations = notificationUserAssService.getNotificationuserassociationBynotificationId(notification.getId());
-		  for (Notificationuserassociation notificationuserassociation : notificationuserassociations) {
-			  User user = userService.getEmailUserById(notificationuserassociation.getUser().getId());
+		  NotificationDTO  notificationDTO = notificationService.getNotificationDTOById(Long.parseLong(messageSource.getMessage(ERPConstants.CLIENT_ADDED_SUCCESSFULLY, null, null)));
+		  List<NotificationUserAssociatinsDTO> notificationUserAssociatinsDTOs = notificationUserAssService.getNotificationUserAssociatinsDTOs(notificationDTO.getId());
+		  for (NotificationUserAssociatinsDTO notificationuserassociation : notificationUserAssociatinsDTOs) {
+			  UserDTO userDTO = userService.getUserDTO(notificationuserassociation.getId());
 			  if(notificationuserassociation.getTo()==true){
-				  mail.setMailTo(client.getEmailid());
+				  mail.setMailTo(client.getEmailId());
 			  }else if(notificationuserassociation.getBcc()==true){
-				  mail.setMailBcc(user.getEmail());
+				  mail.setMailBcc(userDTO.getEmailId());
 			  }else if(notificationuserassociation.getCc()==true){
-				  mail.setMailCc(user.getEmail());
+				  mail.setMailCc(userDTO.getEmailId());
 			  }
 			
 		}
 	     
-	        mail.setMailSubject(notification.getSubject());
+	        mail.setMailSubject(notificationDTO.getSubject());
 
 	        Map < String, Object > model = new HashMap < String, Object > ();
-	        model.put("firstName", client.getCompanyname());
-	        model.put("email", client.getEmailid());
-	        model.put("contactNumber", client.getContactnumber());
+	        model.put("firstName", client.getCompanyName());
+	        model.put("email", client.getEmailId());
+	        model.put("contactNumber", client.getContactNumber());
 	        model.put("location", "Pune");
 	        model.put("signature", "www.NextechServices.in");
 	        mail.setModel(model);
 
-		mailService.sendEmailWithoutPdF(mail, notification);
+		mailService.sendEmailWithoutPdF(mail, notificationDTO);
 	}
 }

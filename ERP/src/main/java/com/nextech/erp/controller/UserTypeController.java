@@ -60,22 +60,21 @@ public class UserTypeController {
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody Usertype getUserType(@PathVariable("id") long id) {
-		Usertype userType = null;
+	public @ResponseBody UserTypeDTO getUserType(@PathVariable("id") long id) {
+		UserTypeDTO userTypeDTO = null;
 		try {
-			userType = userTypeService.getEntityById(Usertype.class, id);
+			userTypeDTO = userTypeService.getUserTypeDto(id);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return userType;
+		return userTypeDTO;
 	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
 	public @ResponseBody UserStatus updateUserType(@RequestBody UserTypeDTO userTypeDTO,HttpServletRequest request,HttpServletResponse response) {
 		try {
-		Usertype usertype =	UserTypeFactory.setUserType(userTypeDTO, request);
-		usertype.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-		userTypeService.updateEntity(usertype);
+	
+		userTypeService.updateEntity(UserTypeFactory.setUserTypeUpdate(userTypeDTO, request));
 			return new UserStatus(1, "UserType update Successfully !");
 		} catch (Exception e) {
 			 e.printStackTrace();
@@ -84,11 +83,11 @@ public class UserTypeController {
 	}
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<Usertype> getUserType() {
+	public @ResponseBody List<UserTypeDTO> getUserType() {
 
-		List<Usertype> userList = null;
+		List<UserTypeDTO> userList = null;
 		try {
-			userList = userTypeService.getEntityList(Usertype.class);
+			userList = userTypeService.getUserTypeDTO();
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -101,9 +100,7 @@ public class UserTypeController {
 	public @ResponseBody UserStatus deleteUserType(@PathVariable("id") long id) {
 
 		try {
-			Usertype usertype = userTypeService.getEntityById(Usertype.class,id);
-			usertype.setIsactive(false);
-			userTypeService.updateEntity(usertype);
+			userTypeService.deleteUserType(id);
 			return new UserStatus(1, "UserType deleted Successfully !");
 		} catch (Exception e) {
 			return new UserStatus(0, e.toString());

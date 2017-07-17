@@ -2,20 +2,14 @@ package com.nextech.erp.newDTO;
 
 
 
+import com.nextech.erp.dto.AbstractDTO;
 import com.nextech.erp.model.Page;
 import com.nextech.erp.model.Usertype;
 
-public class UserTypePageAssoDTO {
+public class UserTypePageAssoDTO extends AbstractDTO{
 
-	private long id;
 	private Page page;
 	private Usertype usertype;
-	public long getId() {
-		return id;
-	}
-	public void setId(long id) {
-		this.id = id;
-	}
 	public Page getPage() {
 		return page;
 	}

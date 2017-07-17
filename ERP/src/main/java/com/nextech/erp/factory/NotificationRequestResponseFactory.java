@@ -1,5 +1,7 @@
 package com.nextech.erp.factory;
 
+import org.apache.commons.collections.functors.NOPTransformer;
+
 import com.nextech.erp.model.Notification;
 import com.nextech.erp.newDTO.NotificationDTO;
 
@@ -17,6 +19,20 @@ public class NotificationRequestResponseFactory {
 		notification.setTemplate(notificationDTO.getTemplate());
 		notification.setType(notificationDTO.getType());
 		return notification;
+	}
+	
+	public static NotificationDTO setNotificationDTO(Notification notification){
+		NotificationDTO notificationDTO = new NotificationDTO();
+		notificationDTO.setBeanClass(notification.getBeanClass());
+		notificationDTO.setDescription(notification.getDescription());
+		notificationDTO.setId(notification.getId());
+		notificationDTO.setActive(true);
+		notificationDTO.setName(notification.getName());
+		notificationDTO.setStatus1(notification.getStatus1());
+		notificationDTO.setSubject(notification.getSubject());
+		notificationDTO.setTemplate(notification.getTemplate());
+		notificationDTO.setType(notification.getType());
+		return notificationDTO;
 	}
 
 }

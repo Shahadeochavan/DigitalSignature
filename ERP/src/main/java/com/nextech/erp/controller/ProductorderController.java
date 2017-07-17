@@ -49,7 +49,10 @@ import com.nextech.erp.model.Productrawmaterialassociation;
 import com.nextech.erp.model.Rawmaterialinventory;
 import com.nextech.erp.model.Status;
 import com.nextech.erp.model.User;
+import com.nextech.erp.newDTO.NotificationDTO;
+import com.nextech.erp.newDTO.NotificationUserAssociatinsDTO;
 import com.nextech.erp.newDTO.ProductOrderAssociationDTO;
+import com.nextech.erp.newDTO.UserDTO;
 import com.nextech.erp.service.ClientService;
 import com.nextech.erp.service.MailService;
 import com.nextech.erp.service.NotificationService;
@@ -370,11 +373,11 @@ public class ProductorderController {
 
 
 		Status status = statusService.getEntityById(Status.class, productorder.getStatus().getId());
-		Notification notification = notificationService.getNotifiactionByStatus(status.getId());
+		NotificationDTO notificationDTO = notificationService.getNotificationDTOById(status.getId());
 		Client client = clientService.getEntityById(Client.class,productorder.getClient().getId());
 
 		//TODO mail sending
-        mailSending(notification, productorder, client,fileName);
+        mailSending(notificationDTO, productorder, client,fileName);
 
 		InputStream inputStream = null;
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -406,10 +409,10 @@ public class ProductorderController {
 	}
 
 	@SuppressWarnings("unchecked")
-	private void mailSending(Notification notification,Productorder productorder,Client client,String fileName) throws Exception{
+	private void mailSending(NotificationDTO notification,Productorder productorder,Client client,String fileName) throws Exception{
 		List<Productorderassociation>  productorderassociations= productorderassociationService.getProductorderassociationByOrderId(productorder.getId());
 		List<ProductOrderData> productOrderDatas = new ArrayList<ProductOrderData>();
-		List<Notificationuserassociation> notificationuserassociations  = notificationUserAssociationService.getNotificationuserassociationBynotificationId(notification.getId());
+		List<NotificationUserAssociatinsDTO> notificationUserAssociatinsDTOs  = notificationUserAssociationService.getNotificationUserAssociatinsDTOs(notification.getId());
 		for (Productorderassociation productorderassociation : productorderassociations) {
 			Product product = productService.getEntityById(Product.class, productorderassociation.getProduct().getId());
 			ProductOrderData productOrderData = new ProductOrderData();
@@ -419,15 +422,15 @@ public class ProductorderController {
 			productOrderDatas.add(productOrderData);
 		}
 		  Mail mail = new Mail();
-		  for (Notificationuserassociation notificationuserassociation : notificationuserassociations) {
+		  for (NotificationUserAssociatinsDTO notificationuserassociation : notificationUserAssociatinsDTOs) {
 		 //  User user = userService.getEntityById(User.class, notificationuserassociation.getUser().getId());
-		   User user = userService.getEmailUserById(notificationuserassociation.getUser().getId());
+		   UserDTO userDTO = userService.getUserDTO(notificationuserassociation.getId());
 		 if(notificationuserassociation.getTo()==true){
 			 mail.setMailTo(client.getEmailid()); 
 		 }else if(notificationuserassociation.getBcc()==true){
-			 mail.setMailBcc(user.getEmail());
+			 mail.setMailBcc(userDTO.getEmailId());
 		 }else if(notificationuserassociation.getCc()==true){
-			 mail.setMailCc(user.getEmail());
+			 mail.setMailCc(userDTO.getEmailId());
 		 }
 	  
 	        mail.setMailSubject(notification.getSubject());

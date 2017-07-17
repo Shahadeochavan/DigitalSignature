@@ -55,6 +55,9 @@ import com.nextech.erp.model.Productorder;
 import com.nextech.erp.model.Productorderassociation;
 import com.nextech.erp.model.Status;
 import com.nextech.erp.model.User;
+import com.nextech.erp.newDTO.NotificationDTO;
+import com.nextech.erp.newDTO.NotificationUserAssociatinsDTO;
+import com.nextech.erp.newDTO.UserDTO;
 import com.nextech.erp.service.BOMRMVendorAssociationService;
 import com.nextech.erp.service.BomService;
 import com.nextech.erp.service.ClientService;
@@ -423,21 +426,21 @@ public class DispatchController {
 	private void mailSending(Productorder productorder,HttpServletRequest request, HttpServletResponse response,Client client, Status status,String fileName,List<DispatchProductDTO> dispatchProductDTOs,DispatchDTO dispatchDTO) throws NumberFormatException,Exception {
 		Mail mail = new Mail();
 
-		Notification notification = notificationService.getEntityById(Notification.class,Long.parseLong(messageSource.getMessage(ERPConstants.DISPATCHED_SUCCESSFULLY, null, null)));
-		  List<Notificationuserassociation> notificationuserassociations = notificationUserAssService.getNotificationuserassociationBynotificationId(notification.getId());
-		  for (Notificationuserassociation notificationuserassociation : notificationuserassociations) {
-			  User user = userService.getEntityById(User.class, notificationuserassociation.getUser().getId());
+		  NotificationDTO  notificationDTO = notificationService.getNotificationDTOById(Long.parseLong(messageSource.getMessage(ERPConstants.DISPATCHED_SUCCESSFULLY, null, null)));
+		  List<NotificationUserAssociatinsDTO> notificationUserAssociatinsDTOs = notificationUserAssService.getNotificationUserAssociatinsDTOs(notificationDTO.getId());
+		  for (NotificationUserAssociatinsDTO notificationuserassociation : notificationUserAssociatinsDTOs) {
+			  UserDTO userDTO = userService.getUserDTO(notificationuserassociation.getId());
 			  if(notificationuserassociation.getTo()==true){
 				  mail.setMailTo(client.getEmailid()); 
 			  }else if(notificationuserassociation.getBcc()==true){
-				  mail.setMailBcc(user.getEmail());
+				  mail.setMailBcc(userDTO.getEmailId());
 			  }else if(notificationuserassociation.getCc()==true){
-				  mail.setMailCc(user.getEmail());
+				  mail.setMailCc(userDTO.getEmailId());
 			  }
 			
 		}
 	   mail.setAttachment(fileName);
-		mail.setMailSubject(notification.getSubject());
+		mail.setMailSubject(notificationDTO.getSubject());
 		mail.setMailTo(client.getEmailid());
 		Map<String, Object> model = new HashMap<String, Object>();
 		model.put("firstName", client.getCompanyname());
@@ -449,7 +452,7 @@ public class DispatchController {
 		model.put("location", "Pune");
 		model.put("signature", "www.NextechServices.in");
 		mail.setModel(model);
-		mailService.sendEmail(mail, notification);
+		mailService.sendEmail(mail, notificationDTO);
 	}
 	
 	public void downloadPDF(HttpServletRequest request, HttpServletResponse response,Productorder productorder,List<DispatchProductDTO> dispatchProductDTOs,Client client,DispatchDTO dispatchDTO) throws IOException {

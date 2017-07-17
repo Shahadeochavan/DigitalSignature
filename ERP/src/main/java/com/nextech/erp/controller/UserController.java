@@ -31,14 +31,14 @@ import com.nextech.erp.dto.Mail;
 import com.nextech.erp.factory.UserFactory;
 import com.nextech.erp.filter.TokenFactory;
 import com.nextech.erp.model.Authorization;
-import com.nextech.erp.model.Notification;
-import com.nextech.erp.model.Notificationuserassociation;
 import com.nextech.erp.model.Page;
 import com.nextech.erp.model.Report;
 import com.nextech.erp.model.Reportusertypeassociation;
 import com.nextech.erp.model.User;
 import com.nextech.erp.model.Usertype;
 import com.nextech.erp.model.Usertypepageassociation;
+import com.nextech.erp.newDTO.NotificationDTO;
+import com.nextech.erp.newDTO.NotificationUserAssociatinsDTO;
 import com.nextech.erp.newDTO.UserDTO;
 import com.nextech.erp.service.MailService;
 import com.nextech.erp.service.NotificationService;
@@ -285,20 +285,20 @@ public class UserController {
 	private void mailSending(UserDTO userDTO,HttpServletRequest request,HttpServletResponse response) throws NumberFormatException, Exception{
 		  Mail mail = new Mail();
 
-		  Notification notification = notificationService.getEntityById(Notification.class,Long.parseLong(messageSource.getMessage(ERPConstants.USER_ADD_NOTIFICATION, null, null)));
-		  List<Notificationuserassociation> notificationuserassociations = notificationUserAssService.getNotificationuserassociationBynotificationId(notification.getId());
-		  for (Notificationuserassociation notificationuserassociation : notificationuserassociations) {
-			  User user1 = userservice.getEmailUserById(notificationuserassociation.getUser().getId());
+		  NotificationDTO  notificationDTO = notificationService.getNotificationDTOById(Long.parseLong(messageSource.getMessage(ERPConstants.USER_ADD_NOTIFICATION, null, null)));
+		  List<NotificationUserAssociatinsDTO> notificationUserAssociatinsDTOs = notificationUserAssService.getNotificationUserAssociatinsDTOs(notificationDTO.getId());
+		  for (NotificationUserAssociatinsDTO notificationuserassociation : notificationUserAssociatinsDTOs) {
+			  UserDTO user1 = userservice.getUserDTO(notificationuserassociation.getUserId().getId());
 			  if(notificationuserassociation.getTo()==true){
 				  mail.setMailTo(userDTO.getEmailId());
 			  }else if(notificationuserassociation.getBcc()==true){
-				  mail.setMailBcc(user1.getEmail());
+				  mail.setMailBcc(user1.getEmailId());
 			  }else if(notificationuserassociation.getCc()==true){
-				  mail.setMailCc(user1.getEmail());
+				  mail.setMailCc(user1.getEmailId());
 			  }
 			
 		}
-		        mail.setMailSubject(notification.getSubject());
+		        mail.setMailSubject(notificationDTO.getSubject());
 		        Map < String, Object > model = new HashMap < String, Object > ();
 		        model.put("firstName", userDTO.getFirstName());
 		        model.put("lastName", userDTO.getLastName());
@@ -308,26 +308,26 @@ public class UserController {
 		        model.put("location", "Pune");
 		        model.put("signature", "www.NextechServices.in");
 		        mail.setModel(model);
-		        mailService.sendEmailWithoutPdF(mail, notification);
+		        mailService.sendEmailWithoutPdF(mail, notificationDTO);
 }
 	
 	private void mailSendingUpdate(UserDTO userDTO,HttpServletRequest request) throws NumberFormatException, Exception{
 		  Mail mail = new Mail();
 
-		  Notification notification = notificationService.getEntityById(Notification.class,16);
-		  List<Notificationuserassociation> notificationuserassociations = notificationUserAssService.getNotificationuserassociationBynotificationId(notification.getId());
-		  for (Notificationuserassociation notificationuserassociation : notificationuserassociations) {
-			  User user1 = userservice.getEmailUserById(notificationuserassociation.getUser().getId());
+		  NotificationDTO  notificationDTO = notificationService.getNotificationDTOById(Long.parseLong(messageSource.getMessage(ERPConstants.USER_UPDATE_NOTIFICATION, null, null)));
+		  List<NotificationUserAssociatinsDTO> notificationUserAssociatinsDTOs = notificationUserAssService.getNotificationUserAssociatinsDTOs(notificationDTO.getId());
+		  for (NotificationUserAssociatinsDTO notificationuserassociation : notificationUserAssociatinsDTOs) {
+			  UserDTO user1 = userservice.getUserDTO(notificationuserassociation.getUserId().getId());
 			  if(notificationuserassociation.getTo()==true){
 				  mail.setMailTo(userDTO.getEmailId());
 			  }else if(notificationuserassociation.getBcc()==true){
-				  mail.setMailBcc(user1.getEmail());
+				  mail.setMailBcc(user1.getEmailId());
 			  }else if(notificationuserassociation.getCc()==true){
-				  mail.setMailCc(user1.getEmail());
+				  mail.setMailCc(user1.getEmailId());
 			  }
 			
 		}
-		        mail.setMailSubject(notification.getSubject());
+		        mail.setMailSubject(notificationDTO.getSubject());
 		        Map < String, Object > model = new HashMap < String, Object > ();
 		        model.put("firstName", userDTO.getFirstName());
 		        model.put("lastName", userDTO.getLastName());
@@ -337,7 +337,7 @@ public class UserController {
 		        model.put("location", "Pune");
 		        model.put("signature", "www.NextechServices.in");
 		        mail.setModel(model);
-		        mailService.sendEmailWithoutPdF(mail, notification);
+		        mailService.sendEmailWithoutPdF(mail, notificationDTO);
 }
 
 }
