@@ -1,11 +1,14 @@
 package com.nextech.erp.serviceImpl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.nextech.erp.dao.ProductRMAssoDao;
+import com.nextech.erp.dto.ProductRMAssociationDTO;
+import com.nextech.erp.factory.ProductRMAssoRequestResponseFactory;
 import com.nextech.erp.model.Productrawmaterialassociation;
 import com.nextech.erp.service.ProductRMAssoService;
 @Service
@@ -31,5 +34,18 @@ public class ProductRMAssoServiceImpl extends CRUDServiceImpl<Productrawmaterial
 			throws Exception {
 		
 		return productrmassDao.getProductList();
+	}
+
+	@Override
+	public List<ProductRMAssociationDTO> getProductRMAssoList(long productId)
+			throws Exception {
+		// TODO Auto-generated method stub
+		List<ProductRMAssociationDTO> productRMAssociationDTOs = new ArrayList<ProductRMAssociationDTO>();
+		List<Productrawmaterialassociation> productrawmaterialassociations = productrmassDao.getProductRMAssoListByProductId(productId);
+		for (Productrawmaterialassociation productrawmaterialassociation : productrawmaterialassociations) {
+			ProductRMAssociationDTO productRMAssociationDTO = ProductRMAssoRequestResponseFactory.setProductRMAssoList(productrawmaterialassociation);
+			productRMAssociationDTOs.add(productRMAssociationDTO);
+		}
+		return productRMAssociationDTOs;
 	}
 }

@@ -98,4 +98,16 @@ public class UserDaoImpl extends SuperDaoImpl<User> implements UserDao {
 		User user = criteria.list().size() > 0 ? (User) criteria.list().get(0): null;
 		return user;
 	}
+
+	@Override
+	public User getUserByNotifictionId(long notificatinId) throws Exception {
+		// TODO Auto-generated method stub
+		session = sessionFactory.openSession();
+		@SuppressWarnings("deprecation")
+		Criteria criteria = session.createCriteria(User.class);
+		criteria.add(Restrictions.eq("isactive", true));
+		criteria.add(Restrictions.eq("mobile", notificatinId));
+		User user = criteria.list().size() > 0 ? (User) criteria.list().get(0): null;
+		return user;
+	}
 }

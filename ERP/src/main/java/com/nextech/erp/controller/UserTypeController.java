@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nextech.erp.factory.UserTypeFactory;
-import com.nextech.erp.model.Usertype;
 import com.nextech.erp.newDTO.UserTypeDTO;
 import com.nextech.erp.service.UserTypeService;
 import com.nextech.erp.status.UserStatus;
@@ -40,9 +39,7 @@ public class UserTypeController {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
-			Usertype usertype = UserTypeFactory.setUserType(userTypeDTO, request);
-			usertype.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-			userTypeService.addEntity(usertype);
+			userTypeService.addEntity(UserTypeFactory.setUserType(userTypeDTO, request));
 			return new UserStatus(1, "Usertype added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			System.out.println("Inside ConstraintViolationException");

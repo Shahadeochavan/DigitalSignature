@@ -27,13 +27,11 @@ import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.dto.Mail;
 import com.nextech.erp.dto.ProductInventoryDTO;
 import com.nextech.erp.factory.ProductInventoryRequestResponseFactory;
-import com.nextech.erp.model.Notification;
-import com.nextech.erp.model.Notificationuserassociation;
 import com.nextech.erp.model.Product;
 import com.nextech.erp.model.Productinventory;
-import com.nextech.erp.model.User;
 import com.nextech.erp.newDTO.NotificationDTO;
 import com.nextech.erp.newDTO.NotificationUserAssociatinsDTO;
+import com.nextech.erp.newDTO.ProductDTO;
 import com.nextech.erp.newDTO.UserDTO;
 import com.nextech.erp.service.MailService;
 import com.nextech.erp.service.NotificationService;
@@ -103,10 +101,10 @@ public class ProductinventoryController {
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody Productinventory getProductinventory(@PathVariable("id") long id) {
-		Productinventory productinventory = null;
+	public @ResponseBody ProductInventoryDTO getProductinventory(@PathVariable("id") long id) {
+		ProductInventoryDTO productinventory = null;
 		try {
-			productinventory = productinventoryService.getEntityById(Productinventory.class,id);
+			productinventory = productinventoryService.getProductInventory(id);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -127,9 +125,9 @@ public class ProductinventoryController {
 	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody Response getProductinventory() {
 
-		List<Productinventory> productinventoryList = null;
+		List<ProductInventoryDTO> productinventoryList = null;
 		try {
-			productinventoryList = productinventoryService.getEntityList(Productinventory.class);
+			productinventoryList = productinventoryService.getproductInventoryDTO();
 			if (productinventoryList.isEmpty()) {
 				System.out.println("Please add product inventory");
 				return new Response(1, "Product Inventory is empty",
@@ -147,9 +145,7 @@ public class ProductinventoryController {
 	public @ResponseBody UserStatus deleteProductinventory(@PathVariable("id") long id) {
 
 		try {
-			Productinventory productinventory = productinventoryService.getEntityById(Productinventory.class,id);
-			productinventory.setIsactive(false);
-			productinventoryService.updateEntity(productinventory);
+			productinventoryService.deleteProductInventory(id);
 			return new UserStatus(1, "Productinventory deleted Successfully !");
 		} catch (Exception e) {
 			return new UserStatus(0, e.toString());
@@ -160,18 +156,18 @@ public class ProductinventoryController {
 	//@Scheduled(initialDelay=600000, fixedRate=600000)
 	public void executeSchedular() throws Exception{
 		System.out.println("Product Inventory Check");
-		List<Productinventory> productinventoryList = null;
+		List<ProductInventoryDTO> productinventoryList = null;
 		List<ProductInventoryDTO> productInventoryDTOs = new ArrayList<ProductInventoryDTO>();
 		try {
-			productinventoryList = productinventoryService.getEntityList(Productinventory.class);
-			for (Productinventory productinventory : productinventoryList) {
-				Product product = productService.getEntityById(Product.class, productinventory.getProduct().getId());
+			productinventoryList = productinventoryService.getproductInventoryDTO();
+			for (ProductInventoryDTO productInventoryDTO1 : productinventoryList) {
+				ProductDTO  product = productService.getProductDTO(productInventoryDTO1.getProductId().getId());
 				ProductInventoryDTO productInventoryDTO = new ProductInventoryDTO();
-				if(productinventory.getQuantityavailable()>=productinventory.getMinimum_quantity()){
+				if(productInventoryDTO1.getQuantityAvailable()>=productInventoryDTO1.getMinimumQuantity()){
 				}else{
-					productInventoryDTO.setInventoryQuantity(productinventory.getQuantityavailable());
+					productInventoryDTO.setInventoryQuantity(productInventoryDTO1.getQuantityAvailable());
 					productInventoryDTO.setProductPartNumber(product.getPartNumber());
-					productInventoryDTO.setMinimumQuantity(productinventory.getMinimum_quantity());
+					productInventoryDTO.setMinimumQuantity(productInventoryDTO1.getMinimumQuantity());
 					productInventoryDTOs.add(productInventoryDTO);
 				}
 				
@@ -192,7 +188,7 @@ public class ProductinventoryController {
 		  NotificationDTO  notificationDTO = notificationService.getNotificationDTOById(Long.parseLong(messageSource.getMessage(ERPConstants.PRODUCT_INVENTORY_NOTIFICATION, null, null)));
 		  List<NotificationUserAssociatinsDTO> notificationUserAssociatinsDTOs = notificationUserAssociationService.getNotificationUserAssociatinsDTOs(notificationDTO.getId());
 		  for (NotificationUserAssociatinsDTO notificationuserassociation : notificationUserAssociatinsDTOs) {
-			  UserDTO userDTO = userService.getUserDTO(notificationuserassociation.getId());
+			  UserDTO userDTO = userService.getUserDTO(notificationuserassociation.getUserId().getId());
 			  if(notificationuserassociation.getTo()==true){
 				  mail.setMailTo(userDTO.getEmailId()); 
 			  }else if(notificationuserassociation.getBcc()==true){

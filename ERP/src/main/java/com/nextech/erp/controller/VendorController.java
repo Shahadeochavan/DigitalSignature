@@ -162,7 +162,7 @@ public class VendorController {
 		  NotificationDTO  notificationDTO = notificationService.getNotificationDTOById(Long.parseLong(messageSource.getMessage(ERPConstants.VENDOR_ADDED_SUCCESSFULLY, null, null)));
 		  List<NotificationUserAssociatinsDTO> notificationUserAssociatinsDTOs = notificationUserAssService.getNotificationUserAssociatinsDTOs(notificationDTO.getId());
 		  for (NotificationUserAssociatinsDTO notificationuserassociation : notificationUserAssociatinsDTOs) {
-			  UserDTO userDTO = userService.getUserDTO(notificationuserassociation.getId());
+			  UserDTO userDTO = userService.getUserDTO(notificationuserassociation.getUserId().getId());
 			  if(notificationuserassociation.getTo()==true){
 				  mail.setMailTo(vendorDTO.getEmail());
 			  }else if(notificationuserassociation.getBcc()==true){
@@ -191,7 +191,7 @@ public class VendorController {
 		  NotificationDTO  notificationDTO = notificationService.getNotificationDTOById(Long.parseLong(messageSource.getMessage(ERPConstants.VENDOR_UPDATE_SUCCESSFULLY, null, null)));
 		  List<NotificationUserAssociatinsDTO> notificationUserAssociatinsDTOs = notificationUserAssService.getNotificationUserAssociatinsDTOs(notificationDTO.getId());
 		  for (NotificationUserAssociatinsDTO notificationuserassociation : notificationUserAssociatinsDTOs) {
-			  UserDTO userDTO = userService.getUserDTO(notificationuserassociation.getId());
+			  UserDTO userDTO = userService.getUserDTO(notificationuserassociation.getUserId().getId());
 			  if(notificationuserassociation.getTo()==true){
 				  mail.setMailTo(vendorDTO.getEmail()); 
 			  }else if(notificationuserassociation.getBcc()==true){

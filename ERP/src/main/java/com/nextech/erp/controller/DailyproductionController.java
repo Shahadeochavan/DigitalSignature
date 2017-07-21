@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.dto.DailyProductionPlanDTO;
 import com.nextech.erp.dto.TodaysProductionPlanDTO;
+import com.nextech.erp.factory.DailyProductionRequestResponseFactory;
 import com.nextech.erp.model.Dailyproduction;
 import com.nextech.erp.model.Productionplanning;
 import com.nextech.erp.model.Status;
@@ -61,10 +62,7 @@ public class DailyproductionController {
 				return new UserStatus(0, bindingResult.getFieldError().getDefaultMessage());
 			}
 			for(DailyProductionPlanDTO dailyProductionPlanDTO : todaysProductionPlanDTO.getDailyProductionPlanDTOs()){
-				Dailyproduction dailyproduction = setProductinPlanCurrentDate(dailyProductionPlanDTO);
-				dailyproduction.setIsactive(true);
-				dailyproduction.setRepaired_quantity(dailyProductionPlanDTO.getRepairedQuantity());
-				dailyproduction.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+				Dailyproduction dailyproduction = DailyProductionRequestResponseFactory.setDailyProduction(dailyProductionPlanDTO, request);
 				dailyproduction.setStatus(statusService.getEntityById(Status.class, Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_QUALITY_CHECK_PENDING, null, null))));
 		       	dailyproductionservice.addEntity(dailyproduction);
 		       	//TODO update production plan daily
@@ -136,16 +134,6 @@ public class DailyproductionController {
 		} catch (Exception e) {
 			return new UserStatus(0, e.toString());
 		}
-	}
-	
-	private Dailyproduction setProductinPlanCurrentDate(DailyProductionPlanDTO dailyProductionPlanDTO) throws Exception {
-		Dailyproduction dailyproduction = new Dailyproduction();
-		dailyproduction.setProductionplanning(productionplanningService.getEntityById(Productionplanning.class, dailyProductionPlanDTO.getProductionPlanId()));
-		dailyproduction.setTargetQuantity(dailyProductionPlanDTO.getTargetQuantity());
-		dailyproduction.setAchivedQuantity(dailyProductionPlanDTO.getAchivedQuantity());
-		dailyproduction.setRemark(dailyProductionPlanDTO.getRemark());
-		dailyproduction.setIsactive(true);
-		return dailyproduction;
 	}
 	
 	private void updateProductionPlan(Dailyproduction dailyproduction,int repairedQuantity,HttpServletRequest request, HttpServletResponse response) throws Exception{

@@ -1,5 +1,6 @@
 package com.nextech.erp.serviceImpl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,9 +8,11 @@ import org.springframework.stereotype.Service;
 
 import com.nextech.erp.dao.ProductDao;
 import com.nextech.erp.dao.ProductorderDao;
+import com.nextech.erp.factory.ProductRequestResponseFactory;
 import com.nextech.erp.model.Product;
 import com.nextech.erp.model.Productorder;
 import com.nextech.erp.model.Productorderassociation;
+import com.nextech.erp.newDTO.ProductDTO;
 import com.nextech.erp.service.ProductService;
 @Service
 public class ProductServiceImpl extends CRUDServiceImpl<Product> implements ProductService {
@@ -53,5 +56,34 @@ public class ProductServiceImpl extends CRUDServiceImpl<Product> implements Prod
 	public List<Product> getProductList(List<Long> productIdList) {
 		// TODO Auto-generated method stub
 		return productDao.getProductList(productIdList);
+	}
+
+	@Override
+	public List<ProductDTO> getProductList() throws Exception {
+		// TODO Auto-generated method stub
+		List<ProductDTO> productDTOs = new ArrayList<ProductDTO>();
+		List<Product> products = productDao.getList(Product.class);
+		for (Product product : products) {
+			ProductDTO productDTO = ProductRequestResponseFactory.setProductDto(product);
+			productDTOs.add(productDTO);
+		}
+		return productDTOs;
+	}
+
+	@Override
+	public ProductDTO getProductDTO(long id) throws Exception {
+		// TODO Auto-generated method stub
+		Product product = productDao.getById(Product.class, id);
+		ProductDTO productDTO = ProductRequestResponseFactory.setProductDto(product);
+		return productDTO;
+	}
+
+	@Override
+	public void deleteProduct(long id) throws Exception {
+		// TODO Auto-generated method stub
+		Product product = productDao.getById(Product.class, id);
+		product.setIsactive(false);
+		productDao.update(product);
+		
 	}
 }

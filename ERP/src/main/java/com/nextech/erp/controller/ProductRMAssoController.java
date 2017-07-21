@@ -25,24 +25,21 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nextech.erp.constants.ERPConstants;
-import com.nextech.erp.dto.ProductOrderInventoryData;
-import com.nextech.erp.dto.ProductRMAssociationModel;
+import com.nextech.erp.dto.ProductRMAssociationDTO;
 import com.nextech.erp.dto.ProductRMAssociationModelParts;
 import com.nextech.erp.dto.RMVendorData;
+import com.nextech.erp.factory.ProductRMAssoRequestResponseFactory;
 import com.nextech.erp.model.Product;
-import com.nextech.erp.model.Productinventory;
-import com.nextech.erp.model.Productorderassociation;
 import com.nextech.erp.model.Productrawmaterialassociation;
 import com.nextech.erp.model.Rawmaterial;
-import com.nextech.erp.model.Rawmaterialvendorassociation;
 import com.nextech.erp.model.Vendor;
+import com.nextech.erp.newDTO.RMVendorAssociationDTO;
 import com.nextech.erp.service.ProductRMAssoService;
 import com.nextech.erp.service.ProductService;
 import com.nextech.erp.service.ProductionplanningService;
 import com.nextech.erp.service.RMVAssoService;
 import com.nextech.erp.service.RawmaterialService;
 import com.nextech.erp.service.VendorService;
-import com.nextech.erp.serviceImpl.ProductRMAssoServiceImpl;
 import com.nextech.erp.status.Response;
 import com.nextech.erp.status.UserStatus;
 
@@ -74,7 +71,7 @@ public class ProductRMAssoController {
 
 	@Transactional @RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addProductrawmaterialassociation(
-			@Valid @RequestBody Productrawmaterialassociation productrawmaterialassociation,
+			@Valid @RequestBody ProductRMAssociationDTO productRMAssociationDTO,
 			BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			if (bindingResult.hasErrors()) {
@@ -82,12 +79,9 @@ public class ProductRMAssoController {
 						.getDefaultMessage());
 			}
 			if (productRMAssoService.getPRMAssociationByPidRmid(
-					productrawmaterialassociation.getProduct().getId(),
-					productrawmaterialassociation.getRawmaterial().getId()) == null){
-				productrawmaterialassociation.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-				productrawmaterialassociation.setIsactive(true);
-				productRMAssoService
-						.addEntity(productrawmaterialassociation);
+					productRMAssociationDTO.getProduct(),
+					productRMAssociationDTO.getRawmaterialId().getId()) == null){
+				productRMAssoService.addEntity(ProductRMAssoRequestResponseFactory.setProductRMAsso(productRMAssociationDTO, request));
 			}
 			else
 				return new UserStatus(1,
@@ -111,7 +105,7 @@ public class ProductRMAssoController {
 
 	@Transactional @RequestMapping(value = "/createmultiple", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addMultipleRawmaterialorder(
-			@Valid @RequestBody ProductRMAssociationModel productRMAssociationModel, BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
+			@Valid @RequestBody ProductRMAssociationDTO productRMAssociationModel, BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			if (bindingResult.hasErrors()) {
 				return new UserStatus(0, bindingResult.getFieldError().getDefaultMessage());
@@ -134,7 +128,7 @@ public class ProductRMAssoController {
 		}
 	}
 
-	private void createMultipleRMAssociations(ProductRMAssociationModel productRMAssociationModel,String currentUser) throws Exception{
+	private void createMultipleRMAssociations(ProductRMAssociationDTO productRMAssociationModel,String currentUser) throws Exception{
 		for(ProductRMAssociationModelParts productRMAssociationModelParts : productRMAssociationModel.getProductRMAssociationModelParts()){
 			Productrawmaterialassociation productrawmaterialassociation =  setMultipleRM(productRMAssociationModelParts);
 			productrawmaterialassociation.setProduct(productService.getEntityById(Product.class, productRMAssociationModel.getProduct()));
@@ -172,7 +166,7 @@ public class ProductRMAssoController {
 
 	@Transactional @RequestMapping(value = "/update/multipleProductRMAssociation", method = RequestMethod.PUT, headers = "Accept=application/json")
 	public @ResponseBody UserStatus updateProductRMAssociation(
-			@RequestBody ProductRMAssociationModel productRMAssociationModel,HttpServletRequest request,HttpServletResponse response) {
+			@RequestBody ProductRMAssociationDTO productRMAssociationModel,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			List<Productrawmaterialassociation> productrawmaterialassociations = productRMAssoService.getProductRMAssoListByProductId(productRMAssociationModel.getProduct());
 			for(Productrawmaterialassociation productrawmaterialassociation : productrawmaterialassociations){
@@ -208,17 +202,16 @@ public class ProductRMAssoController {
 	@Transactional @RequestMapping(value = "getRMVendorData/{productId}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody Response getRMVendorList(@PathVariable("productId") long productId) {
 
-		List<Productrawmaterialassociation> productrawmaterialassociations = null;
+		List<ProductRMAssociationDTO> productrawmaterialassociations = null;
 		List<RMVendorData> rmVendorDatas = new ArrayList<RMVendorData>();
 		try {
-			productrawmaterialassociations = productRMAssoService.getProductRMAssoListByProductId(productId);
-			for(Productrawmaterialassociation productrawmaterialassociation : productrawmaterialassociations){
-				List<Rawmaterialvendorassociation> rawmaterialvendorassociations = RMVAssoService.getRawmaterialvendorassociationListByRMId(productrawmaterialassociation.getRawmaterial().getId());
-				for(Rawmaterialvendorassociation rawmaterialvendorassociation : rawmaterialvendorassociations){
-
+			productrawmaterialassociations = productRMAssoService.getProductRMAssoList(productId);
+			for(ProductRMAssociationDTO productRMAssociationDTO : productrawmaterialassociations){
+				List<RMVendorAssociationDTO> rmVendorAssociationDTOs = RMVAssoService.getRawmaterialvendorassociationListByRMId(productRMAssociationDTO.getRawmaterialId().getId());
+				for(RMVendorAssociationDTO rawmaterialvendorassociation : rmVendorAssociationDTOs){
 						RMVendorData rawRmVendorData = new RMVendorData();
-						Rawmaterial rawmaterial = rawmaterialService.getEntityById(Rawmaterial.class, productrawmaterialassociation.getRawmaterial().getId());
-						Vendor vendor = vendorService.getEntityById(Vendor.class, rawmaterialvendorassociation.getVendor().getId());
+						//Rawmaterial rawmaterial = rawmaterialService.getEntityById(Rawmaterial.class, productRMAssociationDTO.getRawmaterialId().getId());
+						Vendor vendor = vendorService.getEntityById(Vendor.class, rawmaterialvendorassociation.getVendorId().getId());
 						//rawRmVendorData.setRawmaterial(rawmaterial);
 						rawRmVendorData.setVendor(vendor);
 					//	rawRmVendorData.setQuantity(productrawmaterialassociation.getQuantity());
@@ -234,10 +227,10 @@ public class ProductRMAssoController {
 	}
 
 	@Transactional @RequestMapping(value = "/list/multiple", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<ProductRMAssociationModel> getMultipleProductrawmaterialassociation() {
+	public @ResponseBody List<ProductRMAssociationDTO> getMultipleProductrawmaterialassociation() {
 
 
-		List<ProductRMAssociationModel> productRMAssociationModels = new ArrayList<ProductRMAssociationModel>();
+		List<ProductRMAssociationDTO> productRMAssociationModels = new ArrayList<ProductRMAssociationDTO>();
 		try {
 			List<Productrawmaterialassociation> productrawmaterialassociationList = null;
 			productrawmaterialassociationList = productRMAssoService.getEntityList(Productrawmaterialassociation.class);
@@ -260,7 +253,7 @@ public class ProductRMAssoController {
 			}
 			 Set<Entry<Long, List<ProductRMAssociationModelParts>>> multplePRMAssoEntries =  multplePRMAsso.entrySet();
 			for(Entry<Long, List<ProductRMAssociationModelParts>> multplePRMAssoEntry : multplePRMAssoEntries){
-				ProductRMAssociationModel productRMAssociationModel = new ProductRMAssociationModel();
+				ProductRMAssociationDTO productRMAssociationModel = new ProductRMAssociationDTO();
 				Product product = productService.getEntityById(Product.class, multplePRMAssoEntry.getKey());
 				productRMAssociationModel.setName(product.getPartNumber());
 				productRMAssociationModel.setProduct(multplePRMAssoEntry.getKey());

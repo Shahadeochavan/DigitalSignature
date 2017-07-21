@@ -2,11 +2,10 @@ package com.nextech.erp.dto;
 
 import java.util.List;
 
-public class DispatchDTO {
+public class DispatchDTO extends AbstractDTO {
 	private long orderId;
 	private String invoiceNo;
 	private List<DispatchPartDTO> dispatchPartDTOs;
-	private String description;
 	
 	public long getOrderId() {
 		return orderId;
@@ -19,12 +18,6 @@ public class DispatchDTO {
 	}
 	public void setInvoiceNo(String invoiceNo) {
 		this.invoiceNo = invoiceNo;
-	}
-	public String getDescription() {
-		return description;
-	}
-	public void setDescription(String description) {
-		this.description = description;
 	}
 	public List<DispatchPartDTO> getDispatchPartDTOs() {
 		return dispatchPartDTOs;

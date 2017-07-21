@@ -1,68 +1,39 @@
 package com.nextech.erp.newDTO;
 
 
+import com.nextech.erp.dto.AbstractDTO;
 import com.nextech.erp.model.Unit;
 
-public class RawMaterialDTO {
+public class RawMaterialDTO extends AbstractDTO{
 
-	private long id;
-	
-	private String description;
-
-	private String name;
-
+	private String rmName;
 	private String partNumber;
-
 	private float pricePerUnit;
-
-	private Unit unit;
-
-	public long getId() {
-		return id;
+	private Unit unitId;
+	public String getRmName() {
+		return rmName;
 	}
-
-	public void setId(long id) {
-		this.id = id;
+	public void setRmName(String rmName) {
+		this.rmName = rmName;
 	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
 	public String getPartNumber() {
 		return partNumber;
 	}
-
 	public void setPartNumber(String partNumber) {
 		this.partNumber = partNumber;
 	}
-
 	public float getPricePerUnit() {
 		return pricePerUnit;
 	}
-
 	public void setPricePerUnit(float pricePerUnit) {
 		this.pricePerUnit = pricePerUnit;
 	}
-
-	public Unit getUnit() {
-		return unit;
+	public Unit getUnitId() {
+		return unitId;
 	}
-
-	public void setUnit(Unit unit) {
-		this.unit = unit;
+	public void setUnitId(Unit unitId) {
+		this.unitId = unitId;
 	}
+	
 	
 }

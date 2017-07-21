@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.factory.RMVendorAssoRequestResponseFactory;
-import com.nextech.erp.model.Rawmaterialvendorassociation;
 import com.nextech.erp.newDTO.RMVendorAssociationDTO;
 import com.nextech.erp.service.RMVAssoService;
 import com.nextech.erp.status.UserStatus;
@@ -70,12 +69,11 @@ public class RMVAssoController {
 	}
 
 	@Transactional @RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody Rawmaterialvendorassociation getRawmaterialvendorassociation(
+	public @ResponseBody RMVendorAssociationDTO getRawmaterialvendorassociation(
 			@PathVariable("id") long id) {
-		Rawmaterialvendorassociation rawmaterialvendorassociation = null;
+		RMVendorAssociationDTO rawmaterialvendorassociation = null;
 		try {
-			rawmaterialvendorassociation = rmvAssoService.getEntityById(
-					Rawmaterialvendorassociation.class, id);
+			rawmaterialvendorassociation = rmvAssoService.getRMVendor(id);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -96,12 +94,11 @@ public class RMVAssoController {
 	}
 
 	@Transactional @RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<Rawmaterialvendorassociation> getRawmaterialvendorassociation() {
+	public @ResponseBody List<RMVendorAssociationDTO> getRawmaterialvendorassociation() {
 
-		List<Rawmaterialvendorassociation> rawmaterialvendorassociationList = null;
+		List<RMVendorAssociationDTO> rawmaterialvendorassociationList = null;
 		try {
-			rawmaterialvendorassociationList = rmvAssoService
-					.getEntityList(Rawmaterialvendorassociation.class);
+			rawmaterialvendorassociationList = rmvAssoService.getRMVendorList();
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -111,8 +108,8 @@ public class RMVAssoController {
 	}
 	
 	@Transactional @RequestMapping(value = "rmVendorList/{rmId}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<Rawmaterialvendorassociation> getRMVendorList(@PathVariable("rmId") long rmId) {
-		List<Rawmaterialvendorassociation> rmRawmaterialvendorassociations = null;
+	public @ResponseBody List<RMVendorAssociationDTO> getRMVendorList(@PathVariable("rmId") long rmId) {
+		List<RMVendorAssociationDTO> rmRawmaterialvendorassociations = null;
 		try {
 			rmRawmaterialvendorassociations	 = rmvAssoService.getRawmaterialvendorassociationListByRMId(rmId);
 		} catch (Exception e) {
@@ -126,10 +123,7 @@ public class RMVAssoController {
 			@PathVariable("id") long id) {
 
 		try {
-			Rawmaterialvendorassociation rawmaterialvendorassociation = rmvAssoService
-					.getEntityById(Rawmaterialvendorassociation.class, id);
-			rawmaterialvendorassociation.setIsactive(false);
-			rmvAssoService.updateEntity(rawmaterialvendorassociation);
+			rmvAssoService.deleteRMVendor(id);
 			return new UserStatus(1,
 					"Rawmaterialvendorassociation deleted Successfully !");
 		} catch (Exception e) {

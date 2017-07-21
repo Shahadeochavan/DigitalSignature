@@ -17,9 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.nextech.erp.factory.UnitFactory;
-import com.nextech.erp.model.Unit;
 import com.nextech.erp.newDTO.UnitDTO;
 import com.nextech.erp.service.UnitService;
 import com.nextech.erp.status.UserStatus;
@@ -39,7 +37,6 @@ public class UnitController {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
-		     unitDTO.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 		 	unitservice.addEntity(UnitFactory.setUnit(unitDTO, request));
 			return new UserStatus(1, "Unit added Successfully !");
 		} catch (ConstraintViolationException cve) {
@@ -57,10 +54,10 @@ public class UnitController {
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody Unit getUnit(@PathVariable("id") long id) {
-		Unit unit = null;
+	public @ResponseBody UnitDTO getUnit(@PathVariable("id") long id) {
+		UnitDTO unit = null;
 		try {
-			unit = unitservice.getEntityById(Unit.class,id);
+			unit = unitservice.getUnitByID(id);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -70,8 +67,7 @@ public class UnitController {
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
 	public @ResponseBody UserStatus updateUnit(@RequestBody UnitDTO unitDTO,HttpServletRequest request,HttpServletResponse response) {
 		try {
-			unitDTO.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-			unitservice.updateEntity(UnitFactory.setUnit(unitDTO, request));
+			unitservice.updateEntity(UnitFactory.setUnitUpdate(unitDTO, request));
 			return new UserStatus(1, "Unit update Successfully !");
 		} catch (Exception e) {
 			 e.printStackTrace();
@@ -80,11 +76,11 @@ public class UnitController {
 	}
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<Unit> getUnit() {
+	public @ResponseBody List<UnitDTO> getUnit() {
 
-		List<Unit> unitList = null;
+		List<UnitDTO> unitList = null;
 		try {
-			unitList = unitservice.getEntityList(Unit.class);
+			unitList = unitservice.getUnitList();
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -97,9 +93,7 @@ public class UnitController {
 	public @ResponseBody UserStatus deleteUnit(@PathVariable("id") long id) {
 
 		try {
-			Unit unit = unitservice.getEntityById(Unit.class, id);
-			unit.setIsactive(false);
-			unitservice.updateEntity(unit);
+			unitservice.deleteUnit(id);
 			return new UserStatus(1, "Unit deleted Successfully !");
 		} catch (Exception e) {
 			return new UserStatus(0, e.toString());

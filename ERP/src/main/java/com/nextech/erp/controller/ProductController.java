@@ -23,9 +23,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.dto.ProductNewAssoicatedList;
+import com.nextech.erp.dto.ProductRMAssociationDTO;
+import com.nextech.erp.factory.ProductInventoryRequestResponseFactory;
 import com.nextech.erp.factory.ProductRequestResponseFactory;
-import com.nextech.erp.model.Product;
-import com.nextech.erp.model.Productinventory;
 import com.nextech.erp.model.Productrawmaterialassociation;
 import com.nextech.erp.newDTO.ProductDTO;
 import com.nextech.erp.service.ProductRMAssoService;
@@ -67,8 +67,8 @@ public class ProductController {
 			} else {
 				return new UserStatus(0, messageSource.getMessage(ERPConstants.PART_NUMBER, null, null));
 			}
-			productDTO.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-			productService.addEntity(ProductRequestResponseFactory.setProduct(productDTO, request));
+		long id =	productService.addEntity(ProductRequestResponseFactory.setProduct(productDTO, request));
+		productDTO.setId(id);
 			addProductInventory(productDTO, Long.parseLong(request.getAttribute("current_user").toString()));
 			return new UserStatus(1, "product added Successfully !");
 		} catch (ConstraintViolationException cve) {
@@ -86,10 +86,10 @@ public class ProductController {
 	}
 
 	@Transactional @RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody Product getProduct(@PathVariable("id") long id) {
-		Product product = null;
+	public @ResponseBody ProductDTO getProduct(@PathVariable("id") long id) {
+		ProductDTO product = null;
 		try {
-			product = productService.getEntityById(Product.class,id);
+			product = productService.getProductDTO(id);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -99,7 +99,7 @@ public class ProductController {
 	@Transactional @RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
 	public @ResponseBody UserStatus updateProduct(@RequestBody ProductDTO productDTO,HttpServletRequest request,HttpServletResponse response) {
 		try {
-			Product oldProductInfo = productService.getEntityById(Product.class, productDTO.getId());
+			ProductDTO oldProductInfo = productService.getProductDTO(productDTO.getId());
 			if(productDTO.getName().equals(oldProductInfo.getName())){ 	
 				} else { 
 					if (productService.getProductByName(productDTO.getName()) == null) {
@@ -113,8 +113,7 @@ public class ProductController {
 				    	return new UserStatus(0, messageSource.getMessage(ERPConstants.PART_NUMBER, null, null));
 					}
 				 }
-	            productDTO.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-			productService.updateEntity(ProductRequestResponseFactory.setProduct(productDTO, request));
+			productService.updateEntity(ProductRequestResponseFactory.setProductUpdate(productDTO, request));
 			return new UserStatus(1, "Product update Successfully !");
 		} catch (Exception e) {
 			 e.printStackTrace();
@@ -123,12 +122,11 @@ public class ProductController {
 	}
 
 	@Transactional @RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<Product> getProduct() {
+	public @ResponseBody List<ProductDTO> getProduct() {
 
-		List<Product> ProductList = null;
+		List<ProductDTO> ProductList = null;
 		try {
-			ProductList = productService.getEntityList(Product.class);
-
+			ProductList = productService.getProductList();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -138,11 +136,11 @@ public class ProductController {
 	@Transactional @RequestMapping(value = "/list/newProductRMAssociation", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody Response getNewProductRMAsso() {
 
-		List<Product> productList = null;
+		List<ProductDTO> productList = null;
 		List<ProductNewAssoicatedList> productNewAssoicatedLists = new ArrayList<ProductNewAssoicatedList>();
 		try {
-			productList = productService.getEntityList(Product.class);
-			for(Product product : productList){
+			productList = productService.getProductList();
+			for(ProductDTO product : productList){
 				List<Productrawmaterialassociation> productrawmaterialassociations = productRMAssoService.getProductRMAssoListByProductId(product.getId());
 				if(productrawmaterialassociations==null){
 					ProductNewAssoicatedList productNewAssoicatedList = new ProductNewAssoicatedList();
@@ -164,9 +162,7 @@ public class ProductController {
 	public @ResponseBody UserStatus deleteProduct(@PathVariable("id") long id) {
 
 		try {
-			Product product = productService.getEntityById(Product.class,id);
-			product.setIsactive(false);
-			productService.updateEntity(product);
+			productService.getProductDTO(id);
 			return new UserStatus(1, "Product deleted Successfully !");
 		} catch (Exception e) {
 			return new UserStatus(0, e.toString());
@@ -175,13 +171,6 @@ public class ProductController {
 	}
 
 	private void addProductInventory(ProductDTO productDTO,long userId) throws Exception{
-		Productinventory productinventory = new Productinventory();
-		Product product = new Product();
-		product.setId(productDTO.getId());
-		productinventory.setProduct(product);
-		productinventory.setQuantityavailable(0);
-		productinventory.setCreatedBy(userId);
-		productinventory.setIsactive(true);
-		productinventoryService.addEntity(productinventory);
-	}
+		productinventoryService.addEntity(ProductInventoryRequestResponseFactory.setProductIn(productDTO));
+}
 }

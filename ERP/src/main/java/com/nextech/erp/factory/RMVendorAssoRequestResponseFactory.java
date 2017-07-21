@@ -28,5 +28,19 @@ public class RMVendorAssoRequestResponseFactory {
 		rawmaterialvendorassociation.setIsactive(true);
 		return rawmaterialvendorassociation;
 	}
+	
+	public static RMVendorAssociationDTO setRMVendorList(Rawmaterialvendorassociation rawmaterialvendorassociation){
+		RMVendorAssociationDTO rawAssociationDTO = new RMVendorAssociationDTO();
+		rawAssociationDTO.setActive(true);
+		rawAssociationDTO.setCreatedBy(rawmaterialvendorassociation.getCreatedBy());
+		rawAssociationDTO.setCreatedDate(rawmaterialvendorassociation.getCreatedDate());
+		rawAssociationDTO.setPricePerUnit(rawmaterialvendorassociation.getPricePerUnit());
+		rawAssociationDTO.setRawmaterialId(rawmaterialvendorassociation.getRawmaterial());
+		rawAssociationDTO.setUpdatedBy(rawmaterialvendorassociation.getUpdatedBy());
+		rawAssociationDTO.setUpdatedDate(rawmaterialvendorassociation.getUpdatedDate());
+		rawAssociationDTO.setUpdatedBy(rawmaterialvendorassociation.getUpdatedBy());
+		rawAssociationDTO.setVendorId(rawmaterialvendorassociation.getVendor());
+		return rawAssociationDTO;
+	}
 
 }

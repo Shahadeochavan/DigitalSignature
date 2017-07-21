@@ -43,7 +43,7 @@ public class NotificationUserAssociationServiceImpl extends CRUDServiceImpl<Noti
 			long notificationId) throws Exception {
 		// TODO Auto-generated method stub
 	List<NotificationUserAssociatinsDTO>	notificationUserAssociatinsDTOs = new ArrayList<NotificationUserAssociatinsDTO>();
-		List<Notificationuserassociation> notificationuserassociations = notificationUserassociationDao.getList(Notificationuserassociation.class);
+		List<Notificationuserassociation> notificationuserassociations = notificationUserassociationDao.getNotificationuserassociationBynotificationId(notificationId);
 		for (Notificationuserassociation notificationuserassociation : notificationuserassociations) {
 			NotificationUserAssociatinsDTO notificationUserAssociatinsDTO = NotificationUserAssRequestResponseFactory.setNotifiactionDTO(notificationuserassociation);
 			notificationUserAssociatinsDTOs.add(notificationUserAssociatinsDTO);

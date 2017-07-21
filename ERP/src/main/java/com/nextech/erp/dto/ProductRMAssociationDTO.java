@@ -2,9 +2,13 @@ package com.nextech.erp.dto;
 
 import java.util.List;
 
-public class ProductRMAssociationModel {
+import com.nextech.erp.model.Rawmaterial;
+
+public class ProductRMAssociationDTO extends AbstractDTO {
 	private long product;
 	private String name;
+	private long quantity;
+	private Rawmaterial rawmaterialId;
 
 	private List<ProductRMAssociationModelParts> productRMAssociationModelParts;
 
@@ -27,6 +31,18 @@ public class ProductRMAssociationModel {
 	}
 	public void setName(String name) {
 		this.name = name;
+	}
+	public long getQuantity() {
+		return quantity;
+	}
+	public void setQuantity(long quantity) {
+		this.quantity = quantity;
+	}
+	public Rawmaterial getRawmaterialId() {
+		return rawmaterialId;
+	}
+	public void setRawmaterialId(Rawmaterial rawmaterialId) {
+		this.rawmaterialId = rawmaterialId;
 	}
 
 }
