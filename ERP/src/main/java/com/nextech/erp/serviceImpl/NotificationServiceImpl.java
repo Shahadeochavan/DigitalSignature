@@ -45,4 +45,12 @@ public class NotificationServiceImpl extends CRUDServiceImpl<Notification> imple
 		return notificationDTO;
 	}
 
+	@Override
+	public void deleteNofificationById(long id) throws Exception {
+		// TODO Auto-generated method stub
+		Notification notification = notificationDao.getById(Notification.class, id);
+		notification.setIsactive(false);
+		notificationDao.update(notification);
+	}
+
 }

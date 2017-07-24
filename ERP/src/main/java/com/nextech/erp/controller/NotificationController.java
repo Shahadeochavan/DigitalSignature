@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nextech.erp.factory.NotificationRequestResponseFactory;
-import com.nextech.erp.model.Notification;
 import com.nextech.erp.newDTO.NotificationDTO;
 import com.nextech.erp.service.NotificationService;
 import com.nextech.erp.status.UserStatus;
@@ -64,10 +63,10 @@ public class NotificationController {
 	}
 
 	@Transactional @RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody Notification getNotification(@PathVariable("id") long id) {
-		Notification notification = null;
+	public @ResponseBody NotificationDTO getNotification(@PathVariable("id") long id) {
+		NotificationDTO notification = null;
 		try {
-			notification = notificationservice.getEntityById(Notification.class, id);
+			notification = notificationservice.getNotificationDTOById(id);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -88,11 +87,11 @@ public class NotificationController {
 	}
 
 	@Transactional @RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<Notification> getNotification() {
+	public @ResponseBody List<NotificationDTO> getNotification() {
 
-		List<Notification> notificationList = null;
+		List<NotificationDTO> notificationList = null;
 		try {
-			notificationList = notificationservice.getEntityList(Notification.class);
+			notificationList = notificationservice.getNofificationList(notificationList);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -105,9 +104,7 @@ public class NotificationController {
 	public @ResponseBody UserStatus deleteNotification(@PathVariable("id") long id) {
 
 		try {
-			Notification notification = notificationservice.getEntityById(Notification.class,id);
-			notification.setIsactive(false);
-			notificationservice.updateEntity(notification);
+			notificationservice.deleteNofificationById(id);
 			return new UserStatus(1, "Notification deleted Successfully !");
 		} catch (Exception e) {
 			return new UserStatus(0, e.toString());

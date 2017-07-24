@@ -51,4 +51,35 @@ public class NotificationUserAssociationServiceImpl extends CRUDServiceImpl<Noti
 		return notificationUserAssociatinsDTOs;
 	}
 
+	@Override
+	public List<NotificationUserAssociatinsDTO> getNotificationUserAssoList()
+			throws Exception {
+		// TODO Auto-generated method stub
+		List<NotificationUserAssociatinsDTO> notificationUserAssociatinsDTOs = new ArrayList<NotificationUserAssociatinsDTO>();
+		List<Notificationuserassociation> notificationuserassociations = notificationUserassociationDao.getList(Notificationuserassociation.class);
+		for (Notificationuserassociation notificationuserassociation : notificationuserassociations) {
+			NotificationUserAssociatinsDTO notificationUserAssociatinsDTO = NotificationUserAssRequestResponseFactory.setNotifiactionDTO(notificationuserassociation);
+			notificationUserAssociatinsDTOs.add(notificationUserAssociatinsDTO);
+		}
+		return notificationUserAssociatinsDTOs;
+	}
+
+	@Override
+	public NotificationUserAssociatinsDTO getNotificationUserById(long id)
+			throws Exception {
+		// TODO Auto-generated method stub
+		Notificationuserassociation notificationuserassociation = notificationUserassociationDao.getById(Notificationuserassociation.class, id);
+		NotificationUserAssociatinsDTO notificationUserAssociatinsDTO = NotificationUserAssRequestResponseFactory.setNotifiactionDTO(notificationuserassociation);
+		return notificationUserAssociatinsDTO;
+	}
+
+	@Override
+	public void deleteNotificationUserAsso(long id) throws Exception {
+		// TODO Auto-generated method stub
+		Notificationuserassociation notificationuserassociation = notificationUserassociationDao.getById(Notificationuserassociation.class, id);
+		notificationuserassociation.setIsactive(false);
+		notificationUserassociationDao.update(notificationuserassociation);
+		
+	}
+
 }

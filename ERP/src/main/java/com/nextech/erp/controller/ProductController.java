@@ -1,7 +1,9 @@
 package com.nextech.erp.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
@@ -22,15 +24,23 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nextech.erp.constants.ERPConstants;
+import com.nextech.erp.dto.Mail;
 import com.nextech.erp.dto.ProductNewAssoicatedList;
-import com.nextech.erp.dto.ProductRMAssociationDTO;
 import com.nextech.erp.factory.ProductInventoryRequestResponseFactory;
 import com.nextech.erp.factory.ProductRequestResponseFactory;
 import com.nextech.erp.model.Productrawmaterialassociation;
+import com.nextech.erp.newDTO.NotificationDTO;
+import com.nextech.erp.newDTO.NotificationUserAssociatinsDTO;
 import com.nextech.erp.newDTO.ProductDTO;
+import com.nextech.erp.newDTO.UserDTO;
+import com.nextech.erp.service.MailService;
+import com.nextech.erp.service.NotificationService;
+import com.nextech.erp.service.NotificationUserAssociationService;
 import com.nextech.erp.service.ProductRMAssoService;
 import com.nextech.erp.service.ProductService;
 import com.nextech.erp.service.ProductinventoryService;
+import com.nextech.erp.service.UserService;
+import com.nextech.erp.service.VendorService;
 import com.nextech.erp.status.Response;
 import com.nextech.erp.status.UserStatus;
 
@@ -49,6 +59,22 @@ public class ProductController {
 
 	@Autowired
 	ProductRMAssoService productRMAssoService;
+	
+	
+	@Autowired
+	NotificationService notificationService;
+
+	@Autowired
+	VendorService vendorService;
+
+	@Autowired
+	MailService mailService;
+	
+	@Autowired
+	UserService userService;
+	
+	@Autowired 
+	NotificationUserAssociationService notificationUserAssociationService;
 
 	@Transactional @RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addProduct(
@@ -114,6 +140,7 @@ public class ProductController {
 					}
 				 }
 			productService.updateEntity(ProductRequestResponseFactory.setProductUpdate(productDTO, request));
+			mailSendingUpdate();
 			return new UserStatus(1, "Product update Successfully !");
 		} catch (Exception e) {
 			 e.printStackTrace();
@@ -173,4 +200,27 @@ public class ProductController {
 	private void addProductInventory(ProductDTO productDTO,long userId) throws Exception{
 		productinventoryService.addEntity(ProductInventoryRequestResponseFactory.setProductIn(productDTO));
 }
+	
+	private void mailSendingUpdate() throws Exception{
+		  Mail mail = new Mail();
+		  NotificationDTO  notificationDTO = notificationService.getNotificationDTOById(Long.parseLong(messageSource.getMessage(ERPConstants.PRODUCT_MODIFICATION, null, null)));
+		  List<NotificationUserAssociatinsDTO> notificationUserAssociatinsDTOs = notificationUserAssociationService.getNotificationUserAssociatinsDTOs(notificationDTO.getId());
+		  for (NotificationUserAssociatinsDTO notificationuserassociation : notificationUserAssociatinsDTOs) {
+			  UserDTO userDTO = userService.getUserDTO(notificationuserassociation.getUserId().getId());
+			  if(notificationuserassociation.getTo()==true){
+				  mail.setMailTo(userDTO.getEmailId()); 
+			  }else if(notificationuserassociation.getBcc()==true){
+				  mail.setMailBcc(userDTO.getEmailId());
+			  }else if(notificationuserassociation.getCc()==true){
+				  mail.setMailCc(userDTO.getEmailId());
+			  }
+		}
+	        mail.setMailSubject(notificationDTO.getSubject());
+	        Map < String, Object > model = new HashMap < String, Object > ();
+	        model.put("companyName","EK ELECTRONICS");
+	        model.put("location", "Pune");
+	        model.put("signature", "www.NextechServices.in");
+	        mail.setModel(model);
+		mailService.sendEmailWithoutPdF(mail, notificationDTO);
+	}
 }

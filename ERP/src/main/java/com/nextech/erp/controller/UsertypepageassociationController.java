@@ -20,8 +20,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nextech.erp.factory.UserTypePageAssoFactory;
+import com.nextech.erp.model.Page;
+import com.nextech.erp.model.Usertype;
 import com.nextech.erp.model.Usertypepageassociation;
 import com.nextech.erp.newDTO.UserTypePageAssoDTO;
+import com.nextech.erp.newDTO.UserTypePageAssoPart;
+import com.nextech.erp.service.PageService;
+import com.nextech.erp.service.UserTypeService;
 import com.nextech.erp.service.UsertypepageassociationService;
 import com.nextech.erp.status.UserStatus;
 
@@ -31,11 +36,17 @@ public class UsertypepageassociationController {
 
 	@Autowired
 	UsertypepageassociationService usertypepageassociationService;
+	
+	@Autowired
+	PageService pageService;
+	
+	@Autowired
+	UserTypeService userTypeService;
 
 	@Autowired
 	private MessageSource messageSource;
 
-	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
+	@RequestMapping(value = "/addMultiplePage", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addPageAss(
 			@Valid @RequestBody UserTypePageAssoDTO userTypePageAssoDTO,
 			BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
@@ -44,7 +55,7 @@ public class UsertypepageassociationController {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
-			usertypepageassociationService.addEntity(UserTypePageAssoFactory.setUserTypePageAss(userTypePageAssoDTO, request));
+			createMultiplePageAss(userTypePageAssoDTO, request.getAttribute("current_user").toString());
 			return new UserStatus(1,
 					"Usertypepageassociation added Successfully !");
 		} catch (ConstraintViolationException cve) {
@@ -102,11 +113,7 @@ public class UsertypepageassociationController {
 	public @ResponseBody UserStatus deletePageAss(@PathVariable("id") long id) {
 
 		try {
-			Usertypepageassociation usertypepageassociation = usertypepageassociationService
-					.getEntityById(Usertypepageassociation.class, id);
-			usertypepageassociation.setIsactive(false);
-			usertypepageassociationService
-					.updateEntity(usertypepageassociation);
+			usertypepageassociationService.deleteUserTypePage(id);
 			return new UserStatus(1,
 					"Usertypepageassociation deleted Successfully !");
 		} catch (Exception e) {
@@ -114,5 +121,20 @@ public class UsertypepageassociationController {
 			return new UserStatus(0, e.toString());
 		}
 
+	}
+	private void createMultiplePageAss(UserTypePageAssoDTO userTypePageAssoDTO,String currentUser) throws Exception{
+		for(UserTypePageAssoPart userTypePageAssoPart : userTypePageAssoDTO.getUserTypePageAssoParts()){
+			Usertypepageassociation usertypepageassociation =  setMultiplePage(userTypePageAssoPart);
+			usertypepageassociation.setUsertype(userTypeService.getEntityById(Usertype.class, userTypePageAssoDTO.getUsertypeId().getId()));
+			usertypepageassociation.setCreatedBy(Long.parseLong(currentUser));
+			usertypepageassociationService.addEntity(usertypepageassociation);
+		}
+	}
+	
+	private Usertypepageassociation setMultiplePage(UserTypePageAssoPart userTypePageAssoPart) throws Exception {
+		Usertypepageassociation usertypepageassociation = new Usertypepageassociation();
+		usertypepageassociation.setPage(pageService.getEntityById(Page.class, userTypePageAssoPart.getPageId().getId()));
+		usertypepageassociation.setIsactive(true);
+		return usertypepageassociation;
 	}
 }

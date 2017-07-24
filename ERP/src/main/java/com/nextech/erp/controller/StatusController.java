@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nextech.erp.factory.StatusRequestResponseFactory;
-import com.nextech.erp.model.Status;
 import com.nextech.erp.newDTO.StatusDTO;
 import com.nextech.erp.service.StatusService;
 import com.nextech.erp.status.UserStatus;
@@ -40,8 +39,7 @@ public class StatusController {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
-			statusDTO.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-			statusService.addEntity(StatusRequestResponseFactory.setStatsu(statusDTO));
+			statusService.addEntity(StatusRequestResponseFactory.setStatus(statusDTO, request));
 			return new UserStatus(1, "Status added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			cve.printStackTrace();
@@ -58,10 +56,10 @@ public class StatusController {
 	}
 
 	@Transactional @RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody Status getStatus(@PathVariable("id") long id) {
-		Status status = null;
+	public @ResponseBody StatusDTO getStatus(@PathVariable("id") long id) {
+		StatusDTO status = null;
 		try {
-			status = statusService.getEntityById(Status.class, id);
+			status = statusService.getStatusById(id);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -71,8 +69,7 @@ public class StatusController {
 	@Transactional @RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
 	public @ResponseBody UserStatus updateStatus(@RequestBody StatusDTO statusDTO,HttpServletRequest request,HttpServletResponse response) {
 		try {
-			statusDTO.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-			statusService.updateEntity(StatusRequestResponseFactory.setStatsu(statusDTO));
+			statusService.updateEntity(StatusRequestResponseFactory.setStatusUpdate(statusDTO, request));
 			return new UserStatus(1, "Status update Successfully !");
 		} catch (Exception e) {
 			// e.printStackTrace();
@@ -81,11 +78,11 @@ public class StatusController {
 	}
 
 	@Transactional @RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<Status> getStatus() {
+	public @ResponseBody List<StatusDTO> getStatus() {
 
-		List<Status> statusList = null;
+		List<StatusDTO> statusList = null;
 		try {
-			statusList = statusService.getEntityList(Status.class);
+			statusList = statusService.getStatusList();
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -98,9 +95,7 @@ public class StatusController {
 	public @ResponseBody UserStatus deleteStatus(@PathVariable("id") long id) {
 
 		try {
-			Status status = statusService.getEntityById(Status.class,id);
-			status.setIsactive(false);
-			statusService.updateEntity(status);
+			statusService.deleteStatus(id);
 			return new UserStatus(1, "Status deleted Successfully !");
 		} catch (Exception e) {
 			return new UserStatus(0, e.toString());

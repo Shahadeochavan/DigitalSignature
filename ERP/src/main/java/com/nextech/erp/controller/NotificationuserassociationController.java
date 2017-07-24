@@ -19,9 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.nextech.erp.factory.NotificationUserAssRequestResponseFactory;
-import com.nextech.erp.model.Notificationuserassociation;
 import com.nextech.erp.newDTO.NotificationUserAssociatinsDTO;
 import com.nextech.erp.service.NotificationUserAssociationService;
 import com.nextech.erp.status.UserStatus;
@@ -63,10 +61,10 @@ public class NotificationuserassociationController {
 	}
 
 	@Transactional @RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody Notificationuserassociation getNotification(@PathVariable("id") long id) {
-		Notificationuserassociation notification = null;
+	public @ResponseBody NotificationUserAssociatinsDTO getNotification(@PathVariable("id") long id) {
+		NotificationUserAssociatinsDTO notification = null;
 		try {
-			notification = notificationservice.getEntityById(Notificationuserassociation.class, id);
+			notification = notificationservice.getNotificationUserById(id);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -87,11 +85,11 @@ public class NotificationuserassociationController {
 	}
 
 	@Transactional @RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<Notificationuserassociation> getNotification() {
+	public @ResponseBody List<NotificationUserAssociatinsDTO> getNotification() {
 
-		List<Notificationuserassociation> notificationList = null;
+		List<NotificationUserAssociatinsDTO> notificationList = null;
 		try {
-			notificationList = notificationservice.getEntityList(Notificationuserassociation.class);
+			notificationList = notificationservice.getNotificationUserAssoList();
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -104,9 +102,7 @@ public class NotificationuserassociationController {
 	public @ResponseBody UserStatus deleteNotification(@PathVariable("id") long id) {
 
 		try {
-			Notificationuserassociation notification = notificationservice.getEntityById(Notificationuserassociation.class,id);
-			notification.setIsactive(false);
-			notificationservice.updateEntity(notification);
+			notificationservice.deleteNotificationUserAsso(id);
 			return new UserStatus(1, "Notification deleted Successfully !");
 		} catch (Exception e) {
 			return new UserStatus(0, e.toString());

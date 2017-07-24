@@ -11,7 +11,7 @@ public class UserTypePageAssoFactory {
 		Usertypepageassociation usertypepageassociation = new Usertypepageassociation();
 		usertypepageassociation.setId(userTypePageAssoDTO.getId());
 		usertypepageassociation.setPage(userTypePageAssoDTO.getPage());
-		usertypepageassociation.setUsertype(userTypePageAssoDTO.getUsertype());
+		usertypepageassociation.setUsertype(userTypePageAssoDTO.getUsertypeId());
 		usertypepageassociation.setIsactive(true);
 		usertypepageassociation.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 		return usertypepageassociation;
@@ -20,7 +20,7 @@ public class UserTypePageAssoFactory {
 		Usertypepageassociation usertypepageassociation = new Usertypepageassociation();
 		usertypepageassociation.setId(userTypePageAssoDTO.getId());
 		usertypepageassociation.setPage(userTypePageAssoDTO.getPage());
-		usertypepageassociation.setUsertype(userTypePageAssoDTO.getUsertype());
+		usertypepageassociation.setUsertype(userTypePageAssoDTO.getUsertypeId());
 		usertypepageassociation.setIsactive(true);
 		usertypepageassociation.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 		return usertypepageassociation;
@@ -29,7 +29,7 @@ public class UserTypePageAssoFactory {
 		UserTypePageAssoDTO userTypePageAssoDTO = new UserTypePageAssoDTO();
 		userTypePageAssoDTO.setId(usertypepageassociation.getId());
 		userTypePageAssoDTO.setPage(usertypepageassociation.getPage());
-		userTypePageAssoDTO.setUsertype(usertypepageassociation.getUsertype());
+		userTypePageAssoDTO.setUsertypeId(usertypepageassociation.getUsertype());
 		userTypePageAssoDTO.setActive(true);
 		return userTypePageAssoDTO;
 	}

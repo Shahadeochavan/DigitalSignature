@@ -154,14 +154,17 @@ public class RawmaterialorderController {
 				return new UserStatus(0, bindingResult.getFieldError().getDefaultMessage());
 			}
 			//TODO save call raw material order
-		Rawmaterialorder	rawmaterialorder = saveRMOrder(rawmaterialOrderDTO, request, response);
-			String invoiceId = generateInvoiceId()+rawmaterialorder.getId();
+		//Rawmaterialorder	rawmaterialorder = saveRMOrder(rawmaterialOrderDTO, request, response);
+		RawmaterialOrderDTO rawmaterialOrderDTO2	= rawmaterialorderService.saveRMOrder(rawmaterialOrderDTO, request, response);
+			String invoiceId = generateInvoiceId()+rawmaterialOrderDTO2.getId();
+			rawmaterialorderService.updateRMName(invoiceId,rawmaterialOrderDTO2);
+		/*	Rawmaterialorder  rawmaterialorder = new Rawmaterialorder();
 			rawmaterialorder.setName(invoiceId);
 			rawmaterialorderService.updateEntity(rawmaterialorder);
 			rawmaterialOrderDTO.setId(rawmaterialorder.getId());
-			rawmaterialOrderDTO.setStatusId(rawmaterialorder.getStatus());
+			rawmaterialOrderDTO.setStatusId(rawmaterialorder.getStatus());*/
 			//TODO add raw material association
-			addRMOrderAsso(rawmaterialOrderDTO, request, response);
+			addRMOrderAsso(rawmaterialOrderDTO2, request, response);
 
 			return new UserStatus(1, "Multiple Rawmaterial Order added Successfully !");
 		} catch (ConstraintViolationException cve) {
@@ -180,12 +183,11 @@ public class RawmaterialorderController {
 	}
 
 	@Transactional @RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody Rawmaterialorder getRawmaterialorder(
+	public @ResponseBody RawmaterialOrderDTO getRawmaterialorder(
 			@PathVariable("id") long id) {
-		Rawmaterialorder rawmaterialorder = null;
+		RawmaterialOrderDTO rawmaterialorder = null;
 		try {
-			rawmaterialorder = rawmaterialorderService
-					.getEntityById(Rawmaterialorder.class, id);
+			rawmaterialorder = rawmaterialorderService.getRMOrderById(id);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -207,13 +209,11 @@ public class RawmaterialorderController {
 	}
 
 	@Transactional @RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<Rawmaterialorder> getRawmaterialorder() {
+	public @ResponseBody List<RawmaterialOrderDTO> getRawmaterialorder() {
 
-		List<Rawmaterialorder> rawmaterialorderList = null;
+		List<RawmaterialOrderDTO> rawmaterialorderList = null;
 		try {
-			rawmaterialorderList = rawmaterialorderService
-					.getEntityList(Rawmaterialorder.class);
-
+			rawmaterialorderList = rawmaterialorderService.getRMOrderList();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -257,10 +257,7 @@ public class RawmaterialorderController {
 			@PathVariable("id") long id) {
 
 		try {
-			Rawmaterialorder rawmaterialorder = rawmaterialorderService
-					.getEntityById(Rawmaterialorder.class,id);
-			rawmaterialorder.setIsactive(false);
-			rawmaterialorderService.updateEntity(rawmaterialorder);
+			rawmaterialorderService.deleteRMOrder(id);
 			return new UserStatus(1, "Rawmaterial Order deleted Successfully !");
 		} catch (Exception e) {
 			return new UserStatus(0, e.toString());
@@ -282,6 +279,7 @@ public class RawmaterialorderController {
 
 	private Rawmaterialorder  saveRMOrder(RawmaterialOrderDTO rawmaterialOrderDTO,HttpServletRequest request,HttpServletResponse response) throws Exception{
 		Rawmaterialorder  rawmaterialorder = RMOrderRequestResponseFactory.setRMOrder(rawmaterialOrderDTO);
+		
 		rawmaterialorder.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 		rawmaterialorder.setStatus(statusService.getEntityById(Status.class,Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_NEW_RM_ORDER, null, null))));
 		long id=rawmaterialorderService.addEntity(rawmaterialorder);

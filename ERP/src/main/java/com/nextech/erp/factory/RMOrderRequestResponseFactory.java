@@ -36,5 +36,19 @@ public class RMOrderRequestResponseFactory {
 		rawmaterialorderassociation.setIsactive(true);
 		return rawmaterialorderassociation;
 	}
+	
+	public static RawmaterialOrderDTO setRMOrderDTO(Rawmaterialorder rawmaterialorder){
+		RawmaterialOrderDTO rawmaterialOrderDTO = new RawmaterialOrderDTO();
+		rawmaterialOrderDTO.setActive(true);
+		rawmaterialOrderDTO.setActualPrice(rawmaterialorder.getActualPrice());
+		rawmaterialOrderDTO.setDescription(rawmaterialorder.getDescription());
+		rawmaterialOrderDTO.setId(rawmaterialorder.getId());
+		rawmaterialOrderDTO.setName(rawmaterialorder.getName());
+		rawmaterialOrderDTO.setOtherCharges(rawmaterialorder.getOtherCharges());
+		rawmaterialOrderDTO.setQuantity(rawmaterialorder.getQuantity());
+		rawmaterialOrderDTO.setTax(rawmaterialorder.getTax());
+		rawmaterialOrderDTO.setTotalPrice(rawmaterialorder.getTotalprice());
+		return rawmaterialOrderDTO;
+	}
 
 }

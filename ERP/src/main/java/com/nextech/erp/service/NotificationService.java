@@ -12,5 +12,7 @@ public interface NotificationService extends CRUDService<Notification>{
 	public List<NotificationDTO> getNofificationList(List<NotificationDTO> notificationDTOs) throws Exception;
 	
 	public NotificationDTO getNotificationDTOById(long id) throws Exception;
+	
+	public void deleteNofificationById(long id) throws Exception;
 
 }

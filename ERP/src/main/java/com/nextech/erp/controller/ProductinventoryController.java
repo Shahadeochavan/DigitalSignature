@@ -27,8 +27,6 @@ import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.dto.Mail;
 import com.nextech.erp.dto.ProductInventoryDTO;
 import com.nextech.erp.factory.ProductInventoryRequestResponseFactory;
-import com.nextech.erp.model.Product;
-import com.nextech.erp.model.Productinventory;
 import com.nextech.erp.newDTO.NotificationDTO;
 import com.nextech.erp.newDTO.NotificationUserAssociatinsDTO;
 import com.nextech.erp.newDTO.ProductDTO;

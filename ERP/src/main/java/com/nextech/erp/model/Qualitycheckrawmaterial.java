@@ -41,6 +41,8 @@ public class Qualitycheckrawmaterial implements Serializable {
 	private boolean isReturnInvoiceInitated;
 
 	private String remark;
+	
+	private float priceperunit;
 
 	@Column(name="updated_by")
 	private long updatedBy;
@@ -214,6 +216,12 @@ public class Qualitycheckrawmaterial implements Serializable {
 		rawmaterialorderhistory.setQualitycheckrawmaterial(null);
 
 		return rawmaterialorderhistory;
+	}
+	public float getPriceperunit() {
+		return priceperunit;
+	}
+	public void setPriceperunit(float priceperunit) {
+		this.priceperunit = priceperunit;
 	}
 
 }
