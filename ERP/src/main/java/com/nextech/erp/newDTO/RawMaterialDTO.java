@@ -2,6 +2,7 @@ package com.nextech.erp.newDTO;
 
 
 import com.nextech.erp.dto.AbstractDTO;
+import com.nextech.erp.model.Rmtype;
 import com.nextech.erp.model.Unit;
 
 public class RawMaterialDTO extends AbstractDTO{
@@ -10,6 +11,7 @@ public class RawMaterialDTO extends AbstractDTO{
 	private String partNumber;
 	private float pricePerUnit;
 	private Unit unitId;
+	private Rmtype rmTypeId;
 	public String getRmName() {
 		return rmName;
 	}
@@ -33,6 +35,12 @@ public class RawMaterialDTO extends AbstractDTO{
 	}
 	public void setUnitId(Unit unitId) {
 		this.unitId = unitId;
+	}
+	public Rmtype getRmTypeId() {
+		return rmTypeId;
+	}
+	public void setRmTypeId(Rmtype rmTypeId) {
+		this.rmTypeId = rmTypeId;
 	}
 	
 	

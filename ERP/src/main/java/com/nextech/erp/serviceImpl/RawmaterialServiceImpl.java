@@ -27,7 +27,7 @@ public class RawmaterialServiceImpl extends CRUDServiceImpl<Rawmaterial> impleme
 	
 	@Override
 	public List<RawMaterialDTO> getRawMaterialByRMOrderId(Long id) throws Exception {
-		List<RawMaterialDTO> rawmaterials = new ArrayList<>();
+		List<RawMaterialDTO> rawmaterials = new ArrayList<RawMaterialDTO>();
 		List<Rawmaterialorderassociation> rawmaterialorderassociations = rawmaterialorderassociationDao.getRMOrderRMAssociationByRMOrderId(id);
 		if(rawmaterialorderassociations != null && !rawmaterialorderassociations.isEmpty() && rawmaterialorderassociations.size()>0){
 			for (Rawmaterialorderassociation rawmaterialorderassociation : rawmaterialorderassociations) {
@@ -87,5 +87,17 @@ public class RawmaterialServiceImpl extends CRUDServiceImpl<Rawmaterial> impleme
 		rawmaterial.setIsactive(false);
 		rawmaterialDao.update(rawmaterial);
 		
+	}
+
+	@Override
+	public List<RawMaterialDTO> getRMByRMTypeId(long id) throws Exception {
+		// TODO Auto-generated method stub
+		List<RawMaterialDTO> rawMaterialDTOs =  new ArrayList<RawMaterialDTO>();
+		List<Rawmaterial> rawmaterials = rawmaterialDao.getRMByRMTypeId(id);
+		for (Rawmaterial rawmaterial : rawmaterials) {
+			RawMaterialDTO rawMaterialDTO = RMRequestResponseFactory.setRawMaterialDTO(rawmaterial);
+			rawMaterialDTOs.add(rawMaterialDTO);
+		}
+		return rawMaterialDTOs;
 	}
 }

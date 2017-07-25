@@ -10,5 +10,7 @@ public interface RawmaterialDao extends SuperDao<Rawmaterial>{
 	List<Rawmaterialvendorassociation> getRawmaterialByVenodrId(long id) throws Exception;
 	
 	public Rawmaterial getRMByRMId(long id) throws Exception ;
+	
+	public List<Rawmaterial> getRMByRMTypeId(long id) throws Exception;
 
 }

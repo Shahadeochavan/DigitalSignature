@@ -1,12 +1,8 @@
 package com.nextech.erp.factory;
 
 import javax.servlet.http.HttpServletRequest;
-
-import com.nextech.erp.model.Product;
-import com.nextech.erp.model.Productinventory;
 import com.nextech.erp.model.Rawmaterial;
 import com.nextech.erp.model.Rawmaterialinventory;
-import com.nextech.erp.newDTO.ProductDTO;
 import com.nextech.erp.newDTO.RawMaterialDTO;
 
 public class RMRequestResponseFactory {
@@ -19,6 +15,7 @@ public class RMRequestResponseFactory {
 		rawmaterial.setPartNumber(rawMaterialDTO.getPartNumber());
 		rawmaterial.setPricePerUnit(rawMaterialDTO.getPricePerUnit());
 		rawmaterial.setUnit(rawMaterialDTO.getUnitId());
+		rawmaterial.setRmtype(rawMaterialDTO.getRmTypeId());
 		rawmaterial.setIsactive(true);
 		rawmaterial.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 		return rawmaterial;
@@ -54,7 +51,9 @@ public class RMRequestResponseFactory {
 		rawMaterialDTO.setPricePerUnit(rawmaterial.getPricePerUnit());
 		rawMaterialDTO.setRmName(rawmaterial.getName());
 		rawMaterialDTO.setUnitId(rawmaterial.getUnit());
+		rawMaterialDTO.setRmTypeId(rawmaterial.getRmtype());
 		rawMaterialDTO.setActive(true);
+		rawMaterialDTO.setId(rawmaterial.getId());
 		rawMaterialDTO.setCreatedBy(rawmaterial.getCreatedBy());
 		rawMaterialDTO.setCreatedDate(rawmaterial.getCreatedDate());
 		rawMaterialDTO.setUpdatedBy(rawmaterial.getUpdatedBy());

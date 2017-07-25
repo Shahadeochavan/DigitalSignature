@@ -46,7 +46,7 @@ public class UsertypepageassociationController {
 	@Autowired
 	private MessageSource messageSource;
 
-	@RequestMapping(value = "/addMultiplePage", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
+	@RequestMapping(value = "/createMultiple", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addPageAss(
 			@Valid @RequestBody UserTypePageAssoDTO userTypePageAssoDTO,
 			BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {

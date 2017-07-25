@@ -3,7 +3,7 @@ package com.nextech.erp.dto;
 import com.nextech.erp.model.Rawmaterial;
 import com.nextech.erp.model.Vendor;
 
-public class BomModelPart {
+public class BomModelPart extends AbstractDTO{
 
 	private Rawmaterial rawmaterial;
 	private Vendor vendor;

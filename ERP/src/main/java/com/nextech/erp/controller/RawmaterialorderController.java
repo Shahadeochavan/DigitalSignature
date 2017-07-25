@@ -154,17 +154,9 @@ public class RawmaterialorderController {
 				return new UserStatus(0, bindingResult.getFieldError().getDefaultMessage());
 			}
 			//TODO save call raw material order
-		//Rawmaterialorder	rawmaterialorder = saveRMOrder(rawmaterialOrderDTO, request, response);
-		RawmaterialOrderDTO rawmaterialOrderDTO2	= rawmaterialorderService.saveRMOrder(rawmaterialOrderDTO, request, response);
-			String invoiceId = generateInvoiceId()+rawmaterialOrderDTO2.getId();
-			rawmaterialorderService.updateRMName(invoiceId,rawmaterialOrderDTO2);
-		/*	Rawmaterialorder  rawmaterialorder = new Rawmaterialorder();
-			rawmaterialorder.setName(invoiceId);
-			rawmaterialorderService.updateEntity(rawmaterialorder);
-			rawmaterialOrderDTO.setId(rawmaterialorder.getId());
-			rawmaterialOrderDTO.setStatusId(rawmaterialorder.getStatus());*/
-			//TODO add raw material association
-			addRMOrderAsso(rawmaterialOrderDTO2, request, response);
+		     RawmaterialOrderDTO rawmaterialOrderDTO2	= rawmaterialorderService.saveRMOrder(rawmaterialOrderDTO, request, response);
+		     rawmaterialOrderDTO.setId(rawmaterialOrderDTO2.getId());
+		    addRMOrderAsso(rawmaterialOrderDTO, request, response);
 
 			return new UserStatus(1, "Multiple Rawmaterial Order added Successfully !");
 		} catch (ConstraintViolationException cve) {
@@ -265,9 +257,9 @@ public class RawmaterialorderController {
 
 	}
 	@Transactional @RequestMapping(value = "getVendorOrder/{VENDOR-ID}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<Rawmaterialorder> getRawmaterialorderVendor(@PathVariable("VENDOR-ID") long vendorId) {
+	public @ResponseBody List<RawmaterialOrderDTO> getRawmaterialorderVendor(@PathVariable("VENDOR-ID") long vendorId) {
 
-		List<Rawmaterialorder> rawmaterialorderList = null;
+		List<RawmaterialOrderDTO> rawmaterialorderList = null;
 		try {
 			rawmaterialorderList = rawmaterialorderService.getRawmaterialorderByVendor(vendorId);
 		} catch (Exception e) {

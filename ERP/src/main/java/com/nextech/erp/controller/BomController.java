@@ -34,6 +34,7 @@ import com.nextech.erp.dto.BomRMVendorModel;
 import com.nextech.erp.dto.CreatePdfForBomProduct;
 import com.nextech.erp.dto.ProductBomDTO;
 import com.nextech.erp.factory.BOMFactory;
+import com.nextech.erp.factory.BomRMVendorRequestResponseFactory;
 import com.nextech.erp.model.Bomrmvendorassociation;
 import com.nextech.erp.model.Bom;
 import com.nextech.erp.model.Product;
@@ -109,15 +110,11 @@ public class BomController {
 				return new UserStatus(0, bindingResult.getFieldError().getDefaultMessage());
 			}
 			
-			           // TODO save call bom
-			  Bom bom = BOMFactory.setBom(bomDTO);
-			    bom	 = saveBom(bomDTO, request, response);
-						String bomId = generateBomId()+bom.getId();
-						bom.setBomId(bomId);
-						bomService.updateEntity(BOMFactory.setBom(bomDTO));
-
-						// TODO add product order association
-						addBomRMVendorAsso(bomDTO, bom, request, response);
+			    // TODO save call bom
+			BomDTO bomDTO2 = bomService.saveBOM(bomDTO, request, response);
+			bomDTO.setId(bomDTO2.getId());
+			bomDTO.setProduct(bomDTO2.getProduct());
+			addBomRMVendorAsso(bomDTO, request, response);
 			
 
 			return new UserStatus(1, "Bom added Successfully !");
@@ -151,7 +148,7 @@ public class BomController {
 	public @ResponseBody UserStatus updateUnit(@RequestBody BomDTO bomDTO,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			bomDTO.setUpdatedBy((long) request.getAttribute("current_user"));
-			bomService.updateEntity(BOMFactory.setBom(bomDTO));
+			bomService.updateEntity(BOMFactory.setBom(bomDTO,request));
 			return new UserStatus(1, "Bom update Successfully !");
 		} catch (Exception e) {
 			 e.printStackTrace();
@@ -283,35 +280,13 @@ public class BomController {
 //		return boList;
 	}
 	
-	
-	private Bom saveBom(BomDTO bomDTO,HttpServletRequest request,HttpServletResponse response)
-			throws Exception {
-		Bom bom = new Bom();
-		bom.setBomId(bomDTO.getBomId());
-		bom.setProduct(productService.getEntityById(Product.class,bomDTO.getProduct().getId()));
-		bom.setIsactive(true);
-		bom.setCreatedBy(request.getAttribute("current_user").toString());
-		bomService.addEntity(bom);
-		return bom;
-	}
-	
-	private void addBomRMVendorAsso(BomDTO bomDTO,Bom bom,HttpServletRequest request,HttpServletResponse response) throws Exception {
+	private void addBomRMVendorAsso(BomDTO bomDTO,HttpServletRequest request,HttpServletResponse response) throws Exception {
 		List<BomModelPart> bomModelParts = bomDTO.getBomModelParts();
 		if (bomModelParts != null	&& !bomModelParts.isEmpty()) {
 			for (BomModelPart bomModelPart : bomModelParts) {
+				bomModelPart.setId(bomDTO.getId());
+				bOMRMVendorAssociationService.addEntity(BomRMVendorRequestResponseFactory.setBomVendorAsso(bomModelPart, request));
 				
-				Bomrmvendorassociation bomrmVendorAssociation = new Bomrmvendorassociation();
-				bomrmVendorAssociation.setBom(bom);
-				Rawmaterial rawmaterial = rawmaterialService.getEntityById(Rawmaterial.class, bomModelPart.getRawmaterial().getId());
-				Vendor vendor = vendorService.getEntityById(Vendor.class, bomModelPart.getVendor().getId());
-				bomrmVendorAssociation.setQuantity(bomModelPart.getQuantity());
-				bomrmVendorAssociation.setRawmaterial(rawmaterial);
-				bomrmVendorAssociation.setVendor(vendor);
-				bomrmVendorAssociation.setPricePerUnit(bomModelPart.getPricePerUnit());
-				bomrmVendorAssociation.setCost(bomModelPart.getQuantity()*bomModelPart.getPricePerUnit());
-				bomrmVendorAssociation.setCreatedBy(request.getAttribute("current_user").toString());
-				bomrmVendorAssociation.setIsactive(true);
-				bOMRMVendorAssociationService.addEntity(bomrmVendorAssociation);
 			}
 		}
 	}
@@ -370,11 +345,6 @@ public class BomController {
 			}
 		}
 		return baos;
-	}
-	private String generateBomId(){
-		String bom="";
-		bom = "BOM000";
-		return bom;
 	}
 }
 

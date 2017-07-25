@@ -46,6 +46,18 @@ public class RawmaterialDaoImpl extends SuperDaoImpl<Rawmaterial> implements Raw
 		Rawmaterial rawmaterial = criteria.list().size() > 0 ? (Rawmaterial) criteria.list().get(0): null;
 		return rawmaterial;
 	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Rawmaterial> getRMByRMTypeId(long id) throws Exception {
+		// TODO Auto-generated method stub
+		session = sessionFactory.getCurrentSession();
+		@SuppressWarnings("deprecation")
+		Criteria criteria = session.createCriteria(Rawmaterial.class);
+		criteria.add(Restrictions.eq("isactive", true));
+		criteria.add(Restrictions.eq("rmtype.id", id));
+		return (criteria.list().size() > 0 ? (List<Rawmaterial>)criteria.list() : null);
+	}
 	
 }
 

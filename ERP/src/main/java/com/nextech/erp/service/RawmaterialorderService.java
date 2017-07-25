@@ -19,15 +19,13 @@ public interface RawmaterialorderService extends CRUDService<Rawmaterialorder> {
 
 	public List<Rawmaterialorder> getRawmaterialorderByQualityCheckStatusId(long statusId) throws Exception;
 
-	public List<Rawmaterialorder> getRawmaterialorderByVendor(long  vendorId)throws Exception;
+	public List<RawmaterialOrderDTO> getRawmaterialorderByVendor(long  vendorId)throws Exception;
 
 	public List<Rawmaterialorder> getRawmaterialByName(String  name)throws Exception;
 	
 	public List<Rawmaterialorder> getRawmaterialorderByVendorId(long vendorId,long statusId1,long statusId2) throws Exception;
 	
 	public RawmaterialOrderDTO  saveRMOrder(RawmaterialOrderDTO rawmaterialOrderDTO,HttpServletRequest request,HttpServletResponse response)throws Exception;
-	
-	public void updateRMName(String name,RawmaterialOrderDTO rawmaterialOrderDTO) throws Exception;
 	
 	public List<RawmaterialOrderDTO> getRMOrderList() throws Exception;
 	

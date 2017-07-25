@@ -48,6 +48,8 @@ public class RMOrderRequestResponseFactory {
 		rawmaterialOrderDTO.setQuantity(rawmaterialorder.getQuantity());
 		rawmaterialOrderDTO.setTax(rawmaterialorder.getTax());
 		rawmaterialOrderDTO.setTotalPrice(rawmaterialorder.getTotalprice());
+		rawmaterialOrderDTO.setVendorId(rawmaterialorder.getVendor());
+		rawmaterialOrderDTO.setStatusId(rawmaterialorder.getStatus());
 		return rawmaterialOrderDTO;
 	}
 

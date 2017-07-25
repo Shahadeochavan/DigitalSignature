@@ -140,4 +140,16 @@ public class RawmaterialController {
 	private void addRMInventory(RawMaterialDTO rawMaterialDTO,long userId) throws Exception{
 		rawmaterialinventoryService.addEntity(RMRequestResponseFactory.setRMIn(rawMaterialDTO));
 	}
+	
+	@Transactional @RequestMapping(value = "/getRMaterialList/{RMTypeId}", method = RequestMethod.GET, headers = "Accept=application/json")
+	public @ResponseBody List<RawMaterialDTO> getRawmaterialForRMType(@PathVariable("RMTypeId") long id) {
+
+		List<RawMaterialDTO> rawmaterialList = null;
+		try {
+			rawmaterialList = rawmaterialService.getRMByRMTypeId(id);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return rawmaterialList;
+	}
 }

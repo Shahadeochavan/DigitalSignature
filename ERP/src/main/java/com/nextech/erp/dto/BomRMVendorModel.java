@@ -2,8 +2,7 @@ package com.nextech.erp.dto;
 
 
 
-public class BomRMVendorModel {
-	private long id;
+public class BomRMVendorModel extends AbstractDTO{
 	private String productName;
 	private String vendorName;
 	private String rmName;
@@ -11,13 +10,7 @@ public class BomRMVendorModel {
 	private long quantity;
 	private float amount;
 	private String bomId;
-	private String description;
-	public long getId() {
-		return id;
-	}
-	public void setId(long id) {
-		this.id = id;
-	}
+
 	public String getBomId() {
 		return bomId;
 	}
@@ -59,12 +52,6 @@ public class BomRMVendorModel {
 	}
 	public void setAmount(float amount) {
 		this.amount = amount;
-	}
-	public String getDescription() {
-		return description;
-	}
-	public void setDescription(String description) {
-		this.description = description;
 	}
 
 }

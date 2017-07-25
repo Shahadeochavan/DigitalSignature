@@ -1,6 +1,7 @@
 package com.nextech.erp.serviceImpl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -50,10 +51,16 @@ public class RawmaterialorderServiceImpl extends CRUDServiceImpl<Rawmaterialorde
 	}
 
 	@Override
-	public List<Rawmaterialorder> getRawmaterialorderByVendor(long vendorId)
+	public List<RawmaterialOrderDTO> getRawmaterialorderByVendor(long vendorId)
 			throws Exception {
 		// TODO Auto-generated method stub
-		return rawmaterialorderDao.getRawmaterialorderByVendor(vendorId);
+		List<RawmaterialOrderDTO> rawmaterialOrderDTOs =  new ArrayList<RawmaterialOrderDTO>();
+		List<Rawmaterialorder> rawmaterialorders = rawmaterialorderDao.getRawmaterialorderByVendor(vendorId);
+		for (Rawmaterialorder rawmaterialorder : rawmaterialorders) {
+			RawmaterialOrderDTO rawmaterialOrderDTO = RMOrderRequestResponseFactory.setRMOrderDTO(rawmaterialorder);
+			rawmaterialOrderDTOs.add(rawmaterialOrderDTO);
+		}
+		return rawmaterialOrderDTOs;
 	}
 
 	@Override
@@ -76,20 +83,13 @@ public class RawmaterialorderServiceImpl extends CRUDServiceImpl<Rawmaterialorde
 		Rawmaterialorder  rawmaterialorder = RMOrderRequestResponseFactory.setRMOrder(rawmaterialOrderDTO);
 		rawmaterialorder.setStatus(StatusDao.getById(Status.class,Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_NEW_RM_ORDER, null, null))));
 		long id=rawmaterialorderDao.add(rawmaterialorder);
-		System.out.println("id is"+id);
-		rawmaterialOrderDTO.setId(id);
-		rawmaterialOrderDTO.setStatusId(rawmaterialorder.getStatus());
-		return rawmaterialOrderDTO;
-	}
-
-	@Override
-	public void updateRMName(String name,RawmaterialOrderDTO rawmaterialOrderDTO) throws Exception {
-		// TODO Auto-generated method stub
-		Rawmaterialorder  rawmaterialorder = new Rawmaterialorder();
-		rawmaterialorder.setName(name);
-		rawmaterialorder.setId(rawmaterialOrderDTO.getId());
+		String invoiceId = generateInvoiceId()+rawmaterialorder.getId();
+		rawmaterialorder.setName(invoiceId);
 		rawmaterialorderDao.update(rawmaterialorder);
-}
+		RawmaterialOrderDTO rawmaterialOrderDTO2 =  new RawmaterialOrderDTO();
+		rawmaterialOrderDTO2.setId(rawmaterialorder.getId());
+		return rawmaterialOrderDTO2;
+	}
 
 	@Override
 	public List<RawmaterialOrderDTO> getRMOrderList() throws Exception {
@@ -118,6 +118,23 @@ public class RawmaterialorderServiceImpl extends CRUDServiceImpl<Rawmaterialorde
 		rawmaterialorder.setIsactive(false);
 		rawmaterialorderDao.update(rawmaterialorder);
 		return null;
+	}
+	private String generateInvoiceId(){
+		String year="";
+		Date currentDate = new Date();
+		if(currentDate.getMonth()+1 > 3){
+			int str = currentDate.getYear()+1900;
+			int stri = str + 1;
+			String strDate = stri+"";
+			year = str+"/"+strDate.substring(2);
+		}else{
+			int str = currentDate.getYear()+1899;
+			int stri = str + 1;
+			String strDate = stri+"";
+			year = str+"/"+strDate.substring(2);
+		}
+		year = "EK/PUN/"+year+"/";
+		return year;
 	}
 }
 

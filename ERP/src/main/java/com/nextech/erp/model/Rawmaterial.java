@@ -95,6 +95,10 @@ public class Rawmaterial implements Serializable {
 	@JsonIgnore
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "rawmaterial", cascade = CascadeType.ALL)
 	private List<Storeoutrm> storeoutrms;
+	
+	@ManyToOne
+	@JoinColumn(name="rmTypeId")
+	private Rmtype rmtype;
 
 	public Rawmaterial() {
 	}
@@ -362,5 +366,13 @@ public class Rawmaterial implements Serializable {
 		bomrmvendorassociation.setRawmaterial(null);
 
 		return bomrmvendorassociation;
+	}
+	
+	public Rmtype getRmtype() {
+		return this.rmtype;
+	}
+
+	public void setRmtype(Rmtype rmtype) {
+		this.rmtype = rmtype;
 	}
 }
