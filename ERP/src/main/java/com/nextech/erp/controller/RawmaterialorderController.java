@@ -97,24 +97,6 @@ public class RawmaterialorderController {
 	@Autowired 
 	RMVAssoService rmvAssoService;
 
-	private String generateInvoiceId(){
-		String year="";
-		Date currentDate = new Date();
-		if(currentDate.getMonth()+1 > 3){
-			int str = currentDate.getYear()+1900;
-			int stri = str + 1;
-			String strDate = stri+"";
-			year = str+"/"+strDate.substring(2);
-		}else{
-			int str = currentDate.getYear()+1899;
-			int stri = str + 1;
-			String strDate = stri+"";
-			year = str+"/"+strDate.substring(2);
-		}
-		year = "EK/PUN/"+year+"/";
-		return year;
-	}
-	String s;
 	@Transactional @RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addRawmaterialorder(
 			@Valid @RequestBody RawmaterialOrderDTO rawmaterialOrderDTO,
@@ -127,8 +109,6 @@ public class RawmaterialorderController {
 			rawmaterialOrderDTO.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			
 			Long id = rawmaterialorderService.addEntity(RMOrderRequestResponseFactory.setRMOrder(rawmaterialOrderDTO));
-			String invoiceId = generateInvoiceId()+id;
-			rawmaterialOrderDTO.setName(invoiceId);
 			rawmaterialorderService.updateEntity(RMOrderRequestResponseFactory.setRMOrder(rawmaterialOrderDTO));
 			return new UserStatus(1, "Rawmaterialorder added Successfully !");
 		} catch (ConstraintViolationException cve) {
@@ -150,12 +130,14 @@ public class RawmaterialorderController {
 	public @ResponseBody UserStatus addMultipleRawmaterialorder(
 			@Valid @RequestBody RawmaterialOrderDTO rawmaterialOrderDTO, BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
 		try {
+
 			if (bindingResult.hasErrors()) {
 				return new UserStatus(0, bindingResult.getFieldError().getDefaultMessage());
 			}
 			//TODO save call raw material order
 		     RawmaterialOrderDTO rawmaterialOrderDTO2	= rawmaterialorderService.saveRMOrder(rawmaterialOrderDTO, request, response);
 		     rawmaterialOrderDTO.setId(rawmaterialOrderDTO2.getId());
+		     rawmaterialOrderDTO.setStatusId(rawmaterialOrderDTO2.getStatusId());
 		    addRMOrderAsso(rawmaterialOrderDTO, request, response);
 
 			return new UserStatus(1, "Multiple Rawmaterial Order added Successfully !");
@@ -267,18 +249,6 @@ public class RawmaterialorderController {
 		}
 
 		return rawmaterialorderList;
-	}
-
-	private Rawmaterialorder  saveRMOrder(RawmaterialOrderDTO rawmaterialOrderDTO,HttpServletRequest request,HttpServletResponse response) throws Exception{
-		Rawmaterialorder  rawmaterialorder = RMOrderRequestResponseFactory.setRMOrder(rawmaterialOrderDTO);
-		
-		rawmaterialorder.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-		rawmaterialorder.setStatus(statusService.getEntityById(Status.class,Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_NEW_RM_ORDER, null, null))));
-		long id=rawmaterialorderService.addEntity(rawmaterialorder);
-		System.out.println("id is"+id);
-		//TODO Create PDF file
-		//downloadPDF(request, response, rawmaterialorder);
-		return rawmaterialorder;
 	}
 
 	private void addRMOrderAsso(RawmaterialOrderDTO rawmaterialOrderDTO,HttpServletRequest request,HttpServletResponse response) throws Exception{

@@ -51,8 +51,10 @@ import com.nextech.erp.model.Productorder;
 import com.nextech.erp.model.Productorderassociation;
 import com.nextech.erp.model.Status;
 import com.nextech.erp.model.User;
+import com.nextech.erp.newDTO.BomRMVendorAssociationsDTO;
 import com.nextech.erp.newDTO.NotificationDTO;
 import com.nextech.erp.newDTO.NotificationUserAssociatinsDTO;
+import com.nextech.erp.newDTO.ProductOrderAssociationDTO;
 import com.nextech.erp.newDTO.UserDTO;
 import com.nextech.erp.service.BOMRMVendorAssociationService;
 import com.nextech.erp.service.BomService;
@@ -194,14 +196,14 @@ public class DispatchController {
 											null, null))));
 							Product product = productService.getEntityById(Product.class,productorderassociation.getProduct().getId());
 							Bom bom = bomService.getBomByProductId(product.getId());
-							List<Bomrmvendorassociation> bomrmvendorassociations = bomRMVendorAssociationService.getBomRMVendorByBomId(bom.getId());
+							List<BomRMVendorAssociationsDTO> bomrmvendorassociations = bomRMVendorAssociationService.getBomRMVendorByBomId(bom.getId());
 							float totalCost = 0;
 							DispatchProductDTO  dispatchProductDTO = new DispatchProductDTO();
 							dispatchProductDTO.setClientPartNumber(product.getClientpartnumber());
 							dispatchProductDTO.setProductName(product.getPartNumber());
 							dispatchProductDTO.setQuantityDispatched(dispatch.getQuantity());
 							dispatchProductDTO.setDescription(dispatchDTO.getDescription());
-							for (Bomrmvendorassociation bomrmvendorassociation : bomrmvendorassociations) {
+							for (BomRMVendorAssociationsDTO bomrmvendorassociation : bomrmvendorassociations) {
 							totalCost = totalCost+bomrmvendorassociation.getCost();
 							dispatchProductDTO.setTotalCost(totalCost);
 							}
@@ -323,11 +325,11 @@ public class DispatchController {
 	private int getProductOrderStatus(Productorder productorder)
 			throws Exception {
 		boolean isOrderComplete = false;
-		List<Productorderassociation> productorderassociationsList = productorderassociationService
+		List<ProductOrderAssociationDTO> productorderassociationsList = productorderassociationService
 				.getProductorderassociationByOrderId(productorder.getId());
-		for (Iterator<Productorderassociation> iterator = productorderassociationsList
+		for (Iterator<ProductOrderAssociationDTO> iterator = productorderassociationsList
 				.iterator(); iterator.hasNext();) {
-			Productorderassociation productorderassociation = (Productorderassociation) iterator
+			ProductOrderAssociationDTO productorderassociation = (ProductOrderAssociationDTO) iterator
 					.next();
 			if (productorderassociation.getRemainingQuantity() == 0) {
 				isOrderComplete = true;

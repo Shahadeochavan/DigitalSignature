@@ -1,16 +1,20 @@
 package com.nextech.erp.dto;
 
+import com.nextech.erp.model.Productionplanning;
+
 public class DailyProductionPlanDTO  extends AbstractDTO{
-	private long productionPlanId;
+	private Productionplanning productionPlanId;
 	private long productId;
 	private int targetQuantity;
 	private int achivedQuantity;
 	private int repairedQuantity;
 	private String remark;
-	public long getProductionPlanId() {
+	
+	
+	public Productionplanning getProductionPlanId() {
 		return productionPlanId;
 	}
-	public void setProductionPlanId(long productionPlanId) {
+	public void setProductionPlanId(Productionplanning productionPlanId) {
 		this.productionPlanId = productionPlanId;
 	}
 	public long getProductId() {

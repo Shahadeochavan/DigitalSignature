@@ -80,7 +80,7 @@ public class StoreoutController {
 				return new UserStatus(0, bindingResult.getFieldError().getDefaultMessage());
 			}
 			Productionplanning productionplanning = productionplanningService.getEntityById(Productionplanning.class,
-					storeOutDTO.getProductionPlanId().getId());
+					storeOutDTO.getProductionPlanId());
 			Storeout storeout = StoreoutRequestResponseFactory.setStoreOut(storeOutDTO, request);
 			storeout.setStatus(statusService.getEntityById(Status.class,Long.parseLong(messageSource.getMessage(ERPConstants.ADDED_STORE_OUT, null, null))));
 			storeoutService.addEntity(storeout);

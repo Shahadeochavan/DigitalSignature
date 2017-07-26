@@ -23,6 +23,7 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.nextech.erp.model.Client;
 import com.nextech.erp.model.Productorder;
+import com.nextech.erp.newDTO.ClientDTO;
 import com.nextech.erp.service.RawmaterialorderService;
 
 public class CreatePDF {
@@ -35,9 +36,8 @@ public class CreatePDF {
 	 * @param args
 	 */
 
-	@Autowired
-	RawmaterialorderService rawmaterialorderService;
-	public  Document createPDF(String file,Productorder productorder,List<ProductOrderData> productOrderDatas,Client client) throws Exception {
+
+	public  Document createPDF(String file,ProductOrderDTO productOrderDTO,List<ProductOrderData> productOrderDatas,ClientDTO client) throws Exception {
 
 		Document document = null;
 
@@ -48,9 +48,9 @@ public class CreatePDF {
 
 			addMetaData(document);
 
-			addTitlePage(document,client,productorder);
+			addTitlePage(document,client,productOrderDTO);
 
-			createTable(document, productorder,productOrderDatas);
+			createTable(document, productOrderDTO,productOrderDatas);
 
 			document.close();
 
@@ -71,7 +71,7 @@ public class CreatePDF {
 		document.addCreator("Java Honk");
 	}
 
-	private  void addTitlePage(Document document,Client client,Productorder productorder)
+	private  void addTitlePage(Document document,ClientDTO client,ProductOrderDTO productOrderDTO)
 			throws DocumentException {
 
 		Paragraph preface = new Paragraph();
@@ -110,7 +110,7 @@ public class CreatePDF {
 		     table1.addCell(getCell("Certificate  No :"+"710304", PdfPCell.ALIGN_LEFT,font3));
 		     
 		     PdfPTable table12 = new PdfPTable(1);
-		     table12.addCell(getCell("Invoice No -"+productorder.getInvoiceNo(), PdfPCell.ALIGN_LEFT,bf12));
+		     table12.addCell(getCell("Invoice No -"+productOrderDTO.getInvoiceNo(), PdfPCell.ALIGN_LEFT,bf12));
 		     table12.addCell(getCell("[see rule 11 of Central Excise rule 2002", PdfPCell.ALIGN_LEFT,font3));
 		     
 		     PdfPTable table13 = new PdfPTable(2);
@@ -143,9 +143,9 @@ public class CreatePDF {
 		     PdfPTable table16 = new PdfPTable(1);
 		     table16.addCell(getCell("To", PdfPCell.ALIGN_LEFT,bf12));
 		     table16.addCell(getCell("Name and address of consignee", PdfPCell.ALIGN_LEFT,bf12));
-		     table16.addCell(getCell(client.getCompanyname(), PdfPCell.ALIGN_LEFT,bf12));
+		     table16.addCell(getCell(client.getCompanyName(), PdfPCell.ALIGN_LEFT,bf12));
 		     table16.addCell(getCell(client.getAddress(), PdfPCell.ALIGN_LEFT,font3));
-		     table16.addCell(getCell("Tel."+client.getContactnumber(), PdfPCell.ALIGN_LEFT,font3));
+		     table16.addCell(getCell("Tel."+client.getContactNumber(), PdfPCell.ALIGN_LEFT,font3));
 		     table16.addCell(getCell("Customer ECC No:-"+client.getCustomerEccNumber(), PdfPCell.ALIGN_LEFT,bf12));
 		     table16.addCell(getCell("Renge:-"+client.getRenge(), PdfPCell.ALIGN_LEFT,bf12));
 		     table16.addCell(getCell("Divison:-"+client.getDivision(), PdfPCell.ALIGN_LEFT,bf12));
@@ -195,7 +195,7 @@ public class CreatePDF {
 		}
 	}
 
-	private  void createTable(Document document,Productorder productorder,List<ProductOrderData> productOrderDatas) throws Exception {
+	private  void createTable(Document document,ProductOrderDTO productorder,List<ProductOrderData> productOrderDatas) throws Exception {
               DecimalFormat df = new DecimalFormat("0.0");
 			  Font bf123 = new Font(FontFamily.TIMES_ROMAN, 14,Font.BOLD); 
 			  Font bfBold12 = new Font(FontFamily.TIMES_ROMAN, 12, Font.BOLD, new BaseColor(0, 0, 0)); 

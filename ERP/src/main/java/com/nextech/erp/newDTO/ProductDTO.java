@@ -10,6 +10,7 @@ public class ProductDTO  extends AbstractDTO{
 	private String design;
 	private String name;
 	private String partNumber;
+	private long ratePerUnit;
 	public String getClientPartNumber() {
 		return clientPartNumber;
 	}
@@ -33,6 +34,12 @@ public class ProductDTO  extends AbstractDTO{
 	}
 	public void setPartNumber(String partNumber) {
 		this.partNumber = partNumber;
+	}
+	public long getRatePerUnit() {
+		return ratePerUnit;
+	}
+	public void setRatePerUnit(long ratePerUnit) {
+		this.ratePerUnit = ratePerUnit;
 	}
 	
 

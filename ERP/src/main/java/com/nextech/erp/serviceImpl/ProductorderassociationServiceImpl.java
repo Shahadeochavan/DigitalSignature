@@ -1,5 +1,6 @@
 package com.nextech.erp.serviceImpl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -7,8 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.nextech.erp.dao.ProductorderassociationDao;
+import com.nextech.erp.factory.ProductOrderRequestResponseFactory;
 import com.nextech.erp.model.Productionplanning;
 import com.nextech.erp.model.Productorderassociation;
+import com.nextech.erp.newDTO.ProductOrderAssociationDTO;
 import com.nextech.erp.service.ProductorderassociationService;
 @Service
 public class ProductorderassociationServiceImpl extends CRUDServiceImpl<Productorderassociation> implements
@@ -29,9 +32,15 @@ ProductorderassociationDao productorderassociationDao;
 	}
 
 	@Override
-	public List<Productorderassociation> getProductorderassociationByOrderId(
+	public List<ProductOrderAssociationDTO> getProductorderassociationByOrderId(
 			long orderId) throws Exception {
-		return productorderassociationDao.getProductorderassociationByOrderId(orderId);
+		List<ProductOrderAssociationDTO> productOrderAssociationDTOs =  new ArrayList<ProductOrderAssociationDTO>();
+		List<Productorderassociation> productorderassociations = productorderassociationDao.getProductorderassociationByOrderId(orderId);
+		for (Productorderassociation productorderassociation : productorderassociations) {
+			ProductOrderAssociationDTO  productOrderAssociationDTO = ProductOrderRequestResponseFactory.setProductOrderAssoDto(productorderassociation);
+			productOrderAssociationDTOs.add(productOrderAssociationDTO);
+		}
+		return productOrderAssociationDTOs;
 	}
 
 	@Override

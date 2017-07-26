@@ -87,10 +87,10 @@ public class DailyproductionController {
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody Dailyproduction getDailyproduction(@PathVariable("id") long id) {
-		Dailyproduction Dailyproduction = null;
+	public @ResponseBody DailyProductionPlanDTO getDailyproduction(@PathVariable("id") long id) {
+		DailyProductionPlanDTO Dailyproduction = null;
 		try {
-			Dailyproduction = dailyproductionservice.getEntityById(Dailyproduction.class,id);
+			Dailyproduction = dailyproductionservice.getDailyProductionById(id);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -98,11 +98,9 @@ public class DailyproductionController {
 	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
-	public @ResponseBody UserStatus updateDailyproduction(@RequestBody Dailyproduction Dailyproduction,HttpServletRequest request,HttpServletResponse response) {
+	public @ResponseBody UserStatus updateDailyproduction(@RequestBody DailyProductionPlanDTO dailyProductionPlanDTO,HttpServletRequest request,HttpServletResponse response) {
 		try {
-			Dailyproduction.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-			Dailyproduction.setIsactive(true);
-			dailyproductionservice.updateEntity(Dailyproduction);
+			dailyproductionservice.updateEntity(DailyProductionRequestResponseFactory.setDailyProductionUpdate(dailyProductionPlanDTO, request));
 			return new UserStatus(1, "Dailyproduction update Successfully !");
 		} catch (Exception e) {
 			 e.printStackTrace();
@@ -111,11 +109,11 @@ public class DailyproductionController {
 	}
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<Dailyproduction> getDailyproduction() {
+	public @ResponseBody List<DailyProductionPlanDTO> getDailyproduction() {
 
-		List<Dailyproduction> DailyproductionList = null;
+		List<DailyProductionPlanDTO> DailyproductionList = null;
 		try {
-			DailyproductionList = dailyproductionservice.getEntityList(Dailyproduction.class);
+			DailyproductionList = dailyproductionservice.getDailyProductionList();
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -127,9 +125,7 @@ public class DailyproductionController {
 	public @ResponseBody UserStatus deleteDailyproduction(@PathVariable("id") long id) {
 
 		try {
-			Dailyproduction Dailyproduction = dailyproductionservice.getEntityById(Dailyproduction.class, id);
-			Dailyproduction.setIsactive(false);
-			dailyproductionservice.updateEntity(Dailyproduction);
+			dailyproductionservice.deleteDailyProduction(id);
 			return new UserStatus(1, "Dailyproduction deleted Successfully !");
 		} catch (Exception e) {
 			return new UserStatus(0, e.toString());

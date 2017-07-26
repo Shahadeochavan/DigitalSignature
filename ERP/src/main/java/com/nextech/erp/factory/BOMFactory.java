@@ -17,5 +17,15 @@ public class BOMFactory {
 		bom.setCreatedBy(request.getAttribute("current_user").toString());
 		return bom;
 	}
+	public static BomDTO setBomDTO(Bom bom){
+		BomDTO bomDTO =  new BomDTO();
+		bomDTO.setActive(true);
+		bomDTO.setBomId(bom.getBomId());
+		bomDTO.setId(bom.getId());
+		bomDTO.setProduct(bom.getProduct());
+		bomDTO.setUpdatedDate(bom.getUpdatedDate());
+		bomDTO.setCreatedDate(bom.getCreatedDate());
+		return bomDTO;
+	}
 
 }

@@ -1,15 +1,16 @@
 package com.nextech.erp.dto;
 
-import java.sql.Date;
+import java.util.Date;
 import java.util.List;
 
 import com.nextech.erp.model.Client;
+import com.nextech.erp.model.Status;
 import com.nextech.erp.newDTO.ProductOrderAssociationDTO;
 
 public class ProductOrderDTO extends AbstractDTO{
 	
 	private Client clientId;
-	private long status;
+	private Status statusId;
 	private Date expectedDeliveryDate;	
 	private Date createDate;
 	private String invoiceNo;
@@ -30,11 +31,12 @@ public class ProductOrderDTO extends AbstractDTO{
 	public void setCreateDate(Date createDate) {
 		this.createDate = createDate;
 	}
-	public long getStatus() {
-		return status;
+	
+	public Status getStatusId() {
+		return statusId;
 	}
-	public void setStatus(long status) {
-		this.status = status;
+	public void setStatusId(Status statusId) {
+		this.statusId = statusId;
 	}
 	public String getInvoiceNo() {
 		return invoiceNo;

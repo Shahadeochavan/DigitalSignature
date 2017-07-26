@@ -53,9 +53,15 @@ public class ProductServiceImpl extends CRUDServiceImpl<Product> implements Prod
 	}
 
 	@Override
-	public List<Product> getProductList(List<Long> productIdList) {
+	public List<ProductDTO> getProductList(List<Long> productIdList) {
 		// TODO Auto-generated method stub
-		return productDao.getProductList(productIdList);
+		List<ProductDTO> productDTOs = new ArrayList<ProductDTO>();
+		List<Product> products = productDao.getProductList(productIdList);
+		for (Product product : products) {
+			ProductDTO productDTO = ProductRequestResponseFactory.setProductDto(product);
+			productDTOs.add(productDTO);
+		}
+		return productDTOs;
 	}
 
 	@Override

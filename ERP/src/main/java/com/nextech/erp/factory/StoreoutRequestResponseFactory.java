@@ -3,6 +3,7 @@ package com.nextech.erp.factory;
 import javax.servlet.http.HttpServletRequest;
 
 import com.nextech.erp.dto.StoreOutDTO;
+import com.nextech.erp.model.Productionplanning;
 import com.nextech.erp.model.Storeout;
 
 public class StoreoutRequestResponseFactory {
@@ -12,7 +13,9 @@ public class StoreoutRequestResponseFactory {
 		storeout.setDescription(storeOutDTO.getDescription());
 		storeout.setId(storeOutDTO.getId());
 		storeout.setProduct(storeOutDTO.getProductId());
-		storeout.setProductionplanning(storeOutDTO.getProductionPlanId());
+		Productionplanning productionplanning = new Productionplanning();
+		productionplanning.setId(storeOutDTO.getProductionPlanId());
+		storeout.setProductionplanning(productionplanning);
 		storeout.setQuantityRequired(storeOutDTO.getQuantityRequired());
 		storeout.setSelectedStoreOut(storeOutDTO.isSelectedStoreOut());
 		storeout.setIsactive(true);
@@ -25,7 +28,9 @@ public class StoreoutRequestResponseFactory {
 		storeout.setDescription(storeOutDTO.getDescription());
 		storeout.setId(storeOutDTO.getId());
 		storeout.setProduct(storeOutDTO.getProductId());
-		storeout.setProductionplanning(storeOutDTO.getProductionPlanId());
+		Productionplanning productionplanning = new Productionplanning();
+		productionplanning.setId(storeOutDTO.getProductionPlanId());
+		storeout.setProductionplanning(productionplanning);
 		storeout.setQuantityRequired(storeOutDTO.getQuantityRequired());
 		storeout.setSelectedStoreOut(storeOutDTO.isSelectedStoreOut());
 		storeout.setIsactive(true);

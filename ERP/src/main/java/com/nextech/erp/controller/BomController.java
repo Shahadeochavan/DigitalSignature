@@ -35,12 +35,11 @@ import com.nextech.erp.dto.CreatePdfForBomProduct;
 import com.nextech.erp.dto.ProductBomDTO;
 import com.nextech.erp.factory.BOMFactory;
 import com.nextech.erp.factory.BomRMVendorRequestResponseFactory;
-import com.nextech.erp.model.Bomrmvendorassociation;
-import com.nextech.erp.model.Bom;
-import com.nextech.erp.model.Product;
-import com.nextech.erp.model.Rawmaterial;
-import com.nextech.erp.model.Rawmaterialvendorassociation;
-import com.nextech.erp.model.Vendor;
+import com.nextech.erp.newDTO.BomRMVendorAssociationsDTO;
+import com.nextech.erp.newDTO.ProductDTO;
+import com.nextech.erp.newDTO.RMVendorAssociationDTO;
+import com.nextech.erp.newDTO.RawMaterialDTO;
+import com.nextech.erp.newDTO.VendorDTO;
 import com.nextech.erp.service.BOMRMVendorAssociationService;
 import com.nextech.erp.service.BomService;
 import com.nextech.erp.service.ProductService;
@@ -72,36 +71,7 @@ public class BomController {
 	@Autowired
 	RMVAssoService rMVAssoService;
 	
-	
-	
-
-	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus addUnit(@Valid @RequestBody Bom bom,HttpServletRequest request,HttpServletResponse response,
-			BindingResult bindingResult) {
-		try {
-			if (bindingResult.hasErrors()) {
-				return new UserStatus(0, bindingResult.getFieldError()
-						.getDefaultMessage());
-			}
-			bom.setCreatedBy(request.getAttribute("current_user").toString());
-			bom.setIsactive(true);
-		long id=	bomService.addEntity(bom);
-			System.out.println("id is"+id);
-			return new UserStatus(1, "Unit added Successfully !");
-		} catch (ConstraintViolationException cve) {
-			cve.printStackTrace();
-			return new UserStatus(0, cve.getCause().getMessage());
-		} catch (PersistenceException pe) {
-			System.out.println("Inside PersistenceException");
-			pe.printStackTrace();
-			return new UserStatus(0, pe.getCause().getMessage());
-		} catch (Exception e) {
-			System.out.println("Inside Exception");
-			e.printStackTrace();
-			return new UserStatus(0, e.getCause().getMessage());
-		}
-	}
-	
+		
 	@RequestMapping(value = "/createmultiple", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addMultipleBom(
 			@Valid @RequestBody BomDTO bomDTO, BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
@@ -134,10 +104,10 @@ public class BomController {
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody Bom getUnit(@PathVariable("id") long id) {
-		Bom bom = null;
+	public @ResponseBody BomDTO getUnit(@PathVariable("id") long id) {
+		BomDTO bom = null;
 		try {
-			bom = bomService.getEntityById(Bom.class,id);
+			bom = bomService.getBomById(id);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -157,11 +127,11 @@ public class BomController {
 	}
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<Bom> getBom(HttpServletRequest request,HttpServletResponse response) throws IOException {
+	public @ResponseBody List<BomDTO> getBom(HttpServletRequest request,HttpServletResponse response) throws IOException {
 
-		List<Bom> bomList = null;
+		List<BomDTO> bomList = null;
 		try {
-			bomList = bomService.getEntityList(Bom.class);
+			bomList = bomService.getBomList();
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -173,12 +143,12 @@ public class BomController {
 	@RequestMapping(value = "/BomCompletedList", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody Response getBomCompleted(HttpServletRequest request,HttpServletResponse response) throws IOException {
 
-		List<Bom> bomList = null;
+		List<BomDTO> bomList = null;
 		List<BOMModelData> bomModelDatas = new ArrayList<BOMModelData>(); 
 		try {
-			bomList = bomService.getEntityList(Bom.class);
-			for (Bom bom : bomList) {
-				Product product = productService.getEntityById(Product.class, bom.getProduct().getId());
+			bomList = bomService.getBomList();
+			for (BomDTO bom : bomList) {
+				ProductDTO product = productService.getProductDTO(bom.getProduct().getId());
 				BOMModelData bomModelData = new BOMModelData();
 				bomModelData.setPartNumber(product.getPartNumber());
 				bomModelData.setId(product.getId());
@@ -195,7 +165,7 @@ public class BomController {
 	@RequestMapping(value = "/getProductList", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody Response getProductList() throws IOException {
 
-		List<Product> products = null;
+		List<ProductDTO> products = null;
 		List<Long> productIdList = null; 
 		Response response = null;
 		try {
@@ -217,9 +187,7 @@ public class BomController {
 	public @ResponseBody UserStatus deleteClient(@PathVariable("id") long id) {
 
 		try {
-			Bom bom = bomService.getEntityById(Bom.class, id);
-			bom.setIsactive(false);
-			bomService.updateEntity(bom);
+			bomService.deleteBom(id);
 			return new UserStatus(1, "Bom deleted Successfully !");
 		} catch (Exception e) {
 			return new UserStatus(0, e.toString());
@@ -228,9 +196,9 @@ public class BomController {
 	}
 	
 	@RequestMapping(value = "bomList/{PRODUCT-ID}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<Bom> getBomByProductId(@PathVariable("PRODUCT-ID") long productId) {
+	public @ResponseBody List<BomDTO> getBomByProductId(@PathVariable("PRODUCT-ID") long productId) {
 
-		List<Bom> boList = null;
+		List<BomDTO> boList = null;
 		try {
 			// TODO afterwards you need to change it from properties
 			boList = bomService.getBomListByProductId(productId);
@@ -244,27 +212,27 @@ public class BomController {
 	@RequestMapping(value = "downloadBomPdf/{PRODUCT-ID}/{BOM-ID}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody void getBomPdfByProductIdAndBomId(@PathVariable("PRODUCT-ID") long productId,@PathVariable("BOM-ID") long bomId,HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-		List<Bom> boList = null;
+		List<BomDTO> boList = null;
 		List<BomRMVendorModel> bomRMVendorModels = new ArrayList<BomRMVendorModel>();
 		ProductBomDTO productBomDTO = new ProductBomDTO();
 		try {
 			// TODO afterwards you need to change it from properties
 			boList = bomService.getBomListByProductIdAndBomId(productId, bomId);
-			for (Bom bom : boList) {
-				List<Bomrmvendorassociation> bOMRMVendorAssociations = bOMRMVendorAssociationService.getBomRMVendorByBomId(bom.getId());
-				for (Bomrmvendorassociation bomrmVendorAssociation : bOMRMVendorAssociations) {
+			for (BomDTO bom : boList) {
+				List<BomRMVendorAssociationsDTO> bOMRMVendorAssociations = bOMRMVendorAssociationService.getBomRMVendorByBomId(bom.getId());
+				for (BomRMVendorAssociationsDTO bomrmVendorAssociation : bOMRMVendorAssociations) {
 					BomRMVendorModel bomRMVendorModel  = new BomRMVendorModel();
-					Rawmaterial rawmaterial = rawmaterialService.getEntityById(Rawmaterial.class, bomrmVendorAssociation.getRawmaterial().getId());
-					Vendor vendor = vendorService.getEntityById(Vendor.class, bomrmVendorAssociation.getVendor().getId());
-					Product product = productService.getEntityById(Product.class, bom.getProduct().getId());
-					Rawmaterialvendorassociation rawmaterialvendorassociation = rMVAssoService.getRMVAssoByRMId(rawmaterial.getId());
+					RawMaterialDTO rawmaterial = rawmaterialService.getRMDTO(bomrmVendorAssociation.getRawmaterialId().getId());
+					VendorDTO vendor = vendorService.getVendorById(bomrmVendorAssociation.getVendorId().getId());
+					ProductDTO product = productService.getProductDTO( bom.getProduct().getId());
+					RMVendorAssociationDTO rawmaterialvendorassociation = rMVAssoService.getRMVendor(rawmaterial.getId());
 					bomRMVendorModel.setDescription(rawmaterial.getDescription());
 					bomRMVendorModel.setVendorName(vendor.getCompanyName());
 					bomRMVendorModel.setProductName(product.getName());
 					bomRMVendorModel.setPricePerUnit(rawmaterialvendorassociation.getPricePerUnit());
 					bomRMVendorModel.setQuantity(bomrmVendorAssociation.getQuantity());
 					bomRMVendorModel.setAmount(bomrmVendorAssociation.getQuantity()*rawmaterialvendorassociation.getPricePerUnit());
-					productBomDTO.setClinetPartNumber(product.getClientpartnumber());
+					productBomDTO.setClinetPartNumber(product.getClientPartNumber());
 					productBomDTO.setProductPartNumber(product.getPartNumber()); 
 					productBomDTO.setCreatedDate(bom.getCreatedDate());
 					bomRMVendorModels.add(bomRMVendorModel);

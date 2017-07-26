@@ -88,6 +88,7 @@ public class RawmaterialorderServiceImpl extends CRUDServiceImpl<Rawmaterialorde
 		rawmaterialorderDao.update(rawmaterialorder);
 		RawmaterialOrderDTO rawmaterialOrderDTO2 =  new RawmaterialOrderDTO();
 		rawmaterialOrderDTO2.setId(rawmaterialorder.getId());
+		rawmaterialOrderDTO2.setStatusId(rawmaterialorder.getStatus());
 		return rawmaterialOrderDTO2;
 	}
 

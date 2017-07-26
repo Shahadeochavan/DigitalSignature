@@ -10,9 +10,9 @@ import com.nextech.erp.model.Bom;
 
 public interface BomService extends CRUDService<Bom> {
 	
-	public List<Bom> getBomListByProductId(long productID) throws Exception;
+	public List<BomDTO> getBomListByProductId(long productID) throws Exception;
 	
-	public List<Bom> getBomListByProductIdAndBomId(long productId,long bomId) throws Exception;
+	public List<BomDTO> getBomListByProductIdAndBomId(long productId,long bomId) throws Exception;
 
 	public List<Long> getProductList();
 	
@@ -20,5 +20,10 @@ public interface BomService extends CRUDService<Bom> {
 	
 	public BomDTO saveBOM(BomDTO bomDTO, HttpServletRequest request,HttpServletResponse response) throws Exception;
 	
-	public void updateBOMId(BomDTO bomDTO,String bomId) throws Exception;
+	public List<BomDTO> getBomList() throws Exception;
+	
+	public BomDTO getBomById(long id) throws Exception;
+	
+	public void deleteBom(long id) throws Exception;
+	
 }

@@ -37,21 +37,17 @@ import com.nextech.erp.dto.CreatePDF;
 import com.nextech.erp.dto.Mail;
 import com.nextech.erp.dto.ProductOrderDTO;
 import com.nextech.erp.dto.ProductOrderData;
-import com.nextech.erp.dto.ProductRMAssociationDTO;
 import com.nextech.erp.factory.ProductOrderRequestResponseFactory;
-import com.nextech.erp.model.Client;
-import com.nextech.erp.model.Notification;
-import com.nextech.erp.model.Notificationuserassociation;
-import com.nextech.erp.model.Product;
 import com.nextech.erp.model.Productorder;
-import com.nextech.erp.model.Productorderassociation;
 import com.nextech.erp.model.Productrawmaterialassociation;
 import com.nextech.erp.model.Rawmaterialinventory;
 import com.nextech.erp.model.Status;
-import com.nextech.erp.model.User;
+import com.nextech.erp.newDTO.ClientDTO;
 import com.nextech.erp.newDTO.NotificationDTO;
 import com.nextech.erp.newDTO.NotificationUserAssociatinsDTO;
+import com.nextech.erp.newDTO.ProductDTO;
 import com.nextech.erp.newDTO.ProductOrderAssociationDTO;
+import com.nextech.erp.newDTO.StatusDTO;
 import com.nextech.erp.newDTO.UserDTO;
 import com.nextech.erp.service.ClientService;
 import com.nextech.erp.service.MailService;
@@ -106,35 +102,6 @@ public class ProductorderController {
 	@Autowired
 	RawmaterialinventoryService rawMaterialInventoryService;
 
-	@Transactional @RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus addProductorder(
-			@Valid @RequestBody Productorder productorder,
-			BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
-		try {
-			if (bindingResult.hasErrors()) {
-				return new UserStatus(0, bindingResult.getFieldError()
-						.getDefaultMessage());
-			}
-			// TODO afterwards you need to change it from properties.
-			productorder.setStatus(statusService.getEntityById(Status.class, 14));
-			productorder.setIsactive(true);
-			productorder.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-			productorderService.addEntity(productorder);
-			return new UserStatus(1, "Product Order added Successfully !");
-		} catch (ConstraintViolationException cve) {
-			cve.printStackTrace();
-			return new UserStatus(0, cve.getCause().getMessage());
-		} catch (PersistenceException pe) {
-			System.out.println("Inside PersistenceException");
-			pe.printStackTrace();
-			return new UserStatus(0, pe.getCause().getMessage());
-		} catch (Exception e) {
-			System.out.println("Inside Exception");
-			e.printStackTrace();
-			return new UserStatus(0, e.getCause().getMessage());
-		}
-	}
-
 	@Transactional @RequestMapping(value = "/createmultiple", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addMultipleProductorder(
 			@Valid @RequestBody ProductOrderDTO productOrderDTO,
@@ -146,13 +113,15 @@ public class ProductorderController {
 			}
 
 			// TODO save call product order
-			Productorder productorder = saveProductOrder(productOrderDTO, request, response);
+	      ProductOrderDTO productOrderDTO2	=	productorderService.saveProductOrder(productOrderDTO, request, response);
 
 			// TODO add product order association
-			addProductOrderAsso(productOrderDTO, productorder, request, response);
+	        productOrderDTO.setId(productOrderDTO2.getId());
+	        productOrderDTO.setInvoiceNo(productOrderDTO2.getInvoiceNo());
+	        productOrderDTO.setCreatedDate(productOrderDTO2.getCreatedDate());
+			addProductOrderAsso(productOrderDTO,request, response);
 			
 			//TODO Check Inventory for Products
-			
 			checkInventoryStatus(productOrderDTO);
 
 			return new UserStatus(1,
@@ -207,12 +176,10 @@ public class ProductorderController {
 	}
 
 	@Transactional @RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody Productorder getProductorder(
-			@PathVariable("id") long id) {
-		Productorder productorder = null;
+	public @ResponseBody ProductOrderDTO getProductorder(@PathVariable("id") long id) {
+		ProductOrderDTO productorder = null;
 		try {
-			productorder = productorderService.getEntityById(
-					Productorder.class, id);
+			productorder = productorderService.getProductById(id);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -220,9 +187,9 @@ public class ProductorderController {
 	}
 
 	@Transactional @RequestMapping(value = "productorderId/{orderId}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<Productorderassociation> getProductOrder(
+	public @ResponseBody List<ProductOrderAssociationDTO> getProductOrder(
 			@PathVariable("orderId") long id) {
-		List<Productorderassociation> productorderassociations = null;
+		List<ProductOrderAssociationDTO> productorderassociations = null;
 		try {
 			productorderassociations = productorderassociationService.getProductorderassociationByOrderId(id);
 		} catch (Exception e) {
@@ -248,12 +215,11 @@ public class ProductorderController {
 	}
 
 	@Transactional @RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<Productorder> getProductorder() {
+	public @ResponseBody List<ProductOrderDTO> getProductorder() {
 
-		List<Productorder> productorderList = null;
+		List<ProductOrderDTO> productorderList = null;
 		try {
-			productorderList = productorderService
-					.getEntityList(Productorder.class);
+			productorderList = productorderService.getProductOrderList();
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -300,32 +266,17 @@ public class ProductorderController {
 			@PathVariable("id") long id) {
 
 		try {
-			Productorder productorder = productorderService.getEntityById(
-					Productorder.class, id);
-			productorder.setIsactive(false);
-			productorderService.updateEntity(productorder);
+			productorderService.deleteProductOrder(id);
 			return new UserStatus(1, "Product Order deleted Successfully !");
 		} catch (Exception e) {
 			return new UserStatus(0, e.toString());
 		}
 
 	}
-	private Productorder saveProductOrder(ProductOrderDTO productOrderDTO,HttpServletRequest request,HttpServletResponse response)
-			throws Exception {
-		Productorder productorder = ProductOrderRequestResponseFactory.setProductOrder(productOrderDTO);
-		productorder.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-		productorder.setClient(clientService.getEntityById(Client.class,productOrderDTO.getClientId().getId()));
-		productorder.setStatus(statusService.getEntityById(Status.class,Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_NEW_PRODUCT_ORDER, null, null))));
-		productorderService.addEntity(productorder);
-		productOrderDTO.setId(productorder.getId());
-		//TODO create  PDF file
-	//	downloadPDF(request, response, productorder);
-		return productorder;
-	}
 
-	private void addProductOrderAsso(ProductOrderDTO productOrderDTO,Productorder productorder,HttpServletRequest request,HttpServletResponse response) throws Exception {
+	private void addProductOrderAsso(ProductOrderDTO productOrderDTO,HttpServletRequest request,HttpServletResponse response) throws Exception {
 		List<ProductOrderAssociationDTO> productOrderAssociationDTOs = productOrderDTO.getProductOrderAssociationDTOs();
-		Client client = clientService.getEntityById(Client.class, productOrderDTO.getClientId().getId());
+		ClientDTO client = clientService.getClientDTOById(productOrderDTO.getClientId().getId());
 		if (productOrderAssociationDTOs != null&& !productOrderAssociationDTOs.isEmpty()) {
 			for (ProductOrderAssociationDTO productOrderAssociationDTO : productOrderAssociationDTOs) {
 				productorderassociationService.addEntity(ProductOrderRequestResponseFactory.setProductOrderAsso(productOrderDTO, productOrderAssociationDTO));
@@ -333,7 +284,7 @@ public class ProductorderController {
 		}
 		List<ProductOrderData> productOrderDatas = new ArrayList<ProductOrderData>();
 		for (ProductOrderAssociationDTO productOrderAssociationDTO : productOrderAssociationDTOs) {
-			Product product = productService.getEntityById(Product.class, productOrderAssociationDTO.getProductId().getId());
+			ProductDTO product = productService.getProductDTO(productOrderAssociationDTO.getProductId().getId());
 			ProductOrderData productOrderData = new ProductOrderData();
 			productOrderData.setProductName(product.getName());
 			productOrderData.setQuantity(productOrderAssociationDTO.getQuantity());
@@ -341,9 +292,9 @@ public class ProductorderController {
 			productOrderData.setAmount(product.getRatePerUnit()*productOrderAssociationDTO.getQuantity());
 			productOrderDatas.add(productOrderData);
 		}
-		//downloadPDF(request, response, productorder,productOrderDatas,client);
+		//downloadPDF(request, response, productOrderDTO,productOrderDatas,client);
 	}
-	public void downloadPDF(HttpServletRequest request, HttpServletResponse response,Productorder productorder,List<ProductOrderData> productOrderDatas,Client client) throws IOException {
+	public void downloadPDF(HttpServletRequest request, HttpServletResponse response,ProductOrderDTO productOrderDTO,List<ProductOrderData> productOrderDatas,ClientDTO client) throws IOException {
 
 		final ServletContext servletContext = request.getSession().getServletContext();
 	    final File tempDirectory = (File) servletContext.getAttribute("javax.servlet.context.tempdir");
@@ -356,9 +307,9 @@ public class ProductorderController {
 	    try {
 
 	   CreatePDF ceCreatePDFProductOrder = new CreatePDF();
-	   ceCreatePDFProductOrder.createPDF(temperotyFilePath+"\\"+fileName,productorder,productOrderDatas,client);
+	   ceCreatePDFProductOrder.createPDF(temperotyFilePath+"\\"+fileName,productOrderDTO,productOrderDatas,client);
 	        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-	        baos = convertPDFToByteArrayOutputStream(temperotyFilePath+"\\"+fileName,productorder);
+	        baos = convertPDFToByteArrayOutputStream(temperotyFilePath+"\\"+fileName,productOrderDTO);
 	        OutputStream os = response.getOutputStream();
 	        baos.writeTo(os);
 	        os.flush();
@@ -369,15 +320,15 @@ public class ProductorderController {
 
 	}
 
-	private ByteArrayOutputStream convertPDFToByteArrayOutputStream(String fileName,Productorder productorder) throws Exception {
+	private ByteArrayOutputStream convertPDFToByteArrayOutputStream(String fileName,ProductOrderDTO productOrderDTO) throws Exception {
 
 
-		Status status = statusService.getEntityById(Status.class, productorder.getStatus().getId());
+		StatusDTO status = statusService.getStatusById(productOrderDTO.getStatusId().getId());
 		NotificationDTO notificationDTO = notificationService.getNotificationDTOById(status.getId());
-		Client client = clientService.getEntityById(Client.class,productorder.getClient().getId());
+		ClientDTO client = clientService.getClientDTOById(productOrderDTO.getClientId().getId());
 
 		//TODO mail sending
-        mailSending(notificationDTO, productorder, client,fileName);
+        mailSending(notificationDTO, productOrderDTO, client,fileName);
 
 		InputStream inputStream = null;
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -409,12 +360,12 @@ public class ProductorderController {
 	}
 
 	@SuppressWarnings("unchecked")
-	private void mailSending(NotificationDTO notification,Productorder productorder,Client client,String fileName) throws Exception{
-		List<Productorderassociation>  productorderassociations= productorderassociationService.getProductorderassociationByOrderId(productorder.getId());
+	private void mailSending(NotificationDTO notification,ProductOrderDTO productOrderDTO,ClientDTO client,String fileName) throws Exception{
+		List<ProductOrderAssociationDTO>  productorderassociations= productorderassociationService.getProductorderassociationByOrderId(productOrderDTO.getId());
 		List<ProductOrderData> productOrderDatas = new ArrayList<ProductOrderData>();
 		List<NotificationUserAssociatinsDTO> notificationUserAssociatinsDTOs  = notificationUserAssociationService.getNotificationUserAssociatinsDTOs(notification.getId());
-		for (Productorderassociation productorderassociation : productorderassociations) {
-			Product product = productService.getEntityById(Product.class, productorderassociation.getProduct().getId());
+		for (ProductOrderAssociationDTO productorderassociation : productorderassociations) {
+			ProductDTO product = productService.getProductDTO(productorderassociation.getProductId().getId());
 			ProductOrderData productOrderData = new ProductOrderData();
 			productOrderData.setProductName(product.getName());
 			productOrderData.setQuantity(productorderassociation.getQuantity());
@@ -426,7 +377,7 @@ public class ProductorderController {
 		 //  User user = userService.getEntityById(User.class, notificationuserassociation.getUser().getId());
 		   UserDTO userDTO = userService.getUserDTO(notificationuserassociation.getId());
 		 if(notificationuserassociation.getTo()==true){
-			 mail.setMailTo(client.getEmailid()); 
+			 mail.setMailTo(client.getEmailId()); 
 		 }else if(notificationuserassociation.getBcc()==true){
 			 mail.setMailBcc(userDTO.getEmailId());
 		 }else if(notificationuserassociation.getCc()==true){
@@ -437,12 +388,12 @@ public class ProductorderController {
 	        mail.setAttachment(fileName);
 		  }     
 	        Map < String, Object > model = new HashMap < String, Object >();
-	            model.put("companyName", client.getCompanyname());
+	            model.put("companyName", client.getCompanyName());
 	            model.put("mailfrom", notification.getName());
 	   	        model.put("location", "Pune");
 	   	        model.put("productOrderDatas",productOrderDatas);
-	   	        model.put("invoiceNumber",productorder.getInvoiceNo());
-	   	         model.put("date",productorder.getCreatedDate());
+	   	        model.put("invoiceNumber",productOrderDTO.getInvoiceNo());
+	   	        model.put("date",productOrderDTO.getCreatedDate());
 	   	        model.put("address", client.getAddress());
 	   	        model.put("signature", "www.NextechServices.in");
 	   	        mail.setModel(model);

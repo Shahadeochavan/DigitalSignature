@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.nextech.erp.model.Productionplanning;
 import com.nextech.erp.model.Productorderassociation;
+import com.nextech.erp.newDTO.ProductOrderAssociationDTO;
 
 public interface ProductorderassociationService extends CRUDService<Productorderassociation>{
 
@@ -12,7 +13,7 @@ public interface ProductorderassociationService extends CRUDService<Productorder
 			long pOrderId,long pId) throws Exception;
 
 	public List<Productorderassociation> getProductorderassociationByProdcutId(long pId) throws Exception;
-	public List<Productorderassociation> getProductorderassociationByOrderId(long orderId) throws Exception;
+	public List<ProductOrderAssociationDTO> getProductorderassociationByOrderId(long orderId) throws Exception;
 
 	public List<Productorderassociation> getIncompleteProductOrderAssoByProdutId(long productId) throws Exception;
 

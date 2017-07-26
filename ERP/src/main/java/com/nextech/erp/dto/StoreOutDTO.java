@@ -6,7 +6,7 @@ import com.nextech.erp.model.Product;
 import com.nextech.erp.model.Productionplanning;
 
 public class StoreOutDTO  extends AbstractDTO{
-	private Productionplanning productionPlanId;
+	private long productionPlanId;
 	private Product productId;
 	private long statusId;
 	private long quantityRequired;
@@ -30,13 +30,12 @@ public class StoreOutDTO  extends AbstractDTO{
 	public void setStoreOutParts(List<StoreOutPart> storeOutParts) {
 		this.storeOutParts = storeOutParts;
 	}
-
-
-	public Productionplanning getProductionPlanId() {
+	
+	public long getProductionPlanId() {
 		return productionPlanId;
 	}
 
-	public void setProductionPlanId(Productionplanning productionPlanId) {
+	public void setProductionPlanId(long productionPlanId) {
 		this.productionPlanId = productionPlanId;
 	}
 

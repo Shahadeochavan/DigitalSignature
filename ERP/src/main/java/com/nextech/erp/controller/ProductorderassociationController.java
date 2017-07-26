@@ -24,6 +24,7 @@ import com.nextech.erp.dto.ProductOrderInventoryData;
 import com.nextech.erp.model.Product;
 import com.nextech.erp.model.Productinventory;
 import com.nextech.erp.model.Productorderassociation;
+import com.nextech.erp.newDTO.ProductOrderAssociationDTO;
 import com.nextech.erp.service.ProductService;
 import com.nextech.erp.service.ProductinventoryService;
 import com.nextech.erp.service.ProductorderassociationService;
@@ -109,15 +110,15 @@ public class ProductorderassociationController {
 	@Transactional @RequestMapping(value = "getProductOrderInventoryData/{orderId}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody Response getProductorderassociationList(@PathVariable("orderId") long orderId) {
 
-		List<Productorderassociation> productorderassociationList = null;
+		List<ProductOrderAssociationDTO> productorderassociationList = null;
 		List<ProductOrderInventoryData> productOrderInventoryList = new ArrayList<ProductOrderInventoryData>();
 		try {
 			productorderassociationList = productorderassociationService.getProductorderassociationByOrderId(orderId);
-			for(Productorderassociation productorderassociation : productorderassociationList){
-				List<Productinventory> productinventories = productinventoryService.getProductinventoryListByProductId(productorderassociation.getProduct().getId());
+			for(ProductOrderAssociationDTO productorderassociation : productorderassociationList){
+				List<Productinventory> productinventories = productinventoryService.getProductinventoryListByProductId(productorderassociation.getProductId().getId());
 				for(Productinventory productinventory : productinventories){
 						ProductOrderInventoryData productOrderInventoryData = new ProductOrderInventoryData();
-						Product product = productService.getEntityById(Product.class, productorderassociation.getProduct().getId());
+						Product product = productService.getEntityById(Product.class, productorderassociation.getProductId().getId());
 						productOrderInventoryData.setPartNumber(product.getPartNumber());
 						productOrderInventoryData.setProductId(productinventory.getProduct().getId());
 						productOrderInventoryData.setAvailableQuantity(productinventory.getQuantityavailable());

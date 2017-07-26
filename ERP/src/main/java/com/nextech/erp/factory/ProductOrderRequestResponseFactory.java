@@ -30,5 +30,32 @@ public class ProductOrderRequestResponseFactory {
 		productorderassociation.setIsactive(true);
 		return productorderassociation;
 	}
-
+	
+	public static ProductOrderAssociationDTO setProductOrderAssoDto(Productorderassociation productorderassociation){
+		ProductOrderAssociationDTO productOrderAssociationDTO =  new ProductOrderAssociationDTO();
+		productOrderAssociationDTO.setActive(true);
+		productOrderAssociationDTO.setCreatedBy(productorderassociation.getCreatedBy());
+		productOrderAssociationDTO.setCreatedDate(productOrderAssociationDTO.getUpdatedDate());
+		productOrderAssociationDTO.setId(productorderassociation.getId());
+		productOrderAssociationDTO.setProductId(productorderassociation.getProduct());
+		productOrderAssociationDTO.setQuantity(productorderassociation.getQuantity());
+		productOrderAssociationDTO.setRemainingQuantity(productorderassociation.getRemainingQuantity());
+		productOrderAssociationDTO.setUpdatedBy(productorderassociation.getUpdatedBy());
+		productOrderAssociationDTO.setUpdatedDate(productorderassociation.getUpdatedDate());
+		return productOrderAssociationDTO;
+}
+	public static ProductOrderDTO setProductOrderDTO(Productorder productorder){
+		ProductOrderDTO productOrderDTO =  new ProductOrderDTO();
+		productOrderDTO.setActive(true);
+		productOrderDTO.setClientId(productorder.getClient());
+		productOrderDTO.setCreatedDate(productorder.getCreatedDate());
+		productOrderDTO.setDescription(productorder.getDescription());
+		productOrderDTO.setExpectedDeliveryDate(productorder.getExpecteddeliveryDate());
+		productOrderDTO.setInvoiceNo(productorder.getInvoiceNo());
+		productOrderDTO.setQuantity(productorder.getQuantity());
+		productOrderDTO.setStatusId(productorder.getStatus());
+		productOrderDTO.setUpdatedBy(productorder.getUpdatedBy());
+		productOrderDTO.setUpdatedDate(productorder.getUpdatedDate());
+		return productOrderDTO;
+	}
 }

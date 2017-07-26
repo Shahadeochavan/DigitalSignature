@@ -33,6 +33,7 @@ import com.nextech.erp.model.Product;
 import com.nextech.erp.model.Productrawmaterialassociation;
 import com.nextech.erp.model.Rawmaterial;
 import com.nextech.erp.model.Vendor;
+import com.nextech.erp.newDTO.ProductDTO;
 import com.nextech.erp.newDTO.RMVendorAssociationDTO;
 import com.nextech.erp.service.ProductRMAssoService;
 import com.nextech.erp.service.ProductService;
@@ -287,7 +288,7 @@ public class ProductRMAssoController {
 	public @ResponseBody Response getProductList() {
 
 		List<Long> productIdList = new ArrayList<Long>();
-		List<Product> products = null;
+		List<ProductDTO> products = null;
 		try {
 			productIdList = productRMAssoService.getProductList();
 			products = productService.getProductList(productIdList);
