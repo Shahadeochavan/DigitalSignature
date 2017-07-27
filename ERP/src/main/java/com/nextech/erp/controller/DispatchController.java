@@ -41,7 +41,6 @@ import com.nextech.erp.dto.DispatchProductDTO;
 import com.nextech.erp.dto.Mail;
 import com.nextech.erp.dto.DispatchPartDTO;
 import com.nextech.erp.model.Bom;
-import com.nextech.erp.model.Bomrmvendorassociation;
 import com.nextech.erp.model.Client;
 import com.nextech.erp.model.Dispatch;
 import com.nextech.erp.model.Product;

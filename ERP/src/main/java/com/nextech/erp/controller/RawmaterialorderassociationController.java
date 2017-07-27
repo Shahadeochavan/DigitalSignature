@@ -21,8 +21,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nextech.erp.dto.QualityCheckRMDTO;
+import com.nextech.erp.factory.RMOrderAssociationRequestResponseFactory;
 import com.nextech.erp.factory.RawMaterialInvoiceRequestResponseFactory;
-import com.nextech.erp.model.Rawmaterialorderassociation;
+import com.nextech.erp.newDTO.RMOrderAssociationDTO;
 import com.nextech.erp.service.RawmaterialService;
 import com.nextech.erp.service.RawmaterialorderassociationService;
 import com.nextech.erp.status.Response;
@@ -39,16 +40,14 @@ public class RawmaterialorderassociationController {
 	RawmaterialService rawmaterialService;
 	@Transactional @RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addRawmaterialorderassociation(
-			@Valid @RequestBody Rawmaterialorderassociation rawmaterialorderassociation,
+			@Valid @RequestBody RMOrderAssociationDTO rmOrderAssociationDTO,
 			BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			if (bindingResult.hasErrors()) {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
-			rawmaterialorderassociation.setIsactive(true);
-			rawmaterialorderassociation.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-			rawmaterialorderassociationService.addEntity(rawmaterialorderassociation);
+			rawmaterialorderassociationService.addEntity(RMOrderAssociationRequestResponseFactory.setRMOrderAssocition(rmOrderAssociationDTO, request));
 			return new UserStatus(1,"Rawmaterialorderassociation added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			cve.printStackTrace();
@@ -63,12 +62,11 @@ public class RawmaterialorderassociationController {
 	}
 
 	@Transactional @RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody Rawmaterialorderassociation getRawmaterialorderassociation(
+	public @ResponseBody RMOrderAssociationDTO getRawmaterialorderassociation(
 			@PathVariable("id") long id) {
-		Rawmaterialorderassociation rawmaterialorderassociation = null;
+		RMOrderAssociationDTO rawmaterialorderassociation = null;
 		try {
-			rawmaterialorderassociation = rawmaterialorderassociationService
-					.getEntityById(Rawmaterialorderassociation.class, id);
+			rawmaterialorderassociation = rawmaterialorderassociationService.getRMOrderAssoById(id);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -77,12 +75,9 @@ public class RawmaterialorderassociationController {
 
 	@Transactional @RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
 	public @ResponseBody UserStatus updateRawmaterialorderassociation(
-			@RequestBody Rawmaterialorderassociation rawmaterialorderassociation,HttpServletRequest request,HttpServletResponse response) {
+			@RequestBody RMOrderAssociationDTO rmOrderAssociationDTO,HttpServletRequest request,HttpServletResponse response) {
 		try {
-			rawmaterialorderassociation.setIsactive(true);
-			rawmaterialorderassociation.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-			rawmaterialorderassociationService
-					.updateEntity(rawmaterialorderassociation);
+			rawmaterialorderassociationService.updateEntity(RMOrderAssociationRequestResponseFactory.setRMOrderAssocitionUpdate(rmOrderAssociationDTO, request));
 			return new UserStatus(1,"Rawmaterialorderassociation update Successfully !");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -91,13 +86,11 @@ public class RawmaterialorderassociationController {
 	}
 
 	@Transactional @RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<Rawmaterialorderassociation> getRawmaterialorderassociation() {
+	public @ResponseBody List<RMOrderAssociationDTO> getRawmaterialorderassociation() {
 
-		List<Rawmaterialorderassociation> rawmaterialorderassociationList = null;
+		List<RMOrderAssociationDTO> rawmaterialorderassociationList = null;
 		try {
-			rawmaterialorderassociationList = rawmaterialorderassociationService
-					.getEntityList(Rawmaterialorderassociation.class);
-
+			rawmaterialorderassociationList = rawmaterialorderassociationService.getRMOrderAssoList();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -106,14 +99,13 @@ public class RawmaterialorderassociationController {
 	}
 
 	@Transactional @RequestMapping(value = "getRMForRMOrder/{RMOrderId}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody Response getRawmaterialorderassociationByRMOId(
-			@PathVariable("RMOrderId") long id) throws Exception {
-		List<Rawmaterialorderassociation> rawmaterialorderassociations = null;
+	public @ResponseBody Response getRawmaterialorderassociationByRMOId(@PathVariable("RMOrderId") long id) throws Exception {
+		List<RMOrderAssociationDTO> rawmaterialorderassociations = null;
 		String message = "Success";
 		int code = 1;
 		List<QualityCheckRMDTO> qualityCheckRMDTO = new ArrayList<QualityCheckRMDTO>();
 		rawmaterialorderassociations = rawmaterialorderassociationService.getRMOrderRMAssociationByRMOrderId(id);
-		for (Rawmaterialorderassociation rawmaterialorderassociation2 : rawmaterialorderassociations) {
+		for (RMOrderAssociationDTO rawmaterialorderassociation2 : rawmaterialorderassociations) {
 			qualityCheckRMDTO.add(RawMaterialInvoiceRequestResponseFactory.setRMOrderAsso(new QualityCheckRMDTO(), rawmaterialorderassociation2));
 		}
 		
@@ -131,11 +123,7 @@ public class RawmaterialorderassociationController {
 			@PathVariable("id") long id) {
 
 		try {
-			Rawmaterialorderassociation rawmaterialorderassociation = rawmaterialorderassociationService
-					.getEntityById(Rawmaterialorderassociation.class, id);
-			rawmaterialorderassociation.setIsactive(false);
-			rawmaterialorderassociationService
-					.updateEntity(rawmaterialorderassociation);
+			rawmaterialorderassociationService.deleteRMOrderAsso(id);
 			return new UserStatus(1,
 					"Rawmaterialorderassociation deleted Successfully !");
 		} catch (Exception e) {

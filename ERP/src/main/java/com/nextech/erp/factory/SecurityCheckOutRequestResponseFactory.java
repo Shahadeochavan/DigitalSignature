@@ -7,7 +7,7 @@ import com.nextech.erp.model.Securitycheckout;
 
 public class SecurityCheckOutRequestResponseFactory {
 	
-	public static Securitycheckout setSecrityCheckOut(SecurityCheckOutDTO securityCheckOutDTO,HttpServletRequest request){
+	public static Securitycheckout setSecurityCheckOut(SecurityCheckOutDTO securityCheckOutDTO,HttpServletRequest request){
 		Securitycheckout securitycheckout = new Securitycheckout();
 		securitycheckout.setClientname(securityCheckOutDTO.getClientName());
 		securitycheckout.setCreateDate(securityCheckOutDTO.getCreateDate());
@@ -26,7 +26,7 @@ public class SecurityCheckOutRequestResponseFactory {
 		return securitycheckout;
 	}
 	
-	public static Securitycheckout setSecrityCheckOutUpdate(SecurityCheckOutDTO securityCheckOutDTO,HttpServletRequest request){
+	public static Securitycheckout setSecurityCheckOutUpdate(SecurityCheckOutDTO securityCheckOutDTO,HttpServletRequest request){
 		Securitycheckout securitycheckout = new Securitycheckout();
 		securitycheckout.setClientname(securityCheckOutDTO.getClientName());
 		securitycheckout.setCreateDate(securityCheckOutDTO.getCreateDate());
@@ -44,5 +44,23 @@ public class SecurityCheckOutRequestResponseFactory {
 		securitycheckout.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 		return securitycheckout;
 	}
+	
+	public static SecurityCheckOutDTO setSecurityCheckOutDTO(Securitycheckout  securitycheckout){
+		SecurityCheckOutDTO securityCheckOutDTO =  new SecurityCheckOutDTO();
+		securityCheckOutDTO.setClientName(securitycheckout.getClientname());
+		securityCheckOutDTO.setCreateDate(securitycheckout.getCreateDate());
+		securityCheckOutDTO.setDescription(securitycheckout.getDescription());
+		securityCheckOutDTO.setDriverFirstName(securitycheckout.getFirstName());
+		securityCheckOutDTO.setId(securitycheckout.getId());
+		securityCheckOutDTO.setInTime(securitycheckout.getIntime());
+		securityCheckOutDTO.setInvoiceNo(securitycheckout.getLicence_no());
+		securityCheckOutDTO.setDriverLastName(securitycheckout.getLastName());
+		securityCheckOutDTO.setLicenceNo(securitycheckout.getLicence_no());
+		securityCheckOutDTO.setOutTime(securitycheckout.getOuttime());
+		securityCheckOutDTO.setPoNo(securitycheckout.getPoNo());
+		securityCheckOutDTO.setVehicleNo(securitycheckout.getVehicleNo());
+		securityCheckOutDTO.setActive(true);
+		return securityCheckOutDTO;
+	} 
 
 }

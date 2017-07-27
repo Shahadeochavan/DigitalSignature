@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.nextech.erp.dao.ProductorderassociationDao;
+import com.nextech.erp.factory.ProductOrderAssoRequestResponseFactory;
 import com.nextech.erp.factory.ProductOrderRequestResponseFactory;
 import com.nextech.erp.model.Productionplanning;
 import com.nextech.erp.model.Productorderassociation;
@@ -37,7 +38,7 @@ ProductorderassociationDao productorderassociationDao;
 		List<ProductOrderAssociationDTO> productOrderAssociationDTOs =  new ArrayList<ProductOrderAssociationDTO>();
 		List<Productorderassociation> productorderassociations = productorderassociationDao.getProductorderassociationByOrderId(orderId);
 		for (Productorderassociation productorderassociation : productorderassociations) {
-			ProductOrderAssociationDTO  productOrderAssociationDTO = ProductOrderRequestResponseFactory.setProductOrderAssoDto(productorderassociation);
+			ProductOrderAssociationDTO  productOrderAssociationDTO = ProductOrderAssoRequestResponseFactory.setProductOrderAssoDto(productorderassociation);
 			productOrderAssociationDTOs.add(productOrderAssociationDTO);
 		}
 		return productOrderAssociationDTOs;
@@ -76,6 +77,38 @@ ProductorderassociationDao productorderassociationDao;
 			throws Exception {
 		// TODO Auto-generated method stub
 		return productorderassociationDao.getProdcutAssoByOrder(orderId);
+	}
+
+	@Override
+	public List<ProductOrderAssociationDTO> getProductOrderAssoList()
+			throws Exception {
+		// TODO Auto-generated method stub
+		List<ProductOrderAssociationDTO> productOrderAssociationDTOs = new ArrayList<ProductOrderAssociationDTO>();
+		List<Productorderassociation> productorderassociations = productorderassociationDao.getList(Productorderassociation.class);
+		for (Productorderassociation productorderassociation : productorderassociations) {
+			ProductOrderAssociationDTO productOrderAssociationDTO = ProductOrderAssoRequestResponseFactory.setProductOrderAssoDto(productorderassociation);
+			productOrderAssociationDTOs.add(productOrderAssociationDTO);
+		}
+		return productOrderAssociationDTOs;
+	}
+
+	@Override
+	public ProductOrderAssociationDTO getProductOrderAsoById(long id)
+			throws Exception {
+		// TODO Auto-generated method stub
+		Productorderassociation productorderassociation = productorderassociationDao.getById(Productorderassociation.class, id);
+		ProductOrderAssociationDTO productOrderAssociationDTO = ProductOrderAssoRequestResponseFactory.setProductOrderAssoDto(productorderassociation);
+		return productOrderAssociationDTO;
+	}
+
+	@Override
+	public void deleteProductOrderAsso(long id) throws Exception {
+		// TODO Auto-generated method stub
+		Productorderassociation productorderassociation = productorderassociationDao.getById(Productorderassociation.class, id);
+		productorderassociation.setIsactive(false);
+		productorderassociationDao.update(productorderassociation);
+		
+		
 	}
 
 

@@ -46,6 +46,8 @@ import com.nextech.erp.model.User;
 import com.nextech.erp.model.Vendor;
 import com.nextech.erp.newDTO.NotificationDTO;
 import com.nextech.erp.newDTO.NotificationUserAssociatinsDTO;
+import com.nextech.erp.newDTO.RMOrderAssociationDTO;
+import com.nextech.erp.newDTO.RMVendorAssociationDTO;
 import com.nextech.erp.newDTO.UserDTO;
 import com.nextech.erp.service.MailService;
 import com.nextech.erp.service.NotificationService;
@@ -305,11 +307,11 @@ public class RawmaterialorderinvoiceController {
 			  }
 			  
 		} 
-		  List<Rawmaterialorderassociation> rawmaterialorderassociations = rawmaterialorderassociationService.getRMOrderRMAssociationByRMOrderId(rawmaterialorder.getId());
-		for (Rawmaterialorderassociation rawmaterialorderassociation : rawmaterialorderassociations) {
+		  List<RMOrderAssociationDTO> rawmaterialorderassociations = rawmaterialorderassociationService.getRMOrderRMAssociationByRMOrderId(rawmaterialorder.getId());
+		for (RMOrderAssociationDTO rawmaterialorderassociation : rawmaterialorderassociations) {
 			RMOrderModelData rmOrderModelData = new RMOrderModelData();
-			Rawmaterial rawmaterial = rawmaterialService.getEntityById(Rawmaterial.class, rawmaterialorderassociation.getRawmaterial().getId());
-			Rawmaterialvendorassociation rawmaterialvendorassociation = rMVAssoService.getRMVAssoByRMId(rawmaterial.getId());
+			Rawmaterial rawmaterial = rawmaterialService.getEntityById(Rawmaterial.class, rawmaterialorderassociation.getRawmaterialId().getId());
+			RMVendorAssociationDTO rawmaterialvendorassociation = rMVAssoService.getRMVAssoByRMId(rawmaterial.getId());
 			rmOrderModelData.setAmount(rawmaterialorder.getTotalprice());
 			rmOrderModelData.setDescription(rawmaterial.getDescription());
 			rmOrderModelData.setPricePerUnit(rawmaterialvendorassociation.getPricePerUnit());

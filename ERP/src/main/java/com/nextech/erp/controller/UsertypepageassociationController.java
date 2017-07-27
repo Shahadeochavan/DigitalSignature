@@ -20,11 +20,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nextech.erp.factory.UserTypePageAssoFactory;
-import com.nextech.erp.model.Page;
-import com.nextech.erp.model.Usertype;
-import com.nextech.erp.model.Usertypepageassociation;
 import com.nextech.erp.newDTO.UserTypePageAssoDTO;
-import com.nextech.erp.newDTO.UserTypePageAssoPart;
 import com.nextech.erp.service.PageService;
 import com.nextech.erp.service.UserTypeService;
 import com.nextech.erp.service.UsertypepageassociationService;
@@ -55,7 +51,8 @@ public class UsertypepageassociationController {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
-			createMultiplePageAss(userTypePageAssoDTO, request.getAttribute("current_user").toString());
+			usertypepageassociationService.saveUserTypePageAsso(userTypePageAssoDTO, request.getAttribute("current_user").toString());
+			//createMultiplePageAss(userTypePageAssoDTO, request.getAttribute("current_user").toString());
 			return new UserStatus(1,
 					"Usertypepageassociation added Successfully !");
 		} catch (ConstraintViolationException cve) {
@@ -107,6 +104,20 @@ public class UsertypepageassociationController {
 
 		return UserTypePageAssoDTO;
 	}
+	
+	@RequestMapping(value = "/UserTypePageAsso/{UserTypeId}", method = RequestMethod.GET, headers = "Accept=application/json")
+	public @ResponseBody List<UserTypePageAssoDTO> getPageAssByUserTypeId(@PathVariable("UserTypeId") long id) {
+
+		List<UserTypePageAssoDTO> UserTypePageAssoDTO = null;
+		try {
+			UserTypePageAssoDTO = usertypepageassociationService.getPagesByUsertype(id);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return UserTypePageAssoDTO;
+	}
 
 	/* Delete an object from DB in Spring Restful Services */
 	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
@@ -121,20 +132,5 @@ public class UsertypepageassociationController {
 			return new UserStatus(0, e.toString());
 		}
 
-	}
-	private void createMultiplePageAss(UserTypePageAssoDTO userTypePageAssoDTO,String currentUser) throws Exception{
-		for(UserTypePageAssoPart userTypePageAssoPart : userTypePageAssoDTO.getUserTypePageAssoParts()){
-			Usertypepageassociation usertypepageassociation =  setMultiplePage(userTypePageAssoPart);
-			usertypepageassociation.setUsertype(userTypeService.getEntityById(Usertype.class, userTypePageAssoDTO.getUsertypeId().getId()));
-			usertypepageassociation.setCreatedBy(Long.parseLong(currentUser));
-			usertypepageassociationService.addEntity(usertypepageassociation);
-		}
-	}
-	
-	private Usertypepageassociation setMultiplePage(UserTypePageAssoPart userTypePageAssoPart) throws Exception {
-		Usertypepageassociation usertypepageassociation = new Usertypepageassociation();
-		usertypepageassociation.setPage(pageService.getEntityById(Page.class, userTypePageAssoPart.getPageId().getId()));
-		usertypepageassociation.setIsactive(true);
-		return usertypepageassociation;
 	}
 }

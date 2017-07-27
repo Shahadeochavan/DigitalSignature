@@ -28,10 +28,9 @@ import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.dto.Mail;
 import com.nextech.erp.dto.RMInventoryDTO;
 import com.nextech.erp.factory.RMInventoryRequestResponseFactory;
-import com.nextech.erp.model.Rawmaterial;
-import com.nextech.erp.model.Rawmaterialinventory;
 import com.nextech.erp.newDTO.NotificationDTO;
 import com.nextech.erp.newDTO.NotificationUserAssociatinsDTO;
+import com.nextech.erp.newDTO.RawMaterialDTO;
 import com.nextech.erp.newDTO.UserDTO;
 import com.nextech.erp.service.MailService;
 import com.nextech.erp.service.NotificationService;
@@ -95,10 +94,10 @@ public class RawmaterialinventoryController {
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody Rawmaterialinventory getRawmaterialinventory(@PathVariable("id") long id) {
-		Rawmaterialinventory rawmaterialinventory = null;
+	public @ResponseBody RMInventoryDTO getRawmaterialinventory(@PathVariable("id") long id) {
+		RMInventoryDTO rawmaterialinventory = null;
 		try {
-			rawmaterialinventory = rawmaterialinventoryService.getEntityById(Rawmaterialinventory.class,id);
+			rawmaterialinventory = rawmaterialinventoryService.getRMInventoryById(id);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -117,12 +116,12 @@ public class RawmaterialinventoryController {
 	}
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<Rawmaterialinventory> getRawmaterialinventory() {
+	public @ResponseBody List<RMInventoryDTO> getRawmaterialinventory() {
 
-		List<Rawmaterialinventory> rawmaterialinventoryList = null;
+		List<RMInventoryDTO> rawmaterialinventoryList = null;
 		try {
-			rawmaterialinventoryList = rawmaterialinventoryService.getEntityList(Rawmaterialinventory.class);
-
+			rawmaterialinventoryList = rawmaterialinventoryService.getRMInventoryList();
+					
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -134,9 +133,7 @@ public class RawmaterialinventoryController {
 	public @ResponseBody UserStatus deleteRawmaterialinventory(@PathVariable("id") long id) {
 
 		try {
-			Rawmaterialinventory rawmaterialinventory = rawmaterialinventoryService.getEntityById(Rawmaterialinventory.class,id);
-			rawmaterialinventory.setIsactive(false);
-			rawmaterialinventoryService.updateEntity(rawmaterialinventory);
+			rawmaterialinventoryService.deleteRMInventory(id);
 			return new UserStatus(1, "Rawmaterialinventory deleted Successfully !");
 		} catch (Exception e) {
 			return new UserStatus(0, e.toString());
@@ -145,19 +142,19 @@ public class RawmaterialinventoryController {
 	}
 	//@Scheduled(initialDelay=60000, fixedRate=60000)
 	public void executeSchedular() throws Exception{
-		List<Rawmaterialinventory> rawmaterialinventoryList = null;
+		List<RMInventoryDTO> rawmaterialinventoryList = null;
 		System.out.println("RM Inventory Check");
 		List<RMInventoryDTO> rmInventoryDTOs = new ArrayList<RMInventoryDTO>();
 		try { 
-			rawmaterialinventoryList = rawmaterialinventoryService.getEntityList(Rawmaterialinventory.class);
-			for (Rawmaterialinventory rawmaterialinventory : rawmaterialinventoryList) {
-				Rawmaterial rawmaterial = rawmaterialService.getEntityById(Rawmaterial.class, rawmaterialinventory.getRawmaterial().getId());
-				if(rawmaterialinventory.getQuantityAvailable()>=rawmaterialinventory.getMinimum_quantity()){
+			rawmaterialinventoryList = rawmaterialinventoryService.getRMInventoryList();
+			for (RMInventoryDTO rawmaterialinventory : rawmaterialinventoryList) {
+				RawMaterialDTO rawmaterial = rawmaterialService.getRMDTO(rawmaterialinventory.getRawmaterialId().getId());
+				if(rawmaterialinventory.getQuantityAvailable()>=rawmaterialinventory.getMinimumQuantity()){
 				}else{
 					RMInventoryDTO  rmInventoryDTO = new RMInventoryDTO();
 					rmInventoryDTO.setRmPartNumber(rawmaterial.getPartNumber());
 					rmInventoryDTO.setQuantityAvailable(rawmaterialinventory.getQuantityAvailable());
-					rmInventoryDTO.setMinimumQuantity(rawmaterialinventory.getMinimum_quantity());
+					rmInventoryDTO.setMinimumQuantity(rawmaterialinventory.getMinimumQuantity());
 					rmInventoryDTOs.add(rmInventoryDTO);
 				}
 			}

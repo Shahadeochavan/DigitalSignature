@@ -1,7 +1,7 @@
 package com.nextech.erp.dto;
 
-import java.sql.Date;
 import java.sql.Time;
+import java.util.Date;
 import java.util.List;
 
 public class SecurityCheckOutDTO  extends AbstractDTO{

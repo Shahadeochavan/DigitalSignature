@@ -17,6 +17,8 @@ public class NotificationRequestResponseFactory {
 		notification.setSubject(notificationDTO.getSubject());
 		notification.setTemplate(notificationDTO.getTemplate());
 		notification.setType(notificationDTO.getType());
+		notification.setStatus1(notificationDTO.getStatus1());
+		notification.setStatus2(notificationDTO.getStatus1());
 		return notification;
 	}
 	

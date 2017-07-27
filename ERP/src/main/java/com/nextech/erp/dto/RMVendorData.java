@@ -6,7 +6,7 @@ import com.nextech.erp.model.Vendor;
 public class RMVendorData {
 
 	private Rawmaterial rawmaterial;
-	private Vendor vendor;
+	private long vendor;
 	private long quantity;
 
 	public Rawmaterial getRawmaterial() {
@@ -16,12 +16,13 @@ public class RMVendorData {
 	public void setRawmaterial(Rawmaterial rawmaterial) {
 		this.rawmaterial = rawmaterial;
 	}
+	
 
-	public Vendor getVendor() {
+	public long getVendor() {
 		return vendor;
 	}
 
-	public void setVendor(Vendor vendor) {
+	public void setVendor(long vendor) {
 		this.vendor = vendor;
 	}
 

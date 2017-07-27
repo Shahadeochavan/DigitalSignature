@@ -40,6 +40,7 @@ import com.nextech.erp.model.Usertypepageassociation;
 import com.nextech.erp.newDTO.NotificationDTO;
 import com.nextech.erp.newDTO.NotificationUserAssociatinsDTO;
 import com.nextech.erp.newDTO.UserDTO;
+import com.nextech.erp.newDTO.UserTypePageAssoDTO;
 import com.nextech.erp.service.MailService;
 import com.nextech.erp.service.NotificationService;
 import com.nextech.erp.service.NotificationUserAssociationService;
@@ -151,7 +152,7 @@ public class UserController {
 				authorization.setToken(token);
 				response.addHeader("auth_token", token);
 				Usertype usertype = userTypeService.getEntityById(Usertype.class, user2.getUsertype().getId());
-				List<Usertypepageassociation> usertypepageassociations = usertypepageassociationService
+				List<UserTypePageAssoDTO> usertypepageassociations = usertypepageassociationService
 						.getPagesByUsertype(usertype.getId());
 				List<Reportusertypeassociation> reportusertypeassociations = reportusertypeassociationService.getReportByUsertype(usertype.getId());
 				HashMap<String, Object> result = new HashMap<String, Object>();
@@ -164,7 +165,7 @@ public class UserController {
 					result.put("reports", reports);
 				}
 				if(usertypepageassociations !=null){
-				for (Usertypepageassociation usertypepageassociation : usertypepageassociations) {
+				for (UserTypePageAssoDTO usertypepageassociation : usertypepageassociations) {
 					pages.add(usertypepageassociation.getPage());
 				}
 				result.put("pages", pages);

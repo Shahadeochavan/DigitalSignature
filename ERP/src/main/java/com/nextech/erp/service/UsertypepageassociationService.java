@@ -6,7 +6,7 @@ import com.nextech.erp.model.Usertypepageassociation;
 import com.nextech.erp.newDTO.UserTypePageAssoDTO;
 
 public interface UsertypepageassociationService extends CRUDService<Usertypepageassociation>{
-	public List<Usertypepageassociation> getPagesByUsertype(long usertypeId);
+	public List<UserTypePageAssoDTO> getPagesByUsertype(long usertypeId);
 	
 	public boolean checkPageAccess(long usertypeId,long pageId);
 	
@@ -15,4 +15,6 @@ public interface UsertypepageassociationService extends CRUDService<Usertypepage
 	public UserTypePageAssoDTO getUserTypeDto(long id) throws Exception;
 	
 	public void  deleteUserTypePage(long id)throws Exception;
+	
+	public UserTypePageAssoDTO saveUserTypePageAsso(UserTypePageAssoDTO userTypePageAssoDTO,String user) throws Exception;
 }

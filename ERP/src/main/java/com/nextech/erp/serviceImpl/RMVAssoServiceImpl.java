@@ -37,10 +37,12 @@ public class RMVAssoServiceImpl extends CRUDServiceImpl<Rawmaterialvendorassocia
 	}
 
 	@Override
-	public Rawmaterialvendorassociation getRMVAssoByRMId(long rmId)
+	public RMVendorAssociationDTO getRMVAssoByRMId(long rmId)
 			throws Exception {
 		// TODO Auto-generated method stub
-		return rMVAssoDao.getRMVAssoByRMId(rmId);
+		Rawmaterialvendorassociation rawmaterialvendorassociation = rMVAssoDao.getRMVAssoByRMId(rmId);
+		RMVendorAssociationDTO rmVendorAssociationDTO = RMVendorAssoRequestResponseFactory.setRMVendorList(rawmaterialvendorassociation);
+		return rmVendorAssociationDTO;
 	}
 
 	@Override

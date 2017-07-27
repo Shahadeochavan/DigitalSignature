@@ -6,10 +6,15 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.nextech.erp.dao.PageDao;
+import com.nextech.erp.dao.UserTypeDao;
 import com.nextech.erp.dao.UsertypepageassociationDao;
 import com.nextech.erp.factory.UserTypePageAssoFactory;
+import com.nextech.erp.model.Page;
+import com.nextech.erp.model.Usertype;
 import com.nextech.erp.model.Usertypepageassociation;
 import com.nextech.erp.newDTO.UserTypePageAssoDTO;
+import com.nextech.erp.newDTO.UserTypePageAssoPart;
 import com.nextech.erp.service.UsertypepageassociationService;
 @Service
 public class UsertypepageassociationServiceImpl extends CRUDServiceImpl<Usertypepageassociation> implements
@@ -18,9 +23,21 @@ public class UsertypepageassociationServiceImpl extends CRUDServiceImpl<Usertype
 	@Autowired
 	UsertypepageassociationDao usertypepageassociationDao;
 	
+	@Autowired
+	PageDao pageDao;
+	
+	@Autowired
+	UserTypeDao userTypeDao;
+	
 	@Override
-	public List<Usertypepageassociation> getPagesByUsertype(long usertypeId) {
-		return usertypepageassociationDao.getPagesByUsertype(usertypeId);
+	public List<UserTypePageAssoDTO> getPagesByUsertype(long usertypeId) {
+		List<UserTypePageAssoDTO> userTypePageAssoDTOs = new ArrayList<UserTypePageAssoDTO>();
+		List<Usertypepageassociation> usertypepageassociations = usertypepageassociationDao.getPagesByUsertype(usertypeId);
+		for (Usertypepageassociation usertypepageassociation : usertypepageassociations) {
+			UserTypePageAssoDTO userTypePageAssoDTO =  UserTypePageAssoFactory.setUserTypePageDTO(usertypepageassociation);
+			userTypePageAssoDTOs.add(userTypePageAssoDTO);
+		}
+		return userTypePageAssoDTOs;
 	}
 
 	@Override
@@ -55,6 +72,26 @@ public class UsertypepageassociationServiceImpl extends CRUDServiceImpl<Usertype
 		usertypepageassociation.setIsactive(false);
 		usertypepageassociationDao.update(usertypepageassociation);
 		
+	}
+
+	@Override
+	public UserTypePageAssoDTO saveUserTypePageAsso(UserTypePageAssoDTO userTypePageAssoDTO, String currentUser)
+			throws Exception {
+		// TODO Auto-generated method stub
+		for(UserTypePageAssoPart userTypePageAssoPart : userTypePageAssoDTO.getUserTypePageAssoParts()){
+			Usertypepageassociation usertypepageassociation =  setMultiplePage(userTypePageAssoPart);
+			usertypepageassociation.setUsertype(userTypeDao.getById(Usertype.class, userTypePageAssoDTO.getUsertypeId().getId()));
+			usertypepageassociation.setCreatedBy(Long.parseLong(currentUser));
+			usertypepageassociationDao.add(usertypepageassociation);
+		}
+		return null;
+	}
+	
+	private Usertypepageassociation setMultiplePage(UserTypePageAssoPart userTypePageAssoPart) throws Exception {
+		Usertypepageassociation usertypepageassociation = new Usertypepageassociation();
+		usertypepageassociation.setPage(pageDao.getById(Page.class, userTypePageAssoPart.getPageId().getId()));
+		usertypepageassociation.setIsactive(true);
+		return usertypepageassociation;
 	}
 
 }

@@ -50,6 +50,7 @@ import com.nextech.erp.model.User;
 import com.nextech.erp.model.Vendor;
 import com.nextech.erp.newDTO.NotificationDTO;
 import com.nextech.erp.newDTO.NotificationUserAssociatinsDTO;
+import com.nextech.erp.newDTO.RMOrderAssociationDTO;
 import com.nextech.erp.newDTO.UserDTO;
 import com.nextech.erp.service.MailService;
 import com.nextech.erp.service.NotificationService;
@@ -206,10 +207,10 @@ public class QualitycheckrawmaterialController {
 
 	private int getOrderStatus(Rawmaterialorder rawmaterialorder) throws Exception{
 		boolean isOrderComplete = false;
-		List<Rawmaterialorderassociation> rawmaterialorderassociationList  =rawmaterialorderassociationService.getRMOrderRMAssociationByRMOrderId(rawmaterialorder.getId());
-		for (Iterator<Rawmaterialorderassociation> iterator = rawmaterialorderassociationList.iterator(); iterator
+		List<RMOrderAssociationDTO> rawmaterialorderassociationList  =rawmaterialorderassociationService.getRMOrderRMAssociationByRMOrderId(rawmaterialorder.getId());
+		for (Iterator<RMOrderAssociationDTO> iterator = rawmaterialorderassociationList.iterator(); iterator
 				.hasNext();) {
-			Rawmaterialorderassociation rawmaterialorderassociation = (Rawmaterialorderassociation) iterator
+			RMOrderAssociationDTO rawmaterialorderassociation = (RMOrderAssociationDTO) iterator
 					.next();
 			if(rawmaterialorderassociation.getRemainingQuantity() == 0 ){
 				isOrderComplete = true;

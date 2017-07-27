@@ -23,10 +23,17 @@ public class ProductinventoryServiceImpl extends CRUDServiceImpl<Productinventor
 		return productinventoryDao.getProductinventoryByProductId(productId);
 	}
 	@Override
-	public List<Productinventory> getProductinventoryListByProductId(
+	public List<ProductInventoryDTO> getProductinventoryListByProductId(
 			long productId) throws Exception {
 		// TODO Auto-generated method stub
-		return productinventoryDao.getProductinventoryListByProductId(productId);
+		List<ProductInventoryDTO> productInventoryDTOs = new ArrayList<ProductInventoryDTO>();
+		List<Productinventory> productinventories = productinventoryDao.getProductinventoryListByProductId(productId);
+		for (Productinventory productinventory : productinventories) {
+			ProductInventoryDTO productInventoryDTO = ProductInventoryRequestResponseFactory.setProductDTO(productinventory);
+			productInventoryDTOs.add(productInventoryDTO);
+			
+		}
+		return productInventoryDTOs;
 	}
 	@Override
 	public List<ProductInventoryDTO> getproductInventoryDTO() throws Exception {

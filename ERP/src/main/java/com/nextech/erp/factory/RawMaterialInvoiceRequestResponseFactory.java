@@ -8,6 +8,7 @@ import com.nextech.erp.model.Rawmaterialorderassociation;
 import com.nextech.erp.model.Rawmaterialorderinvoice;
 import com.nextech.erp.model.Rawmaterialorderinvoiceassociation;
 import com.nextech.erp.model.Rmorderinvoiceintakquantity;
+import com.nextech.erp.newDTO.RMOrderAssociationDTO;
 
 public class RawMaterialInvoiceRequestResponseFactory {
 	public static Rawmaterialorderinvoice setRMInvoice(RawMaterialInvoiceDTO rawMaterialInvoiceDTO){
@@ -35,13 +36,13 @@ public class RawMaterialInvoiceRequestResponseFactory {
 		return rawmaterialorderinvoiceassociation;
 	}
 	
-	public static QualityCheckRMDTO setRMOrderAsso(QualityCheckRMDTO qualityCheckRMDTO,Rawmaterialorderassociation rawmaterialorderassociation){
-		AbstractRequestResponse.setAbstractData(qualityCheckRMDTO, rawmaterialorderassociation);
+	public static QualityCheckRMDTO setRMOrderAsso(QualityCheckRMDTO qualityCheckRMDTO,RMOrderAssociationDTO rawmaterialorderassociation){
+	//	AbstractRequestResponse.setAbstractData(qualityCheckRMDTO, rawmaterialorderassociation);
 		qualityCheckRMDTO.setQuantity(rawmaterialorderassociation.getQuantity());
 		qualityCheckRMDTO.setRemainingQuantity(rawmaterialorderassociation.getRemainingQuantity());
-		qualityCheckRMDTO.setRmPartNo(rawmaterialorderassociation.getRawmaterial().getPartNumber());
-		qualityCheckRMDTO.setDescription(rawmaterialorderassociation.getRawmaterial().getDescription());
-		qualityCheckRMDTO.setId(rawmaterialorderassociation.getRawmaterial().getId());
+		qualityCheckRMDTO.setRmPartNo(rawmaterialorderassociation.getRawmaterialId().getPartNumber());
+		qualityCheckRMDTO.setDescription(rawmaterialorderassociation.getRawmaterialId().getDescription());
+		qualityCheckRMDTO.setId(rawmaterialorderassociation.getRawmaterialId().getId());
 		return qualityCheckRMDTO;
 	}
 	

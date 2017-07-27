@@ -11,7 +11,7 @@ public interface RMVAssoService extends CRUDService<Rawmaterialvendorassociation
 
 	public List<RMVendorAssociationDTO> getRawmaterialvendorassociationListByRMId(long id) throws Exception;
 	
-	public Rawmaterialvendorassociation getRMVAssoByRMId(long rmId) throws Exception;
+	public RMVendorAssociationDTO getRMVAssoByRMId(long rmId) throws Exception;
 	
 	public List<RMVendorAssociationDTO> getRMVendorList() throws Exception;
 	

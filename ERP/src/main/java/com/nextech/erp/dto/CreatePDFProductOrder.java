@@ -22,6 +22,7 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.nextech.erp.model.Rawmaterialorder;
 import com.nextech.erp.model.Vendor;
+import com.nextech.erp.newDTO.VendorDTO;
 import com.nextech.erp.service.ProductorderService;
 import com.nextech.erp.service.ProductorderassociationService;
 
@@ -40,7 +41,7 @@ public class CreatePDFProductOrder {
 	@Autowired
 	ProductorderService productorderService;
 
-	public Document createPDF(String file,RawmaterialOrderDTO rawmaterialOrderDTO,List<RMOrderModelData> rmOrderModelDatas,Vendor vendor)
+	public Document createPDF(String file,RawmaterialOrderDTO rawmaterialOrderDTO,List<RMOrderModelData> rmOrderModelDatas,VendorDTO vendor)
 			throws Exception {
 
 		Document document = null;
@@ -75,7 +76,7 @@ public class CreatePDFProductOrder {
 		document.addCreator("Java Honk");
 	}
 
-	private  void addTitlePage(Document document,Vendor vendor,RawmaterialOrderDTO rawmaterialOrderDTO)
+	private  void addTitlePage(Document document,VendorDTO vendor,RawmaterialOrderDTO rawmaterialOrderDTO)
 			throws DocumentException {
 		Paragraph preface = new Paragraph();
 		   Font bf12 = new Font(FontFamily.TIMES_ROMAN, 20,Font.BOLD); 

@@ -31,22 +31,11 @@ public class ProductOrderRequestResponseFactory {
 		return productorderassociation;
 	}
 	
-	public static ProductOrderAssociationDTO setProductOrderAssoDto(Productorderassociation productorderassociation){
-		ProductOrderAssociationDTO productOrderAssociationDTO =  new ProductOrderAssociationDTO();
-		productOrderAssociationDTO.setActive(true);
-		productOrderAssociationDTO.setCreatedBy(productorderassociation.getCreatedBy());
-		productOrderAssociationDTO.setCreatedDate(productOrderAssociationDTO.getUpdatedDate());
-		productOrderAssociationDTO.setId(productorderassociation.getId());
-		productOrderAssociationDTO.setProductId(productorderassociation.getProduct());
-		productOrderAssociationDTO.setQuantity(productorderassociation.getQuantity());
-		productOrderAssociationDTO.setRemainingQuantity(productorderassociation.getRemainingQuantity());
-		productOrderAssociationDTO.setUpdatedBy(productorderassociation.getUpdatedBy());
-		productOrderAssociationDTO.setUpdatedDate(productorderassociation.getUpdatedDate());
-		return productOrderAssociationDTO;
-}
+
 	public static ProductOrderDTO setProductOrderDTO(Productorder productorder){
 		ProductOrderDTO productOrderDTO =  new ProductOrderDTO();
 		productOrderDTO.setActive(true);
+		productOrderDTO.setId(productorder.getId());
 		productOrderDTO.setClientId(productorder.getClient());
 		productOrderDTO.setCreatedDate(productorder.getCreatedDate());
 		productOrderDTO.setDescription(productorder.getDescription());

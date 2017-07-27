@@ -20,10 +20,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.nextech.erp.dto.ProductInventoryDTO;
 import com.nextech.erp.dto.ProductOrderInventoryData;
-import com.nextech.erp.model.Product;
-import com.nextech.erp.model.Productinventory;
-import com.nextech.erp.model.Productorderassociation;
+import com.nextech.erp.factory.ProductOrderAssoRequestResponseFactory;
+import com.nextech.erp.newDTO.ProductDTO;
 import com.nextech.erp.newDTO.ProductOrderAssociationDTO;
 import com.nextech.erp.service.ProductService;
 import com.nextech.erp.service.ProductinventoryService;
@@ -46,15 +46,13 @@ public class ProductorderassociationController {
 
 	@Transactional @RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addProductorderassociation(
-			@Valid @RequestBody Productorderassociation productorderassociation, BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
+			@Valid @RequestBody ProductOrderAssociationDTO productOrderAssociationDTO, BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			if (bindingResult.hasErrors()) {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
-			productorderassociation.setIsactive(true);
-			productorderassociation.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-			productorderassociationService.addEntity(productorderassociation);
+			productorderassociationService.addEntity(ProductOrderAssoRequestResponseFactory.setProductPrderAsso(productOrderAssociationDTO, request));
 			return new UserStatus(1, "Productorderassociation added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			cve.printStackTrace();
@@ -71,10 +69,10 @@ public class ProductorderassociationController {
 	}
 
 	@Transactional @RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody Productorderassociation getProductorderassociation(@PathVariable("id") long id) {
-		Productorderassociation productorderassociation = null;
+	public @ResponseBody ProductOrderAssociationDTO getProductorderassociation(@PathVariable("id") long id) {
+		ProductOrderAssociationDTO productorderassociation = null;
 		try {
-			productorderassociation = productorderassociationService.getEntityById(Productorderassociation.class,id);
+			productorderassociation = productorderassociationService.getProductOrderAsoById(id);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -82,11 +80,9 @@ public class ProductorderassociationController {
 	}
 
 	@Transactional @RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
-	public @ResponseBody UserStatus updateProductorderassociation(@RequestBody Productorderassociation productorderassociation,HttpServletRequest request,HttpServletResponse response) {
+	public @ResponseBody UserStatus updateProductorderassociation(@RequestBody ProductOrderAssociationDTO productOrderAssociationDTO,HttpServletRequest request,HttpServletResponse response) {
 		try {
-			productorderassociation.setIsactive(true);
-			productorderassociation.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-			productorderassociationService.updateEntity(productorderassociation);
+			productorderassociationService.updateEntity(ProductOrderAssoRequestResponseFactory.setProductPrderAssoUpdate(productOrderAssociationDTO, request));
 			return new UserStatus(1, "Productorderassociation update Successfully !");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -95,12 +91,11 @@ public class ProductorderassociationController {
 	}
 
 	@Transactional @RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<Productorderassociation> getProductorderassociation() {
+	public @ResponseBody List<ProductOrderAssociationDTO> getProductorderassociation() {
 
-		List<Productorderassociation> productorderassociationList = null;
+		List<ProductOrderAssociationDTO> productorderassociationList = null;
 		try {
-			productorderassociationList = productorderassociationService.getEntityList(Productorderassociation.class);
-
+			productorderassociationList = productorderassociationService.getProductOrderAssoList();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -115,17 +110,15 @@ public class ProductorderassociationController {
 		try {
 			productorderassociationList = productorderassociationService.getProductorderassociationByOrderId(orderId);
 			for(ProductOrderAssociationDTO productorderassociation : productorderassociationList){
-				List<Productinventory> productinventories = productinventoryService.getProductinventoryListByProductId(productorderassociation.getProductId().getId());
-				for(Productinventory productinventory : productinventories){
+				List<ProductInventoryDTO> productinventories = productinventoryService.getProductinventoryListByProductId(productorderassociation.getProductId().getId());
+				for(ProductInventoryDTO productinventory : productinventories){
 						ProductOrderInventoryData productOrderInventoryData = new ProductOrderInventoryData();
-						Product product = productService.getEntityById(Product.class, productorderassociation.getProductId().getId());
+						ProductDTO product = productService.getProductDTO(productorderassociation.getProductId().getId());
 						productOrderInventoryData.setPartNumber(product.getPartNumber());
-						productOrderInventoryData.setProductId(productinventory.getProduct().getId());
-						productOrderInventoryData.setAvailableQuantity(productinventory.getQuantityavailable());
+						productOrderInventoryData.setProductId(productinventory.getProductId().getId());
+						productOrderInventoryData.setAvailableQuantity(productinventory.getQuantityAvailable());
 						productOrderInventoryData.setRemainingQuantity(productorderassociation.getRemainingQuantity());
 						productOrderInventoryList.add(productOrderInventoryData);
-
-
 				}
 			}
 
@@ -140,9 +133,7 @@ public class ProductorderassociationController {
 	public @ResponseBody UserStatus deleteProductorderassociation(@PathVariable("id") long id) {
 
 		try {
-			Productorderassociation productorderassociation = productorderassociationService.getEntityById(Productorderassociation.class,id);
-			productorderassociation.setIsactive(false);
-			productorderassociationService.updateEntity(productorderassociation);
+			productorderassociationService.deleteProductOrderAsso(id);
 			return new UserStatus(1, "Productorderassociation deleted Successfully !");
 		} catch (Exception e) {
 			return new UserStatus(0, e.toString());

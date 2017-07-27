@@ -3,19 +3,32 @@ package com.nextech.erp.serviceImpl;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.nextech.erp.dao.ProductDao;
 import com.nextech.erp.dao.ProductRMAssoDao;
+import com.nextech.erp.dao.RawmaterialDao;
 import com.nextech.erp.dto.ProductRMAssociationDTO;
+import com.nextech.erp.dto.ProductRMAssociationModelParts;
 import com.nextech.erp.factory.ProductRMAssoRequestResponseFactory;
+import com.nextech.erp.model.Product;
 import com.nextech.erp.model.Productrawmaterialassociation;
+import com.nextech.erp.model.Rawmaterial;
 import com.nextech.erp.service.ProductRMAssoService;
 @Service
 public class ProductRMAssoServiceImpl extends CRUDServiceImpl<Productrawmaterialassociation> implements ProductRMAssoService {
 
 	@Autowired
 	ProductRMAssoDao productrmassDao;
+	
+	@Autowired
+	RawmaterialDao rawmaterialDao;
+	
+	@Autowired
+	ProductDao productDao;
 
 	@Override
 	public Productrawmaterialassociation getPRMAssociationByPidRmid(long pid,long rid) throws Exception {
@@ -47,5 +60,55 @@ public class ProductRMAssoServiceImpl extends CRUDServiceImpl<Productrawmaterial
 			productRMAssociationDTOs.add(productRMAssociationDTO);
 		}
 		return productRMAssociationDTOs;
+	}
+
+	@Override
+	public ProductRMAssociationDTO saveProductRMAsso(ProductRMAssociationDTO productRMAssociationDTO,
+			String currentUser) throws Exception {
+		// TODO Auto-generated method stub
+		for(ProductRMAssociationModelParts productRMAssociationModelParts : productRMAssociationDTO.getProductRMAssociationModelParts()){
+			Productrawmaterialassociation productrawmaterialassociation =  setMultipleRM(productRMAssociationModelParts);
+			productrawmaterialassociation.setProduct(productDao.getById(Product.class, productRMAssociationDTO.getProduct()));
+			productrawmaterialassociation.setCreatedBy(Long.parseLong(currentUser));
+			productrmassDao.add(productrawmaterialassociation);
+		}
+		return null;
+	}
+	private Productrawmaterialassociation setMultipleRM(ProductRMAssociationModelParts productRMAssociationModelParts) throws Exception {
+		Productrawmaterialassociation productrawmaterialassociation = new Productrawmaterialassociation();
+		productrawmaterialassociation.setQuantity(productRMAssociationModelParts.getQuantity());
+		productrawmaterialassociation.setRawmaterial(rawmaterialDao.getById(Rawmaterial.class, productRMAssociationModelParts.getRawmaterial().getId()));
+		productrawmaterialassociation.setIsactive(true);
+		return productrawmaterialassociation;
+	}
+
+	@Override
+	public List<ProductRMAssociationDTO> getProductRMAssoList()
+			throws Exception {
+		// TODO Auto-generated method stub
+		List<ProductRMAssociationDTO> productRMAssociationDTOs = new ArrayList<ProductRMAssociationDTO>();
+		List<Productrawmaterialassociation> productrawmaterialassociations = productrmassDao.getList(Productrawmaterialassociation.class);
+		for (Productrawmaterialassociation productrawmaterialassociation : productrawmaterialassociations) {
+			ProductRMAssociationDTO productRMAssociationDTO = ProductRMAssoRequestResponseFactory.setProductRMAssoList(productrawmaterialassociation);
+			productRMAssociationDTOs.add(productRMAssociationDTO);
+		}
+		return productRMAssociationDTOs;
+	}
+
+	@Override
+	public ProductRMAssociationDTO getProductRMAsooById(long Id)
+			throws Exception {
+		// TODO Auto-generated method stub
+		Productrawmaterialassociation productrawmaterialassociation = productrmassDao.getById(Productrawmaterialassociation.class, Id);
+		ProductRMAssociationDTO productRMAssociationDTO = ProductRMAssoRequestResponseFactory.setProductRMAssoList(productrawmaterialassociation);
+		return productRMAssociationDTO;
+	}
+
+	@Override
+	public void deleteProductRMAssoById(long id) throws Exception {
+		// TODO Auto-generated method stub
+		Productrawmaterialassociation productrawmaterialassociation = productrmassDao.getById(Productrawmaterialassociation.class, id);
+		productrawmaterialassociation.setIsactive(false);
+		productrmassDao.update(productrawmaterialassociation);
 	}
 }

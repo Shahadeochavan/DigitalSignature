@@ -29,7 +29,21 @@ public class RMInventoryRequestResponseFactory {
 		rawmaterialinventory.setIsactive(true);
 		rawmaterialinventory.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 		return rawmaterialinventory;
+	}
 	
+	public static RMInventoryDTO setRMInvetoryDTO(Rawmaterialinventory rawmaterialinventory){
+		RMInventoryDTO rmInventoryDTO =  new RMInventoryDTO();
+		rmInventoryDTO.setActive(true);
+		rmInventoryDTO.setCreatedBy(rawmaterialinventory.getCreatedBy());
+		rmInventoryDTO.setCreatedDate(rawmaterialinventory.getCreatedDate());
+		rmInventoryDTO.setId(rawmaterialinventory.getId());
+		rmInventoryDTO.setMaximumQuantity(rawmaterialinventory.getMaximum_quantity());
+		rmInventoryDTO.setMinimumQuantity(rawmaterialinventory.getMinimum_quantity());
+		rmInventoryDTO.setQuantityAvailable(rawmaterialinventory.getQuantityAvailable());
+		rmInventoryDTO.setRawmaterialId(rawmaterialinventory.getRawmaterial());
+		rmInventoryDTO.setUpdatedBy(rawmaterialinventory.getUpdatedBy());
+		rmInventoryDTO.setUpdatedDate(rawmaterialinventory.getUpdatedDate());
+		return rmInventoryDTO;
 	}
 
 }

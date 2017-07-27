@@ -19,15 +19,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.dto.SecurityCheckOutDTO;
-import com.nextech.erp.dto.SecurityCheckOutPart;
 import com.nextech.erp.factory.SecurityCheckOutRequestResponseFactory;
-import com.nextech.erp.model.Dispatch;
-import com.nextech.erp.model.Productorderassociation;
-import com.nextech.erp.model.Securitycheckout;
-import com.nextech.erp.model.Status;
 import com.nextech.erp.service.DispatchService;
 import com.nextech.erp.service.ProductorderService;
 import com.nextech.erp.service.ProductorderassociationService;
@@ -69,34 +62,9 @@ public class SecuritycheckoutController {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
-
-			Securitycheckout securitycheckout = SecurityCheckOutRequestResponseFactory.setSecrityCheckOut(securityCheckOutDTO, request);
-			securitycheckout.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-			securitycheckout.setStatus(statusService.getEntityById(Status.class, Long.parseLong(messageSource.getMessage(ERPConstants.SECURITY_CHECK_COMPLETE, null, null))));
-			securitycheckoutService.addEntity(securitycheckout);
-			StringBuilder stringBuilder = new StringBuilder();
-			String prefix="";
-			String send="";
-			for(SecurityCheckOutPart securityCheckOutPart : securityCheckOutDTO.getSecurityCheckOutParts()){
-				Productorderassociation  productorderassociation = productorderassociationService.getProdcutAssoByOrder(securitycheckout.getPoNo());
-				stringBuilder.append(prefix);
-				prefix=",";
-				stringBuilder.append(securityCheckOutPart.getProductId());
-				send = stringBuilder.toString();
-				securitycheckout.setDispatch(send);
-
-				List<Dispatch> dispatchList = dispatchService.getDispatchByProductOrderId(securityCheckOutDTO.getPoNo());
-				for(Dispatch dispatch : dispatchList){
-					if(dispatch.getProduct().getId()==securityCheckOutPart.getProductId()){
-				        dispatch.setIsactive(true);
-				        dispatch.setStatus(statusService.getEntityById(Status.class, Long.parseLong(messageSource.getMessage(ERPConstants.ORDER_SECURITY_OUT, null, null))));
-				        dispatch.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-				        dispatchService.updateEntity(dispatch);
-					}
-				}
-			}
-			securitycheckoutService.updateEntity(securitycheckout);
-
+                
+			//TODO Save call security check out
+			securitycheckoutService.saveSecurityCheckOut(securityCheckOutDTO, request);
 
 			return new UserStatus(1, "Securitycheckout added Successfully !");
 		} catch (ConstraintViolationException cve) {
@@ -115,10 +83,10 @@ public class SecuritycheckoutController {
 	}
 
 	@Transactional @RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody Securitycheckout getSecuritycheckout(@PathVariable("id") long id) {
-		Securitycheckout securitycheckout = null;
+	public @ResponseBody SecurityCheckOutDTO getSecuritycheckout(@PathVariable("id") long id) {
+		SecurityCheckOutDTO securitycheckout = null;
 		try {
-			securitycheckout = securitycheckoutService.getEntityById(Securitycheckout.class, id);
+			securitycheckout = securitycheckoutService.getSecurityCheckOutById(id);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -129,7 +97,7 @@ public class SecuritycheckoutController {
 	public @ResponseBody UserStatus updateSecuritycheckout(
 			@RequestBody SecurityCheckOutDTO securityCheckOutDTO,HttpServletRequest request,HttpServletResponse response) {
 		try {
-			securitycheckoutService.updateEntity(SecurityCheckOutRequestResponseFactory.setSecrityCheckOutUpdate(securityCheckOutDTO, request));
+			securitycheckoutService.updateEntity(SecurityCheckOutRequestResponseFactory.setSecurityCheckOutUpdate(securityCheckOutDTO, request));
 			return new UserStatus(1, "Securitycheckout update Successfully !");
 		} catch (Exception e) {
 			 e.printStackTrace();
@@ -138,11 +106,11 @@ public class SecuritycheckoutController {
 	}
 
 	@Transactional @RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<Securitycheckout> getSecuritycheckout() {
+	public @ResponseBody List<SecurityCheckOutDTO> getSecuritycheckout() {
 
-		List<Securitycheckout> securitycheckoutList = null;
+		List<SecurityCheckOutDTO> securitycheckoutList = null;
 		try {
-			securitycheckoutList = securitycheckoutService.getEntityList(Securitycheckout.class);
+			securitycheckoutList = securitycheckoutService.getSecurityCheckOutList();
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -155,9 +123,7 @@ public class SecuritycheckoutController {
 	public @ResponseBody UserStatus deleteSecuritycheckout(@PathVariable("id") long id) {
 
 		try {
-			Securitycheckout securitycheckout = securitycheckoutService.getEntityById(Securitycheckout.class,id);
-			securitycheckout.setIsactive(false);
-			securitycheckoutService.updateEntity(securitycheckout);
+			securitycheckoutService.deleteSecurityCheckOut(id);
 			return new UserStatus(1, "Securitycheckout deleted Successfully !");
 		} catch (Exception e) {
 			return new UserStatus(0, e.toString());

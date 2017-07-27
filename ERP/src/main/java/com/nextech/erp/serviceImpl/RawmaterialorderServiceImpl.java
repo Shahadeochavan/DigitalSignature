@@ -37,17 +37,29 @@ public class RawmaterialorderServiceImpl extends CRUDServiceImpl<Rawmaterialorde
 	}
 
 	@Override
-	public List<Rawmaterialorder> getRawmaterialorderByStatusId(long statusId,long statusId1,long statusId2)
+	public List<RawmaterialOrderDTO> getRawmaterialorderByStatusId(long statusId,long statusId1,long statusId2)
 			throws Exception {
 		// TODO Auto-generated method stub
-		return rawmaterialorderDao.getRawmaterialorderByStatusId(statusId,statusId1,statusId2);
+		List<RawmaterialOrderDTO> rawmaterialOrderDTOs = new ArrayList<RawmaterialOrderDTO>();
+		List<Rawmaterialorder> rawmaterialorders = rawmaterialorderDao.getRawmaterialorderByStatusId(statusId,statusId1,statusId2);
+		for (Rawmaterialorder rawmaterialorder : rawmaterialorders) {
+			RawmaterialOrderDTO rawmaterialOrderDTO = RMOrderRequestResponseFactory.setRMOrderDTO(rawmaterialorder);
+			rawmaterialOrderDTOs.add(rawmaterialOrderDTO);
+		}
+		return rawmaterialOrderDTOs;
 	}
 
 	@Override
-	public List<Rawmaterialorder> getRawmaterialorderByQualityCheckStatusId(
+	public List<RawmaterialOrderDTO> getRawmaterialorderByQualityCheckStatusId(
 			long statusId) throws Exception {
 		// TODO Auto-generated method stub
-		return rawmaterialorderDao.getRawmaterialorderByQualityCheckStatusId(statusId);
+		List<RawmaterialOrderDTO> rawmaterialOrderDTOs = new ArrayList<RawmaterialOrderDTO>();
+		List<Rawmaterialorder> rawmaterialorders = rawmaterialorderDao.getRawmaterialorderByQualityCheckStatusId(statusId);
+		for (Rawmaterialorder rawmaterialorder : rawmaterialorders) {
+			RawmaterialOrderDTO rawmaterialOrderDTO = RMOrderRequestResponseFactory.setRMOrderDTO(rawmaterialorder);
+			rawmaterialOrderDTOs.add(rawmaterialOrderDTO);
+		}
+		return rawmaterialOrderDTOs;
 	}
 
 	@Override
