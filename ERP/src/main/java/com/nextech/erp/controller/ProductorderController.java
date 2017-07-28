@@ -148,17 +148,17 @@ public class ProductorderController {
 		List<ProductOrderAssociationDTO> productOrderAssociationDTOs = productOrderDTO.getProductOrderAssociationDTOs();
 		
 		for(ProductOrderAssociationDTO productOrderAssociationDTO : productOrderAssociationDTOs){
-			List<Productrawmaterialassociation> productrawmaterialassociations = productRMAssoService.getProductRMAssoListByProductId(productOrderAssociationDTO.getProductId().getId());
-			for(Productrawmaterialassociation productrawmaterialassociation : productrawmaterialassociations){
+			List<ProductRMAssociationDTO> productrawmaterialassociations = productRMAssoService.getProductRMAssoListByProductId(productOrderAssociationDTO.getProductId().getId());
+			for(ProductRMAssociationDTO productrawmaterialassociation : productrawmaterialassociations){
 				long requiredQuantity = productrawmaterialassociation.getQuantity() * productOrderAssociationDTO.getQuantity();
-					if(rawMaterialQtyMap.containsKey(productrawmaterialassociation.getRawmaterial())){
-						long existingQuantity = rawMaterialQtyMap.get(productrawmaterialassociation.getRawmaterial());
-						rawMaterialQtyMap.put(productrawmaterialassociation.getRawmaterial().getId(), existingQuantity + requiredQuantity);
+					if(rawMaterialQtyMap.containsKey(productrawmaterialassociation.getRawmaterialId())){
+						long existingQuantity = rawMaterialQtyMap.get(productrawmaterialassociation.getRawmaterialId());
+						rawMaterialQtyMap.put(productrawmaterialassociation.getRawmaterialId().getId(), existingQuantity + requiredQuantity);
 					}else{
-						rawMaterialQtyMap.put(productrawmaterialassociation.getRawmaterial().getId(), requiredQuantity);
+						rawMaterialQtyMap.put(productrawmaterialassociation.getRawmaterialId().getId(), requiredQuantity);
 					}
-					if(!rmIds.contains(productrawmaterialassociation.getRawmaterial().getId())){
-						rmIds.add(productrawmaterialassociation.getRawmaterial().getId());
+					if(!rmIds.contains(productrawmaterialassociation.getRawmaterialId().getId())){
+						rmIds.add(productrawmaterialassociation.getRawmaterialId().getId());
 					}
 			}
 		}

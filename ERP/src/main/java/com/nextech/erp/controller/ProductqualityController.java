@@ -24,17 +24,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.dto.ProductQualityDTO;
-import com.nextech.erp.dto.ProductQualityPart;
-import com.nextech.erp.model.Dailyproduction;
-import com.nextech.erp.model.Product;
-import com.nextech.erp.model.Productinventory;
-import com.nextech.erp.model.Productinventoryhistory;
-import com.nextech.erp.model.Productionplanning;
-import com.nextech.erp.model.Productorderassociation;
-import com.nextech.erp.model.Productquality;
-import com.nextech.erp.model.Status;
+import com.nextech.erp.factory.ProductQualityRequestResponseFactory;
+import com.nextech.erp.newDTO.ProductOrderAssociationDTO;
+import com.nextech.erp.newDTO.ProductionPlanningDTO;
 import com.nextech.erp.service.DailyproductionService;
 import com.nextech.erp.service.ProductService;
 import com.nextech.erp.service.ProductinventoryService;
@@ -82,15 +75,15 @@ public class ProductqualityController {
 	DailyproductionService dailyproductionService;
 
 	@RequestMapping(value = "getQualityPendingListByDate/{date}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<Productionplanning> getProductionPlanDate1(@PathVariable("date") String date,HttpServletRequest request,HttpServletResponse response) {
-		List<Productionplanning> productionplanningsList = new ArrayList<Productionplanning>();
+	public @ResponseBody List<ProductionPlanningDTO> getProductionPlanDate1(@PathVariable("date") String date,HttpServletRequest request,HttpServletResponse response) {
+		List<ProductionPlanningDTO> productionplanningsList = new ArrayList<ProductionPlanningDTO>();
 		try {
-			List<Productionplanning> productionplannings = productionplanningService.getProductionplanByDate(DateUtil.convertToDate(date));
-			for (Productionplanning productionplanning : productionplannings) {
+			List<ProductionPlanningDTO> productionplannings = productionplanningService.getProductionplanByDate(DateUtil.convertToDate(date));
+			for (ProductionPlanningDTO productionplanning : productionplannings) {
 				boolean isProductRemaining = false;
-				List<Productorderassociation> productorderassociations = productorderassociationService.getIncompleteProductOrderAssoByProdutId(productionplanning.getProduct().getId());
+				List<ProductOrderAssociationDTO> productorderassociations = productorderassociationService.getIncompleteProductOrderAssoByProdutId(productionplanning.getProductId().getId());
 				if(productorderassociations !=null && !productorderassociations.isEmpty()){
-					for (Productorderassociation productorderassociation : productorderassociations) {
+					for (ProductOrderAssociationDTO productorderassociation : productorderassociations) {
 						if(productorderassociation.getRemainingQuantity() > 0){
 							isProductRemaining = true;
 							break;
@@ -114,14 +107,10 @@ public class ProductqualityController {
 			if (bindingResult.hasErrors()) {
 				return new UserStatus(0, bindingResult.getFieldError().getDefaultMessage());
 			}
+			//TODO product quality check save call
 			long userId = Long.parseLong(request.getAttribute("current_user").toString());
-			for(ProductQualityPart productQualityPart : productQualityDTO.getProductQualityParts()){
-				Productquality productquality = setProductquality(productQualityPart,userId);
-				productqualityService.addEntity(productquality);
-				updateProductionPlanningForQualityCheck(productquality,userId);
-				updateDailyProduction(productQualityPart,userId);
-			}
-
+			productqualityService.saveProductQuality(productQualityDTO, userId);
+			
 			return new UserStatus(1, "Productquality added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			System.out.println("Inside ConstraintViolationException");
@@ -145,14 +134,10 @@ public class ProductqualityController {
 			if (bindingResult.hasErrors()) {
 				return new UserStatus(0, bindingResult.getFieldError().getDefaultMessage());
 			}
+			//TODO Product quality check store
 			long userId = Long.parseLong(request.getAttribute("current_user").toString());
-			for(ProductQualityPart productQualityPart : productQualityDTO.getProductQualityParts()){
-				Productquality productquality = setProductquality(productQualityPart,userId);
-				Product product =  productService.getEntityById(Product.class, productquality.getProduct().getId());
-				addProductInventoryHistory(productquality.getGoodQuantity(), product, request, response);
-				updateProductInventory(productquality, product, request, response);
-				updateProductionPlanningForStore(productquality,userId);
-			}
+			productqualityService.qualityCheckStore(productQualityDTO, userId);
+			
 			return new UserStatus(1, "Productquality Store added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			cve.printStackTrace();
@@ -167,11 +152,11 @@ public class ProductqualityController {
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody Productquality getProductquality(@PathVariable("id") long id) {
-		Productquality productquality = null;
+	public @ResponseBody ProductQualityDTO getProductquality(@PathVariable("id") long id) {
+		ProductQualityDTO productquality = null;
 		try {
 
-			productquality = productqualityService.getEntityById(Productquality.class,id);
+			productquality = productqualityService.getProductQualityById(id);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -179,11 +164,9 @@ public class ProductqualityController {
 	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
-	public @ResponseBody UserStatus updateProductquality(@RequestBody Productquality productquality,HttpServletRequest request,HttpServletResponse response) {
+	public @ResponseBody UserStatus updateProductquality(@RequestBody ProductQualityDTO productQualityDTO,HttpServletRequest request,HttpServletResponse response) {
 		try {
-			productquality.setIsactive(true);
-			productquality.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-			productqualityService.updateEntity(productquality);
+			productqualityService.updateEntity(ProductQualityRequestResponseFactory.setproductQuality(productQualityDTO, request));
 			return new UserStatus(1, "Productquality update Successfully !");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -192,11 +175,11 @@ public class ProductqualityController {
 	}
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<Productquality> getProductquality() {
+	public @ResponseBody List<ProductQualityDTO> getProductquality() {
 
-		List<Productquality> productqualityList = null;
+		List<ProductQualityDTO> productqualityList = null;
 		try {
-			productqualityList = productqualityService.getEntityList(Productquality.class);
+			productqualityList = productqualityService.getProductQualityList();
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -209,9 +192,7 @@ public class ProductqualityController {
 	public @ResponseBody UserStatus deleteProductquality(@PathVariable("id") long id) {
 
 		try {
-			Productquality productquality = productqualityService.getEntityById(Productquality.class,id);
-			productquality.setIsactive(false);
-			productqualityService.updateEntity(productquality);
+			productqualityService.deleteproductQuality(id);
 			return new UserStatus(1, "Productquality deleted Successfully !");
 		} catch (Exception e) {
 			return new UserStatus(0, e.toString());
@@ -219,70 +200,4 @@ public class ProductqualityController {
 
 	}
 
-	private Productinventory updateProductInventory(Productquality productquality,Product product,HttpServletRequest request,HttpServletResponse response) throws Exception{
-		Productinventory productinventory =  productinventoryService.getProductinventoryByProductId(productquality.getProduct().getId());
-		if(productinventory != null){
-			productinventory.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-			productinventory.setQuantityavailable(productinventory.getQuantityavailable() + productquality.getGoodQuantity());
-			productinventoryService.updateEntity(productinventory);
-		}
-		return productinventory;
-	}
-
-	private void addProductInventoryHistory(long goodQuantity,Product product,HttpServletRequest request,HttpServletResponse response) throws Exception{
-		Productinventory productinventory =  productinventoryService.getProductinventoryByProductId(product.getId());
-		if(productinventory != null){
-			Productinventoryhistory productinventoryhistory = new Productinventoryhistory();
-			productinventoryhistory.setProductinventory(productinventory);
-			productinventoryhistory.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-			productinventoryhistory.setIsactive(true);
-			productinventoryhistory.setBeforequantity((int)productinventory.getQuantityavailable());
-			productinventoryhistory.setAfterquantity((int)(goodQuantity+productinventory.getQuantityavailable()));
-			productinventoryhistory.setStatus(statusService.getEntityById(Status.class, Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_RAW_MATERIAL_INVENTORY_ADD, null, null))));
-			productinventoryhistoryService.addEntity(productinventoryhistory);
-		}
-	}
-
-	private void updateProductionPlanningForQualityCheck(Productquality productquality,long userId) throws Exception {
-		Productionplanning productionplanning = productionplanningService.getEntityById(Productionplanning.class, productquality.getProductionplanning().getId());
-		productionplanning.setQualityPendingQuantity(productionplanning.getQualityPendingQuantity()-(productquality.getGoodQuantity() + productquality.getRejectedQuantity()));
-		productionplanning.setQualityCheckedQuantity(productionplanning.getQualityCheckedQuantity()+productquality.getGoodQuantity());
-		productionplanning.setFailQuantity(productionplanning.getFailQuantity() + productquality.getRejectedQuantity());
-		productionplanning.setUpdatedBy(userId);
-		productionplanningService.updateEntity(productionplanning);
-	}
-	
-
-	private void updateProductionPlanningForStore(Productquality productquality,long userId) throws Exception {
-		Productionplanning productionplanning = productionplanningService.getEntityById(Productionplanning.class, productquality.getProductionplanning().getId());
-		productionplanning.setQualityCheckedQuantity(productionplanning.getQualityCheckedQuantity()-productquality.getGoodQuantity());
-		productionplanning.setCompletedQuantity(productionplanning.getCompletedQuantity()+productquality.getGoodQuantity());
-		productionplanning.setUpdatedBy(userId);
-		if(productionplanning.getTargetQuantity() >= productionplanning.getCompletedQuantity()){
-			productionplanning.setStatus(statusService.getEntityById(Status.class,  Long.parseLong(messageSource.getMessage(ERPConstants.PROD_PLAN_COMPLETE, null, null))));
-		}
-		productionplanningService.updateEntity(productionplanning);
-	}
-
-	private Productquality setProductquality(ProductQualityPart productQualityPart,long userId) throws Exception {
-		Productquality productquality = new Productquality();
-		productquality.setProduct(productService.getEntityById(Product.class, productQualityPart.getProductId()));
-		productquality.setCheckQuantity(productQualityPart.getProductQuantity());
-		productquality.setProductionplanning(productionplanningService.getEntityById(Productionplanning.class, productQualityPart.getProductionPlanId()));
-		productquality.setGoodQuantity(productQualityPart.getPassQuantity());
-		productquality.setRejectedQuantity(productQualityPart.getFailQuantity());
-		productquality.setRemark(productQualityPart.getRemark());
-		productquality.setCreatedBy(userId);
-		productquality.setIsactive(true);
-		return productquality;
-	}
-
-	private void updateDailyProduction(ProductQualityPart productQualityPart,long userId) throws NumberFormatException, NoSuchMessageException, Exception {
-		List<Dailyproduction> dailyproductions = dailyproductionService.getDailyProdPendingForQualityCheckByPlanningId(productQualityPart.getProductionPlanId());
-		for (Dailyproduction dailyproduction : dailyproductions) {
-			dailyproduction.setStatus(statusService.getEntityById(Status.class, Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_QUALITY_CHECK_COMPLETE, null, null))));
-			dailyproduction.setUpdatedBy(userId);
-			dailyproduction.setUpdatedDate(new Timestamp(new Date().getTime()));
-		}
-	}
 }

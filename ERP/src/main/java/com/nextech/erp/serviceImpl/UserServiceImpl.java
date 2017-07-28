@@ -100,5 +100,13 @@ public class UserServiceImpl extends CRUDServiceImpl<User> implements UserServic
 		user.setIsactive(false);
 		userdao.update(user);
 	}
+
+	@Override
+	public UserDTO getUserDTOByUserId(String userId) throws Exception {
+		// TODO Auto-generated method stub
+		User user = userdao.getUserByUserId(userId);
+		UserDTO  userDTO = UserFactory.setUserList(user);
+		return userDTO;
+	}
 	
 }

@@ -45,10 +45,16 @@ ProductorderassociationDao productorderassociationDao;
 	}
 
 	@Override
-	public List<Productorderassociation> getIncompleteProductOrderAssoByProdutId(long productId)
+	public List<ProductOrderAssociationDTO> getIncompleteProductOrderAssoByProdutId(long productId)
 			throws Exception {
 		// TODO Auto-generated method stub
-		return productorderassociationDao.getIncompleteProductOrderAssoByProdutId(productId);
+		List<ProductOrderAssociationDTO> productOrderAssociationDTOs =  new ArrayList<ProductOrderAssociationDTO>();
+		List<Productorderassociation> productorderassociations = productorderassociationDao.getIncompleteProductOrderAssoByProdutId(productId);
+		for (Productorderassociation productorderassociation : productorderassociations) {
+			ProductOrderAssociationDTO productOrderAssociationDTO = ProductOrderAssoRequestResponseFactory.setProductOrderAssoDto(productorderassociation);
+			productOrderAssociationDTOs.add(productOrderAssociationDTO);
+		}
+		return productOrderAssociationDTOs;
 	}
 
 	@Override

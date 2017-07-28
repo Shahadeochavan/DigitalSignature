@@ -26,9 +26,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.dto.Mail;
 import com.nextech.erp.dto.ProductNewAssoicatedList;
+import com.nextech.erp.dto.ProductRMAssociationDTO;
 import com.nextech.erp.factory.ProductInventoryRequestResponseFactory;
 import com.nextech.erp.factory.ProductRequestResponseFactory;
-import com.nextech.erp.model.Productrawmaterialassociation;
 import com.nextech.erp.newDTO.NotificationDTO;
 import com.nextech.erp.newDTO.NotificationUserAssociatinsDTO;
 import com.nextech.erp.newDTO.ProductDTO;
@@ -168,7 +168,7 @@ public class ProductController {
 		try {
 			productList = productService.getProductList();
 			for(ProductDTO product : productList){
-				List<Productrawmaterialassociation> productrawmaterialassociations = productRMAssoService.getProductRMAssoListByProductId(product.getId());
+				List<ProductRMAssociationDTO> productrawmaterialassociations = productRMAssoService.getProductRMAssoListByProductId(product.getId());
 				if(productrawmaterialassociations==null){
 					ProductNewAssoicatedList productNewAssoicatedList = new ProductNewAssoicatedList();
 					productNewAssoicatedList.setId(product.getId());
@@ -189,7 +189,7 @@ public class ProductController {
 	public @ResponseBody UserStatus deleteProduct(@PathVariable("id") long id) {
 
 		try {
-			productService.getProductDTO(id);
+			productService.deleteProduct(id);
 			return new UserStatus(1, "Product deleted Successfully !");
 		} catch (Exception e) {
 			return new UserStatus(0, e.toString());

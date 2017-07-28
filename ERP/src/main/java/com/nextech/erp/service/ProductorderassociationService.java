@@ -15,7 +15,7 @@ public interface ProductorderassociationService extends CRUDService<Productorder
 	public List<Productorderassociation> getProductorderassociationByProdcutId(long pId) throws Exception;
 	public List<ProductOrderAssociationDTO> getProductorderassociationByOrderId(long orderId) throws Exception;
 
-	public List<Productorderassociation> getIncompleteProductOrderAssoByProdutId(long productId) throws Exception;
+	public List<ProductOrderAssociationDTO> getIncompleteProductOrderAssoByProdutId(long productId) throws Exception;
 
 	public Productionplanning getProductionPlanningforCurrentMonthByProductIdAndDate(long pId,Date date)throws Exception;
 

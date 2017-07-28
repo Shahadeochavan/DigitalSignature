@@ -9,25 +9,33 @@ import javax.servlet.http.HttpServletResponse;
 import com.nextech.erp.dto.ProductionPlan;
 import com.nextech.erp.model.Product;
 import com.nextech.erp.model.Productionplanning;
+import com.nextech.erp.newDTO.ProductDTO;
+import com.nextech.erp.newDTO.ProductionPlanningDTO;
 
 public interface ProductionplanningService extends CRUDService<Productionplanning>{
 
 	public Productionplanning getProductionPlanningforCurrentMonthByProductIdAndDate(long pId,Date date)throws Exception;
 
-	public List<Productionplanning> getProductionplanningByMonth(Date month) throws Exception;
+	public List<ProductionPlanningDTO> getProductionplanningByMonth(Date month) throws Exception;
 
 	public List<ProductionPlan> getProductionPlanForCurrentMonth() throws Exception;
 
-	public List<Productionplanning> updateProductionPlanByMonthYear(String month_year) throws Exception;
+	public List<ProductionPlanningDTO> updateProductionPlanByMonthYear(String month_year) throws Exception;
 
-	public List<Productionplanning> createProductionPlanMonthYear(List<Product> productList,String month_year,HttpServletRequest request,HttpServletResponse response) throws Exception;
+	public List<ProductionPlanningDTO> createProductionPlanMonthYear(List<ProductDTO> productList,String month_year,HttpServletRequest request,HttpServletResponse response) throws Exception;
 
 	public void updateProductionplanningForCurrentMonth(List<ProductionPlan> productionplanningList,HttpServletRequest request,HttpServletResponse response) throws Exception;
 
-	public Productionplanning getProductionplanByDateAndProductId(Date date,long pId)throws Exception;
+	public ProductionPlanningDTO getProductionplanByDateAndProductId(Date date,long pId)throws Exception;
 
-	public List<Productionplanning> getProductionplanByDate(Date date)throws Exception;
+	public List<ProductionPlanningDTO> getProductionplanByDate(Date date)throws Exception;
 
-	public List<Productionplanning> getProductionplanByProdutId(Date date,long productID)throws Exception;
+	public List<ProductionPlanningDTO> getProductionplanByProdutId(Date date,long productID)throws Exception;
+	
+	public List<ProductionPlanningDTO> getProductionPlanList() throws Exception;
+	
+	public ProductionPlanningDTO getProductionPlanById(long id)throws Exception;
+	
+	public void deleteProduction(long id)throws Exception;
 
 }

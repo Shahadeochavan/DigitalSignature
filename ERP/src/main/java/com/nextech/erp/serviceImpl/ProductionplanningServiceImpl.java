@@ -23,11 +23,15 @@ import com.nextech.erp.dao.ProductionplanningDao;
 import com.nextech.erp.dao.ProductorderassociationDao;
 import com.nextech.erp.dto.ProductProductionPlan;
 import com.nextech.erp.dto.ProductionPlan;
+import com.nextech.erp.factory.ProductionPlanningRequestResponseFactory;
 import com.nextech.erp.model.Product;
 import com.nextech.erp.model.Productinventory;
 import com.nextech.erp.model.Productionplanning;
 import com.nextech.erp.model.Productorderassociation;
 import com.nextech.erp.model.Status;
+import com.nextech.erp.newDTO.ProductDTO;
+import com.nextech.erp.newDTO.ProductOrderAssociationDTO;
+import com.nextech.erp.newDTO.ProductionPlanningDTO;
 import com.nextech.erp.service.ProductService;
 import com.nextech.erp.service.ProductinventoryService;
 import com.nextech.erp.service.ProductionplanningService;
@@ -70,15 +74,23 @@ public class ProductionplanningServiceImpl extends
 	}
 
 	@Override
-	public List<Productionplanning> getProductionplanningByMonth(
+	public List<ProductionPlanningDTO> getProductionplanningByMonth(
 			Date month) throws Exception {
 		// TODO Auto-generated method stub
-		return productionplanningDao.getProductionplanningByCurrentMonth(month);
+		List<ProductionPlanningDTO> productionPlanningDTOs =  new ArrayList<ProductionPlanningDTO>();
+		List<Productionplanning> productionplannings =  productionplanningDao.getProductionplanningByCurrentMonth(month);
+		for (Productionplanning productionplanning : productionplannings) {
+			ProductionPlanningDTO productionPlanningDTO = ProductionPlanningRequestResponseFactory.setProductionPlanningDTO(productionplanning);
+			productionPlanningDTOs.add(productionPlanningDTO);
+		}
+		return productionPlanningDTOs;
 	}
 	@Override
-	public Productionplanning getProductionplanByDateAndProductId(Date date,long pId) throws Exception {
+	public ProductionPlanningDTO getProductionplanByDateAndProductId(Date date,long pId) throws Exception {
 		// TODO Auto-generated method stub
-		return productionplanningDao.getProductionplanByDateAndProductId(date,pId);
+		Productionplanning productionplanning = productionplanningDao.getProductionplanByDateAndProductId(date,pId);
+		ProductionPlanningDTO productionPlanningDTO = ProductionPlanningRequestResponseFactory.setProductionPlanningDTO(productionplanning);
+		return productionPlanningDTO;
 	}
 	@Override
 	public List<ProductionPlan> getProductionPlanForCurrentMonth(
@@ -149,27 +161,35 @@ public class ProductionplanningServiceImpl extends
 	}
 
 	@Override
-	public List<Productionplanning> updateProductionPlanByMonthYear(
+	public List<ProductionPlanningDTO> updateProductionPlanByMonthYear(
 			String month_year) throws Exception {
 		// TODO Auto-generated method stub
-		return productionplanningDao.updateProductionPlanByMonthYear(month_year);
+		List<ProductionPlanningDTO> productionPlanningDTOs =  new ArrayList<ProductionPlanningDTO>();
+		List<Productionplanning> productionplannings =  productionplanningDao.updateProductionPlanByMonthYear(month_year);
+		for (Productionplanning productionplanning : productionplannings) {
+			ProductionPlanningDTO productionPlanningDTO = ProductionPlanningRequestResponseFactory.setProductionPlanningDTO(productionplanning);
+			productionPlanningDTOs.add(productionPlanningDTO);
+		}
+		return productionPlanningDTOs;
 	}
 
 	@Override
-	public List<Productionplanning> createProductionPlanMonthYear(
-			List<Product> productList,String month_year,HttpServletRequest request,HttpServletResponse response) throws Exception {
-		List<Productionplanning> productionPlanList = new ArrayList<Productionplanning>();
+	public List<ProductionPlanningDTO> createProductionPlanMonthYear(
+			List<ProductDTO> productList,String month_year,HttpServletRequest request,HttpServletResponse response) throws Exception {
+		List<ProductionPlanningDTO> productionPlanList = new ArrayList<ProductionPlanningDTO>();
 		Productionplanning productionplanning = null;
 		Calendar cal = Calendar.getInstance();
 
-		for (Iterator<Product> iterator = productList.iterator(); iterator.hasNext();) {
-			Product product = (Product) iterator.next();
+		for (Iterator<ProductDTO> iterator = productList.iterator(); iterator.hasNext();) {
+			ProductDTO productDTO = (ProductDTO) iterator.next();
+			Product product =  new Product();
+			product.setId(productDTO.getId());
 			cal.setTime(new Date());
 			cal.set(Calendar.DAY_OF_MONTH, 1);
 			int myMonth=cal.get(Calendar.MONTH);
 
 			while (myMonth==cal.get(Calendar.MONTH)) {
-				List<Productorderassociation> productorderassociations = productorderassociationService.getIncompleteProductOrderAssoByProdutId(product.getId());
+				List<ProductOrderAssociationDTO> productorderassociations = productorderassociationService.getIncompleteProductOrderAssoByProdutId(product.getId());
 				if(productorderassociations !=null&&!productorderassociations.isEmpty()){
 				productionplanning = new Productionplanning();
 				productionplanning.setProduct(product);
@@ -180,13 +200,15 @@ public class ProductionplanningServiceImpl extends
 				if (productorderassociationService.getProductionPlanningforCurrentMonthByProductIdAndDate(
 						productionplanning.getProduct().getId(),
 						productionplanning.getDate())== null){
-					productionplanningDao.add(productionplanning);
+				long id =	productionplanningDao.add(productionplanning);
+
 				} }else{
 					System.out.println("production plan already exit");
 
 				}
-
-				productionPlanList.add(productionplanning);
+				Productionplanning productionplanning2 = productionplanningDao.getById(Productionplanning.class, productionplanning.getId());
+				ProductionPlanningDTO productionPlanningDTO = ProductionPlanningRequestResponseFactory.setProductionPlanningDTO(productionplanning2);
+				productionPlanList.add(productionPlanningDTO);
 			  System.out.print("product : " + product.getId() +" Date :" + new SimpleDateFormat("dd-MM-yyyy").format(cal.getTime()));
 			  cal.add(Calendar.DAY_OF_MONTH, 1);
 			}
@@ -229,52 +251,58 @@ public class ProductionplanningServiceImpl extends
 
 		}
 	}
-/*
 	@Override
-	public void updateProductionplanningForCurrentDate(
-			List<ProductionPlan> productionplanningList,HttpServletRequest request,HttpServletResponse response) throws Exception {
-		Calendar cal = Calendar.getInstance();
-		for (Iterator<ProductionPlan> iterator = productionplanningList.iterator(); iterator
-				.hasNext();) {
-			ProductionPlan productionPlan = (ProductionPlan) iterator.next();
-			List<ProductProductionPlan> productProductionPlans = productionPlan.getProductProductionPlan();
-			for (Iterator<ProductProductionPlan> iterator2 = productProductionPlans.iterator(); iterator2
-					.hasNext();) {
-				ProductProductionPlan productProductionPlan = (ProductProductionPlan) iterator2
-						.next();
-				cal.setTime(productProductionPlan.getProductionDate());
-				cal.set(Calendar.HOUR, 0);
-				cal.set(Calendar.MINUTE, 0);
-				Date productionDateStart = cal.getTime();
-				cal.set(Calendar.SECOND, 0);
-				cal.set(Calendar.HOUR, 23);
-				cal.set(Calendar.MINUTE, 59);
-				cal.set(Calendar.SECOND, 59);
-				Date productionDateEnd = cal.getTime();
-				Productionplanning productionplanning = productionplanningDao.getProductionPlanningByDateAndProductId(productionDateStart, productionDateEnd, productionPlan.getProductId());
-				productionplanning.setAchivedQuantity(productProductionPlan.getAchived_quantity());
-				productionplanning.setDispatchQuantity(productProductionPlan.getDispatch_quantity());
-				productionplanning.setTargetQuantity(productProductionPlan.getTarget_quantity());
-				Productorderassociation productorderassociation = productorderassociationDao.getById(Productorderassociation.class, productionplanning.getProduct().getId());
-				System.out.println("productorderassociation quantity is"+productorderassociation.getQuantity());
-				productionplanning.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-				productionplanningDao.update(productionplanning);
-			}
-
-
-		}
-	}
-*/
-	@Override
-	public List<Productionplanning> getProductionplanByDate(Date date)
+	public List<ProductionPlanningDTO> getProductionplanByDate(Date date)
 			throws Exception {
-		return productionplanningDao.getProductionplanByDate(date);
+		List<ProductionPlanningDTO> productionPlanningDTOs =  new ArrayList<ProductionPlanningDTO>();
+		List<Productionplanning> productionplannings = productionplanningDao.getProductionplanByDate(date);
+		for (Productionplanning productionplanning : productionplannings) {
+			ProductionPlanningDTO productionPlanningDTO = ProductionPlanningRequestResponseFactory.setProductionPlanningDTO(productionplanning);
+			productionPlanningDTOs.add(productionPlanningDTO);
+		}
+		return productionPlanningDTOs;
 	}
 
 	@Override
-	public List<Productionplanning> getProductionplanByProdutId(Date date,long productID)
+	public List<ProductionPlanningDTO> getProductionplanByProdutId(Date date,long productID)
 			throws Exception {
 		// TODO Auto-generated method stub
-		return productionplanningDao.getProductionplanByProdutId(date,productID);
+		List<ProductionPlanningDTO> productionPlanningDTOs =  new ArrayList<ProductionPlanningDTO>();
+		List<Productionplanning> productionplannings = productionplanningDao.getProductionplanByProdutId(date,productID);
+		for (Productionplanning productionplanning : productionplannings) {
+			ProductionPlanningDTO productionPlanningDTO = ProductionPlanningRequestResponseFactory.setProductionPlanningDTO(productionplanning);
+			productionPlanningDTOs.add(productionPlanningDTO);
+		}
+		return productionPlanningDTOs;
+	}
+
+	@Override
+	public List<ProductionPlanningDTO> getProductionPlanList() throws Exception {
+		// TODO Auto-generated method stub
+		List<ProductionPlanningDTO> productionPlanningDTOs =  new ArrayList<ProductionPlanningDTO>();
+		List<Productionplanning> productionplannings = productionplanningDao.getList(Productionplanning.class);
+		for (Productionplanning productionplanning : productionplannings) {
+			ProductionPlanningDTO productionPlanningDTO = ProductionPlanningRequestResponseFactory.setProductionPlanningDTO(productionplanning);
+			productionPlanningDTOs.add(productionPlanningDTO);
+		}
+		return productionPlanningDTOs;
+	}
+
+	@Override
+	public ProductionPlanningDTO getProductionPlanById(long id)
+			throws Exception {
+		// TODO Auto-generated method stub
+		Productionplanning productionplanning = productionplanningDao.getById(Productionplanning.class, id);
+		ProductionPlanningDTO productionPlanningDTO = ProductionPlanningRequestResponseFactory.setProductionPlanningDTO(productionplanning);
+		return productionPlanningDTO;
+	}
+
+	@Override
+	public void deleteProduction(long id) throws Exception {
+		// TODO Auto-generated method stub
+		Productionplanning productionplanning = productionplanningDao.getById(Productionplanning.class, id);
+		productionplanning.setIsactive(false);
+		productionplanningDao.update(productionplanning);
+		
 	}
 }

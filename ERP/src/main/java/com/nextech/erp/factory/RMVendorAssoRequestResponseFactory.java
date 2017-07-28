@@ -32,6 +32,7 @@ public class RMVendorAssoRequestResponseFactory {
 	public static RMVendorAssociationDTO setRMVendorList(Rawmaterialvendorassociation rawmaterialvendorassociation){
 		RMVendorAssociationDTO rawAssociationDTO = new RMVendorAssociationDTO();
 		rawAssociationDTO.setActive(true);
+		rawAssociationDTO.setId(rawmaterialvendorassociation.getId());
 		rawAssociationDTO.setCreatedBy(rawmaterialvendorassociation.getCreatedBy());
 		rawAssociationDTO.setCreatedDate(rawmaterialvendorassociation.getCreatedDate());
 		rawAssociationDTO.setPricePerUnit(rawmaterialvendorassociation.getPricePerUnit());
@@ -40,6 +41,7 @@ public class RMVendorAssoRequestResponseFactory {
 		rawAssociationDTO.setUpdatedDate(rawmaterialvendorassociation.getUpdatedDate());
 		rawAssociationDTO.setUpdatedBy(rawmaterialvendorassociation.getUpdatedBy());
 		rawAssociationDTO.setVendorId(rawmaterialvendorassociation.getVendor());
+		rawAssociationDTO.setCreatedBy(rawmaterialvendorassociation.getCreatedBy());
 		return rawAssociationDTO;
 	}
 

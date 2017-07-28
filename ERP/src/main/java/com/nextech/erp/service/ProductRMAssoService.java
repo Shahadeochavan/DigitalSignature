@@ -12,7 +12,7 @@ public interface ProductRMAssoService extends CRUDService<Productrawmaterialasso
 
 	public Productrawmaterialassociation getPRMAssociationByPidRmid(long pid, long rid) throws Exception;
 
-	public List<Productrawmaterialassociation> getProductRMAssoListByProductId(long productID) throws Exception;
+	public List<ProductRMAssociationDTO> getProductRMAssoListByProductId(long productID) throws Exception;
 	
 	public List<Long> getProductList() throws Exception;
 	

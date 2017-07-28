@@ -19,9 +19,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.nextech.erp.constants.ERPConstants;
-import com.nextech.erp.model.Statustransition;
+import com.nextech.erp.factory.StatusTransitionRequestResponseFactory;
+import com.nextech.erp.newDTO.StatusTransitionDTO;
 import com.nextech.erp.service.StatustransitionService;
 import com.nextech.erp.status.UserStatus;
 
@@ -37,7 +37,7 @@ public class StatustransitionController {
 
 	@Transactional @RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addStatustransition(
-			@Valid @RequestBody Statustransition statustransition,
+			@Valid @RequestBody StatusTransitionDTO statusTransitionDTO,
 			BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			if (bindingResult.hasErrors()) {
@@ -45,11 +45,9 @@ public class StatustransitionController {
 						.getDefaultMessage());
 			}
 			if (statustransitionService
-					.getStatustransitionByEmail(statustransition
+					.getStatustransitionByEmail(statusTransitionDTO
 							.getIsNotificationEmail()) == null){
-				statustransition.setIsactive(true);
-				statustransition.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-				statustransitionService.addEntity(statustransition);
+				statustransitionService.addEntity(StatusTransitionRequestResponseFactory.setStatusTransitin(statusTransitionDTO, request));
 			}
 			else
 				return new UserStatus(1, messageSource.getMessage(ERPConstants.EMAIL_ALREADY_EXIT, null, null));
@@ -70,12 +68,11 @@ public class StatustransitionController {
 	}
 
 	@Transactional @RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody Statustransition getStatustransition(
+	public @ResponseBody StatusTransitionDTO getStatustransition(
 			@PathVariable("id") long id) {
-		Statustransition statustransition = null;
+		StatusTransitionDTO statustransition = null;
 		try {
-			statustransition = statustransitionService
-					.getEntityById(Statustransition.class, id);
+			statustransition = statustransitionService.getStatusTranstionbyId(id);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -84,11 +81,9 @@ public class StatustransitionController {
 
 	@Transactional @RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
 	public @ResponseBody UserStatus updateStatustransition(
-			@RequestBody Statustransition statustransition,HttpServletRequest request,HttpServletResponse response) {
+			@RequestBody StatusTransitionDTO statusTransitionDTO,HttpServletRequest request,HttpServletResponse response) {
 		try {
-			statustransition.setIsactive(true);
-			statustransition.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-			statustransitionService.updateEntity(statustransition);
+			statustransitionService.updateEntity(StatusTransitionRequestResponseFactory.setStatusTransitin(statusTransitionDTO, request));
 			return new UserStatus(1, "Statustransition update Successfully !");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -97,12 +92,11 @@ public class StatustransitionController {
 	}
 
 	@Transactional @RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<Statustransition> getStatustransition() {
+	public @ResponseBody List<StatusTransitionDTO> getStatustransition() {
 
-		List<Statustransition> statustransitionList = null;
+		List<StatusTransitionDTO> statustransitionList = null;
 		try {
-			statustransitionList = statustransitionService
-					.getEntityList(Statustransition.class);
+			statustransitionList = statustransitionService.getStatusTranstionList();
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -116,10 +110,7 @@ public class StatustransitionController {
 			@PathVariable("id") long id) {
 
 		try {
-			Statustransition statustransition = statustransitionService
-					.getEntityById(Statustransition.class, id);
-			statustransition.setIsactive(false);
-			statustransitionService.updateEntity(statustransition);
+			statustransitionService.deleteStatusTranstion(id);
 			return new UserStatus(1, "Statustransition deleted Successfully !");
 		} catch (Exception e) {
 			return new UserStatus(0, e.toString());

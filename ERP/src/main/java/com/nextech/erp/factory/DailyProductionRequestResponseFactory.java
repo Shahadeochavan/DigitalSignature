@@ -13,7 +13,7 @@ public class DailyProductionRequestResponseFactory {
 		dailyproduction.setId(dailyProductionPlanDTO.getId());
 		dailyproduction.setAchivedQuantity(dailyProductionPlanDTO.getAchivedQuantity());
 		Productionplanning productionplanning =  new Productionplanning();
-		productionplanning.setId(dailyProductionPlanDTO.getId());
+		productionplanning.setId(dailyProductionPlanDTO.getProductionPlanId());
 		dailyproduction.setProductionplanning(productionplanning);
 		dailyproduction.setRemark(dailyProductionPlanDTO.getRemark());
 		dailyproduction.setRepaired_quantity(dailyProductionPlanDTO.getRepairedQuantity());
@@ -44,7 +44,7 @@ public class DailyProductionRequestResponseFactory {
 		dailyProductionPlanDTO.setActive(true);
 		dailyProductionPlanDTO.setCreatedBy(dailyproduction.getCreatedBy());
 		dailyProductionPlanDTO.setId(dailyproduction.getId());
-		dailyProductionPlanDTO.setProductionPlanId(dailyproduction.getProductionplanning());
+		dailyProductionPlanDTO.setProductionPlanId(dailyproduction.getProductionplanning().getId());
 		dailyProductionPlanDTO.setRemark(dailyproduction.getRemark());
 		dailyProductionPlanDTO.setRepairedQuantity((int)dailyproduction.getRepaired_quantity());
 		dailyProductionPlanDTO.setTargetQuantity(dailyproduction.getTargetQuantity());
