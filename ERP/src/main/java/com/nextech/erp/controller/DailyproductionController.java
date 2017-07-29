@@ -21,14 +21,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.dto.DailyProductionPlanDTO;
 import com.nextech.erp.dto.TodaysProductionPlanDTO;
 import com.nextech.erp.factory.DailyProductionRequestResponseFactory;
-import com.nextech.erp.model.Dailyproduction;
-import com.nextech.erp.model.Productionplanning;
-import com.nextech.erp.model.Status;
 import com.nextech.erp.service.DailyproductionService;
 import com.nextech.erp.service.ProductService;
 import com.nextech.erp.service.ProductionplanningService;
@@ -61,15 +56,8 @@ public class DailyproductionController {
 			if (bindingResult.hasErrors()) {
 				return new UserStatus(0, bindingResult.getFieldError().getDefaultMessage());
 			}
-			for(DailyProductionPlanDTO dailyProductionPlanDTO : todaysProductionPlanDTO.getDailyProductionPlanDTOs()){
-				Dailyproduction dailyproduction = DailyProductionRequestResponseFactory.setDailyProduction(dailyProductionPlanDTO, request);
-				dailyproduction.setStatus(statusService.getEntityById(Status.class, Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_QUALITY_CHECK_PENDING, null, null))));
-		       	dailyproductionservice.addEntity(dailyproduction);
-		       	//TODO update production plan daily
-		       	//need not to change status every time. once it is changed don't execute below method.
-		       	//we will be marking production plan complete from store's call.
-		      	updateProductionPlan(dailyproduction, dailyProductionPlanDTO.getRepairedQuantity(), request, response);
-			}
+			//TODO save call daily production
+			dailyproductionservice.addDailyproduction(todaysProductionPlanDTO, request);
 			return new UserStatus(1, "Dailyproduction added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			System.out.println("Inside ConstraintViolationException");
@@ -132,13 +120,4 @@ public class DailyproductionController {
 		}
 	}
 	
-	private void updateProductionPlan(Dailyproduction dailyproduction,int repairedQuantity,HttpServletRequest request, HttpServletResponse response) throws Exception{
-		Productionplanning productionplanning = productionplanningService.getEntityById(Productionplanning.class, dailyproduction.getProductionplanning().getId());
-		productionplanning.setQualityPendingQuantity(productionplanning.getQualityPendingQuantity()+dailyproduction.getAchivedQuantity() + repairedQuantity);
-		productionplanning.setRepaired_quantity(productionplanning.getRepaired_quantity() + repairedQuantity);
-		productionplanning.setFailQuantity(productionplanning.getFailQuantity() >= repairedQuantity ? productionplanning.getFailQuantity() - repairedQuantity : productionplanning.getFailQuantity());
-		productionplanning.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-		productionplanning.setUpdatedDate(new Timestamp(new Date().getTime()));
-		productionplanningService.updateEntity(productionplanning);
-	}
 }

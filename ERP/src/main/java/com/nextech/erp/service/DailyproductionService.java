@@ -5,6 +5,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import com.nextech.erp.dto.DailyProductionPlanDTO;
+import com.nextech.erp.dto.TodaysProductionPlanDTO;
 import com.nextech.erp.model.Dailyproduction;
 
 public interface DailyproductionService extends CRUDService<Dailyproduction> {
@@ -16,6 +17,6 @@ public interface DailyproductionService extends CRUDService<Dailyproduction> {
 	
 	public void deleteDailyProduction(long id) throws Exception;
 	
-	public DailyProductionPlanDTO saveDailyProduction(DailyProductionPlanDTO dailyProductionPlanDTO,HttpServletRequest request)throws Exception;
+	public void addDailyproduction(TodaysProductionPlanDTO todaysProductionPlanDTO,HttpServletRequest request)throws Exception;
 	
 }

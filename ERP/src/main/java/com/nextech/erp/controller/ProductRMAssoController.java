@@ -110,7 +110,7 @@ public class ProductRMAssoController {
 			}
 		//	createMultipleRMAssociations(productRMAssociationDTO, request.getAttribute("current_user").toString());
 			
-			productRMAssoService.saveProductRMAsso(productRMAssociationDTO, request.getAttribute("current_user").toString());
+			productRMAssoService.createmultiple(productRMAssociationDTO, request.getAttribute("current_user").toString());
 
 			return new UserStatus(1, "Multiple Rawmaterialorder added Successfully !");
 		} catch (ConstraintViolationException cve) {
@@ -162,7 +162,7 @@ public class ProductRMAssoController {
 				//productRMAssoService.deleteEntity(Productrawmaterialassociation.class, productrawmaterialassociation.getId());
 				deleteProductrawmaterialassociation(productrawmaterialassociation.getId());
 			}
-			productRMAssoService.saveProductRMAsso(productRMAssociationDTO, request.getAttribute("current_user").toString());
+			productRMAssoService.createmultiple(productRMAssociationDTO, request.getAttribute("current_user").toString());
 
 			//createMultipleRMAssociations(productRMAssociationModel, request.getAttribute("current_user").toString());
 

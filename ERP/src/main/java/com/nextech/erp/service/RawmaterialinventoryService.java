@@ -7,7 +7,7 @@ import com.nextech.erp.model.Rawmaterialinventory;
 
 public interface RawmaterialinventoryService extends CRUDService<Rawmaterialinventory>{
 	
-	public Rawmaterialinventory getByRMId(long id) throws Exception;
+	public RMInventoryDTO getByRMId(long id) throws Exception;
 	
 	public RMInventoryDTO getRMInventoryById(long id) throws Exception;
 	

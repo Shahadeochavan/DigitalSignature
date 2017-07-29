@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 
@@ -59,6 +60,10 @@ public class Qualitycheckrawmaterial implements Serializable {
 	@ManyToOne
 	@JoinColumn(name="rmorderinvoiceid")
 	private Rawmaterialorderinvoice rawmaterialorderinvoice;
+	
+	
+	@Temporal(TemporalType.DATE)
+	private Date grnDate;
 
 	//bi-directional many-to-one association to Rawmaterialinventoryhistory
 	@JsonIgnore
@@ -223,5 +228,12 @@ public class Qualitycheckrawmaterial implements Serializable {
 	public void setPriceperunit(float priceperunit) {
 		this.priceperunit = priceperunit;
 	}
+	public Date getGrnDate() {
+		return grnDate;
+	}
+	public void setGrnDate(Date grnDate) {
+		this.grnDate = grnDate;
+	}
 
+	
 }

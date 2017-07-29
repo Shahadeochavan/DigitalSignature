@@ -29,6 +29,8 @@ import com.nextech.erp.dto.ProductNewAssoicatedList;
 import com.nextech.erp.dto.ProductRMAssociationDTO;
 import com.nextech.erp.factory.ProductInventoryRequestResponseFactory;
 import com.nextech.erp.factory.ProductRequestResponseFactory;
+import com.nextech.erp.model.Product;
+import com.nextech.erp.model.Productrawmaterialassociation;
 import com.nextech.erp.newDTO.NotificationDTO;
 import com.nextech.erp.newDTO.NotificationUserAssociatinsDTO;
 import com.nextech.erp.newDTO.ProductDTO;
@@ -163,12 +165,12 @@ public class ProductController {
 	@Transactional @RequestMapping(value = "/list/newProductRMAssociation", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody Response getNewProductRMAsso() {
 
-		List<ProductDTO> productList = null;
+		List<Product> productList = null;
 		List<ProductNewAssoicatedList> productNewAssoicatedLists = new ArrayList<ProductNewAssoicatedList>();
 		try {
-			productList = productService.getProductList();
-			for(ProductDTO product : productList){
-				List<ProductRMAssociationDTO> productrawmaterialassociations = productRMAssoService.getProductRMAssoListByProductId(product.getId());
+			productList = productService.getEntityList(Product.class);
+			for(Product product : productList){
+				List<Productrawmaterialassociation> productrawmaterialassociations = productRMAssoService.getProductRMAssoListByProductID(product.getId());
 				if(productrawmaterialassociations==null){
 					ProductNewAssoicatedList productNewAssoicatedList = new ProductNewAssoicatedList();
 					productNewAssoicatedList.setId(product.getId());

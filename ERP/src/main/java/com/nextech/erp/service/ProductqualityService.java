@@ -9,7 +9,7 @@ public interface ProductqualityService  extends CRUDService<Productquality>{
 	
 	public List<Productquality> getProductqualityListByProductId(long productId) throws Exception;
 	
-	public ProductQualityDTO saveProductQuality(ProductQualityDTO productQualityDTO,long userId)throws Exception;
+	public ProductQualityDTO addProductquality(ProductQualityDTO productQualityDTO,long userId)throws Exception;
 	
 	public void qualityCheckStore(ProductQualityDTO productQualityDTO,long userId) throws Exception;
 	

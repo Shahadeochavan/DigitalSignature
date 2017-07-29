@@ -15,11 +15,18 @@ import com.nextech.erp.dao.ClientDao;
 import com.nextech.erp.dao.ProductorderDao;
 import com.nextech.erp.dao.StatusDao;
 import com.nextech.erp.dto.ProductOrderDTO;
+import com.nextech.erp.dto.ProductOrderData;
 import com.nextech.erp.factory.ProductOrderRequestResponseFactory;
 import com.nextech.erp.model.Client;
 import com.nextech.erp.model.Productorder;
 import com.nextech.erp.model.Status;
+import com.nextech.erp.newDTO.ClientDTO;
+import com.nextech.erp.newDTO.ProductDTO;
+import com.nextech.erp.newDTO.ProductOrderAssociationDTO;
+import com.nextech.erp.service.ClientService;
+import com.nextech.erp.service.ProductService;
 import com.nextech.erp.service.ProductorderService;
+import com.nextech.erp.service.ProductorderassociationService;
 @Service
 public class ProductorderServiceImpl extends CRUDServiceImpl<Productorder> implements ProductorderService {
 
@@ -33,7 +40,16 @@ public class ProductorderServiceImpl extends CRUDServiceImpl<Productorder> imple
 	StatusDao statusDao;
 	
 	@Autowired
+	ClientService clientService;
+	
+	@Autowired
+	ProductService productService;
+	
+	@Autowired
 	private MessageSource messageSource;
+	
+	@Autowired
+	ProductorderassociationService productorderassociationService;
 	
 	@Override
 	public Productorder getProductorderByProductOrderId(long pOrderId)
@@ -42,16 +58,28 @@ public class ProductorderServiceImpl extends CRUDServiceImpl<Productorder> imple
 		return productorderDao.getProductorderByProductOrderId(pOrderId);
 	}
 	@Override
-	public List<Productorder> getPendingProductOrders(long statusId,long statusId1) {
-		return productorderDao.getPendingProductOrders(statusId,statusId1);
+	public List<ProductOrderDTO> getPendingProductOrders(long statusId,long statusId1) {
+		List<ProductOrderDTO> productOrderDTOs =  new ArrayList<ProductOrderDTO>();
+		List<Productorder> productorders = productorderDao.getPendingProductOrders(statusId,statusId1);
+		for (Productorder productorder : productorders) {
+			ProductOrderDTO productOrderDTO = ProductOrderRequestResponseFactory.setProductOrderDTO(productorder);
+			productOrderDTOs.add(productOrderDTO);
+		}
+		return productOrderDTOs;
 	}
 	@Override
-	public List<Productorder> getInCompleteProductOrder(long clientId,long statusId,long statusId1) {
+	public List<ProductOrderDTO> getInCompleteProductOrder(long clientId,long statusId,long statusId1) {
 		// TODO Auto-generated method stub
-		return productorderDao.getInCompleteProductOrder(clientId,statusId,statusId1);
+		List<ProductOrderDTO> productOrderDTOs =  new ArrayList<ProductOrderDTO>();
+		List<Productorder> productorders = productorderDao.getInCompleteProductOrder(clientId,statusId,statusId1);
+		for (Productorder productorder : productorders) {
+			ProductOrderDTO productOrderDTO = ProductOrderRequestResponseFactory.setProductOrderDTO(productorder);
+			productOrderDTOs.add(productOrderDTO);
+		}
+		return productOrderDTOs;
 	}
 	@Override
-	public ProductOrderDTO saveProductOrder(ProductOrderDTO productOrderDTO,
+	public ProductOrderDTO createMultiple(ProductOrderDTO productOrderDTO,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		// TODO Auto-generated method stub
@@ -93,5 +121,28 @@ public class ProductorderServiceImpl extends CRUDServiceImpl<Productorder> imple
 		productorder.setIsactive(false);
 		productorderDao.update(productorder);
 		
+	}
+	@Override
+	public List<ProductOrderData> createProductorderAsso(ProductOrderDTO productOrderDTO, HttpServletRequest request)
+			throws Exception {
+		// TODO Auto-generated method stub
+		List<ProductOrderAssociationDTO> productOrderAssociationDTOs = productOrderDTO.getProductOrderAssociationDTOs();
+		ClientDTO client = clientService.getClientDTOById(productOrderDTO.getClientId().getId());
+		if (productOrderAssociationDTOs != null&& !productOrderAssociationDTOs.isEmpty()) {
+			for (ProductOrderAssociationDTO productOrderAssociationDTO : productOrderAssociationDTOs) {
+				productorderassociationService.addEntity(ProductOrderRequestResponseFactory.setProductOrderAsso(productOrderDTO, productOrderAssociationDTO));
+			}
+		}
+		List<ProductOrderData> productOrderDatas = new ArrayList<ProductOrderData>();
+		for (ProductOrderAssociationDTO productOrderAssociationDTO : productOrderAssociationDTOs) {
+			ProductDTO product = productService.getProductDTO(productOrderAssociationDTO.getProductId().getId());
+			ProductOrderData productOrderData = new ProductOrderData();
+			productOrderData.setProductName(product.getName());
+			productOrderData.setQuantity(productOrderAssociationDTO.getQuantity());
+			productOrderData.setRate(product.getRatePerUnit());
+			productOrderData.setAmount(product.getRatePerUnit()*productOrderAssociationDTO.getQuantity());
+			productOrderDatas.add(productOrderData);
+		}
+		return productOrderDatas;
 	}
 }

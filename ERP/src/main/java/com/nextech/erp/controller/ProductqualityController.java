@@ -109,7 +109,7 @@ public class ProductqualityController {
 			}
 			//TODO product quality check save call
 			long userId = Long.parseLong(request.getAttribute("current_user").toString());
-			productqualityService.saveProductQuality(productQualityDTO, userId);
+			productqualityService.addProductquality(productQualityDTO, userId);
 			
 			return new UserStatus(1, "Productquality added Successfully !");
 		} catch (ConstraintViolationException cve) {

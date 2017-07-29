@@ -38,11 +38,8 @@ import com.nextech.erp.dto.Mail;
 import com.nextech.erp.dto.ProductOrderDTO;
 import com.nextech.erp.dto.ProductOrderData;
 import com.nextech.erp.dto.ProductRMAssociationDTO;
+import com.nextech.erp.dto.RMInventoryDTO;
 import com.nextech.erp.factory.ProductOrderRequestResponseFactory;
-import com.nextech.erp.model.Productorder;
-import com.nextech.erp.model.Productrawmaterialassociation;
-import com.nextech.erp.model.Rawmaterialinventory;
-import com.nextech.erp.model.Status;
 import com.nextech.erp.newDTO.ClientDTO;
 import com.nextech.erp.newDTO.NotificationDTO;
 import com.nextech.erp.newDTO.NotificationUserAssociatinsDTO;
@@ -104,7 +101,7 @@ public class ProductorderController {
 	RawmaterialinventoryService rawMaterialInventoryService;
 
 	@Transactional @RequestMapping(value = "/createmultiple", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus addMultipleProductorder(
+	public @ResponseBody UserStatus createMultiple(
 			@Valid @RequestBody ProductOrderDTO productOrderDTO,
 			BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
 		try {
@@ -114,7 +111,7 @@ public class ProductorderController {
 			}
 
 			// TODO save call product order
-	      ProductOrderDTO productOrderDTO2	=	productorderService.saveProductOrder(productOrderDTO, request, response);
+	      ProductOrderDTO productOrderDTO2	=	productorderService.createMultiple(productOrderDTO, request, response);
 
 			// TODO add product order association
 	        productOrderDTO.setId(productOrderDTO2.getId());
@@ -164,7 +161,7 @@ public class ProductorderController {
 		}
 		
 		for(Long rmId : rmIds){
-			Rawmaterialinventory rmInventory = rawMaterialInventoryService.getByRMId(rmId);
+			RMInventoryDTO rmInventory = rawMaterialInventoryService.getByRMId(rmId);
 			if(rmInventory != null){
 				long inventoryQuantity = rmInventory.getQuantityAvailable();
 				System.out.println(rmId + " Quantity Required : " + rawMaterialQtyMap.get(rmId) + " Inventory Quantity : " + inventoryQuantity);
@@ -201,13 +198,9 @@ public class ProductorderController {
 
 	@Transactional @RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
 	public @ResponseBody UserStatus updateProductorder(
-			@RequestBody Productorder productorder,HttpServletRequest request,HttpServletResponse response) {
+			@RequestBody ProductOrderDTO productOrderDTO,HttpServletRequest request,HttpServletResponse response) {
 		try {
-			productorder.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-			productorder.setIsactive(true);
-			productorder.setStatus(statusService.getEntityById(Status.class,
-					Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_NEW_PRODUCT_ORDER, null, null))));
-			productorderService.updateEntity(productorder);
+			productorderService.updateEntity(ProductOrderRequestResponseFactory.setProductOrder(productOrderDTO));
 			return new UserStatus(1, "Product Order update Successfully !");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -230,9 +223,9 @@ public class ProductorderController {
 	}
 
 	@Transactional @RequestMapping(value = "/pendingList", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<Productorder> getPendingsProductorders() {
+	public @ResponseBody List<ProductOrderDTO> getPendingsProductorders() {
 
-		List<Productorder> productorderList = null;
+		List<ProductOrderDTO> productorderList = null;
 		try {
 			// TODO afterwards you need to change it from properties.
 			productorderList = productorderService.getPendingProductOrders(Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_NEW_PRODUCT_ORDER, null, null)),
@@ -247,9 +240,9 @@ public class ProductorderController {
 
 
 	@Transactional @RequestMapping(value = "incompleteProductOrder/{CLIENT-ID}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<Productorder> getInCompleteProductOrder(@PathVariable("CLIENT-ID") long clientId) {
+	public @ResponseBody List<ProductOrderDTO> getInCompleteProductOrder(@PathVariable("CLIENT-ID") long clientId) {
 
-		List<Productorder> productorderList = null;
+		List<ProductOrderDTO> productorderList = null;
 		try {
 			// TODO afterwards you need to change it from properties.
 			productorderList = productorderService.getInCompleteProductOrder(clientId,Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_PRODUCT_ORDER_INCOMPLETE, null, null)),
@@ -276,23 +269,9 @@ public class ProductorderController {
 	}
 
 	private void addProductOrderAsso(ProductOrderDTO productOrderDTO,HttpServletRequest request,HttpServletResponse response) throws Exception {
-		List<ProductOrderAssociationDTO> productOrderAssociationDTOs = productOrderDTO.getProductOrderAssociationDTOs();
-		ClientDTO client = clientService.getClientDTOById(productOrderDTO.getClientId().getId());
-		if (productOrderAssociationDTOs != null&& !productOrderAssociationDTOs.isEmpty()) {
-			for (ProductOrderAssociationDTO productOrderAssociationDTO : productOrderAssociationDTOs) {
-				productorderassociationService.addEntity(ProductOrderRequestResponseFactory.setProductOrderAsso(productOrderDTO, productOrderAssociationDTO));
-			}
-		}
-		List<ProductOrderData> productOrderDatas = new ArrayList<ProductOrderData>();
-		for (ProductOrderAssociationDTO productOrderAssociationDTO : productOrderAssociationDTOs) {
-			ProductDTO product = productService.getProductDTO(productOrderAssociationDTO.getProductId().getId());
-			ProductOrderData productOrderData = new ProductOrderData();
-			productOrderData.setProductName(product.getName());
-			productOrderData.setQuantity(productOrderAssociationDTO.getQuantity());
-			productOrderData.setRate(product.getRatePerUnit());
-			productOrderData.setAmount(product.getRatePerUnit()*productOrderAssociationDTO.getQuantity());
-			productOrderDatas.add(productOrderData);
-		}
+
+		List<ProductOrderData> productOrderDatas =	productorderService.createProductorderAsso(productOrderDTO, request);
+		
 		//downloadPDF(request, response, productOrderDTO,productOrderDatas,client);
 	}
 	public void downloadPDF(HttpServletRequest request, HttpServletResponse response,ProductOrderDTO productOrderDTO,List<ProductOrderData> productOrderDatas,ClientDTO client) throws IOException {
@@ -322,7 +301,6 @@ public class ProductorderController {
 	}
 
 	private ByteArrayOutputStream convertPDFToByteArrayOutputStream(String fileName,ProductOrderDTO productOrderDTO) throws Exception {
-
 
 		StatusDTO status = statusService.getStatusById(productOrderDTO.getStatusId().getId());
 		NotificationDTO notificationDTO = notificationService.getNotificationDTOById(status.getId());

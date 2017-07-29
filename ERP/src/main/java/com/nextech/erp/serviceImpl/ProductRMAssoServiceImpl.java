@@ -41,9 +41,11 @@ public class ProductRMAssoServiceImpl extends CRUDServiceImpl<Productrawmaterial
 		// TODO Auto-generated method stub
 		List<ProductRMAssociationDTO> productRMAssociationDTOs = new ArrayList<ProductRMAssociationDTO>();
 		List<Productrawmaterialassociation> productrawmaterialassociations = productrmassDao.getProductRMAssoListByProductId(productID);
+		if (productrawmaterialassociations != null && !productrawmaterialassociations.isEmpty()) {
 		for (Productrawmaterialassociation productrawmaterialassociation : productrawmaterialassociations) {
 			ProductRMAssociationDTO productRMAssociationDTO = ProductRMAssoRequestResponseFactory.setProductRMAssoList(productrawmaterialassociation);
 			productRMAssociationDTOs.add(productRMAssociationDTO);
+		}
 		}
 		return productRMAssociationDTOs;
 	}
@@ -69,7 +71,7 @@ public class ProductRMAssoServiceImpl extends CRUDServiceImpl<Productrawmaterial
 	}
 
 	@Override
-	public ProductRMAssociationDTO saveProductRMAsso(ProductRMAssociationDTO productRMAssociationDTO,
+	public ProductRMAssociationDTO createmultiple(ProductRMAssociationDTO productRMAssociationDTO,
 			String currentUser) throws Exception {
 		// TODO Auto-generated method stub
 		for(ProductRMAssociationModelParts productRMAssociationModelParts : productRMAssociationDTO.getProductRMAssociationModelParts()){
@@ -78,7 +80,7 @@ public class ProductRMAssoServiceImpl extends CRUDServiceImpl<Productrawmaterial
 			productrawmaterialassociation.setCreatedBy(Long.parseLong(currentUser));
 			productrmassDao.add(productrawmaterialassociation);
 		}
-		return null;
+		return productRMAssociationDTO;
 	}
 	private Productrawmaterialassociation setMultipleRM(ProductRMAssociationModelParts productRMAssociationModelParts) throws Exception {
 		Productrawmaterialassociation productrawmaterialassociation = new Productrawmaterialassociation();
@@ -116,5 +118,12 @@ public class ProductRMAssoServiceImpl extends CRUDServiceImpl<Productrawmaterial
 		Productrawmaterialassociation productrawmaterialassociation = productrmassDao.getById(Productrawmaterialassociation.class, id);
 		productrawmaterialassociation.setIsactive(false);
 		productrmassDao.update(productrawmaterialassociation);
+	}
+
+	@Override
+	public List<Productrawmaterialassociation> getProductRMAssoListByProductID(
+			long productID) throws Exception {
+		// TODO Auto-generated method stub
+		return productrmassDao.getProductRMAssoListByProductId(productID);
 	}
 }

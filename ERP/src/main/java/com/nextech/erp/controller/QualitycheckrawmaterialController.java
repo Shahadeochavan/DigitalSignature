@@ -34,8 +34,6 @@ import com.nextech.erp.dto.StoreInDTO;
 import com.nextech.erp.exceptions.InvalidRMQuantityInQC;
 import com.nextech.erp.factory.QualityRequestResponseFactory;
 import com.nextech.erp.factory.StoreRequestResponseFactory;
-import com.nextech.erp.model.Notification;
-import com.nextech.erp.model.Notificationuserassociation;
 import com.nextech.erp.model.Qualitycheckrawmaterial;
 import com.nextech.erp.model.Rawmaterial;
 import com.nextech.erp.model.Rawmaterialinventory;
@@ -46,7 +44,6 @@ import com.nextech.erp.model.Rawmaterialorderhistory;
 import com.nextech.erp.model.Rawmaterialorderinvoice;
 import com.nextech.erp.model.Rmorderinvoiceintakquantity;
 import com.nextech.erp.model.Status;
-import com.nextech.erp.model.User;
 import com.nextech.erp.model.Vendor;
 import com.nextech.erp.newDTO.NotificationDTO;
 import com.nextech.erp.newDTO.NotificationUserAssociatinsDTO;
@@ -242,7 +239,7 @@ public class QualitycheckrawmaterialController {
 	}
 
 	private Rawmaterialinventory updateInventory(Qualitycheckrawmaterial qualitycheckrawmaterial,Rawmaterial rawmaterial,HttpServletRequest request,HttpServletResponse response) throws Exception{
-		Rawmaterialinventory rawmaterialinventory =  rawmaterialinventoryService.getByRMId(qualitycheckrawmaterial.getRawmaterial().getId());
+		Rawmaterialinventory rawmaterialinventory =  rawmaterialinventoryService.getEntityById(Rawmaterialinventory.class, qualitycheckrawmaterial.getRawmaterial().getId());
 		if(rawmaterialinventory == null){
 			rawmaterialinventory = new Rawmaterialinventory();
 			rawmaterialinventory.setRawmaterial(rawmaterial);

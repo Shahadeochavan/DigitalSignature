@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.nextech.erp.dao.RawmaterialinventoryDao;
+import com.nextech.erp.dto.ProductOrderDTO;
 import com.nextech.erp.dto.RMInventoryDTO;
 import com.nextech.erp.factory.RMInventoryRequestResponseFactory;
 import com.nextech.erp.model.Rawmaterialinventory;
@@ -19,8 +20,10 @@ public class RawmaterialinventoryServiceImpl extends CRUDServiceImpl<Rawmaterial
 	RawmaterialinventoryDao rawmaterialinventoryDao; 
 	
 	@Override
-	public Rawmaterialinventory getByRMId(long id) throws Exception {
-		return rawmaterialinventoryDao.getByRMId(id);
+	public RMInventoryDTO getByRMId(long id) throws Exception {
+		Rawmaterialinventory rawmaterialinventory = rawmaterialinventoryDao.getByRMId(id);
+		RMInventoryDTO rmInventoryDTO = RMInventoryRequestResponseFactory.setRMInvetoryDTO(rawmaterialinventory);
+		return rmInventoryDTO;
 	}
 
 	@Override

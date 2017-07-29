@@ -22,6 +22,7 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.nextech.erp.model.Client;
 import com.nextech.erp.model.Productorder;
+import com.nextech.erp.newDTO.ClientDTO;
 import com.nextech.erp.service.BomService;
 
 public class CreatePdfForDispatchProduct {
@@ -38,7 +39,7 @@ public class CreatePdfForDispatchProduct {
 	@Autowired
 	BomService bomService;
 
-	public Document createPDF(String file,Productorder productorder, List<DispatchProductDTO> dispatchProductDTOs,Client client,DispatchDTO dispatchDTO)
+	public Document createPDF(String file,ProductOrderDTO productorder, List<DispatchProductDTO> dispatchProductDTOs,ClientDTO client,DispatchDTO dispatchDTO)
 			throws Exception {
 
 		Document document = null;
@@ -114,7 +115,7 @@ public class CreatePdfForDispatchProduct {
 		}
 	}
 
-	private void createTable(Document document, List<DispatchProductDTO> dispatchProductDTOs,Productorder productorder)
+	private void createTable(Document document, List<DispatchProductDTO> dispatchProductDTOs,ProductOrderDTO productorder)
 			throws Exception {
 		
 		Paragraph paragraph = new Paragraph();

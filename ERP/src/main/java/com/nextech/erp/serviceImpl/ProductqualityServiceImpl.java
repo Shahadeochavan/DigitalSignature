@@ -63,7 +63,7 @@ public class ProductqualityServiceImpl extends CRUDServiceImpl<Productquality> i
 	}
 
 	@Override
-	public ProductQualityDTO saveProductQuality(ProductQualityDTO productQualityDTO,long userId) throws Exception {
+	public ProductQualityDTO addProductquality(ProductQualityDTO productQualityDTO,long userId) throws Exception {
 		// TODO Auto-generated method stub
 		for(ProductQualityPart productQualityPart : productQualityDTO.getProductQualityParts()){
 			Productquality productquality = setProductquality(productQualityPart,userId);
