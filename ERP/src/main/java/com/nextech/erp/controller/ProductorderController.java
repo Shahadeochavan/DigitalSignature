@@ -40,11 +40,13 @@ import com.nextech.erp.dto.ProductOrderData;
 import com.nextech.erp.dto.ProductRMAssociationDTO;
 import com.nextech.erp.dto.RMInventoryDTO;
 import com.nextech.erp.factory.ProductOrderRequestResponseFactory;
+import com.nextech.erp.model.Productrawmaterialassociation;
 import com.nextech.erp.newDTO.ClientDTO;
 import com.nextech.erp.newDTO.NotificationDTO;
 import com.nextech.erp.newDTO.NotificationUserAssociatinsDTO;
 import com.nextech.erp.newDTO.ProductDTO;
 import com.nextech.erp.newDTO.ProductOrderAssociationDTO;
+import com.nextech.erp.newDTO.RawMaterialDTO;
 import com.nextech.erp.newDTO.StatusDTO;
 import com.nextech.erp.newDTO.UserDTO;
 import com.nextech.erp.service.ClientService;
@@ -55,6 +57,7 @@ import com.nextech.erp.service.ProductRMAssoService;
 import com.nextech.erp.service.ProductService;
 import com.nextech.erp.service.ProductorderService;
 import com.nextech.erp.service.ProductorderassociationService;
+import com.nextech.erp.service.RawmaterialService;
 import com.nextech.erp.service.RawmaterialinventoryService;
 import com.nextech.erp.service.StatusService;
 import com.nextech.erp.service.UserService;
@@ -96,6 +99,9 @@ public class ProductorderController {
 	
 	@Autowired
 	ProductRMAssoService productRMAssoService;
+	
+	@Autowired
+	RawmaterialService rawmaterialService;
 	
 	@Autowired
 	RawmaterialinventoryService rawMaterialInventoryService;
@@ -340,16 +346,26 @@ public class ProductorderController {
 
 	@SuppressWarnings("unchecked")
 	private void mailSending(NotificationDTO notification,ProductOrderDTO productOrderDTO,ClientDTO client,String fileName) throws Exception{
+		long totalRMQuantity = 0;
 		List<ProductOrderAssociationDTO>  productorderassociations= productorderassociationService.getProductorderassociationByOrderId(productOrderDTO.getId());
 		List<ProductOrderData> productOrderDatas = new ArrayList<ProductOrderData>();
 		List<NotificationUserAssociatinsDTO> notificationUserAssociatinsDTOs  = notificationUserAssociationService.getNotificationUserAssociatinsDTOs(notification.getId());
 		for (ProductOrderAssociationDTO productorderassociation : productorderassociations) {
 			ProductDTO product = productService.getProductDTO(productorderassociation.getProductId().getId());
 			ProductOrderData productOrderData = new ProductOrderData();
-			productOrderData.setProductName(product.getName());
-			productOrderData.setQuantity(productorderassociation.getQuantity());
-			productOrderData.setRate(product.getRatePerUnit());
-			productOrderDatas.add(productOrderData);
+			//TODO to check rmaining quantity
+			if(productorderassociation.getRemainingQuantity()>0){
+			List<ProductRMAssociationDTO> productRMAssociationDTOs = productRMAssoService.getProductRMAssoList(product.getId());
+			for (ProductRMAssociationDTO productRMAssociationDTO : productRMAssociationDTOs) {	
+				RawMaterialDTO  rawMaterialDTO = rawmaterialService.getRMDTO(productRMAssociationDTO.getRawmaterialId().getId());
+			         productOrderData.setPartNumber(rawMaterialDTO.getPartNumber());
+		        	  productOrderData.setRmQuantity(productRMAssociationDTO.getQuantity());
+			          productOrderData.setProductName(product.getName());
+			          productOrderData.setQuantity(productorderassociation.getQuantity());
+			          productOrderData.setRate(product.getRatePerUnit());
+			          productOrderDatas.add(productOrderData);
+				  }
+			}
 		}
 		  Mail mail = new Mail();
 		  for (NotificationUserAssociatinsDTO notificationuserassociation : notificationUserAssociatinsDTOs) {
@@ -376,7 +392,32 @@ public class ProductorderController {
 	   	        model.put("address", client.getAddress());
 	   	        model.put("signature", "www.NextechServices.in");
 	   	        mail.setModel(model);
-	  
 		mailService.sendEmail(mail,notification);
 	}
+	
+	public void mailSendingToRMUser(List<ProductOrderData> productOrderDatas)throws Exception{
+		  Mail mail = new Mail();
+		  NotificationDTO  notificationDTO = notificationService.getNotificationDTOById(Long.parseLong(messageSource.getMessage(ERPConstants.VENDOR_UPDATE_SUCCESSFULLY, null, null)));
+		  List<NotificationUserAssociatinsDTO> notificationUserAssociatinsDTOs = notificationUserAssociationService.getNotificationUserAssociatinsDTOs(notificationDTO.getId());
+		  for (NotificationUserAssociatinsDTO notificationuserassociation : notificationUserAssociatinsDTOs) {
+			  UserDTO userDTO = userService.getUserDTO(notificationuserassociation.getUserId().getId());
+			  if(notificationuserassociation.getTo()==true){
+				  mail.setMailTo(userDTO.getEmailId()); 
+			  }else if(notificationuserassociation.getBcc()==true){
+				  mail.setMailBcc(userDTO.getEmailId());
+			  }else if(notificationuserassociation.getCc()==true){
+				  mail.setMailCc(userDTO.getEmailId());
+			  }
+			
+		}
+	        mail.setMailSubject(notificationDTO.getSubject());
+	        Map < String, Object > model = new HashMap < String, Object > ();
+	        model.put("productOrderDatas", productOrderDatas);
+	        model.put("location", "Pune");
+	        model.put("signature", "www.NextechServices.in");
+	        mail.setModel(model);
+		mailService.sendEmailWithoutPdF(mail, notificationDTO);
+	}
+	
+	
 }

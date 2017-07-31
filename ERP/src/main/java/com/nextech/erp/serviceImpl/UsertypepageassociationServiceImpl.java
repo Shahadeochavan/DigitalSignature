@@ -75,16 +75,17 @@ public class UsertypepageassociationServiceImpl extends CRUDServiceImpl<Usertype
 	}
 
 	@Override
-	public UserTypePageAssoDTO saveUserTypePageAsso(UserTypePageAssoDTO userTypePageAssoDTO, String currentUser)
+	public UserTypePageAssoDTO createMultiple(UserTypePageAssoDTO userTypePageAssoDTO, String currentUser)
 			throws Exception {
 		// TODO Auto-generated method stub
 		for(UserTypePageAssoPart userTypePageAssoPart : userTypePageAssoDTO.getUserTypePageAssoParts()){
-			Usertypepageassociation usertypepageassociation =  setMultiplePage(userTypePageAssoPart);
+			Usertypepageassociation usertypepageassociation =	 UserTypePageAssoFactory.setUserTypePageAss(userTypePageAssoDTO);
+			 usertypepageassociation =  setMultiplePage(userTypePageAssoPart);
 			usertypepageassociation.setUsertype(userTypeDao.getById(Usertype.class, userTypePageAssoDTO.getUsertypeId().getId()));
 			usertypepageassociation.setCreatedBy(Long.parseLong(currentUser));
 			usertypepageassociationDao.add(usertypepageassociation);
 		}
-		return null;
+		return userTypePageAssoDTO;
 	}
 	
 	private Usertypepageassociation setMultiplePage(UserTypePageAssoPart userTypePageAssoPart) throws Exception {
@@ -92,6 +93,13 @@ public class UsertypepageassociationServiceImpl extends CRUDServiceImpl<Usertype
 		usertypepageassociation.setPage(pageDao.getById(Page.class, userTypePageAssoPart.getPageId().getId()));
 		usertypepageassociation.setIsactive(true);
 		return usertypepageassociation;
+	}
+
+	@Override
+	public Usertypepageassociation getUserTypePageAssoByPageIduserTypeId(
+			long pageId, long userTypeId) throws Exception {
+		// TODO Auto-generated method stub
+		return usertypepageassociationDao.getUserTypePageAssoByPageIduserTypeId(pageId, userTypeId);
 	}
 
 }

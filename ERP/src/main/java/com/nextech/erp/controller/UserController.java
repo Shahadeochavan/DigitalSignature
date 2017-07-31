@@ -36,7 +36,6 @@ import com.nextech.erp.model.Report;
 import com.nextech.erp.model.Reportusertypeassociation;
 import com.nextech.erp.model.User;
 import com.nextech.erp.model.Usertype;
-import com.nextech.erp.model.Usertypepageassociation;
 import com.nextech.erp.newDTO.NotificationDTO;
 import com.nextech.erp.newDTO.NotificationUserAssociatinsDTO;
 import com.nextech.erp.newDTO.UserDTO;

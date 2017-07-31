@@ -17,6 +17,7 @@ import com.nextech.erp.factory.ProductRMAssoRequestResponseFactory;
 import com.nextech.erp.model.Product;
 import com.nextech.erp.model.Productrawmaterialassociation;
 import com.nextech.erp.model.Rawmaterial;
+import com.nextech.erp.newDTO.RawMaterialDTO;
 import com.nextech.erp.service.ProductRMAssoService;
 @Service
 public class ProductRMAssoServiceImpl extends CRUDServiceImpl<Productrawmaterialassociation> implements ProductRMAssoService {
@@ -126,4 +127,19 @@ public class ProductRMAssoServiceImpl extends CRUDServiceImpl<Productrawmaterial
 		// TODO Auto-generated method stub
 		return productrmassDao.getProductRMAssoListByProductId(productID);
 	}
+
+	@Override
+	public List<ProductRMAssociationDTO> getProductRMListByProductId(long rmId)
+			throws Exception {
+		// TODO Auto-generated method stub
+		List<ProductRMAssociationDTO> productRMAssociationDTOs =  new ArrayList<ProductRMAssociationDTO>();
+		List<Productrawmaterialassociation> productrawmaterialassociations = productrmassDao.getProductRMListByProductId(rmId);
+		for (Productrawmaterialassociation productrawmaterialassociation : productrawmaterialassociations) {
+			ProductRMAssociationDTO productRMAssociationDTO = ProductRMAssoRequestResponseFactory.setProductRMAssoList(productrawmaterialassociation);
+			productRMAssociationDTOs.add(productRMAssociationDTO);
+		}
+		return productRMAssociationDTOs;
+	}
+		
+
 }

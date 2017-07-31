@@ -5,6 +5,8 @@ public class ProductOrderData {
 	private long quantity;
 	private long rate;
 	private long amount;
+	private String partNumber;
+	private long rmQuantity;
 
 
 	public String getProductName() {
@@ -37,6 +39,23 @@ public class ProductOrderData {
 
 	public void setAmount(long amount) {
 		this.amount = amount;
+	}
+
+
+	public long getRmQuantity() {
+		return rmQuantity;
+	}
+
+	public void setRmQuantity(long rmQuantity) {
+		this.rmQuantity = rmQuantity;
+	}
+
+	public String getPartNumber() {
+		return partNumber;
+	}
+
+	public void setPartNumber(String partNumber) {
+		this.partNumber = partNumber;
 	}
 	
 

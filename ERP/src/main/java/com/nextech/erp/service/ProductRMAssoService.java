@@ -3,7 +3,6 @@ package com.nextech.erp.service;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
 
 import com.nextech.erp.dto.ProductRMAssociationDTO;
 import com.nextech.erp.model.Productrawmaterialassociation;
@@ -27,4 +26,6 @@ public interface ProductRMAssoService extends CRUDService<Productrawmaterialasso
 	public ProductRMAssociationDTO getProductRMAsooById(long Id) throws Exception;
 	
 	public void deleteProductRMAssoById(long id)throws Exception;
+	
+	public List<ProductRMAssociationDTO> getProductRMListByProductId(long rmId)throws Exception;
 }

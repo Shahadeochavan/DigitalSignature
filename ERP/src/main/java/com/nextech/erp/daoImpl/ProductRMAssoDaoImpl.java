@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.nextech.erp.dao.ProductRMAssoDao;
+import com.nextech.erp.dto.ProductRMAssociationDTO;
 import com.nextech.erp.model.Productrawmaterialassociation;
 
 @Repository
@@ -58,6 +59,19 @@ public class ProductRMAssoDaoImpl extends SuperDaoImpl<Productrawmaterialassocia
 		criteria.setProjection(Projections.distinct(Projections.property("product.id")));
 		criteria.add(Restrictions.eq("isactive", true));
 		return (List<Long>) (criteria.list().size() > 0 ? criteria.list() : null);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Productrawmaterialassociation> getProductRMListByProductId(long rmId)
+			throws Exception {
+		// TODO Auto-generated method stub
+		session = sessionFactory.getCurrentSession();
+		@SuppressWarnings("deprecation")
+		Criteria criteria = session.createCriteria(Productrawmaterialassociation.class);
+		criteria.add(Restrictions.eq("rawmaterial.id", rmId));
+		criteria.add(Restrictions.eq("isactive", true));
+		return (List<Productrawmaterialassociation>) (criteria.list().size() > 0 ? criteria.list() : null);
 	}
 }
 

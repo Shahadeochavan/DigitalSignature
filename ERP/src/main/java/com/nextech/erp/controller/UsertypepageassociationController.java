@@ -19,8 +19,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.nextech.erp.constants.ERPConstants;
+import com.nextech.erp.factory.RMVendorAssoRequestResponseFactory;
 import com.nextech.erp.factory.UserTypePageAssoFactory;
 import com.nextech.erp.newDTO.UserTypePageAssoDTO;
+import com.nextech.erp.newDTO.UserTypePageAssoPart;
 import com.nextech.erp.service.PageService;
 import com.nextech.erp.service.UserTypeService;
 import com.nextech.erp.service.UsertypepageassociationService;
@@ -43,7 +46,7 @@ public class UsertypepageassociationController {
 	private MessageSource messageSource;
 
 	@RequestMapping(value = "/createMultiple", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus addPageAss(
+	public @ResponseBody UserStatus createMultiple(
 			@Valid @RequestBody UserTypePageAssoDTO userTypePageAssoDTO,
 			BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
 		try {
@@ -51,7 +54,16 @@ public class UsertypepageassociationController {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
-			usertypepageassociationService.saveUserTypePageAsso(userTypePageAssoDTO, request.getAttribute("current_user").toString());
+			List<UserTypePageAssoPart> userTypePageAssoParts =	userTypePageAssoDTO.getUserTypePageAssoParts();
+			for (UserTypePageAssoPart userTypePageAssoPart : userTypePageAssoParts) {	
+			if (usertypepageassociationService.getUserTypePageAssoByPageIduserTypeId((userTypePageAssoPart.getPageId().getId()),userTypePageAssoDTO.getUsertypeId().getId()) == null){
+				usertypepageassociationService.createMultiple(userTypePageAssoDTO, request.getAttribute("current_user").toString());
+			}else{
+				return new UserStatus(2, messageSource.getMessage(ERPConstants.USERTYPE_PAGE_ASSOCITION_EXIT, null, null));
+			}
+			
+			}
+
 			//createMultiplePageAss(userTypePageAssoDTO, request.getAttribute("current_user").toString());
 			return new UserStatus(1,
 					"Usertypepageassociation added Successfully !");

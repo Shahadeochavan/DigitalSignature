@@ -23,6 +23,8 @@ public class ERPConstants {
     public static String USER_ID="userId";
     public static String CONTACT_NUMBER_EXIT="contactNumberXit";
     public static String PRODUCT_NAME="productName";
+    public static String QC_GUIDLINES_FOR_RM="QCGUIDLINESFORRM";
+    public static String QC_GUIDLINES_FOR_PRODUCT="QCGUIDLINESFORPRODCUT";
     public static String PART_NUMBER="partNumber";
     public static String CLIENT_UPDATE="updateClient";
     public static String CLIENT_DELETE="deleteClinet";
@@ -31,6 +33,7 @@ public class ERPConstants {
     public static String QC_RM_ORDER_NOT_FOUND="rmOrderNotFound";
     public static String PRODUCT_RM_ASSO_EXIT="productRMExit";
     public static String VENDOR_RM_ASSO_EXIT="vendorRMExit";
+    public static String USERTYPE_PAGE_ASSOCITION_EXIT="USER_TYPE_PAGE_ASSOCITION_EXIT";
     public static String PRODUCT_INVENTORY_ASSO_EXIT="productInventoryExit";
     public static String RAW_MATERIAL_INVENTORY="rawMaterialInventoryExit";
     public static String PRODUCT_DATE_EXIT="productDateExit";
@@ -69,6 +72,7 @@ public class ERPConstants {
    public static String STORE_OUT_COMPLETE="STORE_OUT_COMPLETE";
    public static String USER_ADD_NOTIFICATION="useraddNotification";
    public static String USER_UPDATE_NOTIFICATION="userupdateNotifiaction";
+   public static String RM_NOTIFICATION ="rmNotification";
 
 
 }

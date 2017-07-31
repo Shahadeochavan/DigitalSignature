@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.nextech.erp.dao.UsertypepageassociationDao;
+import com.nextech.erp.model.Rawmaterialvendorassociation;
 import com.nextech.erp.model.Usertypepageassociation;
 
 @Repository
@@ -44,6 +45,19 @@ public class UsertypepageassociationDaoImpl extends SuperDaoImpl<Usertypepageass
 		criteria.add(Restrictions.eq("page.id", pageId));
 		boolean hasAccess = (criteria.list().size() > 0 ?  true: false);
 		return hasAccess;
+	}
+
+	@Override
+	public Usertypepageassociation getUserTypePageAssoByPageIduserTypeId(
+			long pageId, long userTypeId) throws Exception {
+		// TODO Auto-generated method stub
+		session = sessionFactory.getCurrentSession();
+		@SuppressWarnings("deprecation")
+		Criteria criteria = session.createCriteria(Usertypepageassociation.class);
+		criteria.add(Restrictions.eq("page.id", pageId));
+		criteria.add(Restrictions.eq("usertype.id", userTypeId));
+		Usertypepageassociation rawmaterialorderassociation = (Usertypepageassociation) (criteria.list().size() > 0 ? criteria.list().get(0) : null);
+		return rawmaterialorderassociation;
 	}
 	
 }

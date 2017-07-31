@@ -72,6 +72,7 @@
 				<value>com.nextech.erp.model.Productquality</value>
 				<value>com.nextech.erp.model.Dispatch</value>
 				<value>com.nextech.erp.model.Rmtype</value>
+				<value>com.nextech.erp.model.Qualitycheckguideline</value>
 			</list>
 		</property>
 		<property name="hibernateProperties">
