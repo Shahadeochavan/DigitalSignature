@@ -121,4 +121,16 @@ public class QualityCheckGuidelineController {
 		}
 
 	}
+	
+	@RequestMapping(value = "QCGUIDLINES/{RMID}", method = RequestMethod.GET, headers = "Accept=application/json")
+	public @ResponseBody Qualitycheckguideline qcGuidlines(@PathVariable("RMID") long rmId) {
+		Qualitycheckguideline qualitycheckguideline = null;
+		try {
+			qualitycheckguideline = qualityCheckGuidelineService.getQCGuidlineByRMId(rmId);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return qualitycheckguideline;
+	}
 }

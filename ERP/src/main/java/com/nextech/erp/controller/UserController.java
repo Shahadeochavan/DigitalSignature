@@ -108,8 +108,10 @@ public class UserController {
 					return new UserStatus(2, messageSource.getMessage(
 							ERPConstants.CONTACT_NUMBER_EXIT, null, null));
 				}
-				userDTO.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-			userservice.addEntity(UserFactory.setUser(userDTO, request));
+				User user = UserFactory.setUser(userDTO, request);
+				user.setPassword(new com.nextech.erp.util.EncryptDecrypt().encrypt(userDTO.getPassword()));
+				user.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+			userservice.addEntity(user);
 			mailSending(userDTO, request, response);
 			return new UserStatus(1, "User added Successfully !");
 			} else {

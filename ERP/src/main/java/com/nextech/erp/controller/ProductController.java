@@ -1,11 +1,13 @@
 package com.nextech.erp.controller;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.persistence.PersistenceException;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -13,6 +15,7 @@ import javax.validation.Valid;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,9 +24,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.nextech.erp.constants.ERPConstants;
+import com.nextech.erp.dto.FileInfo;
 import com.nextech.erp.dto.Mail;
 import com.nextech.erp.dto.ProductNewAssoicatedList;
 import com.nextech.erp.dto.ProductRMAssociationDTO;
@@ -75,12 +81,15 @@ public class ProductController {
 	@Autowired
 	UserService userService;
 	
+	@Autowired
+	ServletContext context;
+	
 	@Autowired 
 	NotificationUserAssociationService notificationUserAssociationService;
 
 	@Transactional @RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addProduct(
-			@Valid @RequestBody ProductDTO productDTO, BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
+			@Valid @RequestBody ProductDTO productDTO, BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response, @RequestParam("file") MultipartFile inputFile) {
 		try {
 			if (bindingResult.hasErrors()) {
 				return new UserStatus(0, bindingResult.getFieldError()
@@ -95,6 +104,16 @@ public class ProductController {
 			} else {
 				return new UserStatus(0, messageSource.getMessage(ERPConstants.PART_NUMBER, null, null));
 			}
+			FileInfo fileInfo = new FileInfo();
+			HttpHeaders headers = new HttpHeaders();
+			String originalFilename = inputFile.getOriginalFilename();
+			File destinationFile = new File(context.getRealPath("/WEB-INF")
+					+ File.separator + originalFilename);
+			inputFile.transferTo(destinationFile);
+			fileInfo.setFileName(destinationFile.getPath());
+			fileInfo.setFileSize(inputFile.getSize());
+			Product product = ProductRequestResponseFactory.setProduct(productDTO, request);
+			product.setDesign(String.valueOf(destinationFile));
 		long id =	productService.addEntity(ProductRequestResponseFactory.setProduct(productDTO, request));
 		productDTO.setId(id);
 			addProductInventory(productDTO, Long.parseLong(request.getAttribute("current_user").toString()));
