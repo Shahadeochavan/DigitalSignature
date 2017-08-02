@@ -39,18 +39,16 @@ public class RawmaterialController {
 	@Autowired
 	private MessageSource messageSource;
 
-	@SuppressWarnings("null")
 	@ExceptionHandler(Exception.class)
 	@Transactional @RequestMapping(value = "/create", method = RequestMethod.POST)
 	public @ResponseBody UserStatus addRawmaterial(
 			@Valid @RequestBody RawMaterialDTO rawMaterialDTO, BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			if (bindingResult.hasErrors()) {
-				return new UserStatus(0, bindingResult.getFieldError()
-						.getDefaultMessage());
+				return new UserStatus(0, bindingResult.getFieldError().getDefaultMessage());
 			}
-		long id=	rawmaterialService.addEntity(RMRequestResponseFactory.setRawMaterial(rawMaterialDTO, request));
-		rawMaterialDTO.setId(id);
+			long id = rawmaterialService.addEntity(RMRequestResponseFactory.setRawMaterial(rawMaterialDTO, request));
+			rawMaterialDTO.setId(id);
 			addRMInventory(rawMaterialDTO, Long.parseLong(request.getAttribute("current_user").toString()));
 			return new UserStatus(1, messageSource.getMessage(ERPConstants.RAW_MATERAIL_ADD, null, null));
 		} catch (ConstraintViolationException cve) {
@@ -89,34 +87,27 @@ public class RawmaterialController {
 
 	@Transactional @RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody List<RawMaterialDTO> getRawmaterial() {
-
 		List<RawMaterialDTO> rawmaterialList = null;
 		try {
 			rawmaterialList = rawmaterialService.getRMList();
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		return rawmaterialList;
 	}
 
 	@Transactional @RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus deleteRawmaterial(@PathVariable("id") long id) {
-
 		try {
-
 			rawmaterialService.deleteRM(id);
 			return new UserStatus(1, messageSource.getMessage(ERPConstants.RAW_MATERAIL_DELETE, null, null));
 		} catch (Exception e) {
 			return new UserStatus(0, e.toString());
 		}
-
 	}
 
 	@Transactional @RequestMapping(value = "/getRMaterial/{VendorId}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody List<RMVendorAssociationDTO> getRawmaterialForVendor(@PathVariable("VendorId") long id) {
-
 		List<RMVendorAssociationDTO> rawmaterialvendorassociationList = null;
 		try {
 			rawmaterialvendorassociationList = rawmaterialService.getRawmaterialByVenodrId(id);
@@ -128,7 +119,6 @@ public class RawmaterialController {
 
 	@Transactional @RequestMapping(value = "/getRMForRMOrder/{RMOrderId}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody List<RawMaterialDTO> getRawmaterialForRMOrder(@PathVariable("RMOrderId") long id) {
-
 		List<RawMaterialDTO> rawmaterialList = null;
 		try {
 			rawmaterialList = rawmaterialService.getRawMaterialByRMOrderId(id);
@@ -137,13 +127,13 @@ public class RawmaterialController {
 		}
 		return rawmaterialList;
 	}
+
 	private void addRMInventory(RawMaterialDTO rawMaterialDTO,long userId) throws Exception{
 		rawmaterialinventoryService.addEntity(RMRequestResponseFactory.setRMIn(rawMaterialDTO));
 	}
 	
 	@Transactional @RequestMapping(value = "/getRMaterialList/{RMTypeId}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody List<RawMaterialDTO> getRawmaterialForRMType(@PathVariable("RMTypeId") long id) {
-
 		List<RawMaterialDTO> rawmaterialList = null;
 		try {
 			rawmaterialList = rawmaterialService.getRMByRMTypeId(id);

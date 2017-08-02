@@ -6,11 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -18,7 +14,6 @@ import javax.persistence.PersistenceException;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -115,7 +110,7 @@ public class DispatchController {
 	@Autowired
 	MailService mailService;
 
-
+	@Transactional
 	@RequestMapping(value = "/dispatchProducts", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus listDispatch(
 			@RequestBody DispatchDTO dispatchDTO, BindingResult bindingResult,
@@ -129,7 +124,7 @@ public class DispatchController {
 			ProductOrderDTO productorder = productorderService.getProductById(dispatchDTO.getOrderId());
 			ClientDTO client = clientService.getClientDTOById(productorder.getClientId().getId());
 			StatusDTO status = statusService.getStatusById(productorder.getStatusId().getId());
-		//	mailSending(productorder, request, response, client, status);
+			//mailSending(productorder, request, response, client, status);
 			downloadPDF(request, response, productorder, dispatchProductDTOs, client,dispatchDTO);
 			return new UserStatus(1, "Dispatch added Successfully !");
 		} catch (ConstraintViolationException cve) {
@@ -196,7 +191,7 @@ public class DispatchController {
 		}
 
 	}
-//TODO
+
 	private void mailSending(ProductOrderDTO productorder,HttpServletRequest request, HttpServletResponse response,ClientDTO client, StatusDTO status,String fileName,List<DispatchProductDTO> dispatchProductDTOs,DispatchDTO dispatchDTO) throws NumberFormatException,Exception {
 		Mail mail = new Mail();
 
@@ -261,7 +256,6 @@ public class DispatchController {
 		StatusDTO status = statusService.getStatusById(productorder.getStatusId().getId());
 		ClientDTO client = clientService.getClientDTOById(productorder.getClientId().getId());
 
-		//TODO mail sending
         mailSending(productorder, request, response, client, status, fileName,dispatchProductDTOs,dispatchDTO);
 
 		InputStream inputStream = null;

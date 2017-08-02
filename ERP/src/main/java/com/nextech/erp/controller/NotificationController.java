@@ -9,7 +9,6 @@ import javax.validation.Valid;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,9 +32,6 @@ public class NotificationController {
 	@Autowired
 	NotificationService notificationservice;
 	
-	@Autowired
-	private MessageSource messageSource;
-
 	@Transactional @RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addNotification(@Valid @RequestBody NotificationDTO notificationDTO,
 			BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {

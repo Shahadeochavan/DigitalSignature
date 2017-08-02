@@ -14,7 +14,6 @@ import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -71,15 +70,13 @@ public class RawmaterialinventoryController {
 			@Valid @RequestBody RMInventoryDTO rmInventoryDTO, BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			if (bindingResult.hasErrors()) {
-				return new UserStatus(0, bindingResult.getFieldError()
-						.getDefaultMessage());
+				return new UserStatus(0, bindingResult.getFieldError().getDefaultMessage());
 			}
 			if(rawmaterialinventoryService.getByRMId(rmInventoryDTO.getRawmaterialId().getId())==null){
 				rawmaterialinventoryService.addEntity(RMInventoryRequestResponseFactory.setRMInventory(rmInventoryDTO, request));
 			}
 			else
-				return new UserStatus(1, messageSource.getMessage(
-						ERPConstants.RAW_MATERIAL_INVENTORY, null, null));
+				return new UserStatus(1, messageSource.getMessage(ERPConstants.RAW_MATERIAL_INVENTORY, null, null));
 			return new UserStatus(1, "Rawmaterialinventory added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			cve.printStackTrace();
@@ -121,25 +118,22 @@ public class RawmaterialinventoryController {
 		List<RMInventoryDTO> rawmaterialinventoryList = null;
 		try {
 			rawmaterialinventoryList = rawmaterialinventoryService.getRMInventoryList();
-					
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		return rawmaterialinventoryList;
 	}
 
 	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus deleteRawmaterialinventory(@PathVariable("id") long id) {
-
 		try {
 			rawmaterialinventoryService.deleteRMInventory(id);
 			return new UserStatus(1, "Rawmaterialinventory deleted Successfully !");
 		} catch (Exception e) {
 			return new UserStatus(0, e.toString());
 		}
-
 	}
+
 	//@Scheduled(initialDelay=60000, fixedRate=60000)
 	public void executeSchedular() throws Exception{
 		List<RMInventoryDTO> rawmaterialinventoryList = null;
@@ -162,34 +156,31 @@ public class RawmaterialinventoryController {
 				mailSendingRMInventroy(rmInventoryDTOs);
 			}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 	}
 	
-	private void mailSendingRMInventroy(List<RMInventoryDTO> rmInventoryDTOs) throws Exception{
-		  Mail mail = new Mail();
-		  NotificationDTO  notificationDTO = notificationService.getNotificationDTOById(Long.parseLong(messageSource.getMessage(ERPConstants.RM_INVENTORY_NOTIFICATION, null, null)));
-		  List<NotificationUserAssociatinsDTO> notificationUserAssociatinsDTOs = notificationUserAssociationService.getNotificationUserAssociatinsDTOs(notificationDTO.getId());
-		  for (NotificationUserAssociatinsDTO notificationuserassociation : notificationUserAssociatinsDTOs) {
-			  UserDTO userDTO = userService.getUserDTO(notificationuserassociation.getId());
-			  if(notificationuserassociation.getTo()==true){
-				  mail.setMailTo(userDTO.getEmailId()); 
-			  }else if(notificationuserassociation.getBcc()==true){
-				  mail.setMailBcc(userDTO.getEmailId());
-			  }else if(notificationuserassociation.getCc()==true){
-				  mail.setMailCc(userDTO.getEmailId());
-			  }
-			
+	private void mailSendingRMInventroy(List<RMInventoryDTO> rmInventoryDTOs) throws Exception {
+		Mail mail = new Mail();
+		NotificationDTO notificationDTO = notificationService.getNotificationDTOById(Long.parseLong(messageSource.getMessage(ERPConstants.RM_INVENTORY_NOTIFICATION, null, null)));
+		List<NotificationUserAssociatinsDTO> notificationUserAssociatinsDTOs = notificationUserAssociationService.getNotificationUserAssociatinsDTOs(notificationDTO.getId());
+		for (NotificationUserAssociatinsDTO notificationuserassociation : notificationUserAssociatinsDTOs) {
+			UserDTO userDTO = userService.getUserDTO(notificationuserassociation.getId());
+			if (notificationuserassociation.getTo() == true) {
+				mail.setMailTo(userDTO.getEmailId());
+			} else if (notificationuserassociation.getBcc() == true) {
+				mail.setMailBcc(userDTO.getEmailId());
+			} else if (notificationuserassociation.getCc() == true) {
+				mail.setMailCc(userDTO.getEmailId());
+			}
 		}
-	        mail.setMailSubject(notificationDTO.getSubject());
-	        Map < String, Object > model = new HashMap < String, Object > ();
-	        model.put("firstName", "Prashant");
-	        model.put("rmInventoryDTOs", rmInventoryDTOs);
-	        model.put("location", "Pune");
-	        model.put("signature", "www.NextechServices.in");
-	        mail.setModel(model);
+		mail.setMailSubject(notificationDTO.getSubject());
+		Map<String, Object> model = new HashMap<String, Object>();
+		model.put("firstName", "Prashant");
+		model.put("rmInventoryDTOs", rmInventoryDTOs);
+		model.put("location", "Pune");
+		model.put("signature", "www.NextechServices.in");
+		mail.setModel(model);
 		mailService.sendEmailWithoutPdF(mail, notificationDTO);
 	}
 }

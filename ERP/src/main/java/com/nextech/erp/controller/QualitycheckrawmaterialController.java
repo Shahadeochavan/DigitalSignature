@@ -195,9 +195,7 @@ public class QualitycheckrawmaterialController {
 		}
 	}
 
-
 	private void updateRawMaterialOrderStatus(Rawmaterialorder rawmaterialorder) throws Exception{
-
 		rawmaterialorder.setStatus(statusService.getEntityById(Status.class, getOrderStatus(rawmaterialorder)));
 		rawmaterialorderService.updateEntity(rawmaterialorder);
 	}
@@ -215,7 +213,6 @@ public class QualitycheckrawmaterialController {
 				isOrderComplete = false;
 				break;
 			}
-
 		}
 		return isOrderComplete ? STATUS_RAW_MATERIAL_ORDER_COMPLETE : STATUS_RAW_MATERIAL_ORDER_INCOMPLETE;
 	}
@@ -256,6 +253,7 @@ public class QualitycheckrawmaterialController {
 		}
 		return rawmaterialinventory;
 	}
+	
 	private void  updateRMOrderRemainingQuantity(QualityCheckRMDTO qualityCheckRMDTO ,Rawmaterialorder rawmaterialorder,HttpServletRequest request,HttpServletResponse response) throws InvalidRMQuantityInQC,Exception{
 		Rawmaterialorderassociation rawmaterialorderassociation = rawmaterialorderassociationService.getRMOrderRMAssociationByRMOrderIdandRMId(rawmaterialorder.getId(),qualityCheckRMDTO.getId());
 		if(rawmaterialorderassociation.getRemainingQuantity()-qualityCheckRMDTO.getGoodQuantity() >= 0){
@@ -292,6 +290,7 @@ public class QualitycheckrawmaterialController {
 		rawmaterialorderhistory.setCreatedBy(3);
 		rawmaterialorderhistoryService.addEntity(rawmaterialorderhistory);
 	}
+	
 	private void updateRMIdQuantityMap(long rmId,long quantity){
 		if(rmIdQuantityMap == null){
 			rmIdQuantityMap = new HashMap<Long, Long>();
@@ -299,6 +298,7 @@ public class QualitycheckrawmaterialController {
 		rmIdQuantityMap.put(rmId, quantity);
 
 	}
+	
 	@RequestMapping(value = "listrm/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody List<QualityCheckRMDTO> getRmorderinvoiceintakquantityByRMOInvoiceId(
 			@PathVariable("id") long id) {
@@ -330,6 +330,7 @@ public class QualitycheckrawmaterialController {
 		}
 		return storeInDTOs;
 	}
+	
 	private void mailSending(NotificationDTO notification,Vendor vendor,List<QualityCheckRMDTO> qualityCheckRMDTOs,Rawmaterialorder rawmaterialorder) throws Exception{
 		  Mail mail = new Mail();
 		  List<NotificationUserAssociatinsDTO> notificationUserAssociatinsDTOs = notificationUserAssociationService.getNotificationUserAssociatinsDTOs(notification.getId());
@@ -343,18 +344,16 @@ public class QualitycheckrawmaterialController {
 				  mail.setMailCc(user.getEmailId());
 			  }
 		}
-	        mail.setMailSubject(notification.getSubject());
-	        Map < String, Object > model = new HashMap < String, Object > ();
-	        model.put("firstName", vendor.getFirstName());
-	        model.put("qualityCheckRMDTOs", qualityCheckRMDTOs);
-	        model.put("address", vendor.getAddress());
-	        model.put("companyName", vendor.getCompanyName());
-	        model.put("lastName", vendor.getLastName());
-	        model.put("location", "Pune");
-	        model.put("signature", "www.NextechServices.in");
-	        mail.setModel(model);
-
+        mail.setMailSubject(notification.getSubject());
+        Map < String, Object > model = new HashMap < String, Object > ();
+        model.put("firstName", vendor.getFirstName());
+        model.put("qualityCheckRMDTOs", qualityCheckRMDTOs);
+        model.put("address", vendor.getAddress());
+        model.put("companyName", vendor.getCompanyName());
+        model.put("lastName", vendor.getLastName());
+        model.put("location", "Pune");
+        model.put("signature", "www.NextechServices.in");
+        mail.setModel(model);
 		mailService.sendEmailWithoutPdF(mail,notification);
 	}
-
 }

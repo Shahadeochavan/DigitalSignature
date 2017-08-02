@@ -9,7 +9,6 @@ import javax.validation.Valid;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.nextech.erp.factory.NotificationUserAssRequestResponseFactory;
 import com.nextech.erp.newDTO.NotificationUserAssociatinsDTO;
 import com.nextech.erp.service.NotificationUserAssociationService;
@@ -31,9 +31,6 @@ public class NotificationuserassociationController {
 	@Autowired
 	NotificationUserAssociationService notificationservice;
 	
-	@Autowired
-	private MessageSource messageSource;
-
 	@Transactional @RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addNotification(@Valid @RequestBody NotificationUserAssociatinsDTO notificationUserAssociatinsDTO,
 			BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {

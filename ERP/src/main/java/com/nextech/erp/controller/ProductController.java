@@ -26,7 +26,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.dto.Mail;
 import com.nextech.erp.dto.ProductNewAssoicatedList;
-import com.nextech.erp.dto.ProductRMAssociationDTO;
 import com.nextech.erp.factory.ProductInventoryRequestResponseFactory;
 import com.nextech.erp.factory.ProductRequestResponseFactory;
 import com.nextech.erp.model.Product;
@@ -201,7 +200,7 @@ public class ProductController {
 
 	private void addProductInventory(ProductDTO productDTO,long userId) throws Exception{
 		productinventoryService.addEntity(ProductInventoryRequestResponseFactory.setProductIn(productDTO));
-}
+	}
 	
 	private void mailSendingUpdate() throws Exception{
 		  Mail mail = new Mail();

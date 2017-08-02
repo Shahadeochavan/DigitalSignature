@@ -1,7 +1,5 @@
 package com.nextech.erp.controller;
 
-import java.sql.Timestamp;
-import java.util.Date;
 import java.util.List;
 
 import javax.persistence.PersistenceException;
@@ -11,7 +9,6 @@ import javax.validation.Valid;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
@@ -21,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.nextech.erp.dto.DailyProductionPlanDTO;
 import com.nextech.erp.dto.TodaysProductionPlanDTO;
 import com.nextech.erp.factory.DailyProductionRequestResponseFactory;
@@ -44,9 +42,6 @@ public class DailyproductionController {
 	StatusService statusService;
 	
 	@Autowired
-	private MessageSource messageSource;
-	
-	@Autowired
 	ProductionplanningService productionplanningService;
 
 	@RequestMapping(value = "/dailyproductionSave", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
@@ -56,7 +51,6 @@ public class DailyproductionController {
 			if (bindingResult.hasErrors()) {
 				return new UserStatus(0, bindingResult.getFieldError().getDefaultMessage());
 			}
-			//TODO save call daily production
 			dailyproductionservice.addDailyproduction(todaysProductionPlanDTO, request);
 			return new UserStatus(1, "Dailyproduction added Successfully !");
 		} catch (ConstraintViolationException cve) {

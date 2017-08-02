@@ -1,8 +1,6 @@
 package com.nextech.erp.controller;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.persistence.PersistenceException;
@@ -12,8 +10,6 @@ import javax.validation.Valid;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
-import org.springframework.context.NoSuchMessageException;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,9 +43,6 @@ import com.nextech.erp.util.DateUtil;
 public class ProductqualityController {
 	@Autowired
 	ProductqualityService productqualityService;
-
-	@Autowired
-	private MessageSource messageSource;
 
 	@Autowired
 	ProductinventoryService productinventoryService;
@@ -176,7 +169,6 @@ public class ProductqualityController {
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody List<ProductQualityDTO> getProductquality() {
-
 		List<ProductQualityDTO> productqualityList = null;
 		try {
 			productqualityList = productqualityService.getProductQualityList();
@@ -184,20 +176,16 @@ public class ProductqualityController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		return productqualityList;
 	}
 
 	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus deleteProductquality(@PathVariable("id") long id) {
-
 		try {
 			productqualityService.deleteproductQuality(id);
 			return new UserStatus(1, "Productquality deleted Successfully !");
 		} catch (Exception e) {
 			return new UserStatus(0, e.toString());
 		}
-
 	}
-
 }
