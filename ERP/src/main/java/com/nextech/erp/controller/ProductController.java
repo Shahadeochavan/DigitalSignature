@@ -1,6 +1,8 @@
 package com.nextech.erp.controller;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -8,15 +10,21 @@ import java.util.Map;
 
 import javax.persistence.PersistenceException;
 import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import org.apache.commons.fileupload.disk.DiskFileItem;
+import org.apache.commons.io.IOUtils;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
@@ -27,8 +35,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
+
+import java.io.File;  
+import java.io.FileOutputStream;  
+import java.io.IOException;  
+import java.io.InputStream;  
+import java.io.OutputStream;  
 
 import com.nextech.erp.constants.ERPConstants;
+import com.nextech.erp.constants.UploadImageConstants;
 import com.nextech.erp.dto.FileInfo;
 import com.nextech.erp.dto.Mail;
 import com.nextech.erp.dto.ProductNewAssoicatedList;
@@ -51,6 +67,7 @@ import com.nextech.erp.service.UserService;
 import com.nextech.erp.service.VendorService;
 import com.nextech.erp.status.Response;
 import com.nextech.erp.status.UserStatus;
+import com.nextech.erp.util.MockMultipartFile;
 
 @Controller
 @Transactional @RequestMapping("/product")
@@ -88,8 +105,7 @@ public class ProductController {
 	NotificationUserAssociationService notificationUserAssociationService;
 
 	@Transactional @RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus addProduct(
-			@Valid @RequestBody ProductDTO productDTO, BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response, @RequestParam("file") MultipartFile inputFile) {
+	public @ResponseBody UserStatus addProduct(@Valid @RequestBody ProductDTO productDTO, BindingResult bindingResult,HttpServletRequest request) {
 		try {
 			if (bindingResult.hasErrors()) {
 				return new UserStatus(0, bindingResult.getFieldError()
@@ -104,18 +120,21 @@ public class ProductController {
 			} else {
 				return new UserStatus(0, messageSource.getMessage(ERPConstants.PART_NUMBER, null, null));
 			}
-			FileInfo fileInfo = new FileInfo();
-			HttpHeaders headers = new HttpHeaders();
-			String originalFilename = inputFile.getOriginalFilename();
-			File destinationFile = new File(context.getRealPath("/WEB-INF")
-					+ File.separator + originalFilename);
-			inputFile.transferTo(destinationFile);
-			fileInfo.setFileName(destinationFile.getPath());
-			fileInfo.setFileSize(inputFile.getSize());
+			File file = new File(productDTO.getDesign());
+			
+			DiskFileItem fileItem = new DiskFileItem(productDTO.getDesign(), "image/png", false, file.getName(), (int) file.length(), file.getParentFile());
+			
+            fileItem.getOutputStream();
+            
+            FileInputStream input = new FileInputStream(productDTO.getDesign());
+            
+            MockMultipartFile multipartFile = new MockMultipartFile("fileItem", fileItem.getName(), "image/png", IOUtils.toByteArray(input));
+            
+            String destinationPath =   upload(multipartFile);
 			Product product = ProductRequestResponseFactory.setProduct(productDTO, request);
-			product.setDesign(String.valueOf(destinationFile));
-		long id =	productService.addEntity(ProductRequestResponseFactory.setProduct(productDTO, request));
-		productDTO.setId(id);
+			product.setDesign(destinationPath);
+		    long id =	productService.addEntity(product);
+	    	productDTO.setId(id);
 			addProductInventory(productDTO, Long.parseLong(request.getAttribute("current_user").toString()));
 			return new UserStatus(1, "product added Successfully !");
 		} catch (ConstraintViolationException cve) {
@@ -217,6 +236,21 @@ public class ProductController {
 		}
 
 	}
+	
+	@Transactional @RequestMapping(value = "DOWNLOAD-PRODUCT-IMAGE/{PRODUCT-ID}", method = RequestMethod.GET, headers = "Accept=application/json")
+	public @ResponseBody UserStatus getProductByproductId(@PathVariable("PRODUCT-ID") long productId,HttpServletRequest request) {
+		  InputStream inputStream = null;  
+		  OutputStream outputStream = null;  
+		try {
+			Product product = productService.getProductByProductId(productId);
+			 
+			         System.out.println("File downloaded at client successfully");
+
+			return new UserStatus(1, "Product Image download Successfully !",outputStream);
+		} catch (Exception e) {
+			return new UserStatus(0, e.toString());
+		}
+	}
 
 	private void addProductInventory(ProductDTO productDTO,long userId) throws Exception{
 		productinventoryService.addEntity(ProductInventoryRequestResponseFactory.setProductIn(productDTO));
@@ -243,5 +277,23 @@ public class ProductController {
 	        model.put("signature", "www.NextechServices.in");
 	        mail.setModel(model);
 		mailService.sendEmailWithoutPdF(mail, notificationDTO);
+	}
+	public String upload(MultipartFile inputFile) {
+				FileInfo fileInfo = new FileInfo();
+				String destinationPath ="";
+				HttpHeaders headers = new HttpHeaders();
+					try {
+						String originalFilename = inputFile.getOriginalFilename();
+						String fileName = UploadImageConstants.UPLOAD_IMAGE_PATH;
+						File destinationFile = new File((fileName)+ File.separator + originalFilename);
+						inputFile.transferTo(destinationFile);
+						fileInfo.setFileName(destinationFile.getPath());
+						fileInfo.setFileSize(inputFile.getSize());
+						headers.add("File Uploaded Successfully - ", originalFilename);
+						destinationPath = String.valueOf(destinationFile);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+	         return destinationPath;
 	}
 }

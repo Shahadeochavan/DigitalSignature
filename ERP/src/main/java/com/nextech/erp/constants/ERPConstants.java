@@ -73,6 +73,8 @@ public class ERPConstants {
    public static String USER_ADD_NOTIFICATION="useraddNotification";
    public static String USER_UPDATE_NOTIFICATION="userupdateNotifiaction";
    public static String RM_NOTIFICATION ="rmNotification";
+   
+   public static String UPLOAD_IMAGE="UPLOADIMAGE";
 
 
 }

@@ -1,5 +1,9 @@
 package com.nextech.erp.newDTO;
 
+import java.util.List;
+
+import org.springframework.web.multipart.MultipartFile;
+
 import com.nextech.erp.dto.AbstractDTO;
 
 
@@ -11,6 +15,7 @@ public class ProductDTO  extends AbstractDTO{
 	private String name;
 	private String partNumber;
 	private long ratePerUnit;
+	private List<MultipartFile> files;
 	public String getClientPartNumber() {
 		return clientPartNumber;
 	}
@@ -40,6 +45,12 @@ public class ProductDTO  extends AbstractDTO{
 	}
 	public void setRatePerUnit(long ratePerUnit) {
 		this.ratePerUnit = ratePerUnit;
+	}
+	public List<MultipartFile> getFiles() {
+		return files;
+	}
+	public void setFiles(List<MultipartFile> files) {
+		this.files = files;
 	}
 	
 

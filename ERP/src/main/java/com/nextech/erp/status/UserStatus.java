@@ -1,11 +1,15 @@
 package com.nextech.erp.status;
 
+import java.io.OutputStream;
+
 
 public class UserStatus {
 	private int code;
 	private String message;
 	private Object data;
 	private Object user;
+	
+	private OutputStream out;
 
 	public UserStatus() {
 	}
@@ -30,6 +34,12 @@ public class UserStatus {
 		this.data=data;
 	}
 	
+	public UserStatus(int i, String string, OutputStream outputStream) {
+		// TODO Auto-generated constructor stub
+		this.code=i;
+		this.message=string;
+		this.out=outputStream;
+	}
 	public int getCode() {
 		return code;
 	}
@@ -54,6 +64,12 @@ public class UserStatus {
 	}
 	public void setUser(Object user) {
 		this.user = user;
+	}
+	public OutputStream getOut() {
+		return out;
+	}
+	public void setOut(OutputStream out) {
+		this.out = out;
 	}
 
 

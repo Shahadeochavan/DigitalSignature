@@ -48,6 +48,7 @@ import com.nextech.erp.service.UserService;
 import com.nextech.erp.service.UserTypeService;
 import com.nextech.erp.service.UsertypepageassociationService;
 import com.nextech.erp.status.UserStatus;
+import com.nextech.erp.util.EncryptDecrypt;
 
 @RestController
 @RequestMapping("/user")
@@ -109,7 +110,7 @@ public class UserController {
 							ERPConstants.CONTACT_NUMBER_EXIT, null, null));
 				}
 				User user = UserFactory.setUser(userDTO, request);
-				user.setPassword(new com.nextech.erp.util.EncryptDecrypt().encrypt(userDTO.getPassword()));
+				user.setPassword(new EncryptDecrypt().encrypt(userDTO.getPassword()));
 				user.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			userservice.addEntity(user);
 			mailSending(userDTO, request, response);
@@ -185,14 +186,15 @@ public class UserController {
 	}
 
 	private boolean authenticate(User formUser, User dbUser) {
-		if (formUser.getUserid().equals(dbUser.getUserid())
-				&& formUser.getPassword().equals(dbUser.getPassword())) {
-			dbUser.getFirstName();
-			dbUser.getLastName();
+		EncryptDecrypt encDec = new EncryptDecrypt();
+		boolean password =formUser.getPassword().trim().equalsIgnoreCase(encDec.decrypt(dbUser.getPassword()));
+		if(password==true){
 			return true;
-		} else {
+		} 	
+		else {
 			return false;
 		}
+		
 
 	}
 
@@ -234,7 +236,9 @@ public class UserController {
 							ERPConstants.CONTACT_NUMBER_EXIT, null, null));
 				}
 			}
-		userservice.updateEntity(UserFactory.setUserUpdate(userDTO, request));
+			User user = UserFactory.setUserUpdate(userDTO, request);
+		 	user.setPassword(new com.nextech.erp.util.EncryptDecrypt().encrypt(userDTO.getPassword()));
+	     	userservice.updateEntity(user);
 		mailSendingUpdate(userDTO, request);
 		return new UserStatus(1, "User update Successfully !");
 		} catch (Exception e) {

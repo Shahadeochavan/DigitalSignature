@@ -11,5 +11,7 @@ public interface ProductDao extends SuperDao<Product>{
 	public Product getProductByPartNumber(String partnumber) throws Exception;
 
 	public List<Product> getProductList(List<Long> productIdList);
+	
+	public Product getProductByProductId(long productId) throws Exception;
 }
 

@@ -92,4 +92,10 @@ public class ProductServiceImpl extends CRUDServiceImpl<Product> implements Prod
 		productDao.update(product);
 		
 	}
+
+	@Override
+	public Product getProductByProductId(long productId) throws Exception {
+		// TODO Auto-generated method stub
+		return productDao.getProductByProductId(productId);
+	}
 }

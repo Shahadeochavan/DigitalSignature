@@ -21,4 +21,6 @@ public interface ProductService extends CRUDService<Product>{
 	public ProductDTO getProductDTO(long id) throws Exception;
 	
 	public void deleteProduct(long id) throws Exception;
+	
+	public Product getProductByProductId(long productId) throws Exception;
 }

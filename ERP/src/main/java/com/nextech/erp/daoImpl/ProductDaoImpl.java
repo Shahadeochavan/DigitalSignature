@@ -47,4 +47,16 @@ public class ProductDaoImpl extends SuperDaoImpl<Product> implements ProductDao 
 		return products;
 	}
 
+	@Override
+	public Product getProductByProductId(long productId) throws Exception {
+		// TODO Auto-generated method stub
+		session = sessionFactory.getCurrentSession();
+		@SuppressWarnings("deprecation")
+		Criteria criteria = session.createCriteria(Product.class);
+		criteria.add(Restrictions.eq("isactive", true));
+		criteria.add(Restrictions.eq("id", productId));
+		Product product = criteria.list().size() > 0 ? (Product) criteria.list().get(0) : null;
+		return product;
+	}
+
 }

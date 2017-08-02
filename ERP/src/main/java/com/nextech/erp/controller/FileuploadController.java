@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.nextech.erp.constants.UploadImageConstants;
 import com.nextech.erp.dto.FileInfo;
 
 @RestController
@@ -31,8 +32,8 @@ public class FileuploadController {
 		if (!inputFile.isEmpty()) {
 			try {
 				String originalFilename = inputFile.getOriginalFilename();
-				File destinationFile = new File(context.getRealPath("/WEB-INF")
-						+ File.separator + originalFilename);
+				String fileName = UploadImageConstants.UPLOAD_IMAGE_PATH;
+				File destinationFile = new File((fileName)+ File.separator + originalFilename);
 				inputFile.transferTo(destinationFile);
 				fileInfo.setFileName(destinationFile.getPath());
 				fileInfo.setFileSize(inputFile.getSize());
