@@ -29,6 +29,7 @@ public class RMRequestResponseFactory {
 		rawmaterial.setPartNumber(rawMaterialDTO.getPartNumber());
 		rawmaterial.setPricePerUnit(rawMaterialDTO.getPricePerUnit());
 		rawmaterial.setUnit(rawMaterialDTO.getUnitId());
+		rawmaterial.setRmtype(rawMaterialDTO.getRmTypeId());
 		rawmaterial.setIsactive(true);
 		rawmaterial.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 		return rawmaterial;

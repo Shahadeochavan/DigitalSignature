@@ -13,6 +13,6 @@ public interface PageService extends CRUDService<Page>{
 	
 	public PageDTO getPageDTOById(long id) throws Exception;
 	
-	public void getPageById(long id) throws Exception;
+	public void deletePageById(long id) throws Exception;
 	
 }

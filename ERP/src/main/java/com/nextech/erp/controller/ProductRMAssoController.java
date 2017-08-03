@@ -73,8 +73,7 @@ public class ProductRMAssoController {
 			BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			if (bindingResult.hasErrors()) {
-				return new UserStatus(0, bindingResult.getFieldError()
-						.getDefaultMessage());
+				return new UserStatus(0, bindingResult.getFieldError().getDefaultMessage());
 			}
 			if (productRMAssoService.getPRMAssociationByPidRmid(
 					productRMAssociationDTO.getProduct(),
@@ -82,10 +81,8 @@ public class ProductRMAssoController {
 				productRMAssoService.addEntity(ProductRMAssoRequestResponseFactory.setProductRMAsso(productRMAssociationDTO, request));
 			}
 			else
-				return new UserStatus(1,
-						messageSource.getMessage(ERPConstants.PRODUCT_RM_ASSO_EXIT, null, null));
-			return new UserStatus(1,
-					"Productrawmaterialassociation added Successfully !");
+				return new UserStatus(1,messageSource.getMessage(ERPConstants.PRODUCT_RM_ASSO_EXIT, null, null));
+			return new UserStatus(1,"Productrawmaterialassociation added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			System.out.println("Inside ConstraintViolationException");
 			cve.printStackTrace();
@@ -111,7 +108,6 @@ public class ProductRMAssoController {
 		//	createMultipleRMAssociations(productRMAssociationDTO, request.getAttribute("current_user").toString());
 			
 			productRMAssoService.createmultiple(productRMAssociationDTO, request.getAttribute("current_user").toString());
-
 			return new UserStatus(1, "Multiple Rawmaterialorder added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			System.out.println("Inside ConstraintViolationException");
@@ -163,9 +159,7 @@ public class ProductRMAssoController {
 				deleteProductrawmaterialassociation(productrawmaterialassociation.getId());
 			}
 			productRMAssoService.createmultiple(productRMAssociationDTO, request.getAttribute("current_user").toString());
-
 			//createMultipleRMAssociations(productRMAssociationModel, request.getAttribute("current_user").toString());
-
 			return new UserStatus(1,"Productrawmaterialassociation update Successfully !");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -175,21 +169,17 @@ public class ProductRMAssoController {
 
 	@Transactional @RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody List<ProductRMAssociationDTO> getProductrawmaterialassociation() {
-
 		List<ProductRMAssociationDTO> productrawmaterialassociationList = null;
 		try {
 			productrawmaterialassociationList = productRMAssoService.getProductRMAssoList();
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		return productrawmaterialassociationList;
 	}
 	
 	@Transactional @RequestMapping(value = "getRMVendorData/{productId}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody Response getRMVendorList(@PathVariable("productId") long productId) {
-
 		List<ProductRMAssociationDTO> productrawmaterialassociations = null;
 		List<RMVendorData> rmVendorDatas = new ArrayList<RMVendorData>();
 		try {
@@ -197,27 +187,23 @@ public class ProductRMAssoController {
 			for(ProductRMAssociationDTO productRMAssociationDTO : productrawmaterialassociations){
 				List<RMVendorAssociationDTO> rmVendorAssociationDTOs = RMVAssoService.getRawmaterialvendorassociationListByRMId(productRMAssociationDTO.getRawmaterialId().getId());
 				for(RMVendorAssociationDTO rawmaterialvendorassociation : rmVendorAssociationDTOs){
-						RMVendorData rawRmVendorData = new RMVendorData();
-						//Rawmaterial rawmaterial = rawmaterialService.getEntityById(Rawmaterial.class, productRMAssociationDTO.getRawmaterialId().getId());
-						VendorDTO vendor = vendorService.getVendorById(rawmaterialvendorassociation.getVendorId().getId());
-						//rawRmVendorData.setRawmaterial(rawmaterial);
-						rawRmVendorData.setVendor(vendor.getId());
-					//	rawRmVendorData.setQuantity(productrawmaterialassociation.getQuantity());
-						rmVendorDatas.add(rawRmVendorData);
+					RMVendorData rawRmVendorData = new RMVendorData();
+					//Rawmaterial rawmaterial = rawmaterialService.getEntityById(Rawmaterial.class, productRMAssociationDTO.getRawmaterialId().getId());
+					VendorDTO vendor = vendorService.getVendorById(rawmaterialvendorassociation.getVendorId().getId());
+					//rawRmVendorData.setRawmaterial(rawmaterial);
+					rawRmVendorData.setVendor(vendor.getId());
+				//	rawRmVendorData.setQuantity(productrawmaterialassociation.getQuantity());
+					rmVendorDatas.add(rawRmVendorData);
 				}
 			}
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		return new Response(1,"RMList and VendorList",rmVendorDatas);
 	}
 
 	@Transactional @RequestMapping(value = "/list/multiple", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody List<ProductRMAssociationDTO> getMultipleProductrawmaterialassociation() {
-
-
 		List<ProductRMAssociationDTO> productRMAssociationModels = new ArrayList<ProductRMAssociationDTO>();
 		try {
 			List<ProductRMAssociationDTO> productrawmaterialassociationList = null;
@@ -236,10 +222,9 @@ public class ProductRMAssoController {
 				productRMAssociationModelPart.setRawmaterial(productrawmaterialassociation.getRawmaterialId());
 				//productRMAssociationModelPart.setPartNumber(product.getPartNumber());
 				productRMAssociationModelParts.add(productRMAssociationModelPart);
-				
 				multplePRMAsso.put(productrawmaterialassociation.getProduct(), productRMAssociationModelParts);
 			}
-			 Set<Entry<Long, List<ProductRMAssociationModelParts>>> multplePRMAssoEntries =  multplePRMAsso.entrySet();
+			Set<Entry<Long, List<ProductRMAssociationModelParts>>> multplePRMAssoEntries =  multplePRMAsso.entrySet();
 			for(Entry<Long, List<ProductRMAssociationModelParts>> multplePRMAssoEntry : multplePRMAssoEntries){
 				ProductRMAssociationDTO productRMAssociationModel = new ProductRMAssociationDTO();
 				ProductDTO product = productService.getProductDTO( multplePRMAssoEntry.getKey());
@@ -249,11 +234,9 @@ public class ProductRMAssoController {
 				productRMAssociationModel.setProductRMAssociationModelParts(multplePRMAssoEntry.getValue());
 				productRMAssociationModels.add(productRMAssociationModel);
 			}
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		return productRMAssociationModels;
 	}
 
@@ -263,17 +246,14 @@ public class ProductRMAssoController {
 		List<ProductRMAssociationDTO> productrawmaterialassociationList = null;
 		try {
 			productrawmaterialassociationList = productRMAssoService.getProductRMAssoList(productId);
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		return new Response(1,"Productionplanning List and Productrawmaterialassociation List",productrawmaterialassociationList);
 	}
 	
 	@Transactional @RequestMapping(value = "getProductList", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody Response getProductList() {
-
 		List<Long> productIdList = new ArrayList<Long>();
 		List<ProductDTO> products = null;
 		try {
@@ -290,31 +270,21 @@ public class ProductRMAssoController {
 		}
 		return response;
 	}
-	
-	
 
 	@Transactional @RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus deleteProductrawmaterialassociation(
 			@PathVariable("id") long id) {
-
 		try {
-			//Productrawmaterialassociation productrawmaterialassociation = productRMAssoService.getEntityById(Productrawmaterialassociation.class, id);
-//			for (Productrawmaterialassociation productrawmaterialassociation2 : productrawmaterialassociation) {
-			//	productrawmaterialassociation.setIsactive(false);
 				productRMAssoService.deleteProductRMAssoById(id);
-//			}
-			
 			return new UserStatus(1,"Productrawmaterialassociation deleted Successfully !");
 		} catch (Exception e) {
 			return new UserStatus(0, e.toString());
 		}
-
 	}
 	
 	@Transactional @RequestMapping(value = "delete/multiple/{productId}", method = RequestMethod.DELETE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus deleteProductrawmaterialassociationByProductId(
 			@PathVariable("productId") long productId) {
-
 		try {
 			List<ProductRMAssociationDTO> productrawmaterialassociations = productRMAssoService.getProductRMAssoList(productId);
 			for(ProductRMAssociationDTO productrawmaterialassociation : productrawmaterialassociations){
@@ -322,12 +292,9 @@ public class ProductRMAssoController {
 				//productRMAssoService.deleteEntity(Productrawmaterialassociation.class, productrawmaterialassociation.getId());
 				deleteProductrawmaterialassociation(productrawmaterialassociation.getId());
 			}
-			
 			return new UserStatus(1,"Product Raw Material Associations deleted Successfully !");
 		} catch (Exception e) {
 			return new UserStatus(0, e.toString());
 		}
-
 	}
-
 }

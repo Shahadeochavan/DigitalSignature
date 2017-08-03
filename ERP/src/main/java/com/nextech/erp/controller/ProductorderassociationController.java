@@ -49,8 +49,7 @@ public class ProductorderassociationController {
 			@Valid @RequestBody ProductOrderAssociationDTO productOrderAssociationDTO, BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			if (bindingResult.hasErrors()) {
-				return new UserStatus(0, bindingResult.getFieldError()
-						.getDefaultMessage());
+				return new UserStatus(0, bindingResult.getFieldError().getDefaultMessage());
 			}
 			productorderassociationService.addEntity(ProductOrderAssoRequestResponseFactory.setProductPrderAsso(productOrderAssociationDTO, request));
 			return new UserStatus(1, "Productorderassociation added Successfully !");
@@ -92,19 +91,17 @@ public class ProductorderassociationController {
 
 	@Transactional @RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody List<ProductOrderAssociationDTO> getProductorderassociation() {
-
 		List<ProductOrderAssociationDTO> productorderassociationList = null;
 		try {
 			productorderassociationList = productorderassociationService.getProductOrderAssoList();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		return productorderassociationList;
 	}
+	
 	@Transactional @RequestMapping(value = "getProductOrderInventoryData/{orderId}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody Response getProductorderassociationList(@PathVariable("orderId") long orderId) {
-
 		List<ProductOrderAssociationDTO> productorderassociationList = null;
 		List<ProductOrderInventoryData> productOrderInventoryList = new ArrayList<ProductOrderInventoryData>();
 		try {
@@ -112,32 +109,28 @@ public class ProductorderassociationController {
 			for(ProductOrderAssociationDTO productorderassociation : productorderassociationList){
 				List<ProductInventoryDTO> productinventories = productinventoryService.getProductinventoryListByProductId(productorderassociation.getProductId().getId());
 				for(ProductInventoryDTO productinventory : productinventories){
-						ProductOrderInventoryData productOrderInventoryData = new ProductOrderInventoryData();
-						ProductDTO product = productService.getProductDTO(productorderassociation.getProductId().getId());
-						productOrderInventoryData.setPartNumber(product.getPartNumber());
-						productOrderInventoryData.setProductId(productinventory.getProductId().getId());
-						productOrderInventoryData.setAvailableQuantity(productinventory.getQuantityAvailable());
-						productOrderInventoryData.setRemainingQuantity(productorderassociation.getRemainingQuantity());
-						productOrderInventoryList.add(productOrderInventoryData);
+					ProductOrderInventoryData productOrderInventoryData = new ProductOrderInventoryData();
+					ProductDTO product = productService.getProductDTO(productorderassociation.getProductId().getId());
+					productOrderInventoryData.setPartNumber(product.getPartNumber());
+					productOrderInventoryData.setProductId(productinventory.getProductId().getId());
+					productOrderInventoryData.setAvailableQuantity(productinventory.getQuantityAvailable());
+					productOrderInventoryData.setRemainingQuantity(productorderassociation.getRemainingQuantity());
+					productOrderInventoryList.add(productOrderInventoryData);
 				}
 			}
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		return new Response(1,"ProductorderList and ProductInventoryList",productOrderInventoryList);
 	}
 
 	@Transactional @RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus deleteProductorderassociation(@PathVariable("id") long id) {
-
 		try {
 			productorderassociationService.deleteProductOrderAsso(id);
 			return new UserStatus(1, "Productorderassociation deleted Successfully !");
 		} catch (Exception e) {
 			return new UserStatus(0, e.toString());
 		}
-
 	}
 }

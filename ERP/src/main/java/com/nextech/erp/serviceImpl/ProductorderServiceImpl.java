@@ -145,4 +145,15 @@ public class ProductorderServiceImpl extends CRUDServiceImpl<Productorder> imple
 		}
 		return productOrderDatas;
 	}
+	@Override
+	public ProductOrderDTO updateMultiple(ProductOrderDTO productOrderDTO,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		// TODO Auto-generated method stub
+		Productorder productorder = ProductOrderRequestResponseFactory.setProductOrder(productOrderDTO);
+		productorder.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+		productorder.setStatus(statusDao.getById(Status.class,Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_NEW_PRODUCT_ORDER, null, null))));
+		productorderDao.update(productorder);
+		return productOrderDTO;
+	}
 }

@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.dto.Mail;
 import com.nextech.erp.dto.QualityCheckRMDTO;
+import com.nextech.erp.dto.RMInventoryDTO;
 import com.nextech.erp.dto.RawMaterialInvoiceDTO;
 import com.nextech.erp.dto.StoreInDTO;
 import com.nextech.erp.exceptions.InvalidRMQuantityInQC;
@@ -195,9 +196,7 @@ public class QualitycheckrawmaterialController {
 		}
 	}
 
-
 	private void updateRawMaterialOrderStatus(Rawmaterialorder rawmaterialorder) throws Exception{
-
 		rawmaterialorder.setStatus(statusService.getEntityById(Status.class, getOrderStatus(rawmaterialorder)));
 		rawmaterialorderService.updateEntity(rawmaterialorder);
 	}
@@ -215,7 +214,6 @@ public class QualitycheckrawmaterialController {
 				isOrderComplete = false;
 				break;
 			}
-
 		}
 		return isOrderComplete ? STATUS_RAW_MATERIAL_ORDER_COMPLETE : STATUS_RAW_MATERIAL_ORDER_INCOMPLETE;
 	}
@@ -234,14 +232,18 @@ public class QualitycheckrawmaterialController {
 		qualitycheckrawmaterial.setIntakeQuantity(qualityCheckRMDTO.getIntakeQuantity());
 		qualitycheckrawmaterial.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 		qualitycheckrawmaterial.setIsactive(true);
+		qualitycheckrawmaterial.setRemark(qualityCheckRMDTO.getRemark());
 		qualitycheckrawmaterialService.addEntity(qualitycheckrawmaterial);
 		return qualitycheckrawmaterial.getId();
 	}
 
+	@SuppressWarnings("unused")
 	private Rawmaterialinventory updateInventory(Qualitycheckrawmaterial qualitycheckrawmaterial,Rawmaterial rawmaterial,HttpServletRequest request,HttpServletResponse response) throws Exception{
-		Rawmaterialinventory rawmaterialinventory =  rawmaterialinventoryService.getEntityById(Rawmaterialinventory.class, qualitycheckrawmaterial.getRawmaterial().getId());
-		if(rawmaterialinventory == null){
-			rawmaterialinventory = new Rawmaterialinventory();
+		RMInventoryDTO rmInventoryDTO =  rawmaterialinventoryService.getByRMId(qualitycheckrawmaterial.getRawmaterial().getId());
+		Rawmaterialinventory	rawmaterialinventory = new Rawmaterialinventory();
+		rawmaterialinventory.setId(rmInventoryDTO.getId());
+		if(rmInventoryDTO == null){
+		
 			rawmaterialinventory.setRawmaterial(rawmaterial);
 			rawmaterialinventory.setIsactive(true);
 			rawmaterialinventory.setQuantityAvailable(qualitycheckrawmaterial.getGoodQuantity());
@@ -250,12 +252,14 @@ public class QualitycheckrawmaterialController {
 		}else{
 			rawmaterialinventory.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			rawmaterialinventory.setIsactive(true);
-			rawmaterialinventory.setQuantityAvailable(rawmaterialinventory.getQuantityAvailable()+qualitycheckrawmaterial.getGoodQuantity());
+			rawmaterialinventory.setRawmaterial(rmInventoryDTO.getRawmaterialId());
+			rawmaterialinventory.setQuantityAvailable(rmInventoryDTO.getQuantityAvailable()+qualitycheckrawmaterial.getGoodQuantity());
 			rawmaterialinventory.setUpdatedDate(new Timestamp(new Date().getTime()));
 			 rawmaterialinventoryService.updateEntity(rawmaterialinventory);
 		}
 		return rawmaterialinventory;
 	}
+	
 	private void  updateRMOrderRemainingQuantity(QualityCheckRMDTO qualityCheckRMDTO ,Rawmaterialorder rawmaterialorder,HttpServletRequest request,HttpServletResponse response) throws InvalidRMQuantityInQC,Exception{
 		Rawmaterialorderassociation rawmaterialorderassociation = rawmaterialorderassociationService.getRMOrderRMAssociationByRMOrderIdandRMId(rawmaterialorder.getId(),qualityCheckRMDTO.getId());
 		if(rawmaterialorderassociation.getRemainingQuantity()-qualityCheckRMDTO.getGoodQuantity() >= 0){
@@ -292,6 +296,7 @@ public class QualitycheckrawmaterialController {
 		rawmaterialorderhistory.setCreatedBy(3);
 		rawmaterialorderhistoryService.addEntity(rawmaterialorderhistory);
 	}
+	
 	private void updateRMIdQuantityMap(long rmId,long quantity){
 		if(rmIdQuantityMap == null){
 			rmIdQuantityMap = new HashMap<Long, Long>();
@@ -299,6 +304,7 @@ public class QualitycheckrawmaterialController {
 		rmIdQuantityMap.put(rmId, quantity);
 
 	}
+	
 	@RequestMapping(value = "listrm/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody List<QualityCheckRMDTO> getRmorderinvoiceintakquantityByRMOInvoiceId(
 			@PathVariable("id") long id) {
@@ -330,6 +336,7 @@ public class QualitycheckrawmaterialController {
 		}
 		return storeInDTOs;
 	}
+	
 	private void mailSending(NotificationDTO notification,Vendor vendor,List<QualityCheckRMDTO> qualityCheckRMDTOs,Rawmaterialorder rawmaterialorder) throws Exception{
 		  Mail mail = new Mail();
 		  List<NotificationUserAssociatinsDTO> notificationUserAssociatinsDTOs = notificationUserAssociationService.getNotificationUserAssociatinsDTOs(notification.getId());
@@ -343,18 +350,16 @@ public class QualitycheckrawmaterialController {
 				  mail.setMailCc(user.getEmailId());
 			  }
 		}
-	        mail.setMailSubject(notification.getSubject());
-	        Map < String, Object > model = new HashMap < String, Object > ();
-	        model.put("firstName", vendor.getFirstName());
-	        model.put("qualityCheckRMDTOs", qualityCheckRMDTOs);
-	        model.put("address", vendor.getAddress());
-	        model.put("companyName", vendor.getCompanyName());
-	        model.put("lastName", vendor.getLastName());
-	        model.put("location", "Pune");
-	        model.put("signature", "www.NextechServices.in");
-	        mail.setModel(model);
-
+        mail.setMailSubject(notification.getSubject());
+        Map < String, Object > model = new HashMap < String, Object > ();
+        model.put("firstName", vendor.getFirstName());
+        model.put("qualityCheckRMDTOs", qualityCheckRMDTOs);
+        model.put("address", vendor.getAddress());
+        model.put("companyName", vendor.getCompanyName());
+        model.put("lastName", vendor.getLastName());
+        model.put("location", "Pune");
+        model.put("signature", "www.NextechServices.in");
+        mail.setModel(model);
 		mailService.sendEmailWithoutPdF(mail,notification);
 	}
-
 }

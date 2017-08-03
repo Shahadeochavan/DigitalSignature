@@ -19,6 +19,8 @@ public interface ProductorderService extends CRUDService<Productorder>{
 	
 	public ProductOrderDTO createMultiple(ProductOrderDTO productOrderDTO,HttpServletRequest request,HttpServletResponse response)throws Exception;
 	
+	public ProductOrderDTO updateMultiple(ProductOrderDTO productOrderDTO,HttpServletRequest request,HttpServletResponse response)throws Exception;
+	
 	public List<ProductOrderDTO> getProductOrderList() throws Exception;
 	
 	public ProductOrderDTO getProductById(long id) throws Exception;

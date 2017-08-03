@@ -22,6 +22,8 @@ public class RawMaterialInvoiceRequestResponseFactory {
 		rawmaterialorderinvoice.setOuttime(rawMaterialInvoiceDTO.getOutTime());
 		rawmaterialorderinvoice.setPo_No(rawMaterialInvoiceDTO.getPoNo());
 		rawmaterialorderinvoice.setCreateDate(rawMaterialInvoiceDTO.getCreateDate());
+		rawmaterialorderinvoice.setDescription(rawMaterialInvoiceDTO.getDescription());
+		rawmaterialorderinvoice.setLicence_no(rawMaterialInvoiceDTO.getLicenceNo());
 		rawmaterialorderinvoice.setIsactive(true);
 		return rawmaterialorderinvoice;
 	}
@@ -49,7 +51,7 @@ public class RawMaterialInvoiceRequestResponseFactory {
 	public static Rmorderinvoiceintakquantity setRMOInvoice(QualityCheckRMDTO qualityCheckRMDTO,Rmorderinvoiceintakquantity rmorderinvoiceintakquantity){
 		AbstractRequestResponse.setAbstractDataToEntity(qualityCheckRMDTO,rmorderinvoiceintakquantity);
 		Rawmaterial rawmaterial = new Rawmaterial();
-		rawmaterial.setId(qualityCheckRMDTO.getId());
+		rawmaterial.setId(qualityCheckRMDTO.getRawMaterailId().getId());
 		rmorderinvoiceintakquantity.setQuantity((int) qualityCheckRMDTO.getQuantity());
 		rmorderinvoiceintakquantity.setRawmaterial(rawmaterial);
 		return rmorderinvoiceintakquantity;

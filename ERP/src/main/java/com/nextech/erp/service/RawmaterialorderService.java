@@ -27,6 +27,8 @@ public interface RawmaterialorderService extends CRUDService<Rawmaterialorder> {
 	
 	public RawmaterialOrderDTO  saveRMOrder(RawmaterialOrderDTO rawmaterialOrderDTO,HttpServletRequest request,HttpServletResponse response)throws Exception;
 	
+	public RawmaterialOrderDTO  updateRMOrder(RawmaterialOrderDTO rawmaterialOrderDTO,HttpServletRequest request,HttpServletResponse response)throws Exception;
+	
 	public List<RawmaterialOrderDTO> getRMOrderList() throws Exception;
 	
 	public RawmaterialOrderDTO getRMOrderById(long id) throws Exception;

@@ -44,8 +44,7 @@ public class RawmaterialorderassociationController {
 			BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			if (bindingResult.hasErrors()) {
-				return new UserStatus(0, bindingResult.getFieldError()
-						.getDefaultMessage());
+				return new UserStatus(0, bindingResult.getFieldError().getDefaultMessage());
 			}
 			rawmaterialorderassociationService.addEntity(RMOrderAssociationRequestResponseFactory.setRMOrderAssocition(rmOrderAssociationDTO, request));
 			return new UserStatus(1,"Rawmaterialorderassociation added Successfully !");
@@ -94,7 +93,6 @@ public class RawmaterialorderassociationController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		return rawmaterialorderassociationList;
 	}
 
@@ -108,7 +106,6 @@ public class RawmaterialorderassociationController {
 		for (RMOrderAssociationDTO rawmaterialorderassociation2 : rawmaterialorderassociations) {
 			qualityCheckRMDTO.add(RawMaterialInvoiceRequestResponseFactory.setRMOrderAsso(new QualityCheckRMDTO(), rawmaterialorderassociation2));
 		}
-		
 		if(rawmaterialorderassociations == null || rawmaterialorderassociations.size() == 0){
 			 message = "Invalid RM Order Data";
 			 code = 0;
@@ -121,7 +118,6 @@ public class RawmaterialorderassociationController {
 	@Transactional @RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus deleteRawmaterialorderassociation(
 			@PathVariable("id") long id) {
-
 		try {
 			rawmaterialorderassociationService.deleteRMOrderAsso(id);
 			return new UserStatus(1,
@@ -129,6 +125,5 @@ public class RawmaterialorderassociationController {
 		} catch (Exception e) {
 			return new UserStatus(0, e.toString());
 		}
-
 	}
 }

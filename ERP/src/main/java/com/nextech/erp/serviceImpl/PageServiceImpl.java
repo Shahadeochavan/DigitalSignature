@@ -41,7 +41,7 @@ public class PageServiceImpl extends CRUDServiceImpl<Page> implements PageServic
 		return pageDTO;
 	}
 	@Override
-	public void getPageById(long id) throws Exception {
+	public void deletePageById(long id) throws Exception {
 		// TODO Auto-generated method stub
 		Page page = pageDao.getById(Page.class, id);
 		page.setIsactive(false);

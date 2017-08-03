@@ -1,5 +1,7 @@
 package com.nextech.erp.dto;
 
+import com.nextech.erp.model.Rawmaterial;
+
 public class QualityCheckRMDTO extends AbstractDTO{
 	
 	private String rmPartNo;
@@ -9,6 +11,7 @@ public class QualityCheckRMDTO extends AbstractDTO{
 	private long intakeQuantity;
 	private boolean isReturnInvoiceInitated;
 	private String remark;
+	private Rawmaterial  rawMaterailId;
 	
 	public long getGoodQuantity() {
 		return goodQuantity;
@@ -52,4 +55,11 @@ public class QualityCheckRMDTO extends AbstractDTO{
 	public void setRemainingQuantity(long remainingQuantity) {
 		this.remainingQuantity = remainingQuantity;
 	}
+	public Rawmaterial getRawMaterailId() {
+		return rawMaterailId;
+	}
+	public void setRawMaterailId(Rawmaterial rawMaterailId) {
+		this.rawMaterailId = rawMaterailId;
+	}
+	
 }

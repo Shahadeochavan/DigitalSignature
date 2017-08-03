@@ -51,6 +51,8 @@ public class RMOrderRequestResponseFactory {
 		rawmaterialOrderDTO.setTotalPrice(rawmaterialorder.getTotalprice());
 		rawmaterialOrderDTO.setVendorId(rawmaterialorder.getVendor());
 		rawmaterialOrderDTO.setStatusId(rawmaterialorder.getStatus());
+		rawmaterialOrderDTO.setCreateDate(rawmaterialorder.getCreateDate());
+		rawmaterialOrderDTO.setExpectedDeliveryDate(rawmaterialorder.getExpectedDeliveryDate());
 		return rawmaterialOrderDTO;
 	}
 

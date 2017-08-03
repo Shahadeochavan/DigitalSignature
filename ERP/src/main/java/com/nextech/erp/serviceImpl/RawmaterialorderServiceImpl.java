@@ -94,6 +94,7 @@ public class RawmaterialorderServiceImpl extends CRUDServiceImpl<Rawmaterialorde
 		// TODO Auto-generated method stub
 		Rawmaterialorder  rawmaterialorder = RMOrderRequestResponseFactory.setRMOrder(rawmaterialOrderDTO);
 		rawmaterialorder.setStatus(StatusDao.getById(Status.class,Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_NEW_RM_ORDER, null, null))));
+		rawmaterialorder.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 		long id=rawmaterialorderDao.add(rawmaterialorder);
 		String invoiceId = generateInvoiceId()+rawmaterialorder.getId();
 		rawmaterialorder.setName(invoiceId);
@@ -148,6 +149,17 @@ public class RawmaterialorderServiceImpl extends CRUDServiceImpl<Rawmaterialorde
 		}
 		year = "EK/PUN/"+year+"/";
 		return year;
+	}
+
+	@Override
+	public RawmaterialOrderDTO updateRMOrder(RawmaterialOrderDTO rawmaterialOrderDTO,HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		// TODO Auto-generated method stub
+		Rawmaterialorder  rawmaterialorder = RMOrderRequestResponseFactory.setRMOrder(rawmaterialOrderDTO);
+		rawmaterialorder.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+		rawmaterialorder.setStatus(StatusDao.getById(Status.class,Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_NEW_RM_ORDER, null, null))));
+		rawmaterialorderDao.update(rawmaterialorder);
+		return rawmaterialOrderDTO;
 	}
 }
 
