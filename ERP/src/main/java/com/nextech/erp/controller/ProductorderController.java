@@ -36,6 +36,7 @@ import com.nextech.erp.dto.CreatePDF;
 import com.nextech.erp.dto.Mail;
 import com.nextech.erp.dto.ProductOrderDTO;
 import com.nextech.erp.dto.ProductOrderData;
+import com.nextech.erp.dto.ProductOrderRMData;
 import com.nextech.erp.dto.ProductRMAssociationDTO;
 import com.nextech.erp.dto.RMInventoryDTO;
 import com.nextech.erp.factory.ProductOrderRequestResponseFactory;
@@ -120,6 +121,7 @@ public class ProductorderController {
 		        productOrderDTO.setId(productOrderDTO2.getId());
 		        productOrderDTO.setInvoiceNo(productOrderDTO2.getInvoiceNo());
 		        productOrderDTO.setCreatedDate(productOrderDTO2.getCreatedDate());
+		        productOrderDTO.setStatusId(productOrderDTO2.getStatusId());
 				addProductOrderAsso(productOrderDTO,request, response);
 				
 				//TODO Check Inventory for Products
@@ -257,8 +259,9 @@ public class ProductorderController {
 	}
 
 	private void addProductOrderAsso(ProductOrderDTO productOrderDTO,HttpServletRequest request,HttpServletResponse response) throws Exception {
-		productorderService.createProductorderAsso(productOrderDTO, request);
-		//downloadPDF(request, response, productOrderDTO,productOrderDatas,client);
+		List<ProductOrderData> productOrderDatas=productorderService.createProductorderAsso(productOrderDTO, request);
+		ClientDTO client = clientService.getClientDTOById(productOrderDTO.getClientId().getId());
+		downloadPDF(request, response, productOrderDTO,productOrderDatas,client);
 	}
 	
 	public void downloadPDF(HttpServletRequest request, HttpServletResponse response,ProductOrderDTO productOrderDTO,List<ProductOrderData> productOrderDatas,ClientDTO client) throws IOException {
@@ -272,7 +275,7 @@ public class ProductorderController {
 	    	CreatePDF ceCreatePDFProductOrder = new CreatePDF();
 	    	ceCreatePDFProductOrder.createPDF(temperotyFilePath+"\\"+fileName,productOrderDTO,productOrderDatas,client);
 	        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-	        baos = convertPDFToByteArrayOutputStream(temperotyFilePath+"\\"+fileName,productOrderDTO);
+	        baos = convertPDFToByteArrayOutputStream(temperotyFilePath+"\\"+fileName,productOrderDTO,productOrderDatas);
 	        OutputStream os = response.getOutputStream();
 	        baos.writeTo(os);
 	        os.flush();
@@ -281,12 +284,12 @@ public class ProductorderController {
 	    }
 	}
 
-	private ByteArrayOutputStream convertPDFToByteArrayOutputStream(String fileName,ProductOrderDTO productOrderDTO) throws Exception {
+	private ByteArrayOutputStream convertPDFToByteArrayOutputStream(String fileName,ProductOrderDTO productOrderDTO,List<ProductOrderData> productOrderDatas) throws Exception {
 		StatusDTO status = statusService.getStatusById(productOrderDTO.getStatusId().getId());
 		NotificationDTO notificationDTO = notificationService.getNotificationDTOById(status.getId());
 		ClientDTO client = clientService.getClientDTOById(productOrderDTO.getClientId().getId());
 		//TODO mail sending
-        mailSending(notificationDTO, productOrderDTO, client,fileName);
+        mailSending(notificationDTO, productOrderDatas, client,fileName,productOrderDTO);
 		InputStream inputStream = null;
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		try {
@@ -313,32 +316,12 @@ public class ProductorderController {
 		return baos;
 	}
 
-	private void mailSending(NotificationDTO notification,ProductOrderDTO productOrderDTO,ClientDTO client,String fileName) throws Exception{
-		long totalRMQuantity = 0;
-		List<ProductOrderAssociationDTO>  productorderassociations= productorderassociationService.getProductorderassociationByOrderId(productOrderDTO.getId());
-		List<ProductOrderData> productOrderDatas = new ArrayList<ProductOrderData>();
+	private void mailSending(NotificationDTO notification,List<ProductOrderData> productOrderDatas,ClientDTO client,String fileName,ProductOrderDTO productOrderDTO) throws Exception{
 		List<NotificationUserAssociatinsDTO> notificationUserAssociatinsDTOs  = notificationUserAssociationService.getNotificationUserAssociatinsDTOs(notification.getId());
-		for (ProductOrderAssociationDTO productorderassociation : productorderassociations) {
-			ProductDTO product = productService.getProductDTO(productorderassociation.getProductId().getId());
-			ProductOrderData productOrderData = new ProductOrderData();
-			//TODO to check rmaining quantity
-			if(productorderassociation.getRemainingQuantity()>0){
-			List<ProductRMAssociationDTO> productRMAssociationDTOs = productRMAssoService.getProductRMAssoList(product.getId());
-			for (ProductRMAssociationDTO productRMAssociationDTO : productRMAssociationDTOs) {	
-				RawMaterialDTO  rawMaterialDTO = rawmaterialService.getRMDTO(productRMAssociationDTO.getRawmaterialId().getId());
-			         productOrderData.setPartNumber(rawMaterialDTO.getPartNumber());
-		        	  productOrderData.setRmQuantity(productRMAssociationDTO.getQuantity());
-			          productOrderData.setProductName(product.getName());
-			          productOrderData.setQuantity(productorderassociation.getQuantity());
-			          productOrderData.setRate(product.getRatePerUnit());
-			          productOrderDatas.add(productOrderData);
-				  }
-			}
-		}
 		Mail mail = new Mail();
 		for (NotificationUserAssociatinsDTO notificationuserassociation : notificationUserAssociatinsDTOs) {
 			//  User user = userService.getEntityById(User.class, notificationuserassociation.getUser().getId());
-			UserDTO userDTO = userService.getUserDTO(notificationuserassociation.getId());
+			UserDTO userDTO = userService.getUserDTO(notificationuserassociation.getUserId().getId());
 			if(notificationuserassociation.getTo()==true){
 				mail.setMailTo(client.getEmailId()); 
 			}else if(notificationuserassociation.getBcc()==true){
@@ -360,11 +343,34 @@ public class ProductorderController {
         model.put("signature", "www.NextechServices.in");
         mail.setModel(model);
         mailService.sendEmail(mail,notification);
+        
+        mailSendingToRMUser(productOrderDTO);
 	}
 	
-	public void mailSendingToRMUser(List<ProductOrderData> productOrderDatas)throws Exception{
+	public void mailSendingToRMUser(ProductOrderDTO productOrderDTO)throws Exception{
+		
+		List<ProductOrderAssociationDTO>  productorderassociations= productorderassociationService.getProductorderassociationByOrderId(productOrderDTO.getId());
+		List<ProductOrderRMData> productOrderRMDatas = new ArrayList<ProductOrderRMData>();
+		for (ProductOrderAssociationDTO productorderassociation : productorderassociations) {
+			ProductDTO product = productService.getProductDTO(productorderassociation.getProductId().getId());
+			ProductOrderRMData productOrderRMData = new ProductOrderRMData();	
+			//TODO to check rmaining quantity
+			long totalRMQuantity = 0;
+			if(productorderassociation.getRemainingQuantity()>0){
+			List<ProductRMAssociationDTO> productRMAssociationDTOs = productRMAssoService.getProductRMAssoList(product.getId());
+			for (ProductRMAssociationDTO productRMAssociationDTO : productRMAssociationDTOs) {	
+			//	RawMaterialDTO  rawMaterialDTO = rawmaterialService.getRMDTO(productRMAssociationDTO.getRawmaterialId().getId());
+				productOrderRMData.setProductPartNumber(productorderassociation.getProductId().getPartNumber());
+				productOrderRMData.setRmPartNumber(productRMAssociationDTO.getRawmaterialId().getPartNumber());
+				productOrderRMData.setProductQuantity(productorderassociation.getQuantity());
+				totalRMQuantity = totalRMQuantity+productRMAssociationDTO.getQuantity();
+				productOrderRMData.setRmQuantity(totalRMQuantity);
+			   }
+			productOrderRMDatas.add(productOrderRMData);
+			}
+		}
 		  Mail mail = new Mail();
-		  NotificationDTO  notificationDTO = notificationService.getNotificationDTOById(Long.parseLong(messageSource.getMessage(ERPConstants.VENDOR_UPDATE_SUCCESSFULLY, null, null)));
+		  NotificationDTO  notificationDTO = notificationService.getNotificationDTOById(Long.parseLong(messageSource.getMessage(ERPConstants.RM_NOTIFICATION, null, null)));
 		  List<NotificationUserAssociatinsDTO> notificationUserAssociatinsDTOs = notificationUserAssociationService.getNotificationUserAssociatinsDTOs(notificationDTO.getId());
 		  for (NotificationUserAssociatinsDTO notificationuserassociation : notificationUserAssociatinsDTOs) {
 			  UserDTO userDTO = userService.getUserDTO(notificationuserassociation.getUserId().getId());
@@ -379,7 +385,7 @@ public class ProductorderController {
 		}
 	        mail.setMailSubject(notificationDTO.getSubject());
 	        Map < String, Object > model = new HashMap < String, Object > ();
-	        model.put("productOrderDatas", productOrderDatas);
+	        model.put("productOrderRMDatas", productOrderRMDatas);
 	        model.put("location", "Pune");
 	        model.put("signature", "www.NextechServices.in");
 	        mail.setModel(model);

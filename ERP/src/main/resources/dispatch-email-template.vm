@@ -9,7 +9,7 @@
 					<tr>
 						<td>
 							<p style="font-weight: bold;">Invoice Number
-								${invoiceNumber},</p>
+								${invoiceNo},</p>
 							<p style="font-weight: bold;">From :</p>
 							<div>${mailfrom},</div>
 							<div>Office:18,3rd Floor Vasantika Aparment</div>

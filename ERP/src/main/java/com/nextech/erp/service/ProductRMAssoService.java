@@ -28,4 +28,6 @@ public interface ProductRMAssoService extends CRUDService<Productrawmaterialasso
 	public void deleteProductRMAssoById(long id)throws Exception;
 	
 	public List<ProductRMAssociationDTO> getProductRMListByProductId(long rmId)throws Exception;
+	
+	public ProductRMAssociationDTO getProductRMListByProduct(long productId) throws Exception;
 }

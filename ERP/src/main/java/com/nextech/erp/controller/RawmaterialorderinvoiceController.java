@@ -242,7 +242,7 @@ public class RawmaterialorderinvoiceController {
 			Rawmaterialorder rawmaterialorder = rawmaterialorderService.getEntityById(Rawmaterialorder.class, rawmaterialorderinvoice.getPo_No());
 
 			Status status = statusService.getEntityById(Status.class, rawmaterialorderinvoice.getStatus().getId());
-			NotificationDTO notification = notificationService.getNotificationDTOById(status.getId());
+			NotificationDTO notification = notificationService.getNotifiactionByStatus(status.getId());
 			Vendor vendor = vendorService.getEntityById(Vendor.class, Long.parseLong(rawmaterialorderinvoice.getVendorname()));
 	        mailSending(notification, rawmaterialorder, vendor);
 
@@ -308,6 +308,7 @@ public class RawmaterialorderinvoiceController {
 			Rawmaterial rawmaterial = rawmaterialService.getEntityById(Rawmaterial.class, rawmaterialorderassociation.getRawmaterialId().getId());
 			RMVendorAssociationDTO rawmaterialvendorassociation = rMVAssoService.getRMVAssoByRMId(rawmaterial.getId());
 			rmOrderModelData.setAmount(rawmaterialorder.getTotalprice());
+			rmOrderModelData.setRmName(rawmaterial.getName());
 			rmOrderModelData.setDescription(rawmaterial.getDescription());
 			rmOrderModelData.setPricePerUnit(rawmaterialvendorassociation.getPricePerUnit());
 			rmOrderModelData.setQuantity(rawmaterialorderassociation.getQuantity());

@@ -11,18 +11,24 @@ import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
 import com.nextech.erp.constants.ERPConstants;
+import com.nextech.erp.dao.BOMRMVendorAssociationDao;
 import com.nextech.erp.dao.ClientDao;
 import com.nextech.erp.dao.ProductorderDao;
 import com.nextech.erp.dao.StatusDao;
+import com.nextech.erp.dto.BomDTO;
 import com.nextech.erp.dto.ProductOrderDTO;
 import com.nextech.erp.dto.ProductOrderData;
 import com.nextech.erp.factory.ProductOrderRequestResponseFactory;
+import com.nextech.erp.model.Bom;
+import com.nextech.erp.model.Bomrmvendorassociation;
 import com.nextech.erp.model.Client;
 import com.nextech.erp.model.Productorder;
 import com.nextech.erp.model.Status;
 import com.nextech.erp.newDTO.ClientDTO;
 import com.nextech.erp.newDTO.ProductDTO;
 import com.nextech.erp.newDTO.ProductOrderAssociationDTO;
+import com.nextech.erp.service.BOMRMVendorAssociationService;
+import com.nextech.erp.service.BomService;
 import com.nextech.erp.service.ClientService;
 import com.nextech.erp.service.ProductService;
 import com.nextech.erp.service.ProductorderService;
@@ -50,6 +56,12 @@ public class ProductorderServiceImpl extends CRUDServiceImpl<Productorder> imple
 	
 	@Autowired
 	ProductorderassociationService productorderassociationService;
+	
+	@Autowired 
+	BomService bomService;
+	
+	@Autowired
+	BOMRMVendorAssociationDao bomrmVendorAssociationDao;
 	
 	@Override
 	public Productorder getProductorderByProductOrderId(long pOrderId)
@@ -94,6 +106,7 @@ public class ProductorderServiceImpl extends CRUDServiceImpl<Productorder> imple
 		productOrderDTO2.setId(productorder2.getId());
 		productOrderDTO2.setCreatedDate(productorder2.getCreatedDate());
 		productOrderDTO2.setInvoiceNo(productorder2.getInvoiceNo());
+		productOrderDTO2.setStatusId(productorder2.getStatus());
 		return productOrderDTO2;
 	}
 	@Override
@@ -126,21 +139,28 @@ public class ProductorderServiceImpl extends CRUDServiceImpl<Productorder> imple
 	public List<ProductOrderData> createProductorderAsso(ProductOrderDTO productOrderDTO, HttpServletRequest request)
 			throws Exception {
 		// TODO Auto-generated method stub
+		
 		List<ProductOrderAssociationDTO> productOrderAssociationDTOs = productOrderDTO.getProductOrderAssociationDTOs();
 		ClientDTO client = clientService.getClientDTOById(productOrderDTO.getClientId().getId());
 		if (productOrderAssociationDTOs != null&& !productOrderAssociationDTOs.isEmpty()) {
 			for (ProductOrderAssociationDTO productOrderAssociationDTO : productOrderAssociationDTOs) {
-				productorderassociationService.addEntity(ProductOrderRequestResponseFactory.setProductOrderAsso(productOrderDTO, productOrderAssociationDTO));
+				productorderassociationService.addEntity(ProductOrderRequestResponseFactory.setProductOrderAsso(productOrderDTO, productOrderAssociationDTO,request));
 			}
 		}
 		List<ProductOrderData> productOrderDatas = new ArrayList<ProductOrderData>();
 		for (ProductOrderAssociationDTO productOrderAssociationDTO : productOrderAssociationDTOs) {
+			float totalRate=0;
 			ProductDTO product = productService.getProductDTO(productOrderAssociationDTO.getProductId().getId());
 			ProductOrderData productOrderData = new ProductOrderData();
+			Bom bom = bomService.getBomByProductId(productOrderAssociationDTO.getProductId().getId());
+			List<Bomrmvendorassociation> bomrmvendorassociations = bomrmVendorAssociationDao.getBomRMVendorByBomId(bom.getId());
+			for (Bomrmvendorassociation bomrmvendorassociation : bomrmvendorassociations) {
+			totalRate = totalRate+bomrmvendorassociation.getCost();
 			productOrderData.setProductName(product.getName());
 			productOrderData.setQuantity(productOrderAssociationDTO.getQuantity());
-			productOrderData.setRate(product.getRatePerUnit());
-			productOrderData.setAmount(product.getRatePerUnit()*productOrderAssociationDTO.getQuantity());
+			productOrderData.setRate((long)(totalRate));
+			productOrderData.setAmount((long)totalRate*productOrderAssociationDTO.getQuantity());
+			}
 			productOrderDatas.add(productOrderData);
 		}
 		return productOrderDatas;

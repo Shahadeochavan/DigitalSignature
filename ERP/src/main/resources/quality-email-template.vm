@@ -67,7 +67,7 @@
 										   <tr>
                                        <tr bgcolor="$color">
                                            <td align="left">$row</td>
-                                           <td align="left">$qualityCheckRMDTO.description</td>
+                                           <td align="left">$qualityCheckRMDTO.rmPartNo</td>
                                            <td align="left">$qualityCheckRMDTO.intakeQuantity</td>
                                            <td align="center">$qualityCheckRMDTO.goodQuantity</td>
                                        </tr>

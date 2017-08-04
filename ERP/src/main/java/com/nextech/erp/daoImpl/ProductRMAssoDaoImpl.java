@@ -73,5 +73,18 @@ public class ProductRMAssoDaoImpl extends SuperDaoImpl<Productrawmaterialassocia
 		criteria.add(Restrictions.eq("isactive", true));
 		return (List<Productrawmaterialassociation>) (criteria.list().size() > 0 ? criteria.list() : null);
 	}
+
+	@Override
+	public Productrawmaterialassociation getProductRMListByProduct(
+			long productId) throws Exception {
+		// TODO Auto-generated method stub
+		session = sessionFactory.getCurrentSession();
+		@SuppressWarnings("deprecation")
+		Criteria criteria = session.createCriteria(Productrawmaterialassociation.class);
+		criteria.add(Restrictions.eq("isactive", true));
+		criteria.add(Restrictions.eq("product.id", productId));
+		Productrawmaterialassociation Productrawmaterialassociation = criteria.list().size() > 0 ? (Productrawmaterialassociation) criteria.list().get(0) : null;
+		return Productrawmaterialassociation;
+	}
 }
 

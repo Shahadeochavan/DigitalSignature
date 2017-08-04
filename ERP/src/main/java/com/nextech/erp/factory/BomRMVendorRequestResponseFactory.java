@@ -21,6 +21,7 @@ public class BomRMVendorRequestResponseFactory {
 		bomrmvendorassociation.setQuantity(bomModelPart.getQuantity());
 		bomrmvendorassociation.setRawmaterial(bomModelPart.getRawmaterial());
 		bomrmvendorassociation.setVendor(bomModelPart.getVendor());
+		bomrmvendorassociation.setCost(bomModelPart.getQuantity()*bomModelPart.getPricePerUnit());
 		bomrmvendorassociation.setCreatedBy(request.getAttribute("current_user").toString());
 		return bomrmvendorassociation;
 	}

@@ -42,12 +42,13 @@
                                                       <th align="left">Sr.No</th>
                                                       <th align="left">Product Part Number</th>
                                                       <th align="left">RM Part Number</th>
-                                                      <th align="left">Required Quantity</th>
+                                                      <th align="left">Required RM Quantity</th>
+                                                       <th align="left">Required Product Quantity</th>
                                               </tr>
 											#set ( $row = 1 ) 
 											#set ( $rmtotal = 0) 
 											#set($total=0)
-											#foreach ($productOrderData in $productOrderDatas ) 
+											#foreach ($productOrderRMData in $productOrderRMDatas ) 
 												#if ( $row % 2 == 0 ) 
 													#set ($color="#CBDCFF") 
 												#else 
@@ -56,9 +57,10 @@
 										   <tr>
                                        <tr bgcolor="$color">
                                            <td align="left">$row</td>
-                                           <td align="left">$productOrderData.productName</td>
-                                           <td align="left">$productOrderData.partNumber</td>
-                                            <td align="left">$productOrderData.rmQuantity</td>
+                                           <td align="left">$productOrderRMData.productPartNumber</td>
+                                           <td align="left">$productOrderRMData.rmPartNumber</td>
+                                           <td align="left">$productOrderRMData.rmQuantity</td>
+                                            <td align="left">$productOrderRMData.productQuantity</td>
                                        </tr>
 												#set ( $row = $row + 1 ) 
 											#end

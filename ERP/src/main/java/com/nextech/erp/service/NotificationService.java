@@ -7,7 +7,7 @@ import com.nextech.erp.newDTO.NotificationDTO;
 
 public interface NotificationService extends CRUDService<Notification>{
 
-	public Notification getNotifiactionByStatus(long statusId) throws Exception;
+	public NotificationDTO getNotifiactionByStatus(long statusId) throws Exception;
 	
 	public List<NotificationDTO> getNofificationList(List<NotificationDTO> notificationDTOs) throws Exception;
 	

@@ -291,7 +291,7 @@ public class RawmaterialorderController {
 	
 	private ByteArrayOutputStream convertPDFToByteArrayOutputStream(String fileName,RawmaterialOrderDTO rawmaterialOrderDTO,List<RMOrderModelData> rmOrderModelDatas) throws Exception {
 		StatusDTO status = statusService.getStatusById(rawmaterialOrderDTO.getStatusId().getId());
-		NotificationDTO notification = notificationService.getNotificationDTOById(status.getId());
+		NotificationDTO notification = notificationService.getNotifiactionByStatus(status.getId());
 		VendorDTO vendor = vendorService.getVendorById(rawmaterialOrderDTO.getVendorId().getId());
 		//TODO mail sending
         mailSending(notification, rawmaterialOrderDTO, vendor,fileName,rmOrderModelDatas);

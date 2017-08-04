@@ -76,7 +76,7 @@ public class RawmaterialinventoryController {
 				rawmaterialinventoryService.addEntity(RMInventoryRequestResponseFactory.setRMInventory(rmInventoryDTO, request));
 			}
 			else
-				return new UserStatus(1, messageSource.getMessage(ERPConstants.RAW_MATERIAL_INVENTORY, null, null));
+				return new UserStatus(0, messageSource.getMessage(ERPConstants.RAW_MATERIAL_INVENTORY, null, null));
 			return new UserStatus(1, "Rawmaterialinventory added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			cve.printStackTrace();

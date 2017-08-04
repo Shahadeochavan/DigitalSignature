@@ -12,6 +12,7 @@ public class QualityCheckRMDTO extends AbstractDTO{
 	private boolean isReturnInvoiceInitated;
 	private String remark;
 	private Rawmaterial  rawMaterailId;
+	private float priceperunit;
 	
 	public long getGoodQuantity() {
 		return goodQuantity;
@@ -60,6 +61,12 @@ public class QualityCheckRMDTO extends AbstractDTO{
 	}
 	public void setRawMaterailId(Rawmaterial rawMaterailId) {
 		this.rawMaterailId = rawMaterailId;
+	}
+	public float getPriceperunit() {
+		return priceperunit;
+	}
+	public void setPriceperunit(float priceperunit) {
+		this.priceperunit = priceperunit;
 	}
 	
 }

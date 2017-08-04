@@ -2,6 +2,7 @@ package com.nextech.erp.dao;
 
 import java.util.List;
 
+import com.nextech.erp.dto.ProductRMAssociationDTO;
 import com.nextech.erp.model.Productrawmaterialassociation;
 
 public interface ProductRMAssoDao extends SuperDao<Productrawmaterialassociation>{
@@ -13,4 +14,6 @@ public interface ProductRMAssoDao extends SuperDao<Productrawmaterialassociation
 	public List<Long> getProductList() throws Exception;
 	
 	public List<Productrawmaterialassociation> getProductRMListByProductId(long rmId)throws Exception;
+	
+	public Productrawmaterialassociation getProductRMListByProduct(long productId)throws Exception ;
 }

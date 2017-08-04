@@ -140,6 +140,13 @@ public class ProductRMAssoServiceImpl extends CRUDServiceImpl<Productrawmaterial
 		}
 		return productRMAssociationDTOs;
 	}
+
+	@Override
+	public ProductRMAssociationDTO getProductRMListByProduct(long productId)
+			throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
 		
 
 }

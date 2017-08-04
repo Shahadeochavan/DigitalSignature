@@ -19,9 +19,11 @@ public class NotificationServiceImpl extends CRUDServiceImpl<Notification> imple
 	NotificationDao notificationDao;
 
 	@Override
-	public Notification getNotifiactionByStatus(long statusId) throws Exception {
+	public NotificationDTO getNotifiactionByStatus(long statusId) throws Exception {
 		// TODO Auto-generated method stub
-		return notificationDao.getNotifiactionByStatus(statusId);
+		Notification notification = notificationDao.getNotifiactionByStatus(statusId);
+		NotificationDTO notificationDTO = NotificationRequestResponseFactory.setNotificationDTO(notification);
+		return notificationDTO;
 	}
 
 	@Override
@@ -40,7 +42,7 @@ public class NotificationServiceImpl extends CRUDServiceImpl<Notification> imple
 	@Override
 	public NotificationDTO getNotificationDTOById(long id) throws Exception {
 		// TODO Auto-generated method stub
-		Notification notification = notificationDao.getNotifiactionByStatus(id);
+		Notification notification = notificationDao.getById(Notification.class, id);
 		NotificationDTO notificationDTO = NotificationRequestResponseFactory.setNotificationDTO(notification);
 		return notificationDTO;
 	}
