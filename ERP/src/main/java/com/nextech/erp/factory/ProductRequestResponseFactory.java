@@ -29,6 +29,7 @@ public class ProductRequestResponseFactory {
 		product.setDesign(productDTO.getDesign());
 		product.setPartNumber(productDTO.getPartNumber());
 		product.setName(productDTO.getName());
+		product.setDesign(productDTO.getDesign());
 		product.setIsactive(true);
 		product.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 		return product;

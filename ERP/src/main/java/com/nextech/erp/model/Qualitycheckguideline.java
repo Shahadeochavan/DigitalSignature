@@ -3,6 +3,7 @@ package com.nextech.erp.model;
 import java.io.Serializable;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 
 import java.sql.Timestamp;
 
@@ -27,6 +28,7 @@ public class Qualitycheckguideline implements Serializable {
 	@Column(name="created_date")
 	private Timestamp createdDate;
 
+	@Size(min = 10, max = 2000, message = "{guidelines sholud be greater than 10 or less than 2000 characters}")
 	private String guidelines;
 
 	private boolean isactive;

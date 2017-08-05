@@ -23,7 +23,8 @@ import com.nextech.erp.dto.ProductinPlanPRMAssoData;
 import com.nextech.erp.dto.ProductionPlan;
 import com.nextech.erp.dto.RMInventoryDTO;
 import com.nextech.erp.factory.ProductionPlanningRequestResponseFactory;
-import com.nextech.erp.newDTO.ProductDTO;
+import com.nextech.erp.model.Product;
+import com.nextech.erp.model.Productionplanning;
 import com.nextech.erp.newDTO.ProductOrderAssociationDTO;
 import com.nextech.erp.newDTO.ProductionPlanningDTO;
 import com.nextech.erp.newDTO.RawMaterialDTO;
@@ -150,17 +151,18 @@ public class ProductionplanningController {
 		}
 		return productionplanningList;
 	}
-
-	@Transactional @RequestMapping(value = "createProductionPlanMonthYear/{MONTH-YEAR}", method = RequestMethod.POST, headers = "Accept=application/json")
-	public @ResponseBody List<ProductionPlanningDTO> createProductionPlanMonthYear(@PathVariable("MONTH-YEAR") String month_year,HttpServletRequest request,HttpServletResponse response) {
-		List<ProductionPlanningDTO> productionplanningList = null;
-		List<ProductDTO> productList = null;
+	@RequestMapping(value = "createProductionPlanMonthYear/{MONTH-YEAR}", method = RequestMethod.POST, headers = "Accept=application/json")
+	public @ResponseBody List<Productionplanning> createProductionPlanMonthYear(@PathVariable("MONTH-YEAR") String month_year,HttpServletRequest request,HttpServletResponse response) {
+		List<Productionplanning> productionplanningList = null;
+		List<Product> productList = null;
 		try {
-			productList = productService.getProductList();
-			productionplanningList = productionplanningService.createProductionPlanMonthYear( productList, month_year, request, response);
+			productList = productService.getEntityList(Product.class);
+								productionplanningList = productionplanningService.createProductionPlanMonthYear( productList, month_year, request, response);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
 		return productionplanningList;
 	}
 
@@ -205,7 +207,7 @@ public class ProductionplanningController {
 								}
 							}
 						}
-						return new Response(101,"Please get RM from RM Store Out. So that Today's Production Plan will be generated.",productionplanningFinalList);
+						//return new Response(101,"Please get RM from RM Store Out. So that Today's Production Plan will be generated.",productionplanningFinalList);
 					}
 				}else{
 					return new Response(101,"There is no production plan for today.",productionplanningFinalList);
@@ -292,7 +294,7 @@ public class ProductionplanningController {
 					for(ProductRMAssociationDTO productrawmaterialassociation : productrawmaterialassociations){
 						ProductinPlanPRMAssoData productinPlanPRMAssoData = new ProductinPlanPRMAssoData();
 						RawMaterialDTO rawmaterial = rawmaterialService.getRMDTO( productrawmaterialassociation.getRawmaterialId().getId());
-						RMInventoryDTO rawmaterialinventory = rawmaterialinventoryService.getRMInventoryById(productrawmaterialassociation.getRawmaterialId().getId());
+						RMInventoryDTO rawmaterialinventory = rawmaterialinventoryService.getByRMId(productrawmaterialassociation.getRawmaterialId().getId());
 					    if(rawmaterialinventory==null)
 					    	return new Response(0,"Please Add RM In RM Inventory",null);
 					    else

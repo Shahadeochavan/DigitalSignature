@@ -1,5 +1,6 @@
 package com.nextech.erp.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.PersistenceException;
@@ -21,9 +22,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.factory.QCGuidelineRequestResponseFactory;
+import com.nextech.erp.model.Product;
 import com.nextech.erp.model.Qualitycheckguideline;
+import com.nextech.erp.model.Rawmaterial;
 import com.nextech.erp.newDTO.QualitycheckguidelineDTO;
+import com.nextech.erp.service.ProductService;
 import com.nextech.erp.service.QualityCheckGuidelineService;
+import com.nextech.erp.service.RawmaterialService;
+import com.nextech.erp.status.Response;
 import com.nextech.erp.status.UserStatus;
 
 
@@ -35,6 +41,12 @@ public class QualityCheckGuidelineController {
 	QualityCheckGuidelineService qualityCheckGuidelineService;
 	
 	@Autowired
+	ProductService productService;
+	
+	@Autowired
+	RawmaterialService rawmaterialService;
+	
+	@Autowired
 	private MessageSource messageSource;
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
@@ -44,6 +56,10 @@ public class QualityCheckGuidelineController {
 			if (bindingResult.hasErrors()) {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
+			}
+			
+			if(qualitycheckguidelineDTO.getProductId()== qualitycheckguidelineDTO.getRawMaterialId()){
+				return new UserStatus(0,"Please don't enter same product Id and rm Id");
 			}
 			if (qualityCheckGuidelineService.getQCGuidlineByRMId(qualitycheckguidelineDTO.getRawMaterialId()) == null) {
 
@@ -97,8 +113,27 @@ public class QualityCheckGuidelineController {
 	public @ResponseBody List<Qualitycheckguideline> getUnit() {
 
 		List<Qualitycheckguideline> qualitycheckguidelines = null;
+		List<QualitycheckguidelineDTO> qualitycheckguidelineDTOs =  new ArrayList<QualitycheckguidelineDTO>();
 		try {
 			qualitycheckguidelines = qualityCheckGuidelineService.getEntityList(Qualitycheckguideline.class);
+		/*	for (Qualitycheckguideline qualitycheckguideline : qualitycheckguidelines) {
+				QualitycheckguidelineDTO qualitycheckguidelineDTO = new QualitycheckguidelineDTO();
+				if(qualitycheckguideline.getProductId()>0){
+					Product product = productService.getEntityById(Product.class, qualitycheckguideline.getProductId());
+					qualitycheckguidelineDTO.setProductPartNumber(product.getPartNumber());
+					qualitycheckguidelineDTO.setId(qualitycheckguideline.getId());
+					qualitycheckguidelineDTO.setGuidelines(qualitycheckguideline.getGuidelines());
+					qualitycheckguidelineDTO.setProductId(qualitycheckguideline.getProductId());
+					qualitycheckguidelineDTOs.add(qualitycheckguidelineDTO);
+				}else if(qualitycheckguideline.getRawMaterialId()>0){
+					Rawmaterial rawmaterial =  rawmaterialService.getEntityById(Rawmaterial.class, qualitycheckguideline.getRawMaterialId());
+					qualitycheckguidelineDTO.setRmPartNumber(rawmaterial.getPartNumber());
+					qualitycheckguidelineDTO.setId(qualitycheckguideline.getId());
+					qualitycheckguidelineDTO.setGuidelines(qualitycheckguideline.getGuidelines());
+					qualitycheckguidelineDTO.setProductId(qualitycheckguideline.getRawMaterialId());
+					qualitycheckguidelineDTOs.add(qualitycheckguidelineDTO);
+				}
+			}*/
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -122,15 +157,33 @@ public class QualityCheckGuidelineController {
 
 	}
 	
-	@RequestMapping(value = "QCGUIDLINES/{RMID}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody Qualitycheckguideline qcGuidlines(@PathVariable("RMID") long rmId) {
+	@RequestMapping(value = "rm/{RMID}", method = RequestMethod.GET, headers = "Accept=application/json")
+	public @ResponseBody Response qcGuidlines(@PathVariable("RMID") long rmId) {
 		Qualitycheckguideline qualitycheckguideline = null;
 		try {
 			qualitycheckguideline = qualityCheckGuidelineService.getQCGuidlineByRMId(rmId);
+			if(qualitycheckguideline==null){
+				return new Response(0,"There is no quality check guidlines for this Raw Material");
+			}
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return qualitycheckguideline;
+		return new Response(1,"qc guidlines List",qualitycheckguideline);
+	}
+	
+	@RequestMapping(value = "product/{PRODUCTID}", method = RequestMethod.GET, headers = "Accept=application/json")
+	public @ResponseBody Response qcGuidlinesProduct(@PathVariable("PRODUCTID") long productId) {
+		Qualitycheckguideline qualitycheckguideline = null;
+		try {
+			qualitycheckguideline = qualityCheckGuidelineService.getQCGuidelineByProductId(productId);
+			if(qualitycheckguideline==null){
+				return new Response(0,"There is no quality check guidlines for this product");
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return new Response(1,"qc guidlines List",qualitycheckguideline);
 	}
 }

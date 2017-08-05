@@ -286,7 +286,7 @@ public class ProductorderController {
 
 	private ByteArrayOutputStream convertPDFToByteArrayOutputStream(String fileName,ProductOrderDTO productOrderDTO,List<ProductOrderData> productOrderDatas) throws Exception {
 		StatusDTO status = statusService.getStatusById(productOrderDTO.getStatusId().getId());
-		NotificationDTO notificationDTO = notificationService.getNotificationDTOById(status.getId());
+		NotificationDTO notificationDTO = notificationService.getNotifiactionByStatus(status.getId());
 		ClientDTO client = clientService.getClientDTOById(productOrderDTO.getClientId().getId());
 		//TODO mail sending
         mailSending(notificationDTO, productOrderDatas, client,fileName,productOrderDTO);
@@ -370,7 +370,7 @@ public class ProductorderController {
 			}
 		}
 		  Mail mail = new Mail();
-		  NotificationDTO  notificationDTO = notificationService.getNotificationDTOById(Long.parseLong(messageSource.getMessage(ERPConstants.RM_NOTIFICATION, null, null)));
+		  NotificationDTO  notificationDTO = notificationService.getNotifiactionByStatus(Long.parseLong(messageSource.getMessage(ERPConstants.RM_NOTIFICATION, null, null)));
 		  List<NotificationUserAssociatinsDTO> notificationUserAssociatinsDTOs = notificationUserAssociationService.getNotificationUserAssociatinsDTOs(notificationDTO.getId());
 		  for (NotificationUserAssociatinsDTO notificationuserassociation : notificationUserAssociatinsDTOs) {
 			  UserDTO userDTO = userService.getUserDTO(notificationuserassociation.getUserId().getId());

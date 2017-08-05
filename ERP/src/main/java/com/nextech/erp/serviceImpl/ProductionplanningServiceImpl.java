@@ -174,22 +174,19 @@ public class ProductionplanningServiceImpl extends
 	}
 
 	@Override
-	public List<ProductionPlanningDTO> createProductionPlanMonthYear(
-			List<ProductDTO> productList,String month_year,HttpServletRequest request,HttpServletResponse response) throws Exception {
-		List<ProductionPlanningDTO> productionPlanList = new ArrayList<ProductionPlanningDTO>();
+	public List<Productionplanning> createProductionPlanMonthYear(List<Product> productList,String month_year,HttpServletRequest request,HttpServletResponse response) throws Exception {
+		List<Productionplanning> productionPlanList = new ArrayList<Productionplanning>();
 		Productionplanning productionplanning = null;
 		Calendar cal = Calendar.getInstance();
 
-		for (Iterator<ProductDTO> iterator = productList.iterator(); iterator.hasNext();) {
-			ProductDTO productDTO = (ProductDTO) iterator.next();
-			Product product =  new Product();
-			product.setId(productDTO.getId());
+		for (Iterator<Product> iterator = productList.iterator(); iterator.hasNext();) {
+			Product product = (Product) iterator.next();
 			cal.setTime(new Date());
 			cal.set(Calendar.DAY_OF_MONTH, 1);
 			int myMonth=cal.get(Calendar.MONTH);
 
 			while (myMonth==cal.get(Calendar.MONTH)) {
-				List<ProductOrderAssociationDTO> productorderassociations = productorderassociationService.getIncompleteProductOrderAssoByProdutId(product.getId());
+				List<Productorderassociation> productorderassociations = productorderassociationDao.getIncompleteProductOrderAssoByProdutId(product.getId());
 				if(productorderassociations !=null&&!productorderassociations.isEmpty()){
 				productionplanning = new Productionplanning();
 				productionplanning.setProduct(product);
@@ -200,15 +197,13 @@ public class ProductionplanningServiceImpl extends
 				if (productorderassociationService.getProductionPlanningforCurrentMonthByProductIdAndDate(
 						productionplanning.getProduct().getId(),
 						productionplanning.getDate())== null){
-				long id =	productionplanningDao.add(productionplanning);
-
+					productionplanningDao.add(productionplanning);
 				} }else{
 					System.out.println("production plan already exit");
 
 				}
-				Productionplanning productionplanning2 = productionplanningDao.getById(Productionplanning.class, productionplanning.getId());
-				ProductionPlanningDTO productionPlanningDTO = ProductionPlanningRequestResponseFactory.setProductionPlanningDTO(productionplanning2);
-				productionPlanList.add(productionPlanningDTO);
+
+				productionPlanList.add(productionplanning);
 			  System.out.print("product : " + product.getId() +" Date :" + new SimpleDateFormat("dd-MM-yyyy").format(cal.getTime()));
 			  cal.add(Calendar.DAY_OF_MONTH, 1);
 			}

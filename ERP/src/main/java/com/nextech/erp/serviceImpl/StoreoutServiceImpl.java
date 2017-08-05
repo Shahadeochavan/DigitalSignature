@@ -101,7 +101,7 @@ public class StoreoutServiceImpl extends CRUDServiceImpl<Storeout> implements St
 			productionplanning.setStoreOut_quantity(productionplanning.getStoreOut_quantity() + storeOutDTO.getQuantityRequired());
 		}
 		productionplanningDao.update(productionplanning);
-		return null;
+		return new UserStatus(1, "Storeout added Successfully !");
 		
 	}
 	private Storeoutrm setStoreParts(StoreOutPart storeOutPart) throws Exception {
