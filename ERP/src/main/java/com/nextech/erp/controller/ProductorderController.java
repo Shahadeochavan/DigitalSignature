@@ -107,7 +107,7 @@ public class ProductorderController {
 	RawmaterialinventoryService rawMaterialInventoryService;
 
 	@Transactional @RequestMapping(value = "/createmultiple", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus createMultiple(
+	public @ResponseBody UserStatus addMultipleProductOrder(
 			@Valid @RequestBody ProductOrderDTO productOrderDTO,
 			BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
 			try {
@@ -115,7 +115,7 @@ public class ProductorderController {
 					return new UserStatus(0, bindingResult.getFieldError().getDefaultMessage());
 				}
 				// TODO save call product order
-				ProductOrderDTO productOrderDTO2	=	productorderService.createMultiple(productOrderDTO, request, response);
+				ProductOrderDTO productOrderDTO2	=	productorderService.addMultipleProductOrder(productOrderDTO, request, response);
 
 				// TODO add product order association
 		        productOrderDTO.setId(productOrderDTO2.getId());

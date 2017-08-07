@@ -18,7 +18,7 @@ public interface BomService extends CRUDService<Bom> {
 	
 	public Bom  getBomByProductId(long productID) throws Exception;
 	
-	public BomDTO saveBOM(BomDTO bomDTO, HttpServletRequest request,HttpServletResponse response) throws Exception;
+	public BomDTO addMultipleBom(BomDTO bomDTO, HttpServletRequest request,HttpServletResponse response) throws Exception;
 	
 	public List<BomDTO> getBomList() throws Exception;
 	

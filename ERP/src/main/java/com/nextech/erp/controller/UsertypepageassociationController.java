@@ -46,7 +46,7 @@ public class UsertypepageassociationController {
 	private MessageSource messageSource;
 
 	@RequestMapping(value = "/createMultiple", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus createMultiple(
+	public @ResponseBody UserStatus addMultipleUserTypePageAsso(
 			@Valid @RequestBody UserTypePageAssoDTO userTypePageAssoDTO,
 			BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
 		try {
@@ -57,7 +57,7 @@ public class UsertypepageassociationController {
 			List<UserTypePageAssoPart> userTypePageAssoParts =	userTypePageAssoDTO.getUserTypePageAssoParts();
 			for (UserTypePageAssoPart userTypePageAssoPart : userTypePageAssoParts) {	
 			if (usertypepageassociationService.getUserTypePageAssoByPageIduserTypeId((userTypePageAssoPart.getPageId().getId()),userTypePageAssoDTO.getUsertypeId().getId()) == null){
-				usertypepageassociationService.createMultiple(userTypePageAssoDTO, request.getAttribute("current_user").toString());
+				usertypepageassociationService.addMultipleUserTypePageAsso(userTypePageAssoDTO, request.getAttribute("current_user").toString());
 			}else{
 				return new UserStatus(2, messageSource.getMessage(ERPConstants.USERTYPE_PAGE_ASSOCITION_EXIT, null, null));
 			}
@@ -80,7 +80,7 @@ public class UsertypepageassociationController {
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody UserTypePageAssoDTO getPageAss(
+	public @ResponseBody UserTypePageAssoDTO getUserTypePageAsso(
 			@PathVariable("id") long id) {
 		UserTypePageAssoDTO userTypePageAssoDTO = null;
 		try {
@@ -92,7 +92,7 @@ public class UsertypepageassociationController {
 	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
-	public @ResponseBody UserStatus updatePageAss(
+	public @ResponseBody UserStatus updateUserTypePageAsso(
 			@RequestBody UserTypePageAssoDTO userTypePageAssoDTO,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			usertypepageassociationService.addEntity(UserTypePageAssoFactory.setUserTypePageAssUpdate(userTypePageAssoDTO, request));
@@ -104,7 +104,7 @@ public class UsertypepageassociationController {
 	}
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<UserTypePageAssoDTO> getPageAss() {
+	public @ResponseBody List<UserTypePageAssoDTO> getUserTypePageAsso() {
 
 		List<UserTypePageAssoDTO> UserTypePageAssoDTO = null;
 		try {
@@ -133,7 +133,7 @@ public class UsertypepageassociationController {
 
 	/* Delete an object from DB in Spring Restful Services */
 	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus deletePageAss(@PathVariable("id") long id) {
+	public @ResponseBody UserStatus deleteUserTypePageAsso(@PathVariable("id") long id) {
 
 		try {
 			usertypepageassociationService.deleteUserTypePage(id);

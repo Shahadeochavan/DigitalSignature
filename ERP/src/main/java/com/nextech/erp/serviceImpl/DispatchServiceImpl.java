@@ -85,7 +85,7 @@ public class DispatchServiceImpl extends CRUDServiceImpl<Dispatch> implements Di
 	}
 
 	@Override
-	public List<DispatchProductDTO> saveDispatch(DispatchDTO dispatchDTO,HttpServletRequest request) throws Exception {
+	public List<DispatchProductDTO> addDispatch(DispatchDTO dispatchDTO,HttpServletRequest request) throws Exception {
 		// TODO Auto-generated method stub
 		List<DispatchProductDTO> dispatchProductDTOs = new ArrayList<DispatchProductDTO>();
 		for (DispatchPartDTO dispatchPartDTO : dispatchDTO.getDispatchPartDTOs()) {

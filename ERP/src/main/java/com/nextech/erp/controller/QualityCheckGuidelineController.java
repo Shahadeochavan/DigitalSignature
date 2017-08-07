@@ -50,7 +50,7 @@ public class QualityCheckGuidelineController {
 	private MessageSource messageSource;
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus addUnit(@Valid @RequestBody QualitycheckguidelineDTO qualitycheckguidelineDTO,HttpServletRequest request,HttpServletResponse response,
+	public @ResponseBody UserStatus addQualityCheckGuidline(@Valid @RequestBody QualitycheckguidelineDTO qualitycheckguidelineDTO,HttpServletRequest request,HttpServletResponse response,
 			BindingResult bindingResult) {
 		try {
 			if (bindingResult.hasErrors()) {
@@ -88,7 +88,7 @@ public class QualityCheckGuidelineController {
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody Qualitycheckguideline getUnit(@PathVariable("id") long id) {
+	public @ResponseBody Qualitycheckguideline getQualityCheckGuidline(@PathVariable("id") long id) {
 		Qualitycheckguideline qualitycheckguideline = null;
 		try {
 			qualitycheckguideline = qualityCheckGuidelineService.getEntityById(Qualitycheckguideline.class, id);
@@ -99,7 +99,7 @@ public class QualityCheckGuidelineController {
 	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
-	public @ResponseBody UserStatus updateUnit(@RequestBody QualitycheckguidelineDTO  qualitycheckguidelineDTO,HttpServletRequest request,HttpServletResponse response) {
+	public @ResponseBody UserStatus updateQualityCheckGuidline(@RequestBody QualitycheckguidelineDTO  qualitycheckguidelineDTO,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			qualityCheckGuidelineService.updateEntity(QCGuidelineRequestResponseFactory.setQualityCheckGuidlines(qualitycheckguidelineDTO, request));
 			return new UserStatus(1, "Qualitycheckguideline update Successfully !");
@@ -110,7 +110,7 @@ public class QualityCheckGuidelineController {
 	}
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<Qualitycheckguideline> getUnit() {
+	public @ResponseBody List<Qualitycheckguideline> getQualityCheckGuidline() {
 
 		List<Qualitycheckguideline> qualitycheckguidelines = null;
 		List<QualitycheckguidelineDTO> qualitycheckguidelineDTOs =  new ArrayList<QualitycheckguidelineDTO>();
@@ -143,7 +143,7 @@ public class QualityCheckGuidelineController {
 	}
 
 	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus deleteUnit(@PathVariable("id") long id) {
+	public @ResponseBody UserStatus deleteQualityCheckGuidline(@PathVariable("id") long id) {
 		Qualitycheckguideline qualitycheckguideline = null;
 		try {
 			qualitycheckguideline = qualityCheckGuidelineService.getEntityById(Qualitycheckguideline.class, id);

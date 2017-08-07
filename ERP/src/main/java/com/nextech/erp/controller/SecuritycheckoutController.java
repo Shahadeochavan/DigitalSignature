@@ -55,7 +55,7 @@ public class SecuritycheckoutController {
 
 
 	@Transactional @RequestMapping(value = "/productOrderCheckOut", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus addSecuritycheckout(@Valid @RequestBody SecurityCheckOutDTO securityCheckOutDTO,
+	public @ResponseBody UserStatus addSecurityCheckOut(@Valid @RequestBody SecurityCheckOutDTO securityCheckOutDTO,
 			BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			if (bindingResult.hasErrors()) {
@@ -64,7 +64,7 @@ public class SecuritycheckoutController {
 			}
                 
 			//TODO Save call security check out
-			securitycheckoutService.saveSecurityCheckOut(securityCheckOutDTO, request);
+			securitycheckoutService.addSecurityCheckOut(securityCheckOutDTO, request);
 
 			return new UserStatus(1, "Securitycheckout added Successfully !");
 		} catch (ConstraintViolationException cve) {

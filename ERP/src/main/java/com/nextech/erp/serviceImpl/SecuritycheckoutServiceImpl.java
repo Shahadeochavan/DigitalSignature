@@ -41,7 +41,7 @@ public class SecuritycheckoutServiceImpl extends CRUDServiceImpl<Securitycheckou
 	private MessageSource messageSource;
 	
 	@Override
-	public SecurityCheckOutDTO saveSecurityCheckOut(SecurityCheckOutDTO securityCheckOutDTO, HttpServletRequest request)throws Exception {
+	public SecurityCheckOutDTO addSecurityCheckOut(SecurityCheckOutDTO securityCheckOutDTO, HttpServletRequest request)throws Exception {
 		// TODO Auto-generated method stub
 		
 		Securitycheckout securitycheckout = SecurityCheckOutRequestResponseFactory.setSecurityCheckOut(securityCheckOutDTO, request);

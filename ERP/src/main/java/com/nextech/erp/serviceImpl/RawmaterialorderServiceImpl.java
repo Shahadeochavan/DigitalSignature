@@ -90,7 +90,7 @@ public class RawmaterialorderServiceImpl extends CRUDServiceImpl<Rawmaterialorde
 	}
 
 	@Override
-	public RawmaterialOrderDTO saveRMOrder(RawmaterialOrderDTO rawmaterialOrderDTO,HttpServletRequest request, HttpServletResponse response)throws Exception {
+	public RawmaterialOrderDTO addMultipleRawMaterialOrder(RawmaterialOrderDTO rawmaterialOrderDTO,HttpServletRequest request, HttpServletResponse response)throws Exception {
 		// TODO Auto-generated method stub
 		Rawmaterialorder  rawmaterialorder = RMOrderRequestResponseFactory.setRMOrder(rawmaterialOrderDTO);
 		rawmaterialorder.setStatus(StatusDao.getById(Status.class,Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_NEW_RM_ORDER, null, null))));

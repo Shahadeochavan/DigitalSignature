@@ -56,7 +56,7 @@ public class StoreoutServiceImpl extends CRUDServiceImpl<Storeout> implements St
 	StoreoutrmassociationDao storeoutrmassociationDao;
 	
 	@Override
-	public UserStatus createStoreOut(StoreOutDTO storeOutDTO, HttpServletRequest request)
+	public UserStatus addStoreOutRM(StoreOutDTO storeOutDTO, HttpServletRequest request)
 			throws Exception {
 		// TODO Auto-generated method stub
 		

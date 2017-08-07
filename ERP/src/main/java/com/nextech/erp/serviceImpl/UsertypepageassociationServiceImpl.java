@@ -75,7 +75,7 @@ public class UsertypepageassociationServiceImpl extends CRUDServiceImpl<Usertype
 	}
 
 	@Override
-	public UserTypePageAssoDTO createMultiple(UserTypePageAssoDTO userTypePageAssoDTO, String currentUser)
+	public UserTypePageAssoDTO addMultipleUserTypePageAsso(UserTypePageAssoDTO userTypePageAssoDTO, String currentUser)
 			throws Exception {
 		// TODO Auto-generated method stub
 		for(UserTypePageAssoPart userTypePageAssoPart : userTypePageAssoDTO.getUserTypePageAssoParts()){

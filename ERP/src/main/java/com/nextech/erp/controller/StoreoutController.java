@@ -64,14 +64,14 @@ public class StoreoutController {
 	RawmaterialinventoryService rawmaterialinventoryService;
 
 	@RequestMapping(value = "/createStoreOut", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus createStoreOut(@Valid @RequestBody StoreOutDTO storeOutDTO,
+	public @ResponseBody UserStatus addStoreOutRM(@Valid @RequestBody StoreOutDTO storeOutDTO,
 			BindingResult bindingResult, HttpServletRequest request, HttpServletResponse response) {
 		try {
 			if (bindingResult.hasErrors()) {
 				return new UserStatus(0, bindingResult.getFieldError().getDefaultMessage());
 			}
 			//TODO save call store out rm
-			storeoutService.createStoreOut(storeOutDTO, request);
+			storeoutService.addStoreOutRM(storeOutDTO, request);
 			
 			return new UserStatus(1, "Storeout added Successfully !");
 		} catch (ConstraintViolationException cve) {

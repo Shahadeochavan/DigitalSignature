@@ -64,7 +64,7 @@ public class BomServiceImpl extends CRUDServiceImpl<Bom> implements BomService {
 	}
 
 	@Override
-	public BomDTO saveBOM(BomDTO bomDTO, HttpServletRequest request,
+	public BomDTO addMultipleBom(BomDTO bomDTO, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 		// TODO Auto-generated method stub
 		Bom bom = BOMFactory.setBom(bomDTO, request);

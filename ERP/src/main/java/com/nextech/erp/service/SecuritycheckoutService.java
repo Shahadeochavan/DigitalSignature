@@ -9,7 +9,7 @@ import com.nextech.erp.model.Securitycheckout;
 
 public interface SecuritycheckoutService extends CRUDService<Securitycheckout>{
 	
-	public SecurityCheckOutDTO saveSecurityCheckOut(SecurityCheckOutDTO  securityCheckOutDTO,HttpServletRequest request)throws Exception;
+	public SecurityCheckOutDTO addSecurityCheckOut(SecurityCheckOutDTO  securityCheckOutDTO,HttpServletRequest request)throws Exception;
 	
 	public SecurityCheckOutDTO getSecurityCheckOutById(long id) throws Exception;
 	

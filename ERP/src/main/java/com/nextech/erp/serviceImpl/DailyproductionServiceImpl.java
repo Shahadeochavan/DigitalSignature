@@ -71,7 +71,7 @@ public class DailyproductionServiceImpl extends CRUDServiceImpl<Dailyproduction>
 	}
 
 	@Override
-	public void addDailyproduction(TodaysProductionPlanDTO todaysProductionPlanDTO,
+	public void addDailyProduction(TodaysProductionPlanDTO todaysProductionPlanDTO,
 			HttpServletRequest request) throws Exception {
 		// TODO Auto-generated method stub
 		for(DailyProductionPlanDTO dailyProductionPlanDTO : todaysProductionPlanDTO.getDailyProductionPlanDTOs()){

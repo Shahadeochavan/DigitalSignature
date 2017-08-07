@@ -197,6 +197,17 @@ public class UserController {
 		
 
 	}
+/*	private boolean authenticate(User formUser, User dbUser) {
+		if (formUser.getUserid().equals(dbUser.getUserid())
+				&& formUser.getPassword().equals(dbUser.getPassword())) {
+			dbUser.getFirstName();
+			dbUser.getLastName();
+			return true;
+		} else {
+			return false;
+		}
+
+	}*/
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody UserDTO getUser(@PathVariable("id") long id) {

@@ -17,6 +17,6 @@ public interface QualitycheckrawmaterialService extends
 	
 	public RawMaterialInvoiceDTO addQualityCheck(RawMaterialInvoiceDTO rawMaterialInvoiceDTO,HttpServletRequest request,HttpServletResponse response)throws Exception;
 	
-	public void addRawmaterialorderinvoiceReadyStore(RawMaterialInvoiceDTO rawMaterialInvoiceDTO,HttpServletRequest request,HttpServletResponse response)throws Exception;
+	public void addRawmaterialOrderInvoiceReadyStore(RawMaterialInvoiceDTO rawMaterialInvoiceDTO,HttpServletRequest request,HttpServletResponse response)throws Exception;
 
 }

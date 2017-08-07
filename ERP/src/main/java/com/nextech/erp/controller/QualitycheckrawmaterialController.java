@@ -160,7 +160,7 @@ public class QualitycheckrawmaterialController {
 				return new UserStatus(0, bindingResult.getFieldError().getDefaultMessage());
 			}
 			//TODO RM Ready Store In
-			qualitycheckrawmaterialService.addRawmaterialorderinvoiceReadyStore(rawMaterialInvoiceDTO, request, response);
+			qualitycheckrawmaterialService.addRawmaterialOrderInvoiceReadyStore(rawMaterialInvoiceDTO, request, response);
 			return new UserStatus(1,"Store Quality Check information save succesfully");
 		} catch (ConstraintViolationException cve) {
 			cve.printStackTrace();

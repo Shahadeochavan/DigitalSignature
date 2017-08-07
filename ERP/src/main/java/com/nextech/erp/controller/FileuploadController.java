@@ -9,22 +9,26 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.nextech.erp.constants.UploadImageConstants;
 import com.nextech.erp.dto.FileInfo;
+import com.nextech.erp.newDTO.NotificationDTO;
 
 @RestController
+@RequestMapping({"fileupload"})
 public class FileuploadController {
 
 	@Autowired
 	ServletContext context;
 
-	@Transactional @RequestMapping(value = "/fileupload",headers = "Content-Type=*/*", method = RequestMethod.POST)
+	@RequestMapping(value = "/fileupload",headers = "Content-Type=*/*", method = RequestMethod.POST)
 	public ResponseEntity<FileInfo> upload(
 			@RequestParam("file") MultipartFile inputFile) {
 		FileInfo fileInfo = new FileInfo();
@@ -39,7 +43,7 @@ public class FileuploadController {
 				fileInfo.setFileSize(inputFile.getSize());
 				headers.add("File Uploaded Successfully - ", originalFilename);
 				return new ResponseEntity<FileInfo>(fileInfo, headers,
-						HttpStatus.OK);
+					HttpStatus.OK);
 			} catch (Exception e) {
 				e.printStackTrace();
 				return new ResponseEntity<FileInfo>(HttpStatus.BAD_REQUEST);
@@ -47,5 +51,7 @@ public class FileuploadController {
 		} else {
 			return new ResponseEntity<FileInfo>(HttpStatus.BAD_REQUEST);
 		}
+	
 	}
+	
 }

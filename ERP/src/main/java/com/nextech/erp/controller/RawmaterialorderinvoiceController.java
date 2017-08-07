@@ -110,7 +110,7 @@ public class RawmaterialorderinvoiceController {
 	MailService mailService;
 
 	@Transactional @RequestMapping(value = "/securitycheck", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus addRawmaterialorderinvoice(
+	public @ResponseBody UserStatus addRawmaterialOrderInvoice(
 			@Valid @RequestBody RawMaterialInvoiceDTO rawMaterialInvoiceDTO,
 			BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
 		try {
@@ -124,7 +124,7 @@ public class RawmaterialorderinvoiceController {
 			
 			Rawmaterialorderinvoice rawmaterialorderinvoice = RawMaterialInvoiceRequestResponseFactory.setRMInvoice(rawMaterialInvoiceDTO);
 
-		    saveRMOrderInvoice(rawmaterialorderinvoice, request, response);
+			addRawmaterialOrderInvoice(rawmaterialorderinvoice, request, response);
 			Rawmaterialorder rawmaterialorder = rawmaterialorderService.getEntityById(Rawmaterialorder.class,rawmaterialorderinvoice.getPo_No());
 
 			Rawmaterialorderinvoiceassociation rawmaterialorderinvoiceassociation = RawMaterialInvoiceRequestResponseFactory.setRMOrderInvoiceAsso(rawMaterialInvoiceDTO, rawmaterialorderinvoice);
@@ -231,7 +231,7 @@ public class RawmaterialorderinvoiceController {
 		return rawmaterialorderinvoiceList;
 	}
 
-	private String saveRMOrderInvoice(Rawmaterialorderinvoice rawmaterialorderinvoice,HttpServletRequest request,HttpServletResponse response) throws RMOrderInvoiceExistsException,Exception{
+	private String addRawmaterialOrderInvoice(Rawmaterialorderinvoice rawmaterialorderinvoice,HttpServletRequest request,HttpServletResponse response) throws RMOrderInvoiceExistsException,Exception{
 		String message = "";
 		if (rawmaterialorderinvoiceservice.getRMOrderInvoiceByInVoiceNoVendorNameAndPoNo(rawmaterialorderinvoice.getInvoice_No(),
 				rawmaterialorderinvoice.getVendorname(),rawmaterialorderinvoice.getPo_No())== null) {

@@ -30,7 +30,7 @@ public class RMTypeController {
 	RMTypeService rmTypeService;
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus addUnit(@Valid @RequestBody RMTypeDTO rmTypeDTO,HttpServletRequest request,HttpServletResponse response,
+	public @ResponseBody UserStatus addRMType(@Valid @RequestBody RMTypeDTO rmTypeDTO,HttpServletRequest request,HttpServletResponse response,
 			BindingResult bindingResult) {
 		try {
 			if (bindingResult.hasErrors()) {
@@ -65,7 +65,7 @@ public class RMTypeController {
 	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
-	public @ResponseBody UserStatus updateUnit(@RequestBody RMTypeDTO rmTypeDTO,HttpServletRequest request,HttpServletResponse response) {
+	public @ResponseBody UserStatus updateRMType(@RequestBody RMTypeDTO rmTypeDTO,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			rmTypeService.updateEntity(RMTypeRequestResponseFactory.setRMTypeUpdate(rmTypeDTO, request));
 			return new UserStatus(1, "RM Type update Successfully !");
@@ -76,7 +76,7 @@ public class RMTypeController {
 	}
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<RMTypeDTO> getUnit() {
+	public @ResponseBody List<RMTypeDTO> getRMType() {
 
 		List<RMTypeDTO> rmTypeDTOs = null;
 		try {
@@ -90,7 +90,7 @@ public class RMTypeController {
 	}
 
 	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus deleteUnit(@PathVariable("id") long id) {
+	public @ResponseBody UserStatus deleteRMType(@PathVariable("id") long id) {
 
 		try {
 			rmTypeService.deleteRMType(id);

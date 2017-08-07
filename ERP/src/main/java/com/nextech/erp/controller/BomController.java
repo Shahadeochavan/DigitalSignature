@@ -81,7 +81,7 @@ public class BomController {
 			}
 			
 			    // TODO save call bom
-			BomDTO bomDTO2 = bomService.saveBOM(bomDTO, request, response);
+			BomDTO bomDTO2 = bomService.addMultipleBom(bomDTO, request, response);
 			bomDTO.setId(bomDTO2.getId());
 			bomDTO.setProduct(bomDTO2.getProduct());
 			addBomRMVendorAsso(bomDTO, request, response);

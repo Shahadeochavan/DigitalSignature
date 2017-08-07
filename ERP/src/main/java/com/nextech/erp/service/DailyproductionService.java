@@ -17,6 +17,6 @@ public interface DailyproductionService extends CRUDService<Dailyproduction> {
 	
 	public void deleteDailyProduction(long id) throws Exception;
 	
-	public void addDailyproduction(TodaysProductionPlanDTO todaysProductionPlanDTO,HttpServletRequest request)throws Exception;
+	public void addDailyProduction(TodaysProductionPlanDTO todaysProductionPlanDTO,HttpServletRequest request)throws Exception;
 	
 }

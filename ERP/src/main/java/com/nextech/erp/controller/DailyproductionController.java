@@ -45,13 +45,13 @@ public class DailyproductionController {
 	ProductionplanningService productionplanningService;
 
 	@RequestMapping(value = "/dailyproductionSave", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus addDailyproduction(@Valid @RequestBody TodaysProductionPlanDTO todaysProductionPlanDTO,HttpServletRequest request,HttpServletResponse response,
+	public @ResponseBody UserStatus addDailyProduction(@Valid @RequestBody TodaysProductionPlanDTO todaysProductionPlanDTO,HttpServletRequest request,HttpServletResponse response,
 			BindingResult bindingResult) {
 		try {
 			if (bindingResult.hasErrors()) {
 				return new UserStatus(0, bindingResult.getFieldError().getDefaultMessage());
 			}
-			dailyproductionservice.addDailyproduction(todaysProductionPlanDTO, request);
+			dailyproductionservice.addDailyProduction(todaysProductionPlanDTO, request);
 			return new UserStatus(1, "Dailyproduction added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			System.out.println("Inside ConstraintViolationException");

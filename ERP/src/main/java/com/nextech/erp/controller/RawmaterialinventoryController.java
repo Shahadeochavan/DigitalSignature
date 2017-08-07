@@ -66,7 +66,7 @@ public class RawmaterialinventoryController {
 	RawmaterialService rawmaterialService;
 	
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus addRawmaterialinventory(
+	public @ResponseBody UserStatus addRawMaterialInventory(
 			@Valid @RequestBody RMInventoryDTO rmInventoryDTO, BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			if (bindingResult.hasErrors()) {
@@ -91,7 +91,7 @@ public class RawmaterialinventoryController {
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody RMInventoryDTO getRawmaterialinventory(@PathVariable("id") long id) {
+	public @ResponseBody RMInventoryDTO getRawMaterialInventory(@PathVariable("id") long id) {
 		RMInventoryDTO rawmaterialinventory = null;
 		try {
 			rawmaterialinventory = rawmaterialinventoryService.getRMInventoryById(id);
@@ -102,7 +102,7 @@ public class RawmaterialinventoryController {
 	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
-	public @ResponseBody UserStatus updateRawmaterialinventory(@RequestBody RMInventoryDTO rmInventoryDTO,HttpServletRequest request,HttpServletResponse response) {
+	public @ResponseBody UserStatus updateRawMaterialInventory(@RequestBody RMInventoryDTO rmInventoryDTO,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			rawmaterialinventoryService.updateEntity(RMInventoryRequestResponseFactory.setRMInventoryUpdate(rmInventoryDTO, request));
 			return new UserStatus(1, "Rawmaterialinventory update Successfully !");
@@ -113,7 +113,7 @@ public class RawmaterialinventoryController {
 	}
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<RMInventoryDTO> getRawmaterialinventory() {
+	public @ResponseBody List<RMInventoryDTO> getRawMaterialInventory() {
 
 		List<RMInventoryDTO> rawmaterialinventoryList = null;
 		try {
@@ -125,7 +125,7 @@ public class RawmaterialinventoryController {
 	}
 
 	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus deleteRawmaterialinventory(@PathVariable("id") long id) {
+	public @ResponseBody UserStatus deleteRawMaterialInventory(@PathVariable("id") long id) {
 		try {
 			rawmaterialinventoryService.deleteRMInventory(id);
 			return new UserStatus(1, "Rawmaterialinventory deleted Successfully !");

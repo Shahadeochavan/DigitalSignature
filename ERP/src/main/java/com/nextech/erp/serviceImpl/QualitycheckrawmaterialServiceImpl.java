@@ -194,7 +194,7 @@ public class QualitycheckrawmaterialServiceImpl extends CRUDServiceImpl<Qualityc
 	}
 
 	@Override
-	public void addRawmaterialorderinvoiceReadyStore(
+	public void addRawmaterialOrderInvoiceReadyStore(
 			RawMaterialInvoiceDTO rawMaterialInvoiceDTO,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {

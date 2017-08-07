@@ -91,7 +91,7 @@ public class ProductorderServiceImpl extends CRUDServiceImpl<Productorder> imple
 		return productOrderDTOs;
 	}
 	@Override
-	public ProductOrderDTO createMultiple(ProductOrderDTO productOrderDTO,
+	public ProductOrderDTO addMultipleProductOrder(ProductOrderDTO productOrderDTO,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		// TODO Auto-generated method stub

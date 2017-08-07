@@ -126,14 +126,14 @@ public class RawmaterialorderController {
 	}
 
 	@Transactional @RequestMapping(value = "/createmultiple", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus addMultipleRawmaterialorder(
+	public @ResponseBody UserStatus addMultipleRawMaterialOrder(
 			@Valid @RequestBody RawmaterialOrderDTO rawmaterialOrderDTO, BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			if (bindingResult.hasErrors()) {
 				return new UserStatus(0, bindingResult.getFieldError().getDefaultMessage());
 			}
 			//TODO save call raw material order
-			RawmaterialOrderDTO rawmaterialOrderDTO2	= rawmaterialorderService.saveRMOrder(rawmaterialOrderDTO, request, response);
+			RawmaterialOrderDTO rawmaterialOrderDTO2	= rawmaterialorderService.addMultipleRawMaterialOrder(rawmaterialOrderDTO, request, response);
 			rawmaterialOrderDTO.setId(rawmaterialOrderDTO2.getId());
 			rawmaterialOrderDTO.setStatusId(rawmaterialOrderDTO2.getStatusId());
 			addRMOrderAsso(rawmaterialOrderDTO, request, response);

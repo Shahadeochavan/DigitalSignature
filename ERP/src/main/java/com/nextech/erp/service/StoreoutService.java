@@ -10,7 +10,7 @@ import com.nextech.erp.status.UserStatus;
 
 public interface StoreoutService extends CRUDService<Storeout>{
 	
-	public UserStatus  createStoreOut(StoreOutDTO  storeOutDTO,HttpServletRequest request) throws Exception;
+	public UserStatus  addStoreOutRM(StoreOutDTO  storeOutDTO,HttpServletRequest request) throws Exception;
 	
 	public List<StoreOutDTO> getStoreOutlist() throws Exception;
 	

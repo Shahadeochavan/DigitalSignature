@@ -35,7 +35,7 @@ public class RMVAssoController {
 	private MessageSource messageSource;
 
 	@Transactional @RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus addRawmaterialvendorassociation(
+	public @ResponseBody UserStatus addRawMaterialVendorAssociation(
 			@Valid @RequestBody RMVendorAssociationDTO rmVendorAssociationDTO,
 			BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
 		try {
@@ -69,7 +69,7 @@ public class RMVAssoController {
 	}
 
 	@Transactional @RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody RMVendorAssociationDTO getRawmaterialvendorassociation(
+	public @ResponseBody RMVendorAssociationDTO getRawMaterialVendorAssociation(
 			@PathVariable("id") long id) {
 		RMVendorAssociationDTO rawmaterialvendorassociation = null;
 		try {
@@ -81,7 +81,7 @@ public class RMVAssoController {
 	}
 
 	@Transactional @RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
-	public @ResponseBody UserStatus updateRawmaterialvendorassociation(
+	public @ResponseBody UserStatus updateRawMaterialVendorAssociation(
 			@RequestBody RMVendorAssociationDTO rmVendorAssociationDTO,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			rmvAssoService.updateEntity(RMVendorAssoRequestResponseFactory.setRMVendorAssoUpdate(rmVendorAssociationDTO, request));
@@ -94,7 +94,7 @@ public class RMVAssoController {
 	}
 
 	@Transactional @RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<RMVendorAssociationDTO> getRawmaterialvendorassociation() {
+	public @ResponseBody List<RMVendorAssociationDTO> getRawMaterialVendorAssociation() {
 
 		List<RMVendorAssociationDTO> rawmaterialvendorassociationList = null;
 		try {
@@ -119,7 +119,7 @@ public class RMVAssoController {
 	}
 	
 	@Transactional @RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus deleteRawmaterialvendorassociation(
+	public @ResponseBody UserStatus deleteRawMaterialVendorAssociation(
 			@PathVariable("id") long id) {
 
 		try {
