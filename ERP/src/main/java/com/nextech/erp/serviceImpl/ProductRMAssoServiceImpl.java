@@ -72,7 +72,7 @@ public class ProductRMAssoServiceImpl extends CRUDServiceImpl<Productrawmaterial
 	}
 
 	@Override
-	public ProductRMAssociationDTO createmultiple(ProductRMAssociationDTO productRMAssociationDTO,
+	public ProductRMAssociationDTO addMultipleRawmaterialorder(ProductRMAssociationDTO productRMAssociationDTO,
 			String currentUser) throws Exception {
 		// TODO Auto-generated method stub
 		for(ProductRMAssociationModelParts productRMAssociationModelParts : productRMAssociationDTO.getProductRMAssociationModelParts()){

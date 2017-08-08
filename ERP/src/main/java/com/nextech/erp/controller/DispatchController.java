@@ -112,7 +112,7 @@ public class DispatchController {
 
 	@Transactional
 	@RequestMapping(value = "/dispatchProducts", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus addDispatch(
+	public @ResponseBody UserStatus addDispatchProduct(
 			@RequestBody DispatchDTO dispatchDTO, BindingResult bindingResult,
 			HttpServletRequest request, HttpServletResponse response) {
 		try {
@@ -120,7 +120,7 @@ public class DispatchController {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
-		List<DispatchProductDTO> dispatchProductDTOs=	dispatchservice.addDispatch(dispatchDTO, request);
+		List<DispatchProductDTO> dispatchProductDTOs=	dispatchservice.addDispatchProduct(dispatchDTO, request);
 			ProductOrderDTO productorder = productorderService.getProductById(dispatchDTO.getOrderId());
 			ClientDTO client = clientService.getClientDTOById(productorder.getClientId().getId());
 			StatusDTO status = statusService.getStatusById(productorder.getStatusId().getId());

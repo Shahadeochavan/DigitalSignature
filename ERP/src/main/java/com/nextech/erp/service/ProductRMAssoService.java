@@ -19,7 +19,7 @@ public interface ProductRMAssoService extends CRUDService<Productrawmaterialasso
 	
 	public List<ProductRMAssociationDTO> getProductRMAssoList(long productId) throws Exception;
 	
-	public ProductRMAssociationDTO  createmultiple(ProductRMAssociationDTO productRMAssociationDTO ,String currentUser)throws Exception;
+	public ProductRMAssociationDTO  addMultipleRawmaterialorder(ProductRMAssociationDTO productRMAssociationDTO ,String currentUser)throws Exception;
 	
 	public List<ProductRMAssociationDTO> getProductRMAssoList() throws Exception;
 	

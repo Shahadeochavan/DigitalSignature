@@ -278,12 +278,6 @@ public class RawmaterialorderController {
 	        OutputStream os = response.getOutputStream();
 	        baos.writeTo(os);
 	        os.flush();
-
-	    /*	Status status = statusService.getEntityById(Status.class, rawmaterialorder.getStatus().getId());
-			Notification notification = notificationService.getEntityById(Notification.class, status.getNotifications1().size());
-			Vendor vendor = vendorService.getEntityById(Vendor.class,rawmaterialorder.getVendor().getId());
-			//TODO mail sending
-	        mailSending(notification, rawmaterialorder, vendor,temperotyFilePath);*/
 	    } catch (Exception e1) {
 	        e1.printStackTrace();
 	    }

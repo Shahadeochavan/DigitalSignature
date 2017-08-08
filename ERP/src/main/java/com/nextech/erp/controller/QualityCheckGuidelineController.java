@@ -110,13 +110,13 @@ public class QualityCheckGuidelineController {
 	}
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<Qualitycheckguideline> getQualityCheckGuidline() {
+	public @ResponseBody List<QualitycheckguidelineDTO> getQualityCheckGuidline() {
 
 		List<Qualitycheckguideline> qualitycheckguidelines = null;
 		List<QualitycheckguidelineDTO> qualitycheckguidelineDTOs =  new ArrayList<QualitycheckguidelineDTO>();
 		try {
 			qualitycheckguidelines = qualityCheckGuidelineService.getEntityList(Qualitycheckguideline.class);
-		/*	for (Qualitycheckguideline qualitycheckguideline : qualitycheckguidelines) {
+			for (Qualitycheckguideline qualitycheckguideline : qualitycheckguidelines) {
 				QualitycheckguidelineDTO qualitycheckguidelineDTO = new QualitycheckguidelineDTO();
 				if(qualitycheckguideline.getProductId()>0){
 					Product product = productService.getEntityById(Product.class, qualitycheckguideline.getProductId());
@@ -133,13 +133,13 @@ public class QualityCheckGuidelineController {
 					qualitycheckguidelineDTO.setProductId(qualitycheckguideline.getRawMaterialId());
 					qualitycheckguidelineDTOs.add(qualitycheckguidelineDTO);
 				}
-			}*/
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		return qualitycheckguidelines;
+		return qualitycheckguidelineDTOs;
 	}
 
 	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
