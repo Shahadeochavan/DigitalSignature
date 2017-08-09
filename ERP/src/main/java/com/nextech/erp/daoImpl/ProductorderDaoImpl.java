@@ -38,7 +38,6 @@ public class ProductorderDaoImpl extends SuperDaoImpl<Productorder> implements
 		criteria.add(Restrictions.and(criterion));
 		return (List<Productorder>) (criteria.list().size() > 0 ? criteria.list() : null);
 	}
-
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Productorder> getInCompleteProductOrder(long clientId,long statusId,long statusId1) {

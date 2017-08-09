@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.nextech.erp.dao.RawmaterialinventoryDao;
-import com.nextech.erp.dto.ProductOrderDTO;
 import com.nextech.erp.dto.RMInventoryDTO;
 import com.nextech.erp.factory.RMInventoryRequestResponseFactory;
 import com.nextech.erp.model.Rawmaterialinventory;

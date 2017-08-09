@@ -1,6 +1,7 @@
 package com.nextech.erp.controller;
 
 import java.io.File;
+import java.net.URL;
 
 import javax.servlet.ServletContext;
 
@@ -24,7 +25,7 @@ public class FileuploadController {
 	ServletContext context;
 
 	@RequestMapping(value = "/fileupload",headers = "Content-Type=*/*", method = RequestMethod.POST)
-	public ResponseEntity<FileInfo> upload(
+	public ResponseEntity<FileInfo> upload(@RequestParam("clientPartNumber") String clientPartNumber,
 			@RequestParam("file") MultipartFile inputFile) {
 		FileInfo fileInfo = new FileInfo();
 		HttpHeaders headers = new HttpHeaders();
@@ -48,5 +49,6 @@ public class FileuploadController {
 		}
 	
 	}
+	
 	
 }

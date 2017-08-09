@@ -197,17 +197,7 @@ public class UserController {
 		
 
 	}
-/*	private boolean authenticate(User formUser, User dbUser) {
-		if (formUser.getUserid().equals(dbUser.getUserid())
-				&& formUser.getPassword().equals(dbUser.getPassword())) {
-			dbUser.getFirstName();
-			dbUser.getLastName();
-			return true;
-		} else {
-			return false;
-		}
-
-	}*/
+	
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody UserDTO getUser(@PathVariable("id") long id) {
@@ -257,9 +247,7 @@ public class UserController {
 			return new UserStatus(0, e.toString());
 		}
 	}
-
-	/* @CrossOrigin(origins = "http://localhost:8080") */
-	/* Getting List of objects in Json format in Spring Restful Services */
+	
 	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody List<UserDTO> getUser() {
 
@@ -356,5 +344,6 @@ public class UserController {
 		        mail.setModel(model);
 		        mailService.sendEmailWithoutPdF(mail, notificationDTO);
 }
+
 
 }

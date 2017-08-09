@@ -105,7 +105,6 @@ public class ProductRMAssoController {
 			if (bindingResult.hasErrors()) {
 				return new UserStatus(0, bindingResult.getFieldError().getDefaultMessage());
 			}
-		//	createMultipleRMAssociations(productRMAssociationDTO, request.getAttribute("current_user").toString());
 			
 			productRMAssoService.addMultipleRawmaterialorder(productRMAssociationDTO, request.getAttribute("current_user").toString());
 			return new UserStatus(1, "Multiple Rawmaterialorder added Successfully !");

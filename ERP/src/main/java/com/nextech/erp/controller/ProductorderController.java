@@ -106,7 +106,7 @@ public class ProductorderController {
 	@Autowired
 	RawmaterialinventoryService rawMaterialInventoryService;
 
-	@Transactional @RequestMapping(value = "/createmultiple", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
+	@Transactional @RequestMapping(value = "/createMultiple", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addMultipleProductOrder(
 			@Valid @RequestBody ProductOrderDTO productOrderDTO,
 			BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
@@ -201,7 +201,6 @@ public class ProductorderController {
 			@RequestBody ProductOrderDTO productOrderDTO,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			productorderService.updateMultiple(productOrderDTO, request, response);
-			//productorderService.updateEntity(ProductOrderRequestResponseFactory.setProductOrder(productOrderDTO));
 			return new UserStatus(1, "Product Order update Successfully !");
 		} catch (Exception e) {
 			e.printStackTrace();
