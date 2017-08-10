@@ -12,6 +12,7 @@ public class RawMaterialDTO extends AbstractDTO{
 	private float pricePerUnit;
 	private Unit unitId;
 	private Rmtype rmTypeId;
+	private String design;
 	public String getRmName() {
 		return rmName;
 	}
@@ -41,6 +42,12 @@ public class RawMaterialDTO extends AbstractDTO{
 	}
 	public void setRmTypeId(Rmtype rmTypeId) {
 		this.rmTypeId = rmTypeId;
+	}
+	public String getDesign() {
+		return design;
+	}
+	public void setDesign(String design) {
+		this.design = design;
 	}
 	
 	

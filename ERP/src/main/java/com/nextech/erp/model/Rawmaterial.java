@@ -35,6 +35,8 @@ public class Rawmaterial implements Serializable {
 
 	@Size(min = 4, max = 255, message = "{description sholud be greater than 4 or less than 255 characters}")
 	private String description;
+	
+	private String design;
 
 	private boolean isactive;
 
@@ -96,6 +98,15 @@ public class Rawmaterial implements Serializable {
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "rawmaterial", cascade = CascadeType.ALL)
 	private List<Storeoutrm> storeoutrms;
 	
+	
+	
+	public String getDesign() {
+		return design;
+	}
+	public void setDesign(String design) {
+		this.design = design;
+	}
+
 	@ManyToOne
 	@JoinColumn(name="rmTypeId")
 	private Rmtype rmtype;

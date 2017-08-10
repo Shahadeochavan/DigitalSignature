@@ -13,6 +13,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.poi.hssf.record.formula.Ptg;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+
 
 
 import com.nextech.erp.constants.ERPConstants;
@@ -114,7 +116,7 @@ public class ProductController {
 			Product product = ProductRequestResponseFactory.setProduct(productDTO, request);
 			 product.setDesign(destinationFilePath);
 		    long id =	productService.addEntity(product);
-	    	productDTO.setId(id);
+	    	productDTO.setId(id); 
 			addProductInventory(productDTO, Long.parseLong(request.getAttribute("current_user").toString()));
 			return new UserStatus(1, "product added Successfully !");
 		} catch (ConstraintViolationException cve) {
@@ -141,9 +143,55 @@ public class ProductController {
 		}
 		return product;
 	}
+	
+	@Transactional @RequestMapping(value = "/update",headers = "Content-Type=*/*", method = RequestMethod.POST)
+	public @ResponseBody UserStatus updateProduct(
+			HttpServletRequest request,@RequestParam("file") MultipartFile inputFile,
+			@RequestParam("clientPartNumber") String clientPartNumber,	@RequestParam("id") long id,
+			@RequestParam("name") String name,@RequestParam("description")String description,
+			@RequestParam("partNumber") String partNumber) {
+		try {
+			ProductDTO oldProductInfo = productService.getProductDTO(id);
+			if(name.equals(oldProductInfo.getName())){ 	
+				} else { 
+					if (productService.getProductByName(name) == null) {
+				    }else{  
+				    	return new UserStatus(0, messageSource.getMessage(ERPConstants.PRODUCT_NAME, null, null));
+					}
+				 }
+	            if(partNumber.equals(oldProductInfo.getPartNumber())){  			
+				} else { if (productService.getProductByPartNumber(partNumber) == null) {
+				    }else{  
+				    	return new UserStatus(0, messageSource.getMessage(ERPConstants.PART_NUMBER, null, null));
+					}
+				 }
+			String destinationFilePath = ImageUploadUtil.imgaeUpload(inputFile);
+			  ProductDTO productDTO =  new ProductDTO();
+			   productDTO.setClientPartNumber(clientPartNumber);
+			   productDTO.setName(name);
+			   productDTO.setId(id);
+			   productDTO.setPartNumber(partNumber);
+			   productDTO.setDescription(description);
+			   productDTO.setDesign(destinationFilePath);
+				productService.updateEntity(ProductRequestResponseFactory.setProductUpdate(productDTO, request));
+				mailSendingUpdate();
+			return new UserStatus(1, "product added Successfully !");
+		} catch (ConstraintViolationException cve) {
+			cve.printStackTrace();
+			return new UserStatus(0, cve.getCause().getMessage());
+		} catch (PersistenceException pe) {
+			System.out.println("Inside PersistenceException");
+			pe.printStackTrace();
+			return new UserStatus(0, pe.getCause().getMessage());
+		} catch (Exception e) {
+			System.out.println("Inside Exception");
+			e.printStackTrace();
+			return new UserStatus(0, e.getCause().getMessage());
+		}
+	}
 
-	@Transactional @RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
-	public @ResponseBody UserStatus updateProduct(@RequestBody ProductDTO productDTO,HttpServletRequest request,HttpServletResponse response) {
+/*	@Transactional @RequestMapping(value = "/update1", method = RequestMethod.PUT, headers = "Accept=application/json")
+	public @ResponseBody UserStatus updateProduct1(@RequestBody ProductDTO productDTO,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			ProductDTO oldProductInfo = productService.getProductDTO(productDTO.getId());
 			if(productDTO.getName().equals(oldProductInfo.getName())){ 	
@@ -167,7 +215,7 @@ public class ProductController {
 			return new UserStatus(0, e.toString());
 		}
 	}
-
+*/
 	@Transactional @RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody List<ProductDTO> getProduct() {
 

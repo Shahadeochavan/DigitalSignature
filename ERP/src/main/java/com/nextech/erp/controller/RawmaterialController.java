@@ -18,14 +18,25 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.nextech.erp.constants.ERPConstants;
+import com.nextech.erp.dao.UnitDao;
+import com.nextech.erp.factory.ProductRequestResponseFactory;
 import com.nextech.erp.factory.RMRequestResponseFactory;
+import com.nextech.erp.model.Product;
+import com.nextech.erp.model.Rawmaterial;
+import com.nextech.erp.model.Rmtype;
+import com.nextech.erp.model.Unit;
+import com.nextech.erp.newDTO.ProductDTO;
 import com.nextech.erp.newDTO.RMVendorAssociationDTO;
 import com.nextech.erp.newDTO.RawMaterialDTO;
 import com.nextech.erp.service.RawmaterialService;
 import com.nextech.erp.service.RawmaterialinventoryService;
 import com.nextech.erp.status.UserStatus;
+import com.nextech.erp.util.ImageUploadUtil;
 @Controller
 @Transactional @RequestMapping("/rawmaterial")
 public class RawmaterialController {
@@ -39,18 +50,31 @@ public class RawmaterialController {
 	@Autowired
 	private MessageSource messageSource;
 
-	@ExceptionHandler(Exception.class)
-	@Transactional @RequestMapping(value = "/create", method = RequestMethod.POST)
+	@Transactional @RequestMapping(value = "/create",headers = "Content-Type=*/*", method = RequestMethod.POST)
 	public @ResponseBody UserStatus addRawmaterial(
-			@Valid @RequestBody RawMaterialDTO rawMaterialDTO, BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
+			HttpServletRequest request,@RequestParam("file") MultipartFile inputFile,
+			@RequestParam("rmName") String rmName,
+			@RequestParam("partNumber") String partNumber,@RequestParam("description")String description,
+			@RequestParam("pricePerUnit") float pricePerUnit,
+			@RequestParam("unitId") long unitId,@RequestParam("rmTypeId") long rmTypeId ) {
 		try {
-			if (bindingResult.hasErrors()) {
-				return new UserStatus(0, bindingResult.getFieldError().getDefaultMessage());
-			}
-			long id = rawmaterialService.addEntity(RMRequestResponseFactory.setRawMaterial(rawMaterialDTO, request));
-			rawMaterialDTO.setId(id);
-			addRMInventory(rawMaterialDTO, Long.parseLong(request.getAttribute("current_user").toString()));
-			return new UserStatus(1, messageSource.getMessage(ERPConstants.RAW_MATERAIL_ADD, null, null));
+			String destinationFilePath = ImageUploadUtil.imgaeUpload(inputFile);
+			  RawMaterialDTO rawMaterialDTO =  new RawMaterialDTO();
+			  rawMaterialDTO.setRmName(rmName);
+			  rawMaterialDTO.setDescription(description);
+			  rawMaterialDTO.setDesign(destinationFilePath);
+			  rawMaterialDTO.setPricePerUnit(pricePerUnit);
+			  rawMaterialDTO.setPartNumber(partNumber);
+			   Unit unit =  new Unit();
+			   unit.setId(unitId);
+			   rawMaterialDTO.setUnitId(unit);
+			    Rmtype rmtype =  new Rmtype();
+			   rmtype.setId(rmTypeId);
+			   rawMaterialDTO.setRmTypeId(rmtype);
+				long id = rawmaterialService.addEntity(RMRequestResponseFactory.setRawMaterial(rawMaterialDTO, request));
+				rawMaterialDTO.setId(id);
+				addRMInventory(rawMaterialDTO, Long.parseLong(request.getAttribute("current_user").toString()));
+				return new UserStatus(1, messageSource.getMessage(ERPConstants.RAW_MATERAIL_ADD, null, null));
 		} catch (ConstraintViolationException cve) {
 			cve.printStackTrace();
 			return new UserStatus(0, cve.getCause().getMessage());
@@ -62,7 +86,6 @@ public class RawmaterialController {
 			return new UserStatus(0, e.getCause().getMessage());
 		}
 	}
-
 	@Transactional @RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody RawMaterialDTO getRawmaterial(@PathVariable("id") long id) {
 		RawMaterialDTO rawmaterial = null;
@@ -74,9 +97,28 @@ public class RawmaterialController {
 		return rawmaterial;
 	}
 
-	@Transactional @RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
-	public @ResponseBody UserStatus updateRawmaterial(@RequestBody RawMaterialDTO rawMaterialDTO,HttpServletRequest request,HttpServletResponse response) {
+	@Transactional @RequestMapping(value = "/update",headers = "Content-Type=*/*", method = RequestMethod.POST)
+	public @ResponseBody UserStatus upddateRawmaterial(
+			HttpServletRequest request,@RequestParam("file") MultipartFile inputFile,
+			@RequestParam("rmName") String rmName,@RequestParam("id") long id,
+			@RequestParam("partNumber") String partNumber,@RequestParam("description")String description,
+			@RequestParam("pricePerUnit") float pricePerUnit,
+			@RequestParam("unitId") long unitId,@RequestParam("rmTypeId") long rmTypeId ) {
 		try {
+			String destinationFilePath = ImageUploadUtil.imgaeUpload(inputFile);
+			  RawMaterialDTO rawMaterialDTO =  new RawMaterialDTO();
+			  rawMaterialDTO.setRmName(rmName);
+			  rawMaterialDTO.setDescription(description);
+			  rawMaterialDTO.setDesign(destinationFilePath);
+			  rawMaterialDTO.setPricePerUnit(pricePerUnit);
+			  rawMaterialDTO.setPartNumber(partNumber);
+			  rawMaterialDTO.setId(id);
+			   Unit unit =  new Unit();
+			   unit.setId(unitId);
+			   rawMaterialDTO.setUnitId(unit);
+			    Rmtype rmtype =  new Rmtype();
+			   rmtype.setId(rmTypeId);
+			   rawMaterialDTO.setRmTypeId(rmtype);
 			rawmaterialService.updateEntity(RMRequestResponseFactory.setRawMaterialUpdate(rawMaterialDTO, request));
 			return new UserStatus(1,messageSource.getMessage(ERPConstants.RAW_MATERAIL_UPDATE, null, null));
 		} catch (Exception e) {

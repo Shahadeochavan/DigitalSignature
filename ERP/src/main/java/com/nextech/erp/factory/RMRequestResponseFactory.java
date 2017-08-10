@@ -16,6 +16,7 @@ public class RMRequestResponseFactory {
 		rawmaterial.setPricePerUnit(rawMaterialDTO.getPricePerUnit());
 		rawmaterial.setUnit(rawMaterialDTO.getUnitId());
 		rawmaterial.setRmtype(rawMaterialDTO.getRmTypeId());
+		rawmaterial.setDesign(rawMaterialDTO.getDesign());
 		rawmaterial.setIsactive(true);
 		rawmaterial.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 		return rawmaterial;
@@ -30,6 +31,7 @@ public class RMRequestResponseFactory {
 		rawmaterial.setPricePerUnit(rawMaterialDTO.getPricePerUnit());
 		rawmaterial.setUnit(rawMaterialDTO.getUnitId());
 		rawmaterial.setRmtype(rawMaterialDTO.getRmTypeId());
+		rawmaterial.setDesign(rawMaterialDTO.getDesign());
 		rawmaterial.setIsactive(true);
 		rawmaterial.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 		return rawmaterial;
