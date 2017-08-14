@@ -1,5 +1,8 @@
 package com.nextech.erp.controller;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.List;
 
 import javax.persistence.PersistenceException;
@@ -7,9 +10,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import org.apache.commons.io.IOUtils;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
@@ -183,5 +191,22 @@ public class RawmaterialController {
 			e.printStackTrace();
 		}
 		return rawmaterialList;
+	}
+	@Transactional @RequestMapping(value = "/image/{RM-ID}", method = RequestMethod.GET, headers = "Accept=application/json")
+	public @ResponseBody ResponseEntity<byte[]> getRawmaterailImage(@PathVariable("RM-ID") long id,HttpServletRequest request){
+		try {
+			Rawmaterial rawmaterial = rawmaterialService.getRMByRMId(id);
+			String FILE_PATH = rawmaterial.getDesign();
+			
+			InputStream in = request.getServletContext().getResourceAsStream(FILE_PATH);
+			in = new FileInputStream(new File(FILE_PATH));
+		    final HttpHeaders headers = new HttpHeaders();
+		    headers.setContentType(MediaType.IMAGE_PNG);
+
+		    return new ResponseEntity<byte[]>(IOUtils.toByteArray(in), headers, HttpStatus.CREATED);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 }

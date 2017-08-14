@@ -193,26 +193,29 @@ public class ProductionplanningController {
 		try {
 			List<ProductionPlanningDTO> productionplannings = productionplanningService.getProductionplanByDate(DateUtil.convertToDate(date));
 			for (ProductionPlanningDTO productionplanning : productionplannings) {
-				boolean isProductRemaining = false;
+				boolean isProductionRemaining = false;
 				//TODO Can we add this if condition below to Query along with condition target quantity?
-				if(productionplanning.getStatusId().getId() == Long.parseLong(messageSource.getMessage(ERPConstants.PRODUCTION_PLAN_READY_TO_START, null, null))||
-						productionplanning.getStatusId().getId()==Long.parseLong(messageSource.getMessage(ERPConstants.PROD_PLAN_COMPLETE, null, null))){
+//				if(productionplanning.getStatusId().getId() 
+//						== Long.parseLong(messageSource.getMessage(ERPConstants.PRODUCTION_PLAN_READY_TO_START, null, null))
+//					|| 	productionplanning.getStatusId().getId()
+//						==Long.parseLong(messageSource.getMessage(ERPConstants.PROD_PLAN_COMPLETE, null, null))){
 					if(productionplanning.getTargetQuantity() > 0){
-						List<ProductOrderAssociationDTO> productorderassociations = productorderassociationService.getIncompleteProductOrderAssoByProdutId(productionplanning.getProductId().getId());
+						List<ProductOrderAssociationDTO> productorderassociations = 
+								productorderassociationService.getIncompleteProductOrderAssoByProdutId(productionplanning.getProductId().getId());
 						if(productorderassociations !=null && !productorderassociations.isEmpty()){
 							for (ProductOrderAssociationDTO productorderassociation : productorderassociations) {
 								if(productorderassociation.getRemainingQuantity() > 0){
-									isProductRemaining = true;
+									isProductionRemaining = true;
 									break;
 								}
 							}
 						}
 						//return new Response(101,"Please get RM from RM Store Out. So that Today's Production Plan will be generated.",productionplanningFinalList);
 					}
-				}else{
-					return new Response(101,"There is no production plan for today.",productionplanningFinalList);
-				}
-				if(isProductRemaining)
+//				}else{
+//					return new Response(101,"There is no production plan for today.",productionplanningFinalList);
+//				}
+				if(isProductionRemaining)
 					productionplanningFinalList.add(productionplanning);
 			}
 		} catch (Exception e) {

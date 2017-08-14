@@ -1,23 +1,39 @@
 package com.nextech.erp.controller;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.imageio.ImageIO;
 import javax.persistence.PersistenceException;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Response.ResponseBuilder;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.poi.hssf.record.formula.Ptg;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,6 +43,17 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -189,33 +216,7 @@ public class ProductController {
 			return new UserStatus(0, e.getCause().getMessage());
 		}
 	}
-
-/*	@Transactional @RequestMapping(value = "/update1", method = RequestMethod.PUT, headers = "Accept=application/json")
-	public @ResponseBody UserStatus updateProduct1(@RequestBody ProductDTO productDTO,HttpServletRequest request,HttpServletResponse response) {
-		try {
-			ProductDTO oldProductInfo = productService.getProductDTO(productDTO.getId());
-			if(productDTO.getName().equals(oldProductInfo.getName())){ 	
-				} else { 
-					if (productService.getProductByName(productDTO.getName()) == null) {
-				    }else{  
-				    	return new UserStatus(0, messageSource.getMessage(ERPConstants.PRODUCT_NAME, null, null));
-					}
-				 }
-	            if(productDTO.getPartNumber().equals(oldProductInfo.getPartNumber())){  			
-				} else { if (productService.getProductByPartNumber(productDTO.getPartNumber()) == null) {
-				    }else{  
-				    	return new UserStatus(0, messageSource.getMessage(ERPConstants.PART_NUMBER, null, null));
-					}
-				 }
-			productService.updateEntity(ProductRequestResponseFactory.setProductUpdate(productDTO, request));
-			mailSendingUpdate();
-			return new UserStatus(1, "Product update Successfully !");
-		} catch (Exception e) {
-			 e.printStackTrace();
-			return new UserStatus(0, e.toString());
-		}
-	}
-*/
+	
 	@Transactional @RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody List<ProductDTO> getProduct() {
 
@@ -265,15 +266,22 @@ public class ProductController {
 
 	}
 	
-	@Transactional @RequestMapping(value = "downlodaProductImage/{PRODUCT-ID}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody UserStatus getProductByproductId(@PathVariable("PRODUCT-ID") long productId,HttpServletRequest request) {
+	@Transactional @RequestMapping(value = "/image/{PRODUCT-ID}", method = RequestMethod.GET, headers = "Accept=application/json")
+	public @ResponseBody ResponseEntity<byte[]> getProductByproductId(@PathVariable("PRODUCT-ID") long productId,HttpServletRequest request) {
 	
 		try {
 			Product product = productService.getProductByProductId(productId);
+			String FILE_PATH = product.getDesign();
+			
+			InputStream in = request.getServletContext().getResourceAsStream(FILE_PATH);
+			in = new FileInputStream(new File(FILE_PATH));
+		    final HttpHeaders headers = new HttpHeaders();
+		    headers.setContentType(MediaType.IMAGE_PNG);
+		    return new ResponseEntity<byte[]>(IOUtils.toByteArray(in), headers, HttpStatus.CREATED);
 
-			return new UserStatus(1, "Product Image download Successfully !");
 		} catch (Exception e) {
-			return new UserStatus(0, e.toString());
+			e.printStackTrace();
+			return null;
 		}
 	}
 
@@ -303,4 +311,5 @@ public class ProductController {
 	        mail.setModel(model);
 		mailService.sendEmailWithoutPdF(mail, notificationDTO);
 	}
+	
 }

@@ -318,20 +318,29 @@ public class UserController {
 	
 	private void mailSendingUpdate(UserDTO userDTO,HttpServletRequest request) throws NumberFormatException, Exception{
 		  Mail mail = new Mail();
-
+			StringBuilder stringBuilder = new StringBuilder();
+			String prefix="";
+			String send="";
 		  NotificationDTO  notificationDTO = notificationService.getNotificationDTOById(Long.parseLong(messageSource.getMessage(ERPConstants.USER_UPDATE_NOTIFICATION, null, null)));
 		  List<NotificationUserAssociatinsDTO> notificationUserAssociatinsDTOs = notificationUserAssService.getNotificationUserAssociatinsDTOs(notificationDTO.getId());
 		  for (NotificationUserAssociatinsDTO notificationuserassociation : notificationUserAssociatinsDTOs) {
 			  UserDTO user1 = userservice.getUserDTO(notificationuserassociation.getUserId().getId());
-			  if(notificationuserassociation.getTo()==true){
+			  if(notificationuserassociation.getTo()){
+				
 				  mail.setMailTo(userDTO.getEmailId());
-			  }else if(notificationuserassociation.getBcc()==true){
+			  }else if(notificationuserassociation.getBcc()){
 				  mail.setMailBcc(user1.getEmailId());
-			  }else if(notificationuserassociation.getCc()==true){
-				  mail.setMailCc(user1.getEmailId());
+			  }else if(notificationuserassociation.getCc()){
+					stringBuilder.append(prefix);
+					prefix=",";
+					stringBuilder.append(user1.getEmailId());
+					send = stringBuilder.toString();
+					mail.setMailCc(send);
 			  }
 			
 		}
+		  
+		  
 		        mail.setMailSubject(notificationDTO.getSubject());
 		        Map < String, Object > model = new HashMap < String, Object > ();
 		        model.put("firstName", userDTO.getFirstName());

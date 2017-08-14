@@ -163,11 +163,11 @@ public class VendorController {
 		  List<NotificationUserAssociatinsDTO> notificationUserAssociatinsDTOs = notificationUserAssService.getNotificationUserAssociatinsDTOs(notificationDTO.getId());
 		  for (NotificationUserAssociatinsDTO notificationuserassociation : notificationUserAssociatinsDTOs) {
 			  UserDTO userDTO = userService.getUserDTO(notificationuserassociation.getUserId().getId());
-			  if(notificationuserassociation.getTo()==true){
+			  if(notificationuserassociation.getTo()){
 				  mail.setMailTo(vendorDTO.getEmail());
-			  }else if(notificationuserassociation.getBcc()==true){
+			  }else if(notificationuserassociation.getBcc()){
 				  mail.setMailBcc(userDTO.getEmailId());
-			  }else if(notificationuserassociation.getCc()==true){
+			  }else if(notificationuserassociation.getCc()){
 				  mail.setMailCc(userDTO.getEmailId());
 			  }
 			
@@ -192,11 +192,11 @@ public class VendorController {
 		  List<NotificationUserAssociatinsDTO> notificationUserAssociatinsDTOs = notificationUserAssService.getNotificationUserAssociatinsDTOs(notificationDTO.getId());
 		  for (NotificationUserAssociatinsDTO notificationuserassociation : notificationUserAssociatinsDTOs) {
 			  UserDTO userDTO = userService.getUserDTO(notificationuserassociation.getUserId().getId());
-			  if(notificationuserassociation.getTo()==true){
+			  if(notificationuserassociation.getTo()){
 				  mail.setMailTo(vendorDTO.getEmail()); 
-			  }else if(notificationuserassociation.getBcc()==true){
+			  }else if(notificationuserassociation.getBcc()){
 				  mail.setMailBcc(userDTO.getEmailId());
-			  }else if(notificationuserassociation.getCc()==true){
+			  }else if(notificationuserassociation.getCc()){
 				  mail.setMailCc(userDTO.getEmailId());
 			  }
 			
