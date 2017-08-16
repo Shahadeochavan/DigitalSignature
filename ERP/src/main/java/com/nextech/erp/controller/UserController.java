@@ -238,7 +238,12 @@ public class UserController {
 				}
 			}
 			User user = UserFactory.setUserUpdate(userDTO, request);
-		 	user.setPassword(new com.nextech.erp.util.EncryptDecrypt().encrypt(userDTO.getPassword()));
+			if(userDTO.getPassword().equals(oldUserInfo.getPassword())){
+				user.setPassword(userDTO.getPassword());
+			}else{
+			    user.setPassword(new com.nextech.erp.util.EncryptDecrypt().encrypt(userDTO.getPassword()));	
+			}
+		 //	user.setPassword(new com.nextech.erp.util.EncryptDecrypt().encrypt(userDTO.getPassword()));
 	     	userservice.updateEntity(user);
 		mailSendingUpdate(userDTO, request);
 		return new UserStatus(1, "User update Successfully !");
@@ -326,7 +331,6 @@ public class UserController {
 		  for (NotificationUserAssociatinsDTO notificationuserassociation : notificationUserAssociatinsDTOs) {
 			  UserDTO user1 = userservice.getUserDTO(notificationuserassociation.getUserId().getId());
 			  if(notificationuserassociation.getTo()){
-				
 				  mail.setMailTo(userDTO.getEmailId());
 			  }else if(notificationuserassociation.getBcc()){
 				  mail.setMailBcc(user1.getEmailId());

@@ -31,7 +31,6 @@ public class UserFactory {
 		User user = new User();
 		user.setId(userDTO.getId());
 		user.setUserid(userDTO.getUserId());
-		user.setPassword(userDTO.getPassword());
 		user.setFirstName(userDTO.getFirstName());
 		user.setLastName(userDTO.getLastName());
 		user.setMobile(userDTO.getMobileNo());

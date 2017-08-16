@@ -76,10 +76,12 @@ public class MailServiceImpl extends CRUDServiceImpl<Notification> implements Ma
 	         //   mimeMessageHelper.setFrom(mail.getMailFrom());
 	            if(mail.getMailBcc() != null)
 	            	mimeMessageHelper.setBcc(mail.getMailBcc());
-	            if(mail.getMailCc() != null)
-	            	mimeMessageHelper.setCc(mail.getMailCc());
+	            //if(mail.getMailCc() != null)
+	            	//mimeMessageHelper.setCc(mail.getMailCc());
 	            if(mail.getMailTo() != null)
-	            	mimeMessageHelper.setTo(mail.getMailTo());
+	            mimeMessageHelper.setTo(mail.getMailTo());
+	            String[] address = {"shahadeo@gmail.com","chavan@gmail.com"};
+	            mimeMessageHelper.setCc(address);
 	            mail.setMailContent(geContentFromTemplate(mail.getModel(),notification));
 	            mimeMessageHelper.setText(mail.getMailContent(), true);
 	            mailSender.send(mimeMessageHelper.getMimeMessage());
