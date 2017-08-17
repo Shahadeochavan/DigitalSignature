@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.dto.Mail;
 import com.nextech.erp.factory.VendorFactory;
@@ -56,6 +57,18 @@ public class VendorController {
 
 	@Autowired
 	MailService mailService;
+	
+	StringBuilder stringBuilderCC = new StringBuilder();
+	StringBuilder stringBuilderTO = new StringBuilder();
+	StringBuilder stringBuilderBCC = new StringBuilder();
+	
+	String prefixCC="";
+	String prefixTO="";
+	String prefixBCC="";
+	
+	String multipleCC="";
+	String multipleBCC="";
+	String multipleTO="";
 
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
@@ -79,7 +92,8 @@ public class VendorController {
 			}
               
               vendorService.addEntity(VendorFactory.setVendor(vendorDTO, request));
-		      mailSending(vendorDTO, request, response);
+    		  NotificationDTO  notificationDTO = notificationService.getNotificationDTOById(Long.parseLong(messageSource.getMessage(ERPConstants.VENDOR_ADDED_SUCCESSFULLY, null, null)));
+		      mailSending(vendorDTO, request, response, notificationDTO);
 			return new UserStatus(1, "vendor added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			cve.printStackTrace();
@@ -123,7 +137,8 @@ public class VendorController {
 				}
 			 }
             vendorService.updateEntity( VendorFactory.setVendor(vendorDTO, request));
-		   mailSendingUpdate(vendorDTO, request, response);
+  		  NotificationDTO  notificationDTO = notificationService.getNotificationDTOById(Long.parseLong(messageSource.getMessage(ERPConstants.VENDOR_UPDATE_SUCCESSFULLY, null, null)));
+		   mailSending(vendorDTO, request, response, notificationDTO);
 			return new UserStatus(1, "Vendor update Successfully !");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -156,19 +171,30 @@ public class VendorController {
 		}
 
 	}
-	private void mailSending(VendorDTO vendorDTO,HttpServletRequest request,HttpServletResponse response) throws Exception{
+	private void mailSending(VendorDTO vendorDTO,HttpServletRequest request,HttpServletResponse response,NotificationDTO  notificationDTO) throws Exception{
 		  Mail mail = new Mail();
 
-		  NotificationDTO  notificationDTO = notificationService.getNotificationDTOById(Long.parseLong(messageSource.getMessage(ERPConstants.VENDOR_ADDED_SUCCESSFULLY, null, null)));
 		  List<NotificationUserAssociatinsDTO> notificationUserAssociatinsDTOs = notificationUserAssService.getNotificationUserAssociatinsDTOs(notificationDTO.getId());
 		  for (NotificationUserAssociatinsDTO notificationuserassociation : notificationUserAssociatinsDTOs) {
 			  UserDTO userDTO = userService.getUserDTO(notificationuserassociation.getUserId().getId());
 			  if(notificationuserassociation.getTo()){
-				  mail.setMailTo(vendorDTO.getEmail());
+				  stringBuilderTO.append(prefixTO);
+					prefixTO=",";
+					stringBuilderTO.append(vendorDTO.getEmail());
+					multipleTO = stringBuilderTO.toString();
+					mail.setMailTo(multipleTO);
 			  }else if(notificationuserassociation.getBcc()){
-				  mail.setMailBcc(userDTO.getEmailId());
+				  stringBuilderBCC.append(prefixBCC);
+					prefixBCC=",";
+					stringBuilderBCC.append(userDTO.getEmailId());
+					multipleBCC = stringBuilderBCC.toString();
+					mail.setMailBcc(multipleBCC);
 			  }else if(notificationuserassociation.getCc()){
-				  mail.setMailCc(userDTO.getEmailId());
+					stringBuilderCC.append(prefixCC);
+					prefixCC=",";
+					stringBuilderCC.append(userDTO.getEmailId());
+					multipleCC = stringBuilderCC.toString();
+					mail.setMailCc(multipleCC);
 			  }
 			
 		}
@@ -183,35 +209,6 @@ public class VendorController {
 	        model.put("signature", "www.NextechServices.in");
 	        mail.setModel(model);
 
-		mailService.sendEmailWithoutPdF(mail, notificationDTO);
-	}
-	private void mailSendingUpdate(VendorDTO vendorDTO,HttpServletRequest request,HttpServletResponse response) throws Exception{
-		  Mail mail = new Mail();
-
-		  NotificationDTO  notificationDTO = notificationService.getNotificationDTOById(Long.parseLong(messageSource.getMessage(ERPConstants.VENDOR_UPDATE_SUCCESSFULLY, null, null)));
-		  List<NotificationUserAssociatinsDTO> notificationUserAssociatinsDTOs = notificationUserAssService.getNotificationUserAssociatinsDTOs(notificationDTO.getId());
-		  for (NotificationUserAssociatinsDTO notificationuserassociation : notificationUserAssociatinsDTOs) {
-			  UserDTO userDTO = userService.getUserDTO(notificationuserassociation.getUserId().getId());
-			  if(notificationuserassociation.getTo()){
-				  mail.setMailTo(vendorDTO.getEmail()); 
-			  }else if(notificationuserassociation.getBcc()){
-				  mail.setMailBcc(userDTO.getEmailId());
-			  }else if(notificationuserassociation.getCc()){
-				  mail.setMailCc(userDTO.getEmailId());
-			  }
-			
-		}
-	        
-	        mail.setMailSubject(notificationDTO.getSubject());
-
-	        Map < String, Object > model = new HashMap < String, Object > ();
-	        model.put("firstName", vendorDTO.getFirstName());
-	        model.put("lastName", vendorDTO.getLastName());
-	        model.put("email", vendorDTO.getEmail());
-	        model.put("contactNumber", vendorDTO.getContactNumberMobile());
-	        model.put("location", "Pune");
-	        model.put("signature", "www.NextechServices.in");
-	        mail.setModel(model);
 		mailService.sendEmailWithoutPdF(mail, notificationDTO);
 	}
 

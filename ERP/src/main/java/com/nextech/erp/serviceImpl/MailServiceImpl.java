@@ -37,12 +37,17 @@ public class MailServiceImpl extends CRUDServiceImpl<Notification> implements Ma
 
 	            mimeMessageHelper.setSubject(mail.getMailSubject());
 	    //        mimeMessageHelper.setFrom(mail.getMailFrom());
-	            mimeMessageHelper.setBcc(mail.getMailBcc());
-	            mimeMessageHelper.setCc(mail.getMailCc());
-	            mimeMessageHelper.setTo(mail.getMailTo());
+	            String[] bccAddress = mail.getMailBcc().split(",");
+	            mimeMessageHelper.setBcc(bccAddress);
+	            
+	            String[] toAddress = mail.getMailTo().split(",");
+	            mimeMessageHelper.setTo(toAddress);
+	            
+	            String[] ccAddress = mail.getMailCc().split(",");
+	            mimeMessageHelper.setCc(ccAddress);
+	            
 	            mail.setMailContent(geContentFromTemplate(mail.getModel(),notification));
 	            mimeMessageHelper.setText(mail.getMailContent(), true);
-	          //  FileSystemResource fileSystemResource = new FileSystemResource("");
 	            	 FileSystemResource fileSystemResource = new FileSystemResource(mail.getAttachment());
 	                 mimeMessageHelper.addAttachment(fileSystemResource.getFilename(),fileSystemResource);
 
@@ -74,14 +79,16 @@ public class MailServiceImpl extends CRUDServiceImpl<Notification> implements Ma
 
 	            mimeMessageHelper.setSubject(mail.getMailSubject());
 	         //   mimeMessageHelper.setFrom(mail.getMailFrom());
-	            if(mail.getMailBcc() != null)
-	            	mimeMessageHelper.setBcc(mail.getMailBcc());
-	            //if(mail.getMailCc() != null)
-	            	//mimeMessageHelper.setCc(mail.getMailCc());
-	            if(mail.getMailTo() != null)
-	            mimeMessageHelper.setTo(mail.getMailTo());
-	            String[] address = {"shahadeo@gmail.com","chavan@gmail.com"};
-	            mimeMessageHelper.setCc(address);
+	            
+	            String[] bccAddress = mail.getMailBcc().split(",");
+	            mimeMessageHelper.setBcc(bccAddress);
+	            
+	            String[] toAddress = mail.getMailTo().split(",");
+	            mimeMessageHelper.setTo(toAddress);
+	            
+	            String[] ccAddress = mail.getMailCc().split(",");
+	            mimeMessageHelper.setCc(ccAddress);
+	            
 	            mail.setMailContent(geContentFromTemplate(mail.getModel(),notification));
 	            mimeMessageHelper.setText(mail.getMailContent(), true);
 	            mailSender.send(mimeMessageHelper.getMimeMessage());

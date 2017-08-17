@@ -108,6 +108,18 @@ public class RawmaterialorderinvoiceController {
 
 	@Autowired
 	MailService mailService;
+	
+	StringBuilder stringBuilderCC = new StringBuilder();
+	StringBuilder stringBuilderTO = new StringBuilder();
+	StringBuilder stringBuilderBCC = new StringBuilder();
+	
+	String prefixCC="";
+	String prefixTO="";
+	String prefixBCC="";
+	
+	String multipleCC="";
+	String multipleBCC="";
+	String multipleTO="";
 
 	@Transactional @RequestMapping(value = "/securitycheck", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addRawmaterialOrderInvoice(
@@ -293,12 +305,24 @@ public class RawmaterialorderinvoiceController {
 		  Mail mail = new Mail();
 		  for (NotificationUserAssociatinsDTO notificationuserassociation : notificationuserassociations) {
 			  UserDTO user = userService.getUserDTO(notificationuserassociation.getUserId().getId());
-			  if(notificationuserassociation.getTo()==true){
-				   mail.setMailTo(vendor.getEmail());
-			  }else if(notificationuserassociation.getBcc()==true){
-				  mail.setMailBcc(user.getEmailId());
-			  }else if(notificationuserassociation.getCc()==true){
-				  mail.setMailCc(user.getEmailId());
+			  if(notificationuserassociation.getTo()){
+				  stringBuilderTO.append(prefixTO);
+					prefixTO=",";
+					stringBuilderTO.append(vendor.getEmail());
+					multipleTO = stringBuilderTO.toString();
+					mail.setMailTo(multipleTO);
+			  }else if(notificationuserassociation.getBcc()){
+				  stringBuilderBCC.append(prefixBCC);
+					prefixBCC=",";
+					stringBuilderBCC.append(user.getEmailId());
+					multipleBCC = stringBuilderBCC.toString();
+					mail.setMailBcc(multipleBCC);
+			  }else if(notificationuserassociation.getCc()){
+					stringBuilderCC.append(prefixCC);
+					prefixCC=",";
+					stringBuilderCC.append(user.getEmailId());
+					multipleCC = stringBuilderCC.toString();
+					mail.setMailCc(multipleCC);
 			  }
 			  
 		} 

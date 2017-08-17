@@ -109,6 +109,18 @@ public class DispatchController {
 
 	@Autowired
 	MailService mailService;
+	
+	StringBuilder stringBuilderCC = new StringBuilder();
+	StringBuilder stringBuilderTO = new StringBuilder();
+	StringBuilder stringBuilderBCC = new StringBuilder();
+	
+	String prefixCC="";
+	String prefixTO="";
+	String prefixBCC="";
+	
+	String multipleCC="";
+	String multipleBCC="";
+	String multipleTO="";
 
 	@Transactional
 	@RequestMapping(value = "/dispatchProducts", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
@@ -200,11 +212,23 @@ public class DispatchController {
 		  for (NotificationUserAssociatinsDTO notificationuserassociation : notificationUserAssociatinsDTOs) {
 			  UserDTO userDTO = userService.getUserDTO(notificationuserassociation.getUserId().getId());
 			  if(notificationuserassociation.getTo()==true){
-				  mail.setMailTo(client.getEmailId()); 
-			  }else if(notificationuserassociation.getBcc()==true){
-				  mail.setMailBcc(userDTO.getEmailId());
-			  }else if(notificationuserassociation.getCc()==true){
-				  mail.setMailCc(userDTO.getEmailId());
+				  stringBuilderTO.append(prefixTO);
+				  prefixTO=",";
+				  stringBuilderTO.append(client.getEmailId());
+					multipleTO = stringBuilderTO.toString();
+					mail.setMailTo(multipleTO);
+			  }else if(notificationuserassociation.getBcc()){
+				  stringBuilderBCC.append(prefixBCC);
+				  prefixBCC=",";
+					stringBuilderBCC.append(userDTO.getEmailId());
+					multipleBCC = stringBuilderBCC.toString();
+					mail.setMailBcc(multipleBCC);
+			  }else if(notificationuserassociation.getCc()){
+				  stringBuilderCC.append(prefixCC);
+					prefixCC=",";
+					stringBuilderCC.append(userDTO.getEmailId());
+					multipleCC = stringBuilderCC.toString();
+					mail.setMailCc(multipleCC);
 			  }
 			
 		}

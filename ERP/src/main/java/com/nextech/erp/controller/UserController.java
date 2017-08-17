@@ -83,6 +83,18 @@ public class UserController {
 
 	@Autowired
 	MailService mailService;
+	
+	StringBuilder stringBuilderCC = new StringBuilder();
+	StringBuilder stringBuilderTO = new StringBuilder();
+	StringBuilder stringBuilderBCC = new StringBuilder();
+	
+	String prefixCC="";
+	String prefixTO="";
+	String prefixBCC="";
+	
+	String multipleCC="";
+	String multipleBCC="";
+	String multipleTO="";
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addUser(@Valid @RequestBody UserDTO userDTO,
@@ -113,7 +125,8 @@ public class UserController {
 				user.setPassword(new EncryptDecrypt().encrypt(userDTO.getPassword()));
 				user.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			userservice.addEntity(user);
-			mailSending(userDTO, request, response);
+			  NotificationDTO  notificationDTO = notificationService.getNotificationDTOById(Long.parseLong(messageSource.getMessage(ERPConstants.USER_ADD_NOTIFICATION, null, null)));
+			mailSending(userDTO, request, response,notificationDTO);
 			return new UserStatus(1, "User added Successfully !");
 			} else {
 				new UserStatus(0, "User is not authenticated.");
@@ -245,7 +258,8 @@ public class UserController {
 			}
 		 //	user.setPassword(new com.nextech.erp.util.EncryptDecrypt().encrypt(userDTO.getPassword()));
 	     	userservice.updateEntity(user);
-		mailSendingUpdate(userDTO, request);
+			  NotificationDTO  notificationDTO = notificationService.getNotificationDTOById(Long.parseLong(messageSource.getMessage(ERPConstants.USER_UPDATE_NOTIFICATION, null, null)));
+		mailSending(userDTO, request, response, notificationDTO);
 		return new UserStatus(1, "User update Successfully !");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -292,59 +306,33 @@ public class UserController {
 		}
 
 	}
-	private void mailSending(UserDTO userDTO,HttpServletRequest request,HttpServletResponse response) throws NumberFormatException, Exception{
+	private void mailSending(UserDTO userDTO,HttpServletRequest request,HttpServletResponse response,NotificationDTO  notificationDTO) throws NumberFormatException, Exception{
 		  Mail mail = new Mail();
 
-		  NotificationDTO  notificationDTO = notificationService.getNotificationDTOById(Long.parseLong(messageSource.getMessage(ERPConstants.USER_ADD_NOTIFICATION, null, null)));
-		  List<NotificationUserAssociatinsDTO> notificationUserAssociatinsDTOs = notificationUserAssService.getNotificationUserAssociatinsDTOs(notificationDTO.getId());
-		  for (NotificationUserAssociatinsDTO notificationuserassociation : notificationUserAssociatinsDTOs) {
-			  UserDTO user1 = userservice.getUserDTO(notificationuserassociation.getUserId().getId());
-			  if(notificationuserassociation.getTo()==true){
-				  mail.setMailTo(userDTO.getEmailId());
-			  }else if(notificationuserassociation.getBcc()==true){
-				  mail.setMailBcc(user1.getEmailId());
-			  }else if(notificationuserassociation.getCc()==true){
-				  mail.setMailCc(user1.getEmailId());
-			  }
-			
-		}
-		        mail.setMailSubject(notificationDTO.getSubject());
-		        Map < String, Object > model = new HashMap < String, Object > ();
-		        model.put("firstName", userDTO.getFirstName());
-		        model.put("lastName", userDTO.getLastName());
-		        model.put("userId", userDTO.getUserId());
-		        model.put("password", userDTO.getPassword());
-		        model.put("email", userDTO.getEmailId());
-		        model.put("location", "Pune");
-		        model.put("signature", "www.NextechServices.in");
-		        mail.setModel(model);
-		        mailService.sendEmailWithoutPdF(mail, notificationDTO);
-}
-	
-	private void mailSendingUpdate(UserDTO userDTO,HttpServletRequest request) throws NumberFormatException, Exception{
-		  Mail mail = new Mail();
-			StringBuilder stringBuilder = new StringBuilder();
-			String prefix="";
-			String send="";
-		  NotificationDTO  notificationDTO = notificationService.getNotificationDTOById(Long.parseLong(messageSource.getMessage(ERPConstants.USER_UPDATE_NOTIFICATION, null, null)));
 		  List<NotificationUserAssociatinsDTO> notificationUserAssociatinsDTOs = notificationUserAssService.getNotificationUserAssociatinsDTOs(notificationDTO.getId());
 		  for (NotificationUserAssociatinsDTO notificationuserassociation : notificationUserAssociatinsDTOs) {
 			  UserDTO user1 = userservice.getUserDTO(notificationuserassociation.getUserId().getId());
 			  if(notificationuserassociation.getTo()){
-				  mail.setMailTo(userDTO.getEmailId());
+					stringBuilderTO.append(prefixTO);
+					prefixTO=","; 
+					stringBuilderTO.append(userDTO.getEmailId());
+					multipleTO = stringBuilderTO.toString();
+					mail.setMailTo(multipleTO);
 			  }else if(notificationuserassociation.getBcc()){
-				  mail.setMailBcc(user1.getEmailId());
+				  stringBuilderBCC.append(prefixBCC);
+					prefixBCC=",";
+					stringBuilderBCC.append(user1.getEmailId());
+					multipleBCC = stringBuilderBCC.toString();
+					mail.setMailBcc(multipleBCC);
 			  }else if(notificationuserassociation.getCc()){
-					stringBuilder.append(prefix);
-					prefix=",";
-					stringBuilder.append(user1.getEmailId());
-					send = stringBuilder.toString();
-					mail.setMailCc(send);
+					stringBuilderCC.append(prefixCC);
+					prefixCC=",";
+					stringBuilderCC.append(user1.getEmailId());
+					multipleCC = stringBuilderCC.toString();
+					mail.setMailCc(multipleCC);
 			  }
 			
 		}
-		  
-		  
 		        mail.setMailSubject(notificationDTO.getSubject());
 		        Map < String, Object > model = new HashMap < String, Object > ();
 		        model.put("firstName", userDTO.getFirstName());
@@ -357,6 +345,5 @@ public class UserController {
 		        mail.setModel(model);
 		        mailService.sendEmailWithoutPdF(mail, notificationDTO);
 }
-
 
 }

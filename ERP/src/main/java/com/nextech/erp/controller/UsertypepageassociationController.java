@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nextech.erp.constants.ERPConstants;
-import com.nextech.erp.factory.RMVendorAssoRequestResponseFactory;
 import com.nextech.erp.factory.UserTypePageAssoFactory;
 import com.nextech.erp.newDTO.UserTypePageAssoDTO;
 import com.nextech.erp.newDTO.UserTypePageAssoPart;

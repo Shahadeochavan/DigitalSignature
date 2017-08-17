@@ -1,10 +1,7 @@
 package com.nextech.erp.controller;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -26,29 +23,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.dto.Mail;
 import com.nextech.erp.dto.QualityCheckRMDTO;
-import com.nextech.erp.dto.RMInventoryDTO;
 import com.nextech.erp.dto.RawMaterialInvoiceDTO;
 import com.nextech.erp.dto.StoreInDTO;
-import com.nextech.erp.exceptions.InvalidRMQuantityInQC;
 import com.nextech.erp.factory.QualityRequestResponseFactory;
 import com.nextech.erp.factory.StoreRequestResponseFactory;
 import com.nextech.erp.model.Qualitycheckrawmaterial;
-import com.nextech.erp.model.Rawmaterial;
-import com.nextech.erp.model.Rawmaterialinventory;
-import com.nextech.erp.model.Rawmaterialinventoryhistory;
 import com.nextech.erp.model.Rawmaterialorder;
-import com.nextech.erp.model.Rawmaterialorderassociation;
-import com.nextech.erp.model.Rawmaterialorderhistory;
 import com.nextech.erp.model.Rawmaterialorderinvoice;
 import com.nextech.erp.model.Rmorderinvoiceintakquantity;
 import com.nextech.erp.model.Status;
 import com.nextech.erp.model.Vendor;
 import com.nextech.erp.newDTO.NotificationDTO;
 import com.nextech.erp.newDTO.NotificationUserAssociatinsDTO;
-import com.nextech.erp.newDTO.RMOrderAssociationDTO;
 import com.nextech.erp.newDTO.UserDTO;
 import com.nextech.erp.service.MailService;
 import com.nextech.erp.service.NotificationService;
@@ -122,6 +110,18 @@ public class QualitycheckrawmaterialController {
 
 	@Autowired
 	private MessageSource messageSource;
+	
+	StringBuilder stringBuilderCC = new StringBuilder();
+	StringBuilder stringBuilderTO = new StringBuilder();
+	StringBuilder stringBuilderBCC = new StringBuilder();
+	
+	String prefixCC="";
+	String prefixTO="";
+	String prefixBCC="";
+	
+	String multipleCC="";
+	String multipleBCC="";
+	String multipleTO="";
 
 
 	@RequestMapping(value = "/qualitycheck", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
@@ -211,12 +211,24 @@ public class QualitycheckrawmaterialController {
 		  List<NotificationUserAssociatinsDTO> notificationUserAssociatinsDTOs = notificationUserAssociationService.getNotificationUserAssociatinsDTOs(notification.getId());
 		  for (NotificationUserAssociatinsDTO notificationuserassociation : notificationUserAssociatinsDTOs) {
 			  UserDTO user = userService.getUserDTO( notificationuserassociation.getUserId().getId());
-			  if(notificationuserassociation.getTo()==true){
-				  mail.setMailTo(vendor.getEmail());
-			  }else if(notificationuserassociation.getBcc()==true){
-				  mail.setMailBcc(user.getEmailId());
-			  }else if(notificationuserassociation.getCc()==true){
-				  mail.setMailCc(user.getEmailId());
+			  if(notificationuserassociation.getTo()){
+				  stringBuilderTO.append(prefixTO);
+				  prefixTO=",";
+				  stringBuilderTO.append(vendor.getEmail());
+					multipleTO = stringBuilderTO.toString();
+					mail.setMailTo(multipleTO);
+			  }else if(notificationuserassociation.getBcc()){
+				  stringBuilderBCC.append(prefixBCC);
+					prefixBCC=",";
+					stringBuilderBCC.append(user.getEmailId());
+					multipleBCC = stringBuilderBCC.toString();
+					mail.setMailBcc(multipleBCC);
+			  }else if(notificationuserassociation.getCc()){
+				  stringBuilderCC.append(prefixCC);
+				  prefixCC=",";
+					stringBuilderCC.append(user.getEmailId());
+					multipleCC = stringBuilderCC.toString();
+					mail.setMailCc(multipleCC);
 			  }
 		}
         mail.setMailSubject(notification.getSubject());

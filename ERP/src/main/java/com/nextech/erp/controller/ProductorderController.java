@@ -105,6 +105,18 @@ public class ProductorderController {
 	
 	@Autowired
 	RawmaterialinventoryService rawMaterialInventoryService;
+	
+	StringBuilder stringBuilderCC = new StringBuilder();
+	StringBuilder stringBuilderTO = new StringBuilder();
+	StringBuilder stringBuilderBCC = new StringBuilder();
+	
+	String prefixCC="";
+	String prefixTO="";
+	String prefixBCC="";
+	
+	String multipleCC="";
+	String multipleBCC="";
+	String multipleTO="";
 
 	@Transactional @RequestMapping(value = "/createMultiple", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addMultipleProductOrder(
@@ -321,13 +333,25 @@ public class ProductorderController {
 		for (NotificationUserAssociatinsDTO notificationuserassociation : notificationUserAssociatinsDTOs) {
 			//  User user = userService.getEntityById(User.class, notificationuserassociation.getUser().getId());
 			UserDTO userDTO = userService.getUserDTO(notificationuserassociation.getUserId().getId());
-			if(notificationuserassociation.getTo()==true){
-				mail.setMailTo(client.getEmailId()); 
-			}else if(notificationuserassociation.getBcc()==true){
-				mail.setMailBcc(userDTO.getEmailId());
-			}else if(notificationuserassociation.getCc()==true){
-				mail.setMailCc(userDTO.getEmailId());
-			}
+			if(notificationuserassociation.getTo()){
+				  stringBuilderTO.append(prefixTO);
+					prefixTO=",";
+					stringBuilderTO.append(client.getEmailId());
+					multipleTO = stringBuilderTO.toString();
+					mail.setMailTo(multipleTO);
+			  }else if(notificationuserassociation.getBcc()){
+					stringBuilderBCC.append(prefixBCC);
+					prefixBCC=",";
+					stringBuilderBCC.append(userDTO.getEmailId());
+					multipleBCC = stringBuilderBCC.toString();
+					mail.setMailBcc(multipleBCC);
+			  }else if(notificationuserassociation.getCc()){
+					stringBuilderCC.append(prefixCC);
+					prefixCC=",";
+					stringBuilderCC.append(userDTO.getEmailId());
+					multipleCC = stringBuilderCC.toString();
+					mail.setMailCc(multipleCC);
+			  }
 			mail.setMailSubject(notification.getSubject());
 			mail.setAttachment(fileName);
 		}     
@@ -373,12 +397,24 @@ public class ProductorderController {
 		  List<NotificationUserAssociatinsDTO> notificationUserAssociatinsDTOs = notificationUserAssociationService.getNotificationUserAssociatinsDTOs(notificationDTO.getId());
 		  for (NotificationUserAssociatinsDTO notificationuserassociation : notificationUserAssociatinsDTOs) {
 			  UserDTO userDTO = userService.getUserDTO(notificationuserassociation.getUserId().getId());
-			  if(notificationuserassociation.getTo()==true){
-				  mail.setMailTo(userDTO.getEmailId()); 
-			  }else if(notificationuserassociation.getBcc()==true){
-				  mail.setMailBcc(userDTO.getEmailId());
-			  }else if(notificationuserassociation.getCc()==true){
-				  mail.setMailCc(userDTO.getEmailId());
+			  if(notificationuserassociation.getTo()){
+				  stringBuilderTO.append(prefixTO);
+					prefixTO=",";
+					stringBuilderTO.append(userDTO.getEmailId());
+					multipleTO = stringBuilderTO.toString();
+					mail.setMailTo(multipleTO);
+			  }else if(notificationuserassociation.getBcc()){
+					stringBuilderBCC.append(prefixBCC);
+					prefixBCC=",";
+					stringBuilderBCC.append(userDTO.getEmailId());
+					multipleBCC = stringBuilderBCC.toString();
+					mail.setMailBcc(multipleBCC);
+			  }else if(notificationuserassociation.getCc()){
+					stringBuilderCC.append(prefixCC);
+					prefixCC=",";
+					stringBuilderCC.append(userDTO.getEmailId());
+					multipleCC = stringBuilderCC.toString();
+					mail.setMailCc(multipleCC);
 			  }
 			
 		}
