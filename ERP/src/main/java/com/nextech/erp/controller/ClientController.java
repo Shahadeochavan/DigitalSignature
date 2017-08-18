@@ -204,7 +204,6 @@ public class ClientController {
 						multipleCC = stringBuilderCC.toString();
 						mail.setMailCc(multipleCC);
 				  }
-			
 		}
 	        mail.setMailSubject(notificationDTO.getSubject());
 	        Map < String, Object > model = new HashMap < String, Object > ();
