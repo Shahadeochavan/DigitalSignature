@@ -108,18 +108,7 @@ public class RawmaterialorderinvoiceController {
 
 	@Autowired
 	MailService mailService;
-	
-	StringBuilder stringBuilderCC = new StringBuilder();
-	StringBuilder stringBuilderTO = new StringBuilder();
-	StringBuilder stringBuilderBCC = new StringBuilder();
-	
-	String prefixCC="";
-	String prefixTO="";
-	String prefixBCC="";
-	
-	String multipleCC="";
-	String multipleBCC="";
-	String multipleTO="";
+
 
 	@Transactional @RequestMapping(value = "/securitycheck", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addRawmaterialOrderInvoice(
@@ -300,32 +289,8 @@ public class RawmaterialorderinvoiceController {
 	}
 	
 	private void mailSending(NotificationDTO notification,Rawmaterialorder rawmaterialorder,Vendor vendor) throws Exception{
-		List<NotificationUserAssociatinsDTO> notificationuserassociations = notificationUserAssociationService.getNotificationUserAssociatinsDTOs(notification.getId());
 		List<RMOrderModelData> rmOrderModelDatas = new ArrayList<RMOrderModelData>();
-		  Mail mail = new Mail();
-		  for (NotificationUserAssociatinsDTO notificationuserassociation : notificationuserassociations) {
-			  UserDTO user = userService.getUserDTO(notificationuserassociation.getUserId().getId());
-			  if(notificationuserassociation.getTo()){
-				  stringBuilderTO.append(prefixTO);
-					prefixTO=",";
-					stringBuilderTO.append(vendor.getEmail());
-					multipleTO = stringBuilderTO.toString();
-					mail.setMailTo(multipleTO);
-			  }else if(notificationuserassociation.getBcc()){
-				  stringBuilderBCC.append(prefixBCC);
-					prefixBCC=",";
-					stringBuilderBCC.append(user.getEmailId());
-					multipleBCC = stringBuilderBCC.toString();
-					mail.setMailBcc(multipleBCC);
-			  }else if(notificationuserassociation.getCc()){
-					stringBuilderCC.append(prefixCC);
-					prefixCC=",";
-					stringBuilderCC.append(user.getEmailId());
-					multipleCC = stringBuilderCC.toString();
-					mail.setMailCc(multipleCC);
-			  }
-			  
-		} 
+		  Mail mail = userService.emailNotification(notification);
 		  List<RMOrderAssociationDTO> rawmaterialorderassociations = rawmaterialorderassociationService.getRMOrderRMAssociationByRMOrderId(rawmaterialorder.getId());
 		for (RMOrderAssociationDTO rawmaterialorderassociation : rawmaterialorderassociations) {
 			RMOrderModelData rmOrderModelData = new RMOrderModelData();

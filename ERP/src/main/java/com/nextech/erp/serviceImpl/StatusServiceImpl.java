@@ -41,5 +41,10 @@ public class StatusServiceImpl extends CRUDServiceImpl<Status> implements Status
 		status.setIsactive(false);
 		statusDao.update(status);
 	}
+	@Override
+	public List<Status> getStatusByType(String type) throws Exception {
+		// TODO Auto-generated method stub
+		return statusDao.getStatusByType(type);
+	}
 	
 }

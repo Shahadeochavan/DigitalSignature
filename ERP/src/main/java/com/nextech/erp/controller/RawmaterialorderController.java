@@ -94,18 +94,7 @@ public class RawmaterialorderController {
 	
 	@Autowired 
 	RMVAssoService rmvAssoService;
-	
-	StringBuilder stringBuilderCC = new StringBuilder();
-	StringBuilder stringBuilderTO = new StringBuilder();
-	StringBuilder stringBuilderBCC = new StringBuilder();
-	
-	String prefixCC="";
-	String prefixTO="";
-	String prefixBCC="";
-	
-	String multipleCC="";
-	String multipleBCC="";
-	String multipleTO="";
+
 
 	@Transactional @RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addRawmaterialorder(
@@ -328,30 +317,7 @@ public class RawmaterialorderController {
 	}
 
 	private void mailSending(NotificationDTO notification,RawmaterialOrderDTO rawmaterialOrderDTO,VendorDTO vendor,String fileName,List<RMOrderModelData> rmOrderModelDatas) throws Exception{
-		List<NotificationUserAssociatinsDTO> notificationuserassociations = notificationUserAssociationService.getNotificationUserAssociatinsDTOs(notification.getId());
-		Mail mail = new Mail();
-		for (NotificationUserAssociatinsDTO notificationuserassociation : notificationuserassociations) {
-			UserDTO user = userService.getUserDTO(notificationuserassociation.getUserId().getId());
-			if(notificationuserassociation.getTo()){
-				  stringBuilderTO.append(prefixTO);
-				  prefixTO=",";
-				  stringBuilderTO.append(vendor.getEmail());
-						multipleTO = stringBuilderTO.toString();
-						mail.setMailTo(multipleTO);
-				  }else if(notificationuserassociation.getBcc()){
-					  stringBuilderBCC.append(prefixBCC);
-						prefixBCC=",";
-						stringBuilderBCC.append(user.getEmailId());
-						multipleBCC = stringBuilderBCC.toString();
-						mail.setMailBcc(multipleBCC);
-				  }else if(notificationuserassociation.getCc()){
-						stringBuilderCC.append(prefixCC);
-						prefixCC=",";
-						stringBuilderCC.append(user.getEmailId());
-						multipleCC = stringBuilderCC.toString();
-						mail.setMailCc(multipleCC);
-				  }
-		}
+	Mail mail =  userService.emailNotification(notification);
 		mail.setMailSubject(notification.getSubject());
 		mail.setAttachment(fileName);
 		Map<String, Object> model = new HashMap<String, Object>();

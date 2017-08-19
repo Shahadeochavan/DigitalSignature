@@ -2,7 +2,9 @@ package com.nextech.erp.service;
 
 import java.util.List;
 
+import com.nextech.erp.dto.Mail;
 import com.nextech.erp.model.User;
+import com.nextech.erp.newDTO.NotificationDTO;
 import com.nextech.erp.newDTO.UserDTO;
 
 public interface UserService extends CRUDService<User>{
@@ -32,6 +34,8 @@ public interface UserService extends CRUDService<User>{
 	public void getUserDTOByid(long id)throws Exception;
 	
 	public UserDTO getUserDTOByUserId(String userId) throws Exception;
+	
+	public  Mail  emailNotification(NotificationDTO  notificationDTO) throws Exception;
 	
 	
 	

@@ -5,22 +5,62 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import com.nextech.erp.dao.UserDao;
+import com.nextech.erp.dto.Mail;
 import com.nextech.erp.factory.PageFactory;
 import com.nextech.erp.factory.UserFactory;
 import com.nextech.erp.model.Page;
 import com.nextech.erp.model.User;
+import com.nextech.erp.newDTO.NotificationDTO;
+import com.nextech.erp.newDTO.NotificationUserAssociatinsDTO;
 import com.nextech.erp.newDTO.PageDTO;
 import com.nextech.erp.newDTO.UserDTO;
+import com.nextech.erp.service.MailService;
+import com.nextech.erp.service.NotificationService;
+import com.nextech.erp.service.NotificationUserAssociationService;
+import com.nextech.erp.service.ReportusertypeassociationService;
 import com.nextech.erp.service.UserService;
+import com.nextech.erp.service.UsertypepageassociationService;
 @Service
 @Qualifier("userServiceImpl")
+
 public class UserServiceImpl extends CRUDServiceImpl<User> implements UserService {
 	
 	@Autowired
 	UserDao userdao;
+	
+	@Autowired
+	UsertypepageassociationService usertypepageassociationService;
+
+	@Autowired
+	private JavaMailSender mailSender;
+
+	@Autowired
+	NotificationUserAssociationService notificationUserAssService;
+
+	@Autowired
+	NotificationService notificationService;
+	
+	@Autowired
+	ReportusertypeassociationService reportusertypeassociationService;
+
+	@Autowired
+	MailService mailService;
+	
+	StringBuilder stringBuilderCC = new StringBuilder();
+	StringBuilder stringBuilderTO = new StringBuilder();
+	StringBuilder stringBuilderBCC = new StringBuilder();
+	
+	String prefixCC="";
+	String prefixTO="";
+	String prefixBCC="";
+	
+	String multipleCC="";
+	String multipleBCC="";
+	String multipleTO="";
 
 	@Override
 	public User findByUserId(String string) throws Exception {
@@ -107,6 +147,34 @@ public class UserServiceImpl extends CRUDServiceImpl<User> implements UserServic
 		User user = userdao.getUserByUserId(userId);
 		UserDTO  userDTO = UserFactory.setUserList(user);
 		return userDTO;
+	}
+	@Override
+	public  Mail  emailNotification(NotificationDTO  notificationDTO) throws Exception{
+		  Mail mail = new Mail();
+		  List<NotificationUserAssociatinsDTO> notificationUserAssociatinsDTOs = notificationUserAssService.getNotificationUserAssociatinsDTOs(notificationDTO.getId());
+		  for (NotificationUserAssociatinsDTO notificationuserassociation : notificationUserAssociatinsDTOs) {
+			  User user =  userdao.getById(User.class, notificationuserassociation.getUserId().getId());
+			  if(notificationuserassociation.getTo()){
+					stringBuilderTO.append(prefixTO);
+					prefixTO=","; 
+					stringBuilderTO.append(user.getEmail());
+					multipleTO = stringBuilderTO.toString();
+					mail.setMailTo(multipleTO);
+			  }else if(notificationuserassociation.getBcc()){
+				  stringBuilderBCC.append(prefixBCC);
+					prefixBCC=",";
+					stringBuilderBCC.append(user.getEmail());
+					multipleBCC = stringBuilderBCC.toString();
+					mail.setMailBcc(multipleBCC);
+			  }else if(notificationuserassociation.getCc()){
+					stringBuilderCC.append(prefixCC);
+					prefixCC=",";
+					stringBuilderCC.append(user.getEmail());
+					multipleCC = stringBuilderCC.toString();
+					mail.setMailCc(multipleCC);
+			  }
+		}
+		  return mail;
 	}
 	
 }

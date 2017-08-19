@@ -14,6 +14,8 @@ public interface StatusService extends CRUDService<Status>{
 	
 	public void deleteStatus(long id) throws Exception;
 	
+	public List<Status> getStatusByType(String type) throws Exception;
+	
 }
 
 

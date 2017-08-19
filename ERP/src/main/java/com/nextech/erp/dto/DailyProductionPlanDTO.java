@@ -1,6 +1,5 @@
 package com.nextech.erp.dto;
 
-import com.nextech.erp.model.Productionplanning;
 
 public class DailyProductionPlanDTO  extends AbstractDTO{
 	private long productionPlanId;

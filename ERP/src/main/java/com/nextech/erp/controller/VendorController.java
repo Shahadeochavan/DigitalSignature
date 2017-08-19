@@ -58,18 +58,9 @@ public class VendorController {
 	@Autowired
 	MailService mailService;
 	
-	StringBuilder stringBuilderCC = new StringBuilder();
-	StringBuilder stringBuilderTO = new StringBuilder();
-	StringBuilder stringBuilderBCC = new StringBuilder();
 	
-	String prefixCC="";
-	String prefixTO="";
-	String prefixBCC="";
 	
-	String multipleCC="";
-	String multipleBCC="";
 	String multipleTO="";
-
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addVendor(Model model,
@@ -172,32 +163,8 @@ public class VendorController {
 
 	}
 	private void mailSending(VendorDTO vendorDTO,HttpServletRequest request,HttpServletResponse response,NotificationDTO  notificationDTO) throws Exception{
-		  Mail mail = new Mail();
-		  List<NotificationUserAssociatinsDTO> notificationUserAssociatinsDTOs = notificationUserAssService.getNotificationUserAssociatinsDTOs(notificationDTO.getId());
-		  for (NotificationUserAssociatinsDTO notificationuserassociation : notificationUserAssociatinsDTOs) {
-			  UserDTO userDTO = userService.getUserDTO(notificationuserassociation.getUserId().getId());
-			  if(notificationuserassociation.getTo()){
-				  stringBuilderTO.append(prefixTO);
-					prefixTO=",";
-					stringBuilderTO.append(vendorDTO.getEmail());
-					multipleTO = stringBuilderTO.toString();
-					mail.setMailTo(multipleTO);
-			  }else if(notificationuserassociation.getBcc()){
-				  stringBuilderBCC.append(prefixBCC);
-					prefixBCC=",";
-					stringBuilderBCC.append(userDTO.getEmailId());
-					multipleBCC = stringBuilderBCC.toString();
-					mail.setMailBcc(multipleBCC);
-			  }else if(notificationuserassociation.getCc()){
-					stringBuilderCC.append(prefixCC);
-					prefixCC=",";
-					stringBuilderCC.append(userDTO.getEmailId());
-					multipleCC = stringBuilderCC.toString();
-					mail.setMailCc(multipleCC);
-			  }
-			
-		}
-	        mail.setMailTo(vendorDTO.getEmail());
+		 Mail mail = userService.emailNotification(notificationDTO);
+		   mail.setMailTo(vendorDTO.getEmail());
 	        mail.setMailSubject(notificationDTO.getSubject());
 	        Map < String, Object > model = new HashMap < String, Object > ();
 	        model.put("firstName", vendorDTO.getFirstName());

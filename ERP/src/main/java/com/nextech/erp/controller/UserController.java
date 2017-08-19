@@ -307,31 +307,9 @@ public class UserController {
 
 	}
 	private void mailSending(UserDTO userDTO,HttpServletRequest request,HttpServletResponse response,NotificationDTO  notificationDTO) throws NumberFormatException, Exception{
-		  Mail mail = new Mail();
-		  List<NotificationUserAssociatinsDTO> notificationUserAssociatinsDTOs = notificationUserAssService.getNotificationUserAssociatinsDTOs(notificationDTO.getId());
-		  for (NotificationUserAssociatinsDTO notificationuserassociation : notificationUserAssociatinsDTOs) {
-			  UserDTO user1 = userservice.getUserDTO(notificationuserassociation.getUserId().getId());
-			  if(notificationuserassociation.getTo()){
-					stringBuilderTO.append(prefixTO);
-					prefixTO=","; 
-					stringBuilderTO.append(userDTO.getEmailId());
-					multipleTO = stringBuilderTO.toString();
-					mail.setMailTo(multipleTO);
-			  }else if(notificationuserassociation.getBcc()){
-				  stringBuilderBCC.append(prefixBCC);
-					prefixBCC=",";
-					stringBuilderBCC.append(user1.getEmailId());
-					multipleBCC = stringBuilderBCC.toString();
-					mail.setMailBcc(multipleBCC);
-			  }else if(notificationuserassociation.getCc()){
-					stringBuilderCC.append(prefixCC);
-					prefixCC=",";
-					stringBuilderCC.append(user1.getEmailId());
-					multipleCC = stringBuilderCC.toString();
-					mail.setMailCc(multipleCC);
-			  }
-			
-		}
+         Mail mail = userservice.emailNotification(notificationDTO);
+         
+                mail.setMailTo(userDTO.getEmailId());      
 		        mail.setMailSubject(notificationDTO.getSubject());
 		        Map < String, Object > model = new HashMap < String, Object > ();
 		        model.put("firstName", userDTO.getFirstName());
@@ -343,6 +321,6 @@ public class UserController {
 		        model.put("signature", "www.NextechServices.in");
 		        mail.setModel(model);
 		        mailService.sendEmailWithoutPdF(mail, notificationDTO);
-}
+	}
 
 }

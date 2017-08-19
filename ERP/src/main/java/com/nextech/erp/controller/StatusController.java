@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nextech.erp.factory.StatusRequestResponseFactory;
+import com.nextech.erp.model.Status;
 import com.nextech.erp.newDTO.StatusDTO;
 import com.nextech.erp.service.StatusService;
 import com.nextech.erp.status.UserStatus;
@@ -100,6 +101,18 @@ public class StatusController {
 		} catch (Exception e) {
 			return new UserStatus(0, e.toString());
 		}
+
+	}
+	@Transactional @RequestMapping(value = "type/{type}", method = RequestMethod.GET, headers = "Accept=application/json")
+	public @ResponseBody List<Status> getStatusType(@PathVariable("type") String type) {
+		List<Status> statuList =null;
+
+		try {
+			statuList = statusService.getStatusByType(type);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return statuList;
 
 	}
 }

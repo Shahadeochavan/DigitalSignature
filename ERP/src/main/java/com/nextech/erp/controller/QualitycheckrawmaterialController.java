@@ -111,18 +111,6 @@ public class QualitycheckrawmaterialController {
 	@Autowired
 	private MessageSource messageSource;
 	
-	StringBuilder stringBuilderCC = new StringBuilder();
-	StringBuilder stringBuilderTO = new StringBuilder();
-	StringBuilder stringBuilderBCC = new StringBuilder();
-	
-	String prefixCC="";
-	String prefixTO="";
-	String prefixBCC="";
-	
-	String multipleCC="";
-	String multipleBCC="";
-	String multipleTO="";
-
 
 	@RequestMapping(value = "/qualitycheck", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	@Transactional
@@ -207,8 +195,7 @@ public class QualitycheckrawmaterialController {
 	}
 	
 	private void mailSending(NotificationDTO notification,Vendor vendor,List<QualityCheckRMDTO> qualityCheckRMDTOs,Rawmaterialorder rawmaterialorder) throws Exception{
-		  Mail mail = new Mail();
-		  List<NotificationUserAssociatinsDTO> notificationUserAssociatinsDTOs = notificationUserAssociationService.getNotificationUserAssociatinsDTOs(notification.getId());
+/*		  List<NotificationUserAssociatinsDTO> notificationUserAssociatinsDTOs = notificationUserAssociationService.getNotificationUserAssociatinsDTOs(notification.getId());
 		  for (NotificationUserAssociatinsDTO notificationuserassociation : notificationUserAssociatinsDTOs) {
 			  UserDTO user = userService.getUserDTO( notificationuserassociation.getUserId().getId());
 			  if(notificationuserassociation.getTo()){
@@ -230,7 +217,9 @@ public class QualitycheckrawmaterialController {
 					multipleCC = stringBuilderCC.toString();
 					mail.setMailCc(multipleCC);
 			  }
-		}
+		}*/
+		  Mail mail = userService.emailNotification(notification);
+		  
         mail.setMailSubject(notification.getSubject());
         Map < String, Object > model = new HashMap < String, Object > ();
         model.put("firstName", vendor.getFirstName());

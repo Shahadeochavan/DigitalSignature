@@ -105,18 +105,7 @@ public class ProductorderController {
 	
 	@Autowired
 	RawmaterialinventoryService rawMaterialInventoryService;
-	
-	StringBuilder stringBuilderCC = new StringBuilder();
-	StringBuilder stringBuilderTO = new StringBuilder();
-	StringBuilder stringBuilderBCC = new StringBuilder();
-	
-	String prefixCC="";
-	String prefixTO="";
-	String prefixBCC="";
-	
-	String multipleCC="";
-	String multipleBCC="";
-	String multipleTO="";
+
 
 	@Transactional @RequestMapping(value = "/createMultiple", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addMultipleProductOrder(
@@ -328,33 +317,7 @@ public class ProductorderController {
 	}
 
 	private void mailSending(NotificationDTO notification,List<ProductOrderData> productOrderDatas,ClientDTO client,String fileName,ProductOrderDTO productOrderDTO) throws Exception{
-		List<NotificationUserAssociatinsDTO> notificationUserAssociatinsDTOs  = notificationUserAssociationService.getNotificationUserAssociatinsDTOs(notification.getId());
-		Mail mail = new Mail();
-		for (NotificationUserAssociatinsDTO notificationuserassociation : notificationUserAssociatinsDTOs) {
-			//  User user = userService.getEntityById(User.class, notificationuserassociation.getUser().getId());
-			UserDTO userDTO = userService.getUserDTO(notificationuserassociation.getUserId().getId());
-			if(notificationuserassociation.getTo()){
-				  stringBuilderTO.append(prefixTO);
-					prefixTO=",";
-					stringBuilderTO.append(client.getEmailId());
-					multipleTO = stringBuilderTO.toString();
-					mail.setMailTo(multipleTO);
-			  }else if(notificationuserassociation.getBcc()){
-					stringBuilderBCC.append(prefixBCC);
-					prefixBCC=",";
-					stringBuilderBCC.append(userDTO.getEmailId());
-					multipleBCC = stringBuilderBCC.toString();
-					mail.setMailBcc(multipleBCC);
-			  }else if(notificationuserassociation.getCc()){
-					stringBuilderCC.append(prefixCC);
-					prefixCC=",";
-					stringBuilderCC.append(userDTO.getEmailId());
-					multipleCC = stringBuilderCC.toString();
-					mail.setMailCc(multipleCC);
-			  }
-			mail.setMailSubject(notification.getSubject());
-			mail.setAttachment(fileName);
-		}     
+	Mail mail =  userService.emailNotification(notification);    
         Map < String, Object > model = new HashMap < String, Object >();
         model.put("companyName", client.getCompanyName());
         model.put("mailfrom", notification.getName());
@@ -392,32 +355,8 @@ public class ProductorderController {
 			productOrderRMDatas.add(productOrderRMData);
 			}
 		}
-		  Mail mail = new Mail();
 		  NotificationDTO  notificationDTO = notificationService.getNotifiactionByStatus(Long.parseLong(messageSource.getMessage(ERPConstants.RM_NOTIFICATION, null, null)));
-		  List<NotificationUserAssociatinsDTO> notificationUserAssociatinsDTOs = notificationUserAssociationService.getNotificationUserAssociatinsDTOs(notificationDTO.getId());
-		  for (NotificationUserAssociatinsDTO notificationuserassociation : notificationUserAssociatinsDTOs) {
-			  UserDTO userDTO = userService.getUserDTO(notificationuserassociation.getUserId().getId());
-			  if(notificationuserassociation.getTo()){
-				  stringBuilderTO.append(prefixTO);
-					prefixTO=",";
-					stringBuilderTO.append(userDTO.getEmailId());
-					multipleTO = stringBuilderTO.toString();
-					mail.setMailTo(multipleTO);
-			  }else if(notificationuserassociation.getBcc()){
-					stringBuilderBCC.append(prefixBCC);
-					prefixBCC=",";
-					stringBuilderBCC.append(userDTO.getEmailId());
-					multipleBCC = stringBuilderBCC.toString();
-					mail.setMailBcc(multipleBCC);
-			  }else if(notificationuserassociation.getCc()){
-					stringBuilderCC.append(prefixCC);
-					prefixCC=",";
-					stringBuilderCC.append(userDTO.getEmailId());
-					multipleCC = stringBuilderCC.toString();
-					mail.setMailCc(multipleCC);
-			  }
-			
-		}
+          Mail mail =  userService.emailNotification(notificationDTO);
 	        mail.setMailSubject(notificationDTO.getSubject());
 	        Map < String, Object > model = new HashMap < String, Object > ();
 	        model.put("productOrderRMDatas", productOrderRMDatas);
