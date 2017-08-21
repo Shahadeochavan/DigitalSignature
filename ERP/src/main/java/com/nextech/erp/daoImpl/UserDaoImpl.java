@@ -2,6 +2,11 @@ package com.nextech.erp.daoImpl;
 
 import java.util.List;
 
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
@@ -17,13 +22,13 @@ public class UserDaoImpl extends SuperDaoImpl<User> implements UserDao {
 	@Override
 	public User getUserByUserId(String userid) throws Exception {
 		session = sessionFactory.openSession();
-		@SuppressWarnings("deprecation")
-		Criteria criteria = session.createCriteria(User.class);
-		criteria.add(Restrictions.eq("isactive", true));
-		criteria.add(Restrictions.eq("userid", userid));
-		System.out.println("UserDaoImpl session closed session.isOpen() : " + session.isOpen() + " sessionFactory.isOpen() : " + sessionFactory.isOpen());
-		User user = criteria.list().size() > 0 ? (User) criteria.list().get(0): null;
-		return user;
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<User> criteria = builder.createQuery(User.class);
+		Root<User> userRoot = criteria.from(User.class);
+		criteria.select(userRoot).where(builder.equal(userRoot.get("userid"), userid),builder.equal(userRoot.get("isactive"), true));
+		TypedQuery<User> query = session.createQuery(criteria);
+		List<User> results = query.getResultList();
+		return results.get(0);
 	}
 
 	@Override

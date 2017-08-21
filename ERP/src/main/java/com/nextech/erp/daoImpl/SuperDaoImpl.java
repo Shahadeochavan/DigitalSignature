@@ -2,11 +2,13 @@ package com.nextech.erp.daoImpl;
 
 import java.util.List;
 
-import org.hibernate.Criteria;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,57 +20,49 @@ public class SuperDaoImpl<T> implements SuperDao<T>{
 	@Autowired
 	SessionFactory sessionFactory;
 	Session session = null;
-	Transaction tx = null;
-	
+
 	@Override
 	public Long add(T bean) throws Exception {
 		session = sessionFactory.openSession();
-		tx = session.beginTransaction();
 		Long id = (Long) session.save(bean);
-		tx.commit();
 		return id;
 	}
 
-	@SuppressWarnings({ "deprecation", "unchecked" })
 	@Override
 	public T getById(Class<T> z,long id) throws Exception {
 		session = sessionFactory.openSession();
-		Criteria criteria = session.createCriteria(z);
-		criteria.add(Restrictions.eq("isactive", true));
-		criteria.add(Restrictions.eq("id", id));
-		T t= criteria.list().size() > 0 ? (T) criteria.list().get(0): null;
-		return t;
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<T> criteria = builder.createQuery(z);
+		Root<T> userRoot = (Root<T>) criteria.from(z);
+		criteria.select(userRoot).where(builder.equal(userRoot.get("id"), id),builder.equal(userRoot.get("isactive"), true));
+		TypedQuery<T> query = session.createQuery(criteria);
+		return query.getResultList().get(0);
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	public List<T> getList(Class<T> z) throws Exception {
 		session = sessionFactory.openSession();
-		@SuppressWarnings("deprecation")
-		Criteria criteria = session.createCriteria(z);
-		criteria.add(Restrictions.eq("isactive", true));
-		List<T> list = criteria.list();
-		return list;
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<T> criteria = builder.createQuery(z);
+		Root<T> userRoot = (Root<T>) criteria.from(z);
+		criteria.select(userRoot).where(builder.equal(userRoot.get("isactive"), true));
+		TypedQuery<T> query = session.createQuery(criteria);
+		return query.getResultList();
 	}
 
 	@Override
 	public boolean delete(Class<T> z,long id) throws Exception {
 		session = sessionFactory.openSession();
 		Object o = session.load(z, id);
-		tx = session.getTransaction();
 		session.beginTransaction();
 		session.delete(o);
-		tx.commit();
 		return true;
 	}
 
 	@Override
 	public T update(T bean) throws Exception {
 		session = sessionFactory.openSession();
-		tx = session.beginTransaction();
 		session.merge(bean);
-		tx.commit();
 		return bean;
 	}
-
 }

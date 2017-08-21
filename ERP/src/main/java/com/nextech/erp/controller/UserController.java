@@ -223,7 +223,6 @@ public class UserController {
 		return userDTO;
 	}
 
-	@CrossOrigin(origins = "http://localhost:8080")
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
 	public @ResponseBody UserStatus updateUser(@RequestBody UserDTO userDTO,HttpServletRequest request,HttpServletResponse response) {
 		try {
@@ -258,7 +257,7 @@ public class UserController {
 			}
 		 //	user.setPassword(new com.nextech.erp.util.EncryptDecrypt().encrypt(userDTO.getPassword()));
 	     	userservice.updateEntity(user);
-			  NotificationDTO  notificationDTO = notificationService.getNotificationDTOById(Long.parseLong(messageSource.getMessage(ERPConstants.USER_UPDATE_NOTIFICATION, null, null)));
+			NotificationDTO  notificationDTO = notificationService.getNotificationDTOById(Long.parseLong(messageSource.getMessage(ERPConstants.USER_UPDATE_NOTIFICATION, null, null)));
 		mailSending(userDTO, request, response, notificationDTO);
 		return new UserStatus(1, "User update Successfully !");
 		} catch (Exception e) {
