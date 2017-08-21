@@ -51,7 +51,6 @@ public class UserDaoImpl extends SuperDaoImpl<User> implements UserDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<User> getUserProfileByUserId(long id) throws Exception {
-		// TODO Auto-generated method stub
 		session = sessionFactory.openSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(User.class);
@@ -68,14 +67,12 @@ public class UserDaoImpl extends SuperDaoImpl<User> implements UserDao {
 		criteria.add(Restrictions.eq("isactive", true));
 		criteria.add(Restrictions.eq("firstName", firstName));
 		criteria.add(Restrictions.eq("lastName", lastName));
-		System.out.println("UserDaoImpl session closed session.isOpen() : " + session.isOpen() + " sessionFactory.isOpen() : " + sessionFactory.isOpen());
 		User user = criteria.list().size() > 0 ? (User) criteria.list().get(0): null;
 		return user;
 	}
 
 	@Override
 	public User getEmailUserById(long id) throws Exception {
-		// TODO Auto-generated method stub
 		session = sessionFactory.openSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(User.class);
@@ -88,7 +85,6 @@ public class UserDaoImpl extends SuperDaoImpl<User> implements UserDao {
 
 	@Override
 	public User getUserByContact(String contact) throws Exception {
-		// TODO Auto-generated method stub
 		session = sessionFactory.openSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(User.class);
@@ -101,7 +97,6 @@ public class UserDaoImpl extends SuperDaoImpl<User> implements UserDao {
 
 	@Override
 	public User getUserByNotifictionId(long notificatinId) throws Exception {
-		// TODO Auto-generated method stub
 		session = sessionFactory.openSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(User.class);
