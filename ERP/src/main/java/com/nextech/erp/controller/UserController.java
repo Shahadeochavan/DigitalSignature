@@ -16,9 +16,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,7 +35,6 @@ import com.nextech.erp.model.Reportusertypeassociation;
 import com.nextech.erp.model.User;
 import com.nextech.erp.model.Usertype;
 import com.nextech.erp.newDTO.NotificationDTO;
-import com.nextech.erp.newDTO.NotificationUserAssociatinsDTO;
 import com.nextech.erp.newDTO.UserDTO;
 import com.nextech.erp.newDTO.UserTypePageAssoDTO;
 import com.nextech.erp.service.MailService;
@@ -68,10 +65,7 @@ public class UserController {
 
 	@Autowired
 	UsertypepageassociationService usertypepageassociationService;
-
-	@Autowired
-	private JavaMailSender mailSender;
-
+	
 	@Autowired
 	NotificationUserAssociationService notificationUserAssService;
 
@@ -84,18 +78,6 @@ public class UserController {
 	@Autowired
 	MailService mailService;
 	
-	StringBuilder stringBuilderCC = new StringBuilder();
-	StringBuilder stringBuilderTO = new StringBuilder();
-	StringBuilder stringBuilderBCC = new StringBuilder();
-	
-	String prefixCC="";
-	String prefixTO="";
-	String prefixBCC="";
-	
-	String multipleCC="";
-	String multipleBCC="";
-	String multipleTO="";
-
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addUser(@Valid @RequestBody UserDTO userDTO,
 			BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
