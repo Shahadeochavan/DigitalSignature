@@ -138,6 +138,8 @@ public class UserServiceImpl extends CRUDServiceImpl<User> implements UserServic
 		String multipleTO = "";
 		Mail mail = new Mail();
 		List<NotificationUserAssociatinsDTO> notificationUserAssociatinsDTOs = notificationUserAssService.getNotificationUserAssociatinsDTOs(notificationDTO.getId());
+		
+		// Form comma separated list of notificationuserassociation.getUserId().getId() and fetch all e-mails in single DB call.
 		for (NotificationUserAssociatinsDTO notificationuserassociation : notificationUserAssociatinsDTOs) {
 			User user = userdao.getById(User.class, notificationuserassociation.getUserId().getId());
 			if (notificationuserassociation.getTo()) {
