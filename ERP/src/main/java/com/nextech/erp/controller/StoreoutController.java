@@ -19,8 +19,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.nextech.erp.dto.StoreOutDTO;
 import com.nextech.erp.factory.StoreoutRequestResponseFactory;
+import com.nextech.erp.model.Storeout;
 import com.nextech.erp.service.ProductService;
 import com.nextech.erp.service.ProductionplanningService;
 import com.nextech.erp.service.RawmaterialService;
@@ -113,17 +115,17 @@ public class StoreoutController {
 	}
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<StoreOutDTO> getStoreout() {
-
-		List<StoreOutDTO> userList = null;
+	public @ResponseBody List<Storeout> getStoreout() {
+		List<Storeout> storeouts = null;
+		
 		try {
-			userList = storeoutService.getStoreOutlist();
+			 storeouts =  storeoutService.getEntityList(Storeout.class);
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		return userList;
+		return storeouts;
 	}
 
 	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")

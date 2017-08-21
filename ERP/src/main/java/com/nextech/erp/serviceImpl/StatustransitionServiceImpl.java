@@ -32,7 +32,7 @@ public class StatustransitionServiceImpl extends CRUDServiceImpl<Statustransitio
 			StatusTransitionDTO statusTransitionDTO = StatusTransitionRequestResponseFactory.setStatusTransitinDTO(statustransition);
 			statusTransitionDTOs.add(statusTransitionDTO);
 		}
-		return null;
+		return statusTransitionDTOs;
 	}
 
 	@Override

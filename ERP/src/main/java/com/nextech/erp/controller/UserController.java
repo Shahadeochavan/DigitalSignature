@@ -308,8 +308,8 @@ public class UserController {
 	}
 	private void mailSending(UserDTO userDTO,HttpServletRequest request,HttpServletResponse response,NotificationDTO  notificationDTO) throws NumberFormatException, Exception{
          Mail mail = userservice.emailNotification(notificationDTO);
-         
-                mail.setMailTo(userDTO.getEmailId());      
+         String userEmailTo = mail.getMailTo()+","+userDTO.getEmailId();
+                mail.setMailTo(userEmailTo);      
 		        mail.setMailSubject(notificationDTO.getSubject());
 		        Map < String, Object > model = new HashMap < String, Object > ();
 		        model.put("firstName", userDTO.getFirstName());

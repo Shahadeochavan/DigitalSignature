@@ -13,4 +13,15 @@ public class ReportColumn {
 	public static ColumnBuilder<?, ?> USER_ID = Columns.column("User Id", "id", DataTypes.integerType());
 	public static ColumnBuilder<?, ?> FIRST_NAME = Columns.column("First Name", "firstname", DataTypes.stringType());
 	public static ColumnBuilder<?, ?> LAST_NAME = Columns.column("Last Name", "last_name", DataTypes.stringType());
+	
+	public static String CLIENT_REPORT = "CLIENT";
+	public static String CLIENT_REPORT_PATH = "D:/report/client.pdf";
+	public static String CLIENT_REPORT_QUERY = "SELECT id, companyname,address,emailid,contactnumber FROM ekerp.client";
+	
+	/**************************** COLUMNS **********************************/
+	public static ColumnBuilder<?, ?> CLIENT_ID = Columns.column("Client Id", "id", DataTypes.integerType());
+	public static ColumnBuilder<?, ?> COMPANY_NAME = Columns.column("Company name", "companyname", DataTypes.stringType());
+	public static ColumnBuilder<?, ?> EMAIL_ID = Columns.column("Email Id", "emailid", DataTypes.stringType());
+	public static ColumnBuilder<?, ?> ADDRESS = Columns.column("Address", "address", DataTypes.stringType());
+	public static ColumnBuilder<?, ?> CONTACT_NUMBER = Columns.column("Contact Number", "contactnumber", DataTypes.stringType());
 }

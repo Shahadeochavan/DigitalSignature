@@ -26,8 +26,6 @@ import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.dto.Mail;
 import com.nextech.erp.factory.VendorFactory;
 import com.nextech.erp.newDTO.NotificationDTO;
-import com.nextech.erp.newDTO.NotificationUserAssociatinsDTO;
-import com.nextech.erp.newDTO.UserDTO;
 import com.nextech.erp.newDTO.VendorDTO;
 import com.nextech.erp.service.MailService;
 import com.nextech.erp.service.NotificationService;
@@ -164,7 +162,8 @@ public class VendorController {
 	}
 	private void mailSending(VendorDTO vendorDTO,HttpServletRequest request,HttpServletResponse response,NotificationDTO  notificationDTO) throws Exception{
 		 Mail mail = userService.emailNotification(notificationDTO);
-		   mail.setMailTo(vendorDTO.getEmail());
+		 String vendorEmail = mail.getMailTo()+","+vendorDTO.getEmail();
+		   mail.setMailTo(vendorEmail);
 	        mail.setMailSubject(notificationDTO.getSubject());
 	        Map < String, Object > model = new HashMap < String, Object > ();
 	        model.put("firstName", vendorDTO.getFirstName());

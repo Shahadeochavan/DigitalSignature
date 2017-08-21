@@ -181,24 +181,10 @@ public class ProductinventoryController {
 		
 	}
 	private void mailSendingProductInventroy(List<ProductInventoryDTO> productInventoryDTOs) throws Exception{
-		  Mail mail = new Mail();
 		  NotificationDTO  notificationDTO = notificationService.getNotificationDTOById(Long.parseLong(messageSource.getMessage(ERPConstants.PRODUCT_INVENTORY_NOTIFICATION, null, null)));
-		  List<NotificationUserAssociatinsDTO> notificationUserAssociatinsDTOs = notificationUserAssociationService.getNotificationUserAssociatinsDTOs(notificationDTO.getId());
-		  for (NotificationUserAssociatinsDTO notificationuserassociation : notificationUserAssociatinsDTOs) {
-			  UserDTO userDTO = userService.getUserDTO(notificationuserassociation.getUserId().getId());
-			  if(notificationuserassociation.getTo()==true){
-				  mail.setMailTo(userDTO.getEmailId()); 
-			  }else if(notificationuserassociation.getBcc()==true){
-				  mail.setMailBcc(userDTO.getEmailId());
-			  }else if(notificationuserassociation.getCc()==true){
-				  mail.setMailCc(userDTO.getEmailId());
-			  }
-			
-		}
+		  Mail mail = userService.emailNotification(notificationDTO);
 	        mail.setMailSubject(notificationDTO.getSubject());
 	        Map < String, Object > model = new HashMap < String, Object > ();
-	        model.put("firstName", "Prashant");
-	        model.put("lastName", "Raskar");
 	        model.put("productInventoryDTOs", productInventoryDTOs);
 	        model.put("location", "Pune");
 	        model.put("signature", "www.NextechServices.in");

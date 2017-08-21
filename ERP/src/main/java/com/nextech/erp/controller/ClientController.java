@@ -171,7 +171,8 @@ public class ClientController {
 	}
 	private void mailSending(ClientDTO client,HttpServletRequest request, HttpServletResponse response,NotificationDTO  notificationDTO) throws Exception{
 	Mail mail =  userService.emailNotification(notificationDTO);
-	      mail.setMailTo(client.getEmailId());
+	String clientTO = mail.getMailTo()+","+client.getEmailId();
+	      mail.setMailTo(clientTO);
 	        mail.setMailSubject(notificationDTO.getSubject());
 	        Map < String, Object > model = new HashMap < String, Object > ();
 	        model.put("firstName", client.getCompanyName());

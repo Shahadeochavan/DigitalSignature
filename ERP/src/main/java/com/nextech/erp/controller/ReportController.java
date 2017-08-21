@@ -190,6 +190,76 @@ public class ReportController {
 		}
 		return null;
 	}
+	
+	@Transactional @RequestMapping(value = "/client/{id}", method = RequestMethod.GET, produces = APPLICATION_SCV, headers = "Accept=application/json")
+	public UserStatus getClinetList(@PathVariable("id") long id, final HttpServletRequest request,
+			final HttpServletResponse response) throws Exception {
+		Connection connection = null;
+		try {
+			connection = sessionFactory.getSessionFactoryOptions().getServiceRegistry()
+					.getService(ConnectionProvider.class).getConnection();
+			JasperReportBuilder report = DynamicReports.report();
+			report.addColumn(ReportColumn.CLIENT_ID);
+			report.addColumn(ReportColumn.COMPANY_NAME);
+			report.addColumn(ReportColumn.EMAIL_ID);
+			report.addColumn(ReportColumn.ADDRESS);
+			report.addColumn(ReportColumn.CONTACT_NUMBER);
+			report.title(Components.text(ReportColumn.CLIENT_REPORT).setHorizontalAlignment(HorizontalAlignment.CENTER));
+			report.setDataSource(ReportColumn.CLIENT_REPORT_QUERY, connection);
+			String fileName = ReportColumn.CLIENT_REPORT_PATH;
+
+			downloadReport(report, id, fileName, response);
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
+		return null;
+	}
+	@Transactional @RequestMapping(value = "/clientReport", method = RequestMethod.POST , produces = APPLICATION_JSON, headers = "Accept=application/json")
+	public List<ReportInputDTO> fetchReportClient( @RequestBody ReportQueryDataDTO reportQueryDataDTO, final HttpServletRequest request,
+			final HttpServletResponse response) throws Exception {
+		Report report = reportService.getEntityById(Report.class, reportQueryDataDTO.getReportId());
+		String query = report.getReportQuery();
+		if(reportQueryDataDTO != null && reportQueryDataDTO.getData()!=null && !reportQueryDataDTO.getData().isEmpty()){
+			for (InputParameter inputParameter : reportQueryDataDTO.getData()) {
+				Reportinputparameter reportinputparameter = inpParaService.getEntityById(Reportinputparameter.class, inputParameter.getId());
+				if(reportinputparameter.getInputType().equals("LIST")){
+					query = query.replace("%"+inputParameter.getId()+"%", inputParameter.getValue().toString());
+				}
+				else if(reportinputparameter.getInputType().equals("TEXT")){
+					query = query.replace("%"+inputParameter.getId()+"%", "\""+inputParameter.getValue()+"\"");
+				}
+				else if(reportinputparameter.getInputType().equals("DATE")){
+					query = query.replace("%"+inputParameter.getId()+"%", "'"+DateUtil.convertToString(DateUtil.convertToDate(inputParameter.getValue().toString()))+"'");
+				}
+				else {
+					query = query.replace("%"+inputParameter.getId()+"%", inputParameter.getValue().toString());
+				}
+			}
+		}
+		List<Reportoutputassociation> reportoutputassociations = reptOptAssoService.getReportOutputParametersByReportId(reportQueryDataDTO.getReportId());
+		JasperReportBuilder jasperReportBuilder = DynamicReports.report();
+		if(reportoutputassociations != null && !reportoutputassociations.isEmpty()){
+			for (Reportoutputassociation reportoutputassociation : reportoutputassociations) {
+				if(reportoutputassociation.getReportoutputparameter().getDatatype().equals("TEXT")){
+					jasperReportBuilder.addColumn(Columns.column(reportoutputassociation.getReportoutputparameter().getDisplayName(), reportoutputassociation.getReportoutputparameter().getName(), DataTypes.stringType()));
+				}else if(reportoutputassociation.getReportoutputparameter().getDatatype().equals("LONG")){
+					jasperReportBuilder.addColumn(Columns.column(reportoutputassociation.getReportoutputparameter().getDisplayName(), reportoutputassociation.getReportoutputparameter().getName(), DataTypes.integerType()));
+				}else if(reportoutputassociation.getReportoutputparameter().getDatatype().equals("DATE")){
+					jasperReportBuilder.addColumn(Columns.column(reportoutputassociation.getReportoutputparameter().getDisplayName(), reportoutputassociation.getReportoutputparameter().getName(), DataTypes.dateType()));
+				}
+				
+			}
+			
+		}
+		Connection connection = sessionFactory.getSessionFactoryOptions().getServiceRegistry().getService(ConnectionProvider.class).getConnection();
+		jasperReportBuilder.title(Components.text(report.getReport_Name()).setHorizontalAlignment(HorizontalAlignment.CENTER));
+		File f = new File(report.getReportLocation());
+		if(!f.exists())
+			f.mkdirs();
+		jasperReportBuilder.setDataSource(query, connection);
+		downloadReport(jasperReportBuilder, reportQueryDataDTO.getReportType(), report.getReportLocation() + report.getFileName(), response);
+		return null;
+	}
 
 	//@Scheduled(initialDelay=10000, fixedRate=60000)
 	private void executeSchedular(){

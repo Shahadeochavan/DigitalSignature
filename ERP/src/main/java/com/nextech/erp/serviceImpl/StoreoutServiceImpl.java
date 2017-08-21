@@ -1,5 +1,6 @@
 package com.nextech.erp.serviceImpl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -115,6 +116,12 @@ public class StoreoutServiceImpl extends CRUDServiceImpl<Storeout> implements St
 	@Override
 	public List<StoreOutDTO> getStoreOutlist() throws Exception {
 		// TODO Auto-generated method stub
+		List<StoreOutDTO> storeOutDTOs =  new ArrayList<StoreOutDTO>();
+		List<Storeout> storeouts =  storeoutDao.getList(Storeout.class);
+		for (Storeout storeout : storeouts) {
+		
+		}
+		
 		return null;
 	}
 	@Override
