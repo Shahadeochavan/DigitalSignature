@@ -1,9 +1,12 @@
 package com.nextech.erp.daoImpl;
 
-import org.hibernate.Criteria;
-import org.hibernate.criterion.Restrictions;
-import org.springframework.stereotype.Repository;
+import java.util.List;
 
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+import org.springframework.stereotype.Repository;
 import com.nextech.erp.dao.NotificationDao;
 import com.nextech.erp.model.Notification;
 
@@ -13,14 +16,18 @@ public class NotificationDaoImpl extends SuperDaoImpl<Notification> implements N
 
 	@Override
 	public Notification getNotifiactionByStatus(long statusId) throws Exception {
-		// TODO Auto-generated method stub
 		session = sessionFactory.getCurrentSession();
-		@SuppressWarnings("deprecation")
-		Criteria criteria = session.createCriteria(Notification.class);
-		criteria.add(Restrictions.eq("status1.id",statusId));
-		criteria.add(Restrictions.eq("isactive", true));
-		Notification notification = criteria.list().size() > 0 ? (Notification) criteria.list().get(0) : null;
-		return notification;
+		session = sessionFactory.openSession();
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<Notification> criteria = builder.createQuery(Notification.class);
+		Root<Notification> userRoot = (Root<Notification>) criteria.from(Notification.class);
+		criteria.select(userRoot).where(builder.equal(userRoot.get("status1"), statusId),builder.equal(userRoot.get("isactive"), true));
+		TypedQuery<Notification> query = session.createQuery(criteria);
+		  List<Notification> list = query.getResultList();
+		  if (list.isEmpty()) {
+		        return null;
+		    }
+		    return list.get(0);
 	}
 
 }

@@ -2,10 +2,11 @@ package com.nextech.erp.daoImpl;
 
 import java.util.List;
 
-import org.hibernate.Criteria;
-import org.hibernate.criterion.Restrictions;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import org.springframework.stereotype.Repository;
-
 import com.nextech.erp.dao.NotificationUserassociationDao;
 import com.nextech.erp.model.Notificationuserassociation;
 
@@ -20,44 +21,42 @@ public class NotificationUserassociationDaoImpl extends
 			throws Exception {
 		// TODO Auto-generated method stub
 		session = sessionFactory.getCurrentSession();
-		@SuppressWarnings("deprecation")
-		Criteria criteria = session
-				.createCriteria(Notificationuserassociation.class);
-		criteria.add(Restrictions.eq("user.id", userId));
-		criteria.add(Restrictions.eq("isactive", true));
-		Notificationuserassociation notificationuserassociation = criteria
-				.list().size() > 0 ? (Notificationuserassociation) criteria
-				.list().get(0) : null;
-		return notificationuserassociation;
+		session = sessionFactory.openSession();
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<Notificationuserassociation> criteria = builder.createQuery(Notificationuserassociation.class);
+		Root<Notificationuserassociation> userRoot = (Root<Notificationuserassociation>) criteria.from(Notificationuserassociation.class);
+		criteria.select(userRoot).where(builder.equal(userRoot.get("user"), userId),builder.equal(userRoot.get("isactive"), true));
+		TypedQuery<Notificationuserassociation> query = session.createQuery(criteria);
+		  List<Notificationuserassociation> list = query.getResultList();
+		  if (list.isEmpty()) {
+		        return null;
+		    }
+		    return list.get(0);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public List<Notificationuserassociation> getNotificationuserassociationByUserId(
 			long userId) throws Exception {
 		// TODO Auto-generated method stub
-		session = sessionFactory.getCurrentSession();
-		@SuppressWarnings("deprecation")
-		Criteria criteria = session
-				.createCriteria(Notificationuserassociation.class);
-		criteria.add(Restrictions.eq("isactive", true));
-		criteria.add(Restrictions.eq("user.id", userId));
-		return (criteria.list().size() > 0 ? (List<Notificationuserassociation>) criteria
-				.list() : null);
+		session = sessionFactory.openSession();
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<Notificationuserassociation> criteria = builder.createQuery(Notificationuserassociation.class);
+		Root<Notificationuserassociation> userRoot  = (Root<Notificationuserassociation>) criteria.from(Notificationuserassociation.class);
+		criteria.select(userRoot).where(builder.equal(userRoot.get("user"), userId),builder.equal(userRoot.get("isactive"), true));
+		TypedQuery<Notificationuserassociation> query = session.createQuery(criteria);
+		return query.getResultList();
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public List<Notificationuserassociation> getNotificationuserassociationBynotificationId(
 			long notificationId) throws Exception {
-		session = sessionFactory.getCurrentSession();
-		@SuppressWarnings("deprecation")
-		Criteria criteria = session
-				.createCriteria(Notificationuserassociation.class);
-		criteria.add(Restrictions.eq("isactive", true));
-		criteria.add(Restrictions.eq("notification.id", notificationId));
-		return (criteria.list().size() > 0 ? (List<Notificationuserassociation>) criteria
-				.list() : null);
+		session = sessionFactory.openSession();
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<Notificationuserassociation> criteria = builder.createQuery(Notificationuserassociation.class);
+		Root<Notificationuserassociation> userRoot  = (Root<Notificationuserassociation>) criteria.from(Notificationuserassociation.class);
+		criteria.select(userRoot).where(builder.equal(userRoot.get("notification"), notificationId),builder.equal(userRoot.get("isactive"), true));
+		TypedQuery<Notificationuserassociation> query = session.createQuery(criteria);
+		return query.getResultList();
 	}
 
 }

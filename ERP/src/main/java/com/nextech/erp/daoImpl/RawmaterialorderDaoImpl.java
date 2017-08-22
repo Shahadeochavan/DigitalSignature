@@ -3,6 +3,11 @@ package com.nextech.erp.daoImpl;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
@@ -10,6 +15,8 @@ import org.springframework.stereotype.Repository;
 
 import com.nextech.erp.dao.RawmaterialorderDao;
 import com.nextech.erp.model.Rawmaterialorder;
+import com.nextech.erp.model.Usertypepageassociation;
+import com.nextech.erp.model.Vendor;
 
 @Repository
 
@@ -23,14 +30,17 @@ public class RawmaterialorderDaoImpl extends SuperDaoImpl<Rawmaterialorder>
 	@Override
 	public Rawmaterialorder getRawmaterialorderByIdName(long id, String rmname)
 			throws Exception {
-		session = sessionFactory.getCurrentSession();
-		@SuppressWarnings("deprecation")
-		Criteria criteria = session.createCriteria(Rawmaterialorder.class);
-		criteria.add(Restrictions.eq("isactive", true));
-		criteria.add(Restrictions.eq("id", id));
-		criteria.add(Restrictions.eq("name", rmname));
-		Rawmaterialorder rawmaterialorder = criteria.list().size() > 0 ? (Rawmaterialorder) criteria.list().get(0) : null;
-		return rawmaterialorder;
+		session = sessionFactory.openSession();
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<Rawmaterialorder> criteria = builder.createQuery(Rawmaterialorder.class);
+		Root<Rawmaterialorder> userRoot = criteria.from(Rawmaterialorder.class);
+		criteria.select(userRoot).where(builder.equal(userRoot.get("name"), rmname),builder.equal(userRoot.get("id"), id),builder.equal(userRoot.get("isactive"), true));
+		TypedQuery<Rawmaterialorder> query = session.createQuery(criteria);
+		List<Rawmaterialorder> results = query.getResultList();
+		  if (results.isEmpty()) {
+		        return null;
+		    }
+		    return results.get(0);
 	}
 
 	@Override
@@ -49,14 +59,13 @@ public class RawmaterialorderDaoImpl extends SuperDaoImpl<Rawmaterialorder>
 
 	@Override
 	public List<Rawmaterialorder> getRawmaterialorderByQualityCheckStatusId(long statusId) throws Exception {
-		session = sessionFactory.getCurrentSession();
-		@SuppressWarnings("deprecation")
-		Criteria criteria = session.createCriteria(Rawmaterialorder.class);
-		criteria.add(Restrictions.eq("isactive", true));
-		criteria.add(Restrictions.eq("status.id", statusId));
-		@SuppressWarnings("unchecked")
-		List<Rawmaterialorder> rawmaterialorder = criteria.list().size() > 0 ? (List<Rawmaterialorder>) criteria.list() : null;
-		return rawmaterialorder;
+		session = sessionFactory.openSession();
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<Rawmaterialorder> criteria = builder.createQuery(Rawmaterialorder.class);
+		Root<Rawmaterialorder> userRoot  = (Root<Rawmaterialorder>) criteria.from(Rawmaterialorder.class);
+		criteria.select(userRoot).where(builder.equal(userRoot.get("status"), statusId),builder.equal(userRoot.get("isactive"), true));
+		TypedQuery<Rawmaterialorder> query = session.createQuery(criteria);
+		return query.getResultList();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -71,17 +80,17 @@ public class RawmaterialorderDaoImpl extends SuperDaoImpl<Rawmaterialorder>
 		return criteria.list();
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public List<Rawmaterialorder> getRawmaterialByName(String name)
 			throws Exception {
 		// TODO Auto-generated method stub
-		session = sessionFactory.getCurrentSession();
-		@SuppressWarnings("deprecation")
-		Criteria criteria = session.createCriteria(Rawmaterialorder.class);
-		criteria.add(Restrictions.eq("isactive", true));
-		criteria.add(Restrictions.eq("name", name));
-		return criteria.list();
+		session = sessionFactory.openSession();
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<Rawmaterialorder> criteria = builder.createQuery(Rawmaterialorder.class);
+		Root<Rawmaterialorder> userRoot  = (Root<Rawmaterialorder>) criteria.from(Rawmaterialorder.class);
+		criteria.select(userRoot).where(builder.equal(userRoot.get("name"), name),builder.equal(userRoot.get("isactive"), true));
+		TypedQuery<Rawmaterialorder> query = session.createQuery(criteria);
+		return query.getResultList();
 	}
 
 	@Override

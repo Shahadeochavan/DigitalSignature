@@ -1,10 +1,14 @@
 package com.nextech.erp.daoImpl;
 
-import org.hibernate.Criteria;
+import java.util.List;
+
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -23,14 +27,17 @@ public class PageDaoImpl extends SuperDaoImpl<Page> implements PageDao{
 	@Override
 	public Page getPageByUrl(String url) throws Exception {
 		session = sessionFactory.getCurrentSession();
-		@SuppressWarnings("deprecation")
-		Criteria criteria = session.createCriteria(Page.class);
-		criteria.add(Restrictions.eq("isactive", true));
-		criteria.add(Restrictions.eq("url", url));
-		Page page = criteria.list().size() > 0 ? (Page) criteria.list()
-				.get(0) : null;
-		 // //session.close();
-		return page;
+		session = sessionFactory.openSession();
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<Page> criteria = builder.createQuery(Page.class);
+		Root<Page> userRoot = (Root<Page>) criteria.from(Page.class);
+		criteria.select(userRoot).where(builder.equal(userRoot.get("url"), url),builder.equal(userRoot.get("isactive"), true));
+		TypedQuery<Page> query = session.createQuery(criteria);
+		  List<Page> list = query.getResultList();
+		  if (list.isEmpty()) {
+		        return null;
+		    }
+		    return list.get(0);
 	}
 
 }

@@ -2,10 +2,11 @@ package com.nextech.erp.daoImpl;
 
 import java.util.List;
 
-import org.hibernate.Criteria;
-import org.hibernate.criterion.Restrictions;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import org.springframework.stereotype.Repository;
-
 import com.nextech.erp.dao.ReptOptAssoDao;
 import com.nextech.erp.model.Reportoutputassociation;
 
@@ -13,16 +14,15 @@ import com.nextech.erp.model.Reportoutputassociation;
 
 public class ReptOptAssoDaoImpl extends SuperDaoImpl<Reportoutputassociation> implements ReptOptAssoDao {
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public List<Reportoutputassociation> getListByReportId(long id) {
-		session = sessionFactory.getCurrentSession();
-		@SuppressWarnings("deprecation")
-		Criteria criteria = session.createCriteria(Reportoutputassociation.class);
-		criteria.add(Restrictions.eq("isactive", true));
-		criteria.add(Restrictions.eq("report.id", id));
-		List<Reportoutputassociation> reportoutputassociations = criteria.list().size() > 0 ?  criteria.list(): null;
-		return reportoutputassociations;
+		session = sessionFactory.openSession();
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<Reportoutputassociation> criteria = builder.createQuery(Reportoutputassociation.class);
+		Root<Reportoutputassociation> userRoot  = (Root<Reportoutputassociation>) criteria.from(Reportoutputassociation.class);
+		criteria.select(userRoot).where(builder.equal(userRoot.get("report"), id),builder.equal(userRoot.get("isactive"), true));
+		TypedQuery<Reportoutputassociation> query = session.createQuery(criteria);
+		return query.getResultList();
 	}
 
 }

@@ -2,9 +2,13 @@ package com.nextech.erp.daoImpl;
 
 import java.util.List;
 
-import org.hibernate.Criteria;
-import org.hibernate.criterion.Restrictions;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+
 import org.springframework.stereotype.Repository;
+
 import com.nextech.erp.dao.StatusDao;
 import com.nextech.erp.model.Status;
 
@@ -12,16 +16,17 @@ import com.nextech.erp.model.Status;
 
 public class StatusDaoImpl extends SuperDaoImpl<Status> implements StatusDao{
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public List<Status> getStatusByType(String type) throws Exception {
 		// TODO Auto-generated method stub
-		session = sessionFactory.getCurrentSession();
-		@SuppressWarnings("deprecation")
-		Criteria criteria = session.createCriteria(Status.class);
-		criteria.add(Restrictions.eq("type", type));
-		criteria.add(Restrictions.eq("isactive", true));
-		return (criteria.list().size() > 0 ? (List<Status>)criteria.list() : null);
+		
+		session = sessionFactory.openSession();
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<Status> criteria = builder.createQuery(Status.class);
+		Root<Status> userRoot = (Root<Status>) criteria.from(Status.class);
+		criteria.select(userRoot).where(builder.equal(userRoot.get("type"), type),builder.equal(userRoot.get("isactive"), true));
+		TypedQuery<Status> query = session.createQuery(criteria);
+		return query.getResultList();
 	}
 
 }

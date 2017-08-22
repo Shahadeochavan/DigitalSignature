@@ -2,11 +2,14 @@ package com.nextech.erp.daoImpl;
 
 import java.util.List;
 
-import org.hibernate.Criteria;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -22,27 +25,30 @@ public class RawmaterialorderassociationDaoImpl extends SuperDaoImpl<Rawmaterial
 	Session session = null;
 	Transaction tx = null;
 
-	@SuppressWarnings({ "deprecation", "unchecked" })
 	@Override
 	public List<Rawmaterialorderassociation> getRMOrderRMAssociationByRMOrderId(long id) throws Exception {
-		session = sessionFactory.getCurrentSession();
-		Criteria criteria = session.createCriteria(Rawmaterialorderassociation.class);
-		criteria.add(Restrictions.eq("rawmaterialorder.id", id));
-		criteria.add(Restrictions.eq("isactive", true));
-		//criteria.add(Restrictions.gt("remainingQuantity", new Long(0)));
-		return (criteria.list().size() > 0 ? (List<Rawmaterialorderassociation>)criteria.list() : null);
+		session = sessionFactory.openSession();
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<Rawmaterialorderassociation> criteria = builder.createQuery(Rawmaterialorderassociation.class);
+		Root<Rawmaterialorderassociation> userRoot  = (Root<Rawmaterialorderassociation>) criteria.from(Rawmaterialorderassociation.class);
+		criteria.select(userRoot).where(builder.equal(userRoot.get("rawmaterialorder"), id),builder.equal(userRoot.get("isactive"), true));
+		TypedQuery<Rawmaterialorderassociation> query = session.createQuery(criteria);
+		return query.getResultList();
 	}
 
 	@Override
 	public Rawmaterialorderassociation getRMOrderRMAssociationByRMOrderIdandRMId(long id, long rmId) throws Exception {
-		session = sessionFactory.getCurrentSession();
-		@SuppressWarnings("deprecation")
-		Criteria criteria = session.createCriteria(Rawmaterialorderassociation.class);
-		criteria.add(Restrictions.eq("rawmaterialorder.id", id));
-		criteria.add(Restrictions.eq("rawmaterial.id", rmId));
-		criteria.add(Restrictions.eq("isactive", true));
-		Rawmaterialorderassociation rawmaterialorderassociation = (Rawmaterialorderassociation) (criteria.list().size()>0 ? criteria.list().get(0) : null);
-		return rawmaterialorderassociation;
+		session = sessionFactory.openSession();
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<Rawmaterialorderassociation> criteria = builder.createQuery(Rawmaterialorderassociation.class);
+		Root<Rawmaterialorderassociation> userRoot = criteria.from(Rawmaterialorderassociation.class);
+		criteria.select(userRoot).where(builder.equal(userRoot.get("rawmaterial"), rmId),builder.equal(userRoot.get("rawmaterialorder"), id),builder.equal(userRoot.get("isactive"), true));
+		TypedQuery<Rawmaterialorderassociation> query = session.createQuery(criteria);
+		List<Rawmaterialorderassociation> results = query.getResultList();
+		  if (results.isEmpty()) {
+		        return null;
+		    }
+		    return results.get(0);
 	}
 
 }

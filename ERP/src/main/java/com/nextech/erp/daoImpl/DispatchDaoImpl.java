@@ -2,8 +2,10 @@ package com.nextech.erp.daoImpl;
 
 import java.util.List;
 
-import org.hibernate.Criteria;
-import org.hibernate.criterion.Restrictions;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import org.springframework.stereotype.Repository;
 
 import com.nextech.erp.dao.DispatchDao;
@@ -16,28 +18,31 @@ public class DispatchDaoImpl extends SuperDaoImpl<Dispatch> implements DispatchD
 	@Override
 	public Dispatch getDispatchByProductOrderIdAndProductId(long orderID,
 			long productID) throws Exception {
-		// TODO Auto-generated method stub
 		session = sessionFactory.getCurrentSession();
-		@SuppressWarnings("deprecation")
-		Criteria criteria = session.createCriteria(Dispatch.class);
-		criteria.add(Restrictions.eq("isactive", true));
-		criteria.add(Restrictions.eq("productorder.id", orderID));
-		criteria.add(Restrictions.eq("product.id", productID));
-		Dispatch dispatch = criteria.list().size() > 0 ? (Dispatch) criteria.list().get(0): null;
-		return dispatch;
+		session = sessionFactory.openSession();
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<Dispatch> criteria = builder.createQuery(Dispatch.class);
+		Root<Dispatch> userRoot = (Root<Dispatch>) criteria.from(Dispatch.class);
+		criteria.select(userRoot).where(builder.equal(userRoot.get("productorder"), orderID),builder.equal(userRoot.get("product"), productID),builder.equal(userRoot.get("isactive"), true));
+		TypedQuery<Dispatch> query = session.createQuery(criteria);
+		  List<Dispatch> list = query.getResultList();
+		  if (list.isEmpty()) {
+		        return null;
+		    }
+		    return list.get(0);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public List<Dispatch> getDispatchByProductOrderId(long productOrderId)
 			throws Exception {
 		// TODO Auto-generated method stub
-		session = sessionFactory.getCurrentSession();
-		@SuppressWarnings("deprecation")
-		Criteria criteria = session.createCriteria(Dispatch.class);
-		criteria.add(Restrictions.eq("isactive", true));
-		criteria.add(Restrictions.eq("productorder.id", productOrderId));
-		return (criteria.list().size() > 0 ? (List<Dispatch>)criteria.list() : null);
+		session = sessionFactory.openSession();
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<Dispatch> criteria = builder.createQuery(Dispatch.class);
+		Root<Dispatch> userRoot  = (Root<Dispatch>) criteria.from(Dispatch.class);
+		criteria.select(userRoot).where(builder.equal(userRoot.get("productorder"), productOrderId),builder.equal(userRoot.get("isactive"), true));
+		TypedQuery<Dispatch> query = session.createQuery(criteria);
+		return query.getResultList();
 	}
 
 }

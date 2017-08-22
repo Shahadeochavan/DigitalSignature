@@ -2,14 +2,15 @@ package com.nextech.erp.daoImpl;
 
 import java.util.List;
 
-import org.hibernate.Criteria;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-
 import com.nextech.erp.dao.RawmaterialorderinvoiceDao;
 import com.nextech.erp.model.Rawmaterialorderinvoice;
 
@@ -23,28 +24,30 @@ public class RawmaterialorderinvoiceDaoImpl extends
 	Session session = null;
 	Transaction tx = null;
 
-	@SuppressWarnings({ "deprecation", "unchecked" })
 	@Override
 	public List<Rawmaterialorderinvoice> getRawmaterialorderinvoiceByStatusId(
 			long id) throws Exception {
-		session = sessionFactory.getCurrentSession();
-		Criteria criteria = session
-				.createCriteria(Rawmaterialorderinvoice.class);
-		criteria.add(Restrictions.eq("status.id", id));
-		return criteria.list();
+	
+		session = sessionFactory.openSession();
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<Rawmaterialorderinvoice> criteria = builder.createQuery(Rawmaterialorderinvoice.class);
+		Root<Rawmaterialorderinvoice> userRoot  = (Root<Rawmaterialorderinvoice>) criteria.from(Rawmaterialorderinvoice.class);
+		criteria.select(userRoot).where(builder.equal(userRoot.get("status"), id));
+		TypedQuery<Rawmaterialorderinvoice> query = session.createQuery(criteria);
+		return query.getResultList();
 	}
 	@Override
 	public Rawmaterialorderinvoice getRMOrderInvoiceByInVoiceNoVendorNameAndPoNo(String invoiceNo,String vendorName,int poNO) throws Exception {
-		session = sessionFactory.getCurrentSession();
-		@SuppressWarnings("deprecation")
-		Criteria criteria = session.createCriteria(Rawmaterialorderinvoice.class);
-		criteria.add(Restrictions.eq("isactive", true));
-		criteria.add(Restrictions.eq("invoice_No", invoiceNo));
-		criteria.add(Restrictions.eq("vendorname", vendorName));
-		criteria.add(Restrictions.eq("po_No", poNO));
-		Rawmaterialorderinvoice rawmaterialorderinvoice = criteria.list().size() > 0 ? (Rawmaterialorderinvoice) criteria.list().get(0)
-				: null;
-		//  //session.close();
-		return rawmaterialorderinvoice;
+		session = sessionFactory.openSession();
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<Rawmaterialorderinvoice> criteria = builder.createQuery(Rawmaterialorderinvoice.class);
+		Root<Rawmaterialorderinvoice> userRoot = criteria.from(Rawmaterialorderinvoice.class);
+		criteria.select(userRoot).where(builder.equal(userRoot.get("invoice_No"), invoiceNo),builder.equal(userRoot.get("vendorname"), vendorName),builder.equal(userRoot.get("po_No"), poNO),builder.equal(userRoot.get("isactive"), true));
+		TypedQuery<Rawmaterialorderinvoice> query = session.createQuery(criteria);
+		List<Rawmaterialorderinvoice> results = query.getResultList();
+		  if (results.isEmpty()) {
+		        return null;
+		    }
+		    return results.get(0);
 	}
 }

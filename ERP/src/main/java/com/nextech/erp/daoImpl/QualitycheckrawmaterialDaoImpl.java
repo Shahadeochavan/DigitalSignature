@@ -3,10 +3,11 @@ package com.nextech.erp.daoImpl;
 
 import java.util.List;
 
-import org.hibernate.Criteria;
-import org.hibernate.criterion.Restrictions;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import org.springframework.stereotype.Repository;
-
 import com.nextech.erp.dao.QualitycheckrawmaterialDao;
 import com.nextech.erp.model.Qualitycheckrawmaterial;
 
@@ -18,26 +19,29 @@ public class QualitycheckrawmaterialDaoImpl extends
 
 	@Override
 	public Qualitycheckrawmaterial getQualitycheckrawmaterialByInvoiceIdAndRMId(long invoiceId,long rmId) throws Exception {
-		session = sessionFactory.getCurrentSession();
-		@SuppressWarnings("deprecation")
-		Criteria criteria = session.createCriteria(Qualitycheckrawmaterial.class);
-		criteria.add(Restrictions.eq("isactive", true));
-		criteria.add(Restrictions.eq("rawmaterialorderinvoice.id", invoiceId));
-		criteria.add(Restrictions.eq("rawmaterial.id", rmId));
-		Qualitycheckrawmaterial qualitycheckrawmaterial = criteria.list().size() > 0 ? (Qualitycheckrawmaterial) criteria.list().get(0): null;
-		return qualitycheckrawmaterial;
+		session = sessionFactory.openSession();
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<Qualitycheckrawmaterial> criteria = builder.createQuery(Qualitycheckrawmaterial.class);
+		Root<Qualitycheckrawmaterial> userRoot = criteria.from(Qualitycheckrawmaterial.class);
+		criteria.select(userRoot).where(builder.equal(userRoot.get("rawmaterial"), rmId),builder.equal(userRoot.get("rawmaterialorderinvoice"), invoiceId),builder.equal(userRoot.get("isactive"), true));
+		TypedQuery<Qualitycheckrawmaterial> query = session.createQuery(criteria);
+		List<Qualitycheckrawmaterial> results = query.getResultList();
+		  if (results.isEmpty()) {
+		        return null;
+		    }
+		    return results.get(0);
 }
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public List<Qualitycheckrawmaterial> getQualitycheckrawmaterialByInvoiceId(
 			long invoiceId) throws Exception {
 		// TODO Auto-generated method stub
-		session = sessionFactory.getCurrentSession();
-		@SuppressWarnings("deprecation")
-		Criteria criteria = session.createCriteria(Qualitycheckrawmaterial.class);
-		criteria.add(Restrictions.eq("rawmaterialorderinvoice.id", invoiceId));
-		criteria.add(Restrictions.eq("isactive", true));
-		return (List<Qualitycheckrawmaterial>) (criteria.list().size() > 0 ? criteria.list() : null);
+		session = sessionFactory.openSession();
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<Qualitycheckrawmaterial> criteria = builder.createQuery(Qualitycheckrawmaterial.class);
+		Root<Qualitycheckrawmaterial> userRoot  = (Root<Qualitycheckrawmaterial>) criteria.from(Qualitycheckrawmaterial.class);
+		criteria.select(userRoot).where(builder.equal(userRoot.get("rawmaterialorderinvoice"), invoiceId),builder.equal(userRoot.get("isactive"), true));
+		TypedQuery<Qualitycheckrawmaterial> query = session.createQuery(criteria);
+		return query.getResultList();
 	}
 }

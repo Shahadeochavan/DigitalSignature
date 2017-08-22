@@ -2,8 +2,11 @@ package com.nextech.erp.daoImpl;
 
 import java.util.List;
 
-import org.hibernate.Criteria;
-import org.hibernate.criterion.Restrictions;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+
 import org.springframework.stereotype.Repository;
 
 import com.nextech.erp.dao.ProductqualityDao;
@@ -13,17 +16,17 @@ import com.nextech.erp.model.Productquality;
 
 public class ProductqualityDaoImpl extends SuperDaoImpl<Productquality> implements ProductqualityDao{
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public List<Productquality> getProductqualityListByProductId(long productId)
 			throws Exception {
 		// TODO Auto-generated method stub
-		session = sessionFactory.getCurrentSession();
-		@SuppressWarnings("deprecation")
-		Criteria criteria = session.createCriteria(Productquality.class);
-		criteria.add(Restrictions.eq("product.id", productId));
-		criteria.add(Restrictions.eq("isactive", true));
-		return (criteria.list().size() > 0 ? (List<Productquality>)criteria.list() : null);
+		session = sessionFactory.openSession();
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<Productquality> criteria = builder.createQuery(Productquality.class);
+		Root<Productquality> userRoot  = (Root<Productquality>) criteria.from(Productquality.class);
+		criteria.select(userRoot).where(builder.equal(userRoot.get("product"), productId),builder.equal(userRoot.get("isactive"), true));
+		TypedQuery<Productquality> query = session.createQuery(criteria);
+		return query.getResultList();
 	}
 	
 	

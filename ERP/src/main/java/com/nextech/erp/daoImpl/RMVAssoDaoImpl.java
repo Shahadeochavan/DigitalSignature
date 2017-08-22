@@ -2,11 +2,14 @@ package com.nextech.erp.daoImpl;
 
 import java.util.List;
 
-import org.hibernate.Criteria;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -26,35 +29,43 @@ public class RMVAssoDaoImpl extends SuperDaoImpl<Rawmaterialvendorassociation>
 	@Override
 	public Rawmaterialvendorassociation getRMVAssoByVendorIdRMId(long vendorId,
 			long rmId) throws Exception {
-		session = sessionFactory.getCurrentSession();
-		@SuppressWarnings("deprecation")
-		Criteria criteria = session.createCriteria(Rawmaterialvendorassociation.class);
-		criteria.add(Restrictions.eq("rawmaterial.id", rmId));
-		criteria.add(Restrictions.eq("vendor.id", vendorId));
-		Rawmaterialvendorassociation rawmaterialorderassociation = (Rawmaterialvendorassociation) (criteria.list().size() > 0 ? criteria.list().get(0) : null);
-		return rawmaterialorderassociation;
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<Rawmaterialvendorassociation> getRawmaterialvendorassociationListByRMId(long id) {
-		session = sessionFactory.getCurrentSession();
-		@SuppressWarnings("deprecation")
-		Criteria criteria = session.createCriteria(Rawmaterialvendorassociation.class);
-		criteria.add(Restrictions.eq("isactive", true));
-		criteria.add(Restrictions.eq("rawmaterial.id", id));
-		return (criteria.list().size() > 0 ? (List<Rawmaterialvendorassociation>)criteria.list() : null);
+		session = sessionFactory.openSession();
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<Rawmaterialvendorassociation> criteria = builder.createQuery(Rawmaterialvendorassociation.class);
+		Root<Rawmaterialvendorassociation> userRoot = criteria.from(Rawmaterialvendorassociation.class);
+		criteria.select(userRoot).where(builder.equal(userRoot.get("vendor"), vendorId),builder.equal(userRoot.get("rawmaterial"), rmId),builder.equal(userRoot.get("isactive"), true));
+		TypedQuery<Rawmaterialvendorassociation> query = session.createQuery(criteria);
+		List<Rawmaterialvendorassociation> results = query.getResultList();
+		  if (results.isEmpty()) {
+		        return null;
+		    }
+		    return results.get(0);
+}
+	
+	public List<Rawmaterialvendorassociation> getRawmaterialvendorassociationListByRMId(long rmId) {		
+		session = sessionFactory.openSession();
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<Rawmaterialvendorassociation> criteria = builder.createQuery(Rawmaterialvendorassociation.class);
+		Root<Rawmaterialvendorassociation> userRoot  = (Root<Rawmaterialvendorassociation>) criteria.from(Rawmaterialvendorassociation.class);
+		criteria.select(userRoot).where(builder.equal(userRoot.get("rawmaterial"), rmId),builder.equal(userRoot.get("isactive"), true));
+		TypedQuery<Rawmaterialvendorassociation> query = session.createQuery(criteria);
+		return query.getResultList();
 	}
 
 	@Override
 	public Rawmaterialvendorassociation getRMVAssoByRMId(long rmId)
 			throws Exception {
-		session = sessionFactory.getCurrentSession();
-		@SuppressWarnings("deprecation")
-		Criteria criteria = session.createCriteria(Rawmaterialvendorassociation.class);
-		criteria.add(Restrictions.eq("rawmaterial.id", rmId));
-		Rawmaterialvendorassociation rawmaterialorderassociation = (Rawmaterialvendorassociation) (criteria.list().size() > 0 ? criteria.list().get(0) : null);
-		return rawmaterialorderassociation;
+		session = sessionFactory.openSession();
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<Rawmaterialvendorassociation> criteria = builder.createQuery(Rawmaterialvendorassociation.class);
+		Root<Rawmaterialvendorassociation> userRoot = criteria.from(Rawmaterialvendorassociation.class);
+		criteria.select(userRoot).where(builder.equal(userRoot.get("rawmaterial"), rmId),builder.equal(userRoot.get("isactive"), true));
+		TypedQuery<Rawmaterialvendorassociation> query = session.createQuery(criteria);
+		List<Rawmaterialvendorassociation> results = query.getResultList();
+		  if (results.isEmpty()) {
+		        return null;
+		    }
+		    return results.get(0);
 	}
 
 }

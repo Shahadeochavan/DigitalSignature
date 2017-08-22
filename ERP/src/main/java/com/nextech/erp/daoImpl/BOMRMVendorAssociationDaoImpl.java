@@ -2,10 +2,11 @@ package com.nextech.erp.daoImpl;
 
 import java.util.List;
 
-import org.hibernate.Criteria;
-import org.hibernate.criterion.Restrictions;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import org.springframework.stereotype.Repository;
-
 import com.nextech.erp.dao.BOMRMVendorAssociationDao;
 import com.nextech.erp.model.Bomrmvendorassociation;
 
@@ -15,18 +16,16 @@ public class BOMRMVendorAssociationDaoImpl extends
 		SuperDaoImpl<Bomrmvendorassociation> implements
 		BOMRMVendorAssociationDao {
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public List<Bomrmvendorassociation> getBomRMVendorByBomId(long bomId)
 			throws Exception {
-		// TODO Auto-generated method stub
-		session = sessionFactory.getCurrentSession();
-		@SuppressWarnings("deprecation")
-		Criteria criteria = session
-				.createCriteria(Bomrmvendorassociation.class);
-		criteria.add(Restrictions.eq("bom.id", bomId));
-		criteria.add(Restrictions.eq("isactive", true));
-		return (List<Bomrmvendorassociation>) (criteria.list().size() > 0 ? criteria
-				.list() : null);
+
+		session = sessionFactory.openSession();
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<Bomrmvendorassociation> criteria = builder.createQuery(Bomrmvendorassociation.class);
+		Root<Bomrmvendorassociation> userRoot  = (Root<Bomrmvendorassociation>) criteria.from(Bomrmvendorassociation.class);
+		criteria.select(userRoot).where(builder.equal(userRoot.get("bom"), bomId),builder.equal(userRoot.get("isactive"), true));
+		TypedQuery<Bomrmvendorassociation> query = session.createQuery(criteria);
+		return query.getResultList();
 	}
 }

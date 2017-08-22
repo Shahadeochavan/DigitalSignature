@@ -3,6 +3,11 @@ package com.nextech.erp.daoImpl;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
@@ -18,13 +23,18 @@ public class ProductorderDaoImpl extends SuperDaoImpl<Productorder> implements
 
 	@Override
 	public Productorder getProductorderByProductOrderId(long pOrderId)throws Exception {
-		session = sessionFactory.getCurrentSession();
-		@SuppressWarnings("deprecation")
-		Criteria criteria = session.createCriteria(Productorder.class);
-		criteria.add(Restrictions.eq("id", pOrderId));
-		criteria.add(Restrictions.eq("isactive", true));
-		Productorder productorder = (Productorder) (criteria.list().size() > 0 ? criteria.list().get(0) : null);
-		return productorder;
+		
+		session = sessionFactory.openSession();
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<Productorder> criteria = builder.createQuery(Productorder.class);
+		Root<Productorder> userRoot = (Root<Productorder>) criteria.from(Productorder.class);
+		criteria.select(userRoot).where(builder.equal(userRoot.get("id"), pOrderId),builder.equal(userRoot.get("isactive"), true));
+		TypedQuery<Productorder> query = session.createQuery(criteria);
+		  List<Productorder> list = query.getResultList();
+		  if (list.isEmpty()) {
+		        return null;
+		    }
+		    return list.get(0);
 	}
 
 	@SuppressWarnings("unchecked")

@@ -2,10 +2,11 @@ package com.nextech.erp.daoImpl;
 
 import java.util.List;
 
-import org.hibernate.Criteria;
-import org.hibernate.criterion.Restrictions;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import org.springframework.stereotype.Repository;
-
 import com.nextech.erp.dao.ReportusertypeassociationDao;
 import com.nextech.erp.model.Reportusertypeassociation;
 
@@ -13,16 +14,15 @@ import com.nextech.erp.model.Reportusertypeassociation;
 
 public class ReportusertypeassociationDaoImpl extends SuperDaoImpl<Reportusertypeassociation> implements ReportusertypeassociationDao {
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public List<Reportusertypeassociation> getReportByUsertype(long usertypeId) {
 		// TODO Auto-generated method stub
-		session = sessionFactory.getCurrentSession();
-		@SuppressWarnings("deprecation")
-		Criteria criteria = session.createCriteria(Reportusertypeassociation.class);
-		criteria.add(Restrictions.eq("isactive", true));
-		criteria.add(Restrictions.eq("usertype.id", usertypeId));
-		List<Reportusertypeassociation> reportusertypeassociations = criteria.list().size() > 0 ?  criteria.list(): null;
-		return reportusertypeassociations;
+		session = sessionFactory.openSession();
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<Reportusertypeassociation> criteria = builder.createQuery(Reportusertypeassociation.class);
+		Root<Reportusertypeassociation> userRoot  = (Root<Reportusertypeassociation>) criteria.from(Reportusertypeassociation.class);
+		criteria.select(userRoot).where(builder.equal(userRoot.get("usertype"), usertypeId),builder.equal(userRoot.get("isactive"), true));
+		TypedQuery<Reportusertypeassociation> query = session.createQuery(criteria);
+		return query.getResultList();
 	}
 	}

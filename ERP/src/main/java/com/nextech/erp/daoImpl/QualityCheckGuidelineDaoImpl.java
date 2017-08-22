@@ -1,9 +1,12 @@
 package com.nextech.erp.daoImpl;
 
-import org.hibernate.Criteria;
-import org.hibernate.criterion.Restrictions;
-import org.springframework.stereotype.Repository;
+import java.util.List;
 
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+import org.springframework.stereotype.Repository;
 import com.nextech.erp.dao.QualityCheckGuidelineDao;
 import com.nextech.erp.model.Qualitycheckguideline;
 
@@ -14,26 +17,34 @@ public class QualityCheckGuidelineDaoImpl extends SuperDaoImpl<Qualitycheckguide
 	public Qualitycheckguideline getQCGuidlineByRMId(long rmId)
 			throws Exception {
 		// TODO Auto-generated method stub
-		session = sessionFactory.getCurrentSession();
-		@SuppressWarnings("deprecation")
-		Criteria criteria = session.createCriteria(Qualitycheckguideline.class);
-		criteria.add(Restrictions.eq("isactive", true));
-		criteria.add(Restrictions.eq("rawMaterialId", rmId));
-		Qualitycheckguideline qualitycheckguideline = criteria.list().size() > 0 ? (Qualitycheckguideline) criteria.list().get(0) : null;
-		return qualitycheckguideline;
+		session = sessionFactory.openSession();
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<Qualitycheckguideline> criteria = builder.createQuery(Qualitycheckguideline.class);
+		Root<Qualitycheckguideline> userRoot = (Root<Qualitycheckguideline>) criteria.from(Qualitycheckguideline.class);
+		criteria.select(userRoot).where(builder.equal(userRoot.get("rawMaterialId"), rmId),builder.equal(userRoot.get("isactive"), true));
+		TypedQuery<Qualitycheckguideline> query = session.createQuery(criteria);
+		  List<Qualitycheckguideline> list = query.getResultList();
+		  if (list.isEmpty()) {
+		        return null;
+		    }
+		    return list.get(0);
 	}
 
 	@Override
 	public Qualitycheckguideline getQCGuidelineByProductId(long productId)
 			throws Exception {
 		// TODO Auto-generated method stub
-		session = sessionFactory.getCurrentSession();
-		@SuppressWarnings("deprecation")
-		Criteria criteria = session.createCriteria(Qualitycheckguideline.class);
-		criteria.add(Restrictions.eq("isactive", true));
-		criteria.add(Restrictions.eq("productId", productId));
-		Qualitycheckguideline qualitycheckguideline = criteria.list().size() > 0 ? (Qualitycheckguideline) criteria.list().get(0) : null;
-		return qualitycheckguideline;
+		session = sessionFactory.openSession();
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<Qualitycheckguideline> criteria = builder.createQuery(Qualitycheckguideline.class);
+		Root<Qualitycheckguideline> userRoot = (Root<Qualitycheckguideline>) criteria.from(Qualitycheckguideline.class);
+		criteria.select(userRoot).where(builder.equal(userRoot.get("productId"), productId),builder.equal(userRoot.get("isactive"), true));
+		TypedQuery<Qualitycheckguideline> query = session.createQuery(criteria);
+		  List<Qualitycheckguideline> list = query.getResultList();
+		  if (list.isEmpty()) {
+		        return null;
+		    }
+		    return list.get(0);
 	}
 
 }
