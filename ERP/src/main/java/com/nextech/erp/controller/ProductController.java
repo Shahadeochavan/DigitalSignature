@@ -91,7 +91,7 @@ public class ProductController {
 	@Transactional @RequestMapping(value = "/create",headers = "Content-Type=*/*", method = RequestMethod.POST)
 	public @ResponseBody UserStatus addProduct(
 			HttpServletRequest request,@RequestParam("file") MultipartFile inputFile,
-			@RequestParam("clientPartNumber") String clientPartNumber,
+			@RequestParam("clientPartNumber") String clientPartNumber,@RequestParam("notificationId") long notificationId,
 			@RequestParam("name") String name,@RequestParam("description")String description,
 			@RequestParam("partNumber") String partNumber) {
 		try {
@@ -114,7 +114,7 @@ public class ProductController {
 			 product.setDesign(destinationFilePath);
 		    long id =	productService.addEntity(product);
 	    	productDTO.setId(id); 
-			addProductInventory(productDTO, Long.parseLong(request.getAttribute("current_user").toString()));
+			addProductInventory(productDTO, notificationId,Long.parseLong(request.getAttribute("current_user").toString()));
 			return new UserStatus(1, "product added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			cve.printStackTrace();
@@ -255,8 +255,8 @@ public class ProductController {
 		}
 	}
 
-	private void addProductInventory(ProductDTO productDTO,long userId) throws Exception{
-		productinventoryService.addEntity(ProductInventoryRequestResponseFactory.setProductIn(productDTO));
+	private void addProductInventory(ProductDTO productDTO,long notificationId,long userId) throws Exception{
+		productinventoryService.addEntity(ProductInventoryRequestResponseFactory.setProductIn(productDTO,notificationId, userId));
 	}
 	
 	private void mailSendingUpdate() throws Exception{

@@ -28,6 +28,7 @@ public class VendorFactory {
 		vendor.setState(vendorDTO.getState());
 		vendor.setVatNo(vendorDTO.getVatNo());
 		vendor.setIsactive(true);
+		vendor.setNotificationId(vendorDTO.getNotificationId());
 		vendor.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 		return vendor;
 	}
@@ -52,6 +53,7 @@ public class VendorFactory {
 		vendorDTO.setState(vendor.getState());
 		vendorDTO.setVatNo(vendor.getVatNo());
 		vendorDTO.setIsactive(true);
+		vendorDTO.setNotificationId(vendor.getNotificationId());
 		return vendorDTO;
 	}
 

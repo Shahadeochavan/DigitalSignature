@@ -37,6 +37,21 @@ public class StoreoutRequestResponseFactory {
 		storeout.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));		
 		return storeout;
 	}
+	public static StoreOutDTO setStoreOutDTO(Storeout storeout){
+		StoreOutDTO storeOutDTO =  new StoreOutDTO();
+		storeOutDTO.setActive(true);
+		storeout.setCreatedBy(storeout.getCreatedBy());
+		storeout.setDescription(storeout.getDescription());
+		storeOutDTO.setCreatedDate(storeout.getCreatedDate());
+		storeOutDTO.setId(storeout.getId());
+		storeOutDTO.setProductId(storeout.getProduct());
+		storeOutDTO.setProductionPlanId(storeout.getProductionplanning().getId());
+		storeOutDTO.setStatusId(storeout.getStatus().getId());
+		storeOutDTO.setUpdatedBy(storeout.getUpdatedBy());
+		storeOutDTO.setQuantityRequired(storeout.getQuantityRequired());
+		storeOutDTO.setUpdatedDate(storeout.getUpdatedDate());
+		return storeOutDTO;
+	}
 
 
 }

@@ -48,6 +48,8 @@ public class Rawmaterialinventory implements Serializable {
 	//bi-directional many-to-one association to Rawmaterial
 	@ManyToOne
 	private Rawmaterial rawmaterial;
+	
+	private long notificationId;
 
 	//bi-directional many-to-one association to Rawmaterialinventoryhistory
 	@JsonIgnore
@@ -164,6 +166,12 @@ public class Rawmaterialinventory implements Serializable {
 		rawmaterialinventoryhistory.setRawmaterialinventory(null);
 
 		return rawmaterialinventoryhistory;
+	}
+	public long getNotificationId() {
+		return notificationId;
+	}
+	public void setNotificationId(long notificationId) {
+		this.notificationId = notificationId;
 	}
 
 }

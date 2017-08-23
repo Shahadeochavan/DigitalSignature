@@ -119,15 +119,18 @@ public class StoreoutServiceImpl extends CRUDServiceImpl<Storeout> implements St
 		List<StoreOutDTO> storeOutDTOs =  new ArrayList<StoreOutDTO>();
 		List<Storeout> storeouts =  storeoutDao.getList(Storeout.class);
 		for (Storeout storeout : storeouts) {
-		
+		StoreOutDTO storeOutDTO = StoreoutRequestResponseFactory.setStoreOutDTO(storeout);
+		storeOutDTOs.add(storeOutDTO);
 		}
 		
-		return null;
+		return storeOutDTOs;
 	}
 	@Override
 	public StoreOutDTO getStoreOutById(long id) throws Exception {
 		// TODO Auto-generated method stub
-		return null;
+		Storeout storeout  =  storeoutDao.getById(Storeout.class, id);
+		StoreOutDTO storeOutDTO = StoreoutRequestResponseFactory.setStoreOutDTO(storeout);
+		return storeOutDTO;
 	}
 	@Override
 	public void deleteStoreOutById(long id) throws Exception {

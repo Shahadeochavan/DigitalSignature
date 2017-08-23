@@ -154,16 +154,18 @@ public class ProductinventoryController {
 		System.out.println("Product Inventory Check");
 		List<ProductInventoryDTO> productinventoryList = null;
 		List<ProductInventoryDTO> productInventoryDTOs = new ArrayList<ProductInventoryDTO>();
+		ProductInventoryDTO productInventoryDTO = new ProductInventoryDTO();
 		try {
 			productinventoryList = productinventoryService.getproductInventoryDTO();
 			for (ProductInventoryDTO productInventoryDTO1 : productinventoryList) {
 				ProductDTO  product = productService.getProductDTO(productInventoryDTO1.getProductId().getId());
-				ProductInventoryDTO productInventoryDTO = new ProductInventoryDTO();
+				
 				if(productInventoryDTO1.getQuantityAvailable()>=productInventoryDTO1.getMinimumQuantity()){
 				}else{
 					productInventoryDTO.setInventoryQuantity(productInventoryDTO1.getQuantityAvailable());
 					productInventoryDTO.setProductPartNumber(product.getPartNumber());
 					productInventoryDTO.setMinimumQuantity(productInventoryDTO1.getMinimumQuantity());
+					productInventoryDTO.setNotificationId(productInventoryDTO1.getNotificationId());
 					productInventoryDTOs.add(productInventoryDTO);
 				}
 				
@@ -171,15 +173,15 @@ public class ProductinventoryController {
 			if(productInventoryDTOs != null&& ! productInventoryDTOs.isEmpty()){
 				System.out.println("value  of product  inventroy"+productInventoryDTOs);
 				System.out.println();
-				mailSendingProductInventroy(productInventoryDTOs);	
+				mailSendingProductInventroy(productInventoryDTOs,productInventoryDTO);	
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
 	}
-	private void mailSendingProductInventroy(List<ProductInventoryDTO> productInventoryDTOs) throws Exception{
-		  NotificationDTO  notificationDTO = notificationService.getNotificationDTOById(Long.parseLong(messageSource.getMessage(ERPConstants.PRODUCT_INVENTORY_NOTIFICATION, null, null)));
+	private void mailSendingProductInventroy(List<ProductInventoryDTO> productInventoryDTOs,ProductInventoryDTO productInventoryDTO) throws Exception{
+		  NotificationDTO  notificationDTO = notificationService.getNotificationDTOById(productInventoryDTO.getNotificationId());
 		  Mail mail = userService.emailNotification(notificationDTO);
 	        mail.setMailSubject(notificationDTO.getSubject());
 	        Map < String, Object > model = new HashMap < String, Object > ();

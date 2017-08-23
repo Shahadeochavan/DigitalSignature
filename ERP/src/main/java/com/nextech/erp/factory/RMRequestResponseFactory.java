@@ -37,13 +37,15 @@ public class RMRequestResponseFactory {
 		return rawmaterial;
 	}
 	
-	public static Rawmaterialinventory setRMIn(RawMaterialDTO rawMaterialDTO){
+	public static Rawmaterialinventory setRMIn(RawMaterialDTO rawMaterialDTO,long notificationId,long userId){
 		Rawmaterialinventory rawmaterialinventory = new Rawmaterialinventory();
 		Rawmaterial rawmaterial = new Rawmaterial();
 		rawmaterial.setId(rawMaterialDTO.getId());
 		rawmaterialinventory.setRawmaterial(rawmaterial);
 		rawmaterialinventory.setQuantityAvailable(0);
 		rawmaterialinventory.setIsactive(true);
+		rawmaterialinventory.setNotificationId(notificationId);
+		rawmaterialinventory.setCreatedBy(userId);
 		return rawmaterialinventory;
 	}
 	

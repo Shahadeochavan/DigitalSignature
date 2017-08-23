@@ -21,6 +21,7 @@ public class ProductInventoryRequestResponseFactory {
 		productinventory.setRacknumber(productInventoryDTO.getRackNumber());
 		productinventory.setIsactive(true);
 		productinventory.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+		productinventory.setNotificationId(productInventoryDTO.getNotificationId());
 		return productinventory;
 	}
 	
@@ -36,15 +37,18 @@ public class ProductInventoryRequestResponseFactory {
 		productinventory.setRacknumber(productInventoryDTO.getRackNumber());
 		productinventory.setIsactive(true);
 		productinventory.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+		productinventory.setNotificationId(productInventoryDTO.getNotificationId());
 		return productinventory;
 	}
-	public static Productinventory setProductIn(ProductDTO productDTO){
+	public static Productinventory setProductIn(ProductDTO productDTO,long notificationId,long userId){
 		Productinventory productinventory = new Productinventory();
 		Product product = new Product();
 		product.setId(productDTO.getId());
 		productinventory.setProduct(product);
 		productinventory.setQuantityavailable(0);
 		productinventory.setIsactive(true);
+		productinventory.setNotificationId(notificationId);
+		productinventory.setCreatedBy(userId);
 		return productinventory;
 	}
 	
@@ -63,6 +67,7 @@ public class ProductInventoryRequestResponseFactory {
 		productInventoryDTO.setCreatedDate(productinventory.getCreatedDate());
 		productInventoryDTO.setUpdatedBy(productinventory.getUpdatedBy());
 		productInventoryDTO.setUpdatedDate(productinventory.getUpdatedDate());
+		productInventoryDTO.setNotificationId(productinventory.getNotificationId());
 		return productInventoryDTO;
 	}
 

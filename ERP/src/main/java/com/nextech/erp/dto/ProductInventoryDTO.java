@@ -11,6 +11,8 @@ public class ProductInventoryDTO extends AbstractDTO{
 	private long quantityAvailable;
 	private long rackNumber;
 	private Product productId;
+	
+	private long notificationId;
 	public String getProductPartNumber() {
 		return productPartNumber;
 	}
@@ -58,6 +60,12 @@ public class ProductInventoryDTO extends AbstractDTO{
 	}
 	public void setProductId(Product productId) {
 		this.productId = productId;
+	}
+	public long getNotificationId() {
+		return notificationId;
+	}
+	public void setNotificationId(long notificationId) {
+		this.notificationId = notificationId;
 	}
 
 

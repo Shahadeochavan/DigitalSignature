@@ -15,6 +15,7 @@ public class UserDTO extends AbstractDTO {
 	private Date dob;
 	private Date doj;
 	private String emailId;
+	private long notificationId;
 	private List<NotificationUserAssociatinsDTO> notificationUserAssociatinsDTOs;
 	public String getUserId() {
 		return userId;
@@ -76,6 +77,12 @@ public class UserDTO extends AbstractDTO {
 	public void setNotificationUserAssociatinsDTOs(
 			List<NotificationUserAssociatinsDTO> notificationUserAssociatinsDTOs) {
 		this.notificationUserAssociatinsDTOs = notificationUserAssociatinsDTOs;
+	}
+	public long getNotificationId() {
+		return notificationId;
+	}
+	public void setNotificationId(long notificationId) {
+		this.notificationId = notificationId;
 	}
 	
 	

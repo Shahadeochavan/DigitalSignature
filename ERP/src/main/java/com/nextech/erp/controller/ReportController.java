@@ -7,13 +7,19 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.naming.NamingException;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
 import org.hibernate.Criteria;
 import org.hibernate.Query;
@@ -21,7 +27,10 @@ import org.hibernate.SessionFactory;
 import org.hibernate.engine.jdbc.connections.spi.ConnectionProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
 import org.springframework.util.FileCopyUtils;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,10 +42,12 @@ import com.nextech.erp.dto.InputParameter;
 import com.nextech.erp.dto.ReportInputDTO;
 import com.nextech.erp.dto.ReportInputDataDTO;
 import com.nextech.erp.dto.ReportQueryDataDTO;
+import com.nextech.erp.model.Rawmaterialorder;
 import com.nextech.erp.model.Report;
 import com.nextech.erp.model.Reportinputassociation;
 import com.nextech.erp.model.Reportinputparameter;
 import com.nextech.erp.model.Reportoutputassociation;
+import com.nextech.erp.model.User;
 import com.nextech.erp.service.ReportService;
 import com.nextech.erp.service.ReptInpAssoService;
 import com.nextech.erp.service.ReptInpParaService;
@@ -44,6 +55,7 @@ import com.nextech.erp.service.ReptOptAssoService;
 import com.nextech.erp.service.ReptOptParaService;
 import com.nextech.erp.status.UserStatus;
 import com.nextech.erp.util.DateUtil;
+
 import net.sf.dynamicreports.jasper.builder.JasperReportBuilder;
 import net.sf.dynamicreports.report.builder.DynamicReports;
 import net.sf.dynamicreports.report.builder.column.Columns;
@@ -51,6 +63,12 @@ import net.sf.dynamicreports.report.builder.component.Components;
 import net.sf.dynamicreports.report.builder.datatype.DataTypes;
 import net.sf.dynamicreports.report.constant.HorizontalAlignment;
 import net.sf.dynamicreports.report.exception.DRException;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.JasperRunManager;
+import net.sf.jasperreports.engine.util.JRLoader;
 
 @SuppressWarnings("deprecation")
 @RestController
@@ -294,4 +312,109 @@ public class ReportController {
 			e.printStackTrace();
 		}
 	}
-}
+	
+	@RequestMapping(value = "/generateReport", method = RequestMethod.POST)
+	public String generateReport(@Valid @ModelAttribute("rawmaterialorder") Rawmaterialorder rawmaterialorder,BindingResult result,Model model, HttpServletRequest request,HttpServletResponse response) throws ParseException {
+	 
+	    if (result.hasErrors()) {
+	        System.out.println("validation error occured in jasper input form");
+	        return "loadJasper";
+	 
+	    }
+	 
+	    String reportFileName = "JREmp1";
+	 
+	    Connection conn = null;
+	    try {
+	        try {
+	 
+	             Class.forName("com.mysql.jdbc.Driver");
+	            } catch (ClassNotFoundException e) {
+	                System.out.println("Please include Classpath Where your MySQL Driver is located");
+	                e.printStackTrace();
+	            }  
+	 
+	         conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/root","root","******");
+	 
+	     if (conn != null)
+	     {
+	         System.out.println("Database Connected");
+	     }
+	     else
+	     {
+	         System.out.println(" connection Failed ");
+	     }
+	 
+	          String rptFormat = "pdf";
+	          long noy = rawmaterialorder.getStatus().getId();
+	 
+	          System.out.println("rpt format " + rptFormat);
+	          System.out.println("no of years " + noy);
+	 
+	           //Parameters as Map to be passed to Jasper
+	           HashMap<String,Object> hmParams=new HashMap<String,Object>();
+	 
+	           hmParams.put("noy", new Long(noy));
+	 
+	                   hmParams.put("Title", "Rawmaterialorder working more than "+ noy + " Years");
+	 
+	            JasperReport jasperReport = getCompiledFile(reportFileName, request);
+	 
+
+	         if  (rptFormat.equalsIgnoreCase("pdf") )  {
+	 
+	            generateReportPDF(response, hmParams, jasperReport, conn); // For PDF report
+	 
+	            }
+	 
+	       } catch (Exception sqlExp) {
+	 
+	           System.out.println( "Exception::" + sqlExp.toString());
+	 
+	       } finally {
+	 
+	            try {
+	 
+	            if (conn != null) {
+	                conn.close();
+	                conn = null;
+	            }
+	 
+	            } catch (SQLException expSQL) {
+	 
+	                System.out.println("SQLExp::CLOSING::" + expSQL.toString());
+	 
+	            }
+	 
+	           }
+	 
+	return null;
+	 
+	}
+	 
+	private JasperReport getCompiledFile(String fileName, HttpServletRequest request) throws JRException {
+	    System.out.println("path " + request.getSession().getServletContext().getRealPath("/jasper/" + fileName + ".jasper"));
+	    File reportFile = new File( request.getSession().getServletContext().getRealPath("/jasper/" + fileName + ".jasper"));
+	    // If compiled file is not found, then compile XML template
+	    if (!reportFile.exists()) {
+	               JasperCompileManager.compileReportToFile(request.getSession().getServletContext().getRealPath("/jasper/" + fileName + ".jrxml"),request.getSession().getServletContext().getRealPath("/jasper/" + fileName + ".jasper"));
+	        }
+	        JasperReport jasperReport = (JasperReport) JRLoader.loadObjectFromFile(reportFile.getPath());
+	       return jasperReport;
+	    } 
+	 
+	 
+	    private void generateReportPDF (HttpServletResponse resp, Map parameters, JasperReport jasperReport, Connection conn)throws JRException, NamingException, SQLException, IOException {
+	        byte[] bytes = null;
+	        bytes = JasperRunManager.runReportToPdf(jasperReport,parameters,conn);
+	        resp.reset();
+	        resp.resetBuffer();
+	        resp.setContentType("application/pdf");
+	        resp.setContentLength(bytes.length);
+	        ServletOutputStream ouputStream = resp.getOutputStream();
+	        ouputStream.write(bytes, 0, bytes.length);
+	        ouputStream.flush();
+	        ouputStream.close();
+	    } 
+	 
+	}

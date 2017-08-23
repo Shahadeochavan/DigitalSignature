@@ -62,6 +62,8 @@ public class Client implements Serializable {
 	private String vatNo;
 
 	//bi-directional many-to-one association to Productorder
+	
+	private long notificationId;
 
 	@JsonIgnore
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "client", cascade = CascadeType.ALL)
@@ -245,6 +247,12 @@ public class Client implements Serializable {
 		productorder.setClient(null);
 
 		return productorder;
+	}
+	public long getNotificationId() {
+		return notificationId;
+	}
+	public void setNotificationId(long notificationId) {
+		this.notificationId = notificationId;
 	}
 
 }

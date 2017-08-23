@@ -59,6 +59,8 @@ public class Productinventory implements Serializable {
 	@ManyToOne
 	@JoinColumn(name="productid")
 	private Product product;
+	
+	private long notificationId;
 
 	//bi-directional many-to-one association to Productinventoryhistory
 	@JsonIgnore
@@ -192,6 +194,12 @@ public class Productinventory implements Serializable {
 		productinventoryhistory.setProductinventory(null);
 
 		return productinventoryhistory;
+	}
+	public long getNotificationId() {
+		return notificationId;
+	}
+	public void setNotificationId(long notificationId) {
+		this.notificationId = notificationId;
 	}
 
 }

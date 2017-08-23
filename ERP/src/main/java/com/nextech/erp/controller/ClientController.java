@@ -26,8 +26,6 @@ import com.nextech.erp.dto.Mail;
 import com.nextech.erp.factory.ClientFactory;
 import com.nextech.erp.newDTO.ClientDTO;
 import com.nextech.erp.newDTO.NotificationDTO;
-import com.nextech.erp.newDTO.NotificationUserAssociatinsDTO;
-import com.nextech.erp.newDTO.UserDTO;
 import com.nextech.erp.service.ClientService;
 import com.nextech.erp.service.MailService;
 import com.nextech.erp.service.NotificationService;
@@ -82,7 +80,7 @@ public class ClientController {
 			}
        
 		    	clientService.addEntity(ClientFactory.setClient(clientDTO, request));
-				  NotificationDTO  notificationDTO = notificationService.getNotificationDTOById(Long.parseLong(messageSource.getMessage(ERPConstants.CLIENT_ADDED_SUCCESSFULLY, null, null)));
+				  NotificationDTO  notificationDTO = notificationService.getNotificationDTOById(clientDTO.getNotificationId());
 		        mailSending(clientDTO, request, response,notificationDTO);
 			return new UserStatus(1, messageSource.getMessage(
 					ERPConstants.CLIENT_ADDED, null, null));
@@ -133,7 +131,7 @@ public class ClientController {
 				}
 			 }
 	    	clientService.updateEntity(ClientFactory.setClientUpdate(clientDTO, request));
-			  NotificationDTO  notificationDTO = notificationService.getNotificationDTOById(Long.parseLong(messageSource.getMessage(ERPConstants.CLIENT_UPDATE_SUCCESSFULLY, null, null)));
+			  NotificationDTO  notificationDTO = notificationService.getNotificationDTOById(clientDTO.getNotificationId());
 	        mailSending(clientDTO, request, response, notificationDTO);
 			return new UserStatus(1, messageSource.getMessage(
 					ERPConstants.CLIENT_UPDATE, null, null));

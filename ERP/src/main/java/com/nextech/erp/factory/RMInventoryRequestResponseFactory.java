@@ -16,6 +16,7 @@ public class RMInventoryRequestResponseFactory {
 		rawmaterialinventory.setId(rmInventoryDTO.getId());
 		rawmaterialinventory.setIsactive(true);
 		rawmaterialinventory.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+		rawmaterialinventory.setNotificationId(rmInventoryDTO.getNotificationId());
 		return rawmaterialinventory;
 	}
 	
@@ -27,6 +28,7 @@ public class RMInventoryRequestResponseFactory {
 		rawmaterialinventory.setRawmaterial(rmInventoryDTO.getRawmaterialId());
 		rawmaterialinventory.setId(rmInventoryDTO.getId());
 		rawmaterialinventory.setIsactive(true);
+		rawmaterialinventory.setNotificationId(rmInventoryDTO.getNotificationId());
 		rawmaterialinventory.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 		return rawmaterialinventory;
 	}
@@ -43,6 +45,7 @@ public class RMInventoryRequestResponseFactory {
 		rmInventoryDTO.setRawmaterialId(rawmaterialinventory.getRawmaterial());
 		rmInventoryDTO.setUpdatedBy(rawmaterialinventory.getUpdatedBy());
 		rmInventoryDTO.setUpdatedDate(rawmaterialinventory.getUpdatedDate());
+		rmInventoryDTO.setNotificationId(rawmaterialinventory.getNotificationId());
 		return rmInventoryDTO;
 	}
 

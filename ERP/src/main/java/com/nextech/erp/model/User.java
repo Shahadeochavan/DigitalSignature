@@ -39,6 +39,8 @@ public class User implements Serializable {
 
 	@Temporal(TemporalType.DATE)
 	private Date doj;
+	
+	private long notificationId;
 
 	@Email(message="{email should be enter valid")
 	@Size(min = 2, max = 255, message = "{Email sholud be greater than 2 or less than 255 characters}")
@@ -228,4 +230,11 @@ public class User implements Serializable {
 
 		return notificationuserassociation;
 	}
+	public long getNotificationId() {
+		return notificationId;
+	}
+	public void setNotificationId(long notificationId) {
+		this.notificationId = notificationId;
+	}
+	
 }

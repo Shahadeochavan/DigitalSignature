@@ -124,7 +124,7 @@ public class DispatchController {
 		List<DispatchProductDTO> dispatchProductDTOs=	dispatchservice.addDispatchProduct(dispatchDTO, request);
 			ProductOrderDTO productorder = productorderService.getProductById(dispatchDTO.getOrderId());
 			ClientDTO client = clientService.getClientDTOById(productorder.getClientId().getId());
-			StatusDTO status = statusService.getStatusById(productorder.getStatusId().getId());
+			
 			//mailSending(productorder, request, response, client, status);
 			downloadPDF(request, response, productorder, dispatchProductDTOs, client,dispatchDTO);
 			return new UserStatus(1, "Dispatch added Successfully !");
@@ -194,11 +194,9 @@ public class DispatchController {
 	}
 
 	private void mailSending(ProductOrderDTO productorder,HttpServletRequest request, HttpServletResponse response,ClientDTO client, StatusDTO status,String fileName,List<DispatchProductDTO> dispatchProductDTOs,DispatchDTO dispatchDTO) throws NumberFormatException,Exception {
-	
-
-		  NotificationDTO  notificationDTO = notificationService.getNotificationDTOById(Long.parseLong(messageSource.getMessage(ERPConstants.DISPATCHED_SUCCESSFULLY, null, null)));
+		  NotificationDTO  notificationDTO = notificationService.getNotifiactionByStatus(status.getId());
 			Mail mail = userService.emailNotification(notificationDTO);
-	   mail.setAttachment(fileName);
+	        mail.setAttachment(fileName);
 		mail.setMailSubject(notificationDTO.getSubject());
 		mail.setMailTo(client.getEmailId());
 		Map<String, Object> model = new HashMap<String, Object>();
