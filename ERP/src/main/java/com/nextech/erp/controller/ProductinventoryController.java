@@ -165,7 +165,6 @@ public class ProductinventoryController {
 					productInventoryDTO.setInventoryQuantity(productInventoryDTO1.getQuantityAvailable());
 					productInventoryDTO.setProductPartNumber(product.getPartNumber());
 					productInventoryDTO.setMinimumQuantity(productInventoryDTO1.getMinimumQuantity());
-					productInventoryDTO.setNotificationId(productInventoryDTO1.getNotificationId());
 					productInventoryDTOs.add(productInventoryDTO);
 				}
 				
@@ -173,15 +172,15 @@ public class ProductinventoryController {
 			if(productInventoryDTOs != null&& ! productInventoryDTOs.isEmpty()){
 				System.out.println("value  of product  inventroy"+productInventoryDTOs);
 				System.out.println();
-				mailSendingProductInventroy(productInventoryDTOs,productInventoryDTO);	
+				mailSendingProductInventroy(productInventoryDTOs);	
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
 	}
-	private void mailSendingProductInventroy(List<ProductInventoryDTO> productInventoryDTOs,ProductInventoryDTO productInventoryDTO) throws Exception{
-		  NotificationDTO  notificationDTO = notificationService.getNotificationDTOById(productInventoryDTO.getNotificationId());
+	private void mailSendingProductInventroy(List<ProductInventoryDTO> productInventoryDTOs) throws Exception{
+		   NotificationDTO  notificationDTO = notificationService.getNotifiactionByStatus(Long.parseLong(messageSource.getMessage(ERPConstants.PRODUCT_INVENTORY_NOTIFICATION, null, null)));
 		  Mail mail = userService.emailNotification(notificationDTO);
 	        mail.setMailSubject(notificationDTO.getSubject());
 	        Map < String, Object > model = new HashMap < String, Object > ();

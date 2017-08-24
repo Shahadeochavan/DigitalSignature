@@ -25,7 +25,6 @@ public class VendorDTO extends AbstractDTO{
 	private String renge; 
 	private String state;
 	private String vatNo;
-	private long notificationId;
 	private List<BomRMVendorAssociationsDTO> bomRMVendorAssociationsDTOs;
 	private List<RMVendorAssociationDTO> rawmaterialvendorassociations;
 	private List<RawmaterialOrderDTO> rawmaterialOrderDTOs;
@@ -193,13 +192,5 @@ public class VendorDTO extends AbstractDTO{
 		this.rawmaterialOrderDTOs = rawmaterialOrderDTOs;
 	}
 
-	public long getNotificationId() {
-		return notificationId;
-	}
-
-	public void setNotificationId(long notificationId) {
-		this.notificationId = notificationId;
-	}
-	
 	
 }

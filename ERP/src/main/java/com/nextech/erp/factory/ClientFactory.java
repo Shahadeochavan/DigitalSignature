@@ -23,7 +23,6 @@ public class ClientFactory {
 		client.setRenge(clientDTO.getRenge());
 		client.setVatNo(clientDTO.getVatNo());
 		client.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-		client.setNotificationId(clientDTO.getNotificationId());
 		client.setIsactive(true);
 		return client;
 	}
@@ -44,7 +43,6 @@ public class ClientFactory {
 		client.setRenge(clientDTO.getRenge());
 		client.setVatNo(clientDTO.getVatNo());
 		client.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-		client.setNotificationId(clientDTO.getNotificationId());
 		client.setIsactive(true);
 		return client;
 	}
@@ -64,7 +62,6 @@ public class ClientFactory {
 		clientDTO.setEmailId(client.getEmailid());
 		clientDTO.setRenge(client.getRenge());
 		clientDTO.setVatNo(client.getVatNo());
-		clientDTO.setNotificationId(client.getNotificationId());
 		clientDTO.setActive(true);
 		return clientDTO;
 	}

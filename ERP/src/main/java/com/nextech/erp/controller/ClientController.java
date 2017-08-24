@@ -80,7 +80,7 @@ public class ClientController {
 			}
        
 		    	clientService.addEntity(ClientFactory.setClient(clientDTO, request));
-				  NotificationDTO  notificationDTO = notificationService.getNotificationDTOById(clientDTO.getNotificationId());
+	            NotificationDTO  notificationDTO = notificationService.getNotifiactionByStatus(Long.parseLong(messageSource.getMessage(ERPConstants.CLIENT_ADDED_SUCCESSFULLY, null, null)));
 		        mailSending(clientDTO, request, response,notificationDTO);
 			return new UserStatus(1, messageSource.getMessage(
 					ERPConstants.CLIENT_ADDED, null, null));
@@ -131,7 +131,7 @@ public class ClientController {
 				}
 			 }
 	    	clientService.updateEntity(ClientFactory.setClientUpdate(clientDTO, request));
-			  NotificationDTO  notificationDTO = notificationService.getNotificationDTOById(clientDTO.getNotificationId());
+            NotificationDTO  notificationDTO = notificationService.getNotifiactionByStatus(Long.parseLong(messageSource.getMessage(ERPConstants.CLIENT_UPDATE_SUCCESSFULLY, null, null)));
 	        mailSending(clientDTO, request, response, notificationDTO);
 			return new UserStatus(1, messageSource.getMessage(
 					ERPConstants.CLIENT_UPDATE, null, null));

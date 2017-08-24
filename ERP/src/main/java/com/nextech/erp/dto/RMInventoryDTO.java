@@ -11,7 +11,6 @@ public class RMInventoryDTO extends AbstractDTO{
 	private long minimumQuantity;
 	private long maximumQuantity;
 	private Rawmaterial rawmaterialId;
-	private long notificationId;
 	
 	public String getRmPartNumber() {
 		return rmPartNumber;
@@ -42,12 +41,6 @@ public class RMInventoryDTO extends AbstractDTO{
 	}
 	public void setRawmaterialId(Rawmaterial rawmaterialId) {
 		this.rawmaterialId = rawmaterialId;
-	}
-	public long getNotificationId() {
-		return notificationId;
-	}
-	public void setNotificationId(long notificationId) {
-		this.notificationId = notificationId;
 	}
 
 }

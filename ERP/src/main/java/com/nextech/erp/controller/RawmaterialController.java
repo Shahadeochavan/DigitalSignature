@@ -54,7 +54,7 @@ public class RawmaterialController {
 			HttpServletRequest request,@RequestParam("file") MultipartFile inputFile,
 			@RequestParam("rmName") String rmName,
 			@RequestParam("partNumber") String partNumber,@RequestParam("description")String description,
-			@RequestParam("pricePerUnit") float pricePerUnit,@RequestParam("notificationId") long notificationId,
+			@RequestParam("pricePerUnit") float pricePerUnit,
 			@RequestParam("unitId") long unitId,@RequestParam("rmTypeId") long rmTypeId ) {
 		try {
 			String destinationFilePath = ImageUploadUtil.imgaeUpload(inputFile);
@@ -72,7 +72,7 @@ public class RawmaterialController {
 			   rawMaterialDTO.setRmTypeId(rmtype);
 				long id = rawmaterialService.addEntity(RMRequestResponseFactory.setRawMaterial(rawMaterialDTO, request));
 				rawMaterialDTO.setId(id);
-				addRMInventory(rawMaterialDTO,notificationId, Long.parseLong(request.getAttribute("current_user").toString()));
+				addRMInventory(rawMaterialDTO, Long.parseLong(request.getAttribute("current_user").toString()));
 				return new UserStatus(1, messageSource.getMessage(ERPConstants.RAW_MATERAIL_ADD, null, null));
 		} catch (ConstraintViolationException cve) {
 			cve.printStackTrace();
@@ -169,8 +169,8 @@ public class RawmaterialController {
 		return rawmaterialList;
 	}
 
-	private void addRMInventory(RawMaterialDTO rawMaterialDTO,long notificationId,long userId) throws Exception{
-		rawmaterialinventoryService.addEntity(RMRequestResponseFactory.setRMIn(rawMaterialDTO,notificationId,userId));
+	private void addRMInventory(RawMaterialDTO rawMaterialDTO,long userId) throws Exception{
+		rawmaterialinventoryService.addEntity(RMRequestResponseFactory.setRMIn(rawMaterialDTO,userId));
 	}
 	
 	@Transactional @RequestMapping(value = "/getRMaterialList/{RMTypeId}", method = RequestMethod.GET, headers = "Accept=application/json")

@@ -17,7 +17,6 @@ public class ClientDTO extends AbstractDTO{
 	private String emailId;
 	private String  renge;
 	private String vatNo;
-	private long notificationId;
 	public String getAddress() {
 		return address;
 	}
@@ -84,11 +83,4 @@ public class ClientDTO extends AbstractDTO{
 	public void setVatNo(String vatNo) {
 		this.vatNo = vatNo;
 	}
-	public long getNotificationId() {
-		return notificationId;
-	}
-	public void setNotificationId(long notificationId) {
-		this.notificationId = notificationId;
-	}
-	
 }

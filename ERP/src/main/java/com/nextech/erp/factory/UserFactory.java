@@ -24,7 +24,6 @@ public class UserFactory {
 		user.setUsertype(userDTO.getUserType());
 		user.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 		user.setIsactive(true);
-		user.setNotificationId(userDTO.getNotificationId());
 		return user;
 	}
 	
@@ -40,7 +39,6 @@ public class UserFactory {
 		user.setEmail(userDTO.getEmailId());
 		user.setUsertype(userDTO.getUserType());
 		user.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-		user.setNotificationId(userDTO.getNotificationId());
 		user.setIsactive(true);
 		return user;
 	}
@@ -61,7 +59,6 @@ public class UserFactory {
 		userDTO.setCreatedDate(user.getCreatedDate());
 		userDTO.setUpdatedBy(user.getUpdatedBy());
 		userDTO.setUpdatedDate(user.getUpdatedDate());
-		userDTO.setNotificationId(user.getNotificationId());
 		return userDTO;
 	}
 

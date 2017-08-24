@@ -147,20 +147,19 @@ public class RawmaterialinventoryController {
 					rmInventoryDTO.setRmPartNumber(rawmaterial.getPartNumber());
 					rmInventoryDTO.setQuantityAvailable(rawmaterialinventory.getQuantityAvailable());
 					rmInventoryDTO.setMinimumQuantity(rawmaterialinventory.getMinimumQuantity());
-					rmInventoryDTO.setNotificationId(rawmaterialinventory.getNotificationId());
 					rmInventoryDTOs.add(rmInventoryDTO);
 				}
 			}
 			if(rmInventoryDTOs != null&& ! rmInventoryDTOs.isEmpty()){
-				mailSendingRMInventroy(rmInventoryDTOs,rmInventoryDTO);
+				mailSendingRMInventroy(rmInventoryDTOs);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
-	private void mailSendingRMInventroy(List<RMInventoryDTO> rmInventoryDTOs,RMInventoryDTO  rmInventoryDTO) throws Exception {
-		NotificationDTO notificationDTO = notificationService.getNotificationDTOById(rmInventoryDTO.getNotificationId());
+	private void mailSendingRMInventroy(List<RMInventoryDTO> rmInventoryDTOs) throws Exception {
+		   NotificationDTO  notificationDTO = notificationService.getNotifiactionByStatus(Long.parseLong(messageSource.getMessage(ERPConstants.RM_INVENTORY_NOTIFICATION, null, null)));
 		Mail mail = userService.emailNotification(notificationDTO);
 		mail.setMailSubject(notificationDTO.getSubject());
 		Map<String, Object> model = new HashMap<String, Object>();

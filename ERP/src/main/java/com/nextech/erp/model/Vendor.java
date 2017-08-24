@@ -75,7 +75,6 @@ public class Vendor implements Serializable {
 	@Column(name="vat_no")
 	private String vatNo;
 	
-	private long notificationId;
 
 	@JsonIgnore
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "vendor", cascade = CascadeType.ALL)
@@ -353,12 +352,6 @@ public class Vendor implements Serializable {
 		rawmaterialvendorassociation.setVendor(null);
 
 		return rawmaterialvendorassociation;
-	}
-	public long getNotificationId() {
-		return notificationId;
-	}
-	public void setNotificationId(long notificationId) {
-		this.notificationId = notificationId;
 	}
 	
 	
