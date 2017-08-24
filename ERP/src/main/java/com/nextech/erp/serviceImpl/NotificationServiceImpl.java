@@ -55,4 +55,12 @@ public class NotificationServiceImpl extends CRUDServiceImpl<Notification> imple
 		notificationDao.update(notification);
 	}
 
+	@Override
+	public NotificationDTO getNotificationByCode(String code) throws Exception {
+		// TODO Auto-generated method stub
+		Notification notification = notificationDao.getNotificationByCode(code);
+		NotificationDTO notificationDTO = NotificationRequestResponseFactory.setNotificationDTO(notification);
+		return notificationDTO;
+	}
+
 }

@@ -107,7 +107,7 @@ public class UserController {
 				user.setPassword(new EncryptDecrypt().encrypt(userDTO.getPassword()));
 				user.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			   userservice.addEntity(user);
-	            NotificationDTO  notificationDTO = notificationService.getNotifiactionByStatus(Long.parseLong(messageSource.getMessage(ERPConstants.USER_ADD_NOTIFICATION, null, null)));
+	            NotificationDTO  notificationDTO = notificationService.getNotificationByCode((messageSource.getMessage(ERPConstants.USER_ADD_NOTIFICATION, null, null)));
 			mailSending(userDTO, request, response,notificationDTO);
 			return new UserStatus(1, "User added Successfully !");
 			} else {
@@ -239,7 +239,7 @@ public class UserController {
 			}
 		 //	user.setPassword(new com.nextech.erp.util.EncryptDecrypt().encrypt(userDTO.getPassword()));
 	     	userservice.updateEntity(user);
-            NotificationDTO  notificationDTO = notificationService.getNotifiactionByStatus(Long.parseLong(messageSource.getMessage(ERPConstants.USER_UPDATE_NOTIFICATION, null, null)));
+            NotificationDTO  notificationDTO = notificationService.getNotificationByCode((messageSource.getMessage(ERPConstants.USER_UPDATE_NOTIFICATION, null, null)));
 		mailSending(userDTO, request, response, notificationDTO);
 		return new UserStatus(1, "User update Successfully !");
 		} catch (Exception e) {

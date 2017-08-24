@@ -58,6 +58,8 @@ public class Notification implements Serializable {
 	@ManyToOne
 	@JoinColumn(name="toStatus")
 	private Status status2;
+	
+	private String code;
 
 	//bi-directional many-to-one association to Notificationuserassociation
 	@JsonIgnore
@@ -203,6 +205,14 @@ public class Notification implements Serializable {
 		notificationuserassociation.setNotification(null);
 
 		return notificationuserassociation;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
 	}
 
 }

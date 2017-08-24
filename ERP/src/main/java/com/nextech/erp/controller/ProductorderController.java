@@ -350,7 +350,7 @@ public class ProductorderController {
 			productOrderRMDatas.add(productOrderRMData);
 			}
 		}
-		  NotificationDTO  notificationDTO = notificationService.getNotifiactionByStatus(Long.parseLong(messageSource.getMessage(ERPConstants.RM_NOTIFICATION, null, null)));
+		  NotificationDTO  notificationDTO = notificationService.getNotificationByCode((messageSource.getMessage(ERPConstants.RM_NOTIFICATION, null, null)));
           Mail mail =  userService.emailNotification(notificationDTO);
 	        mail.setMailSubject(notificationDTO.getSubject());
 	        Map < String, Object > model = new HashMap < String, Object > ();

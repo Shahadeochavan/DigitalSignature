@@ -14,6 +14,7 @@ public class NotificationDTO extends AbstractDTO{
 	private String type;
 	private Status status1;
 	private Status status2;
+	private String code;
 	
 	private List<NotificationUserAssociatinsDTO> notificationUserAssociatinsDTOs;
 	public String getBeanClass() {
@@ -65,7 +66,12 @@ public class NotificationDTO extends AbstractDTO{
 			List<NotificationUserAssociatinsDTO> notificationUserAssociatinsDTOs) {
 		this.notificationUserAssociatinsDTOs = notificationUserAssociatinsDTOs;
 	}
-	
+	public String getCode() {
+		return code;
+	}
+	public void setCode(String code) {
+		this.code = code;
+	}
 	
 
 }
