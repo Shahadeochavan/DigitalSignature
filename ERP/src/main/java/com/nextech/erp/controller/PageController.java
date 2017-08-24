@@ -30,7 +30,6 @@ public class PageController {
 
 	@Autowired
 	PageService pageservice;
-	
 	@Transactional @RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addPage(@Valid @RequestBody PageDTO pageDTO,
 			BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
