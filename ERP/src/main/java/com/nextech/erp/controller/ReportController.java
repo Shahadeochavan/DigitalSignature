@@ -7,19 +7,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.naming.NamingException;
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 
 import org.hibernate.Criteria;
 import org.hibernate.Query;
@@ -27,10 +21,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.engine.jdbc.connections.spi.ConnectionProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.ui.Model;
 import org.springframework.util.FileCopyUtils;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,12 +33,10 @@ import com.nextech.erp.dto.InputParameter;
 import com.nextech.erp.dto.ReportInputDTO;
 import com.nextech.erp.dto.ReportInputDataDTO;
 import com.nextech.erp.dto.ReportQueryDataDTO;
-import com.nextech.erp.model.Rawmaterialorder;
 import com.nextech.erp.model.Report;
 import com.nextech.erp.model.Reportinputassociation;
 import com.nextech.erp.model.Reportinputparameter;
 import com.nextech.erp.model.Reportoutputassociation;
-import com.nextech.erp.model.User;
 import com.nextech.erp.service.ReportService;
 import com.nextech.erp.service.ReptInpAssoService;
 import com.nextech.erp.service.ReptInpParaService;
@@ -63,12 +52,6 @@ import net.sf.dynamicreports.report.builder.component.Components;
 import net.sf.dynamicreports.report.builder.datatype.DataTypes;
 import net.sf.dynamicreports.report.constant.HorizontalAlignment;
 import net.sf.dynamicreports.report.exception.DRException;
-import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.JasperCompileManager;
-import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.JasperReport;
-import net.sf.jasperreports.engine.JasperRunManager;
-import net.sf.jasperreports.engine.util.JRLoader;
 
 @SuppressWarnings("deprecation")
 @RestController
