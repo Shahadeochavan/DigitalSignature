@@ -19,13 +19,11 @@ public class ProductinventoryServiceImpl extends CRUDServiceImpl<Productinventor
 	@Override
 	public Productinventory getProductinventoryByProductId(long productId)
 			throws Exception {
-		// TODO Auto-generated method stub
 		return productinventoryDao.getProductinventoryByProductId(productId);
 	}
 	@Override
 	public List<ProductInventoryDTO> getProductinventoryListByProductId(
 			long productId) throws Exception {
-		// TODO Auto-generated method stub
 		List<ProductInventoryDTO> productInventoryDTOs = new ArrayList<ProductInventoryDTO>();
 		List<Productinventory> productinventories = productinventoryDao.getProductinventoryListByProductId(productId);
 		for (Productinventory productinventory : productinventories) {
@@ -37,7 +35,6 @@ public class ProductinventoryServiceImpl extends CRUDServiceImpl<Productinventor
 	}
 	@Override
 	public List<ProductInventoryDTO> getproductInventoryDTO() throws Exception {
-		// TODO Auto-generated method stub
 		List<ProductInventoryDTO> productInventoryDTOs = new ArrayList<ProductInventoryDTO>();
 		List<Productinventory> productinventories = productinventoryDao.getList(Productinventory.class);
 		for (Productinventory productinventory : productinventories) {
@@ -49,14 +46,12 @@ public class ProductinventoryServiceImpl extends CRUDServiceImpl<Productinventor
 	}
 	@Override
 	public ProductInventoryDTO getProductInventory(long id) throws Exception {
-		// TODO Auto-generated method stub
 		Productinventory productinventory = productinventoryDao.getById(Productinventory.class, id);
 		ProductInventoryDTO productInventoryDTO = ProductInventoryRequestResponseFactory.setProductDTO(productinventory);
 		return productInventoryDTO;
 	}
 	@Override
 	public void deleteProductInventory(long id) throws Exception {
-		// TODO Auto-generated method stub
 		Productinventory productinventory = productinventoryDao.getById(Productinventory.class, id);
 		productinventory.setIsactive(false);
 		productinventoryDao.update(productinventory);

@@ -17,7 +17,7 @@ public class ReptInpAssoDaoImpl extends SuperDaoImpl<Reportinputassociation> imp
 	@Override
 	public List<Reportinputassociation> getListByReportId(long id) {
 		try {
-			session = sessionFactory.getCurrentSession();
+			
 			@SuppressWarnings("deprecation")
 			Criteria criteria = session.createCriteria(Reportinputassociation.class);
 			criteria.add(Restrictions.eq("report.id",id));

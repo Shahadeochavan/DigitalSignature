@@ -16,11 +16,10 @@ public class ProductDaoImpl extends SuperDaoImpl<Product> implements ProductDao 
 
 	@Override
 	public Product getProductByName(String productname) throws Exception {
-		session = sessionFactory.getCurrentSession();
 		session = sessionFactory.openSession();
 		CriteriaBuilder builder = session.getCriteriaBuilder();
 		CriteriaQuery<Product> criteria = builder.createQuery(Product.class);
-		Root<Product> userRoot = (Root<Product>) criteria.from(Product.class);
+		Root<Product> userRoot = criteria.from(Product.class);
 		criteria.select(userRoot).where(builder.equal(userRoot.get("name"), productname),builder.equal(userRoot.get("isactive"), true));
 		TypedQuery<Product> query = session.createQuery(criteria);
 		  List<Product> list = query.getResultList();
@@ -32,11 +31,10 @@ public class ProductDaoImpl extends SuperDaoImpl<Product> implements ProductDao 
 
 	@Override
 	public Product getProductByPartNumber(String partNumber) throws Exception {
-		session = sessionFactory.getCurrentSession();
 		session = sessionFactory.openSession();
 		CriteriaBuilder builder = session.getCriteriaBuilder();
 		CriteriaQuery<Product> criteria = builder.createQuery(Product.class);
-		Root<Product> userRoot = (Root<Product>) criteria.from(Product.class);
+		Root<Product> userRoot = criteria.from(Product.class);
 		criteria.select(userRoot).where(builder.equal(userRoot.get("partNumber"), partNumber),builder.equal(userRoot.get("isactive"), true));
 		TypedQuery<Product> query = session.createQuery(criteria);
 		  List<Product> list = query.getResultList();
@@ -51,20 +49,18 @@ public class ProductDaoImpl extends SuperDaoImpl<Product> implements ProductDao 
 		session = sessionFactory.openSession();
 		CriteriaBuilder builder = session.getCriteriaBuilder();
 		CriteriaQuery<Product> criteria = builder.createQuery(Product.class);
-		Root<Product> userRoot  = (Root<Product>) criteria.from(Product.class);
-		criteria.select(userRoot).where(builder.equal(userRoot.get("id"), productIdList),builder.equal(userRoot.get("isactive"), true));
+		Root<Product> userRoot  = criteria.from(Product.class);
+		criteria.select(userRoot).where(userRoot.in(productIdList));
 		TypedQuery<Product> query = session.createQuery(criteria);
 		return query.getResultList();
 	}
 
 	@Override
 	public Product getProductByProductId(long productId) throws Exception {
-		// TODO Auto-generated method stub
-		session = sessionFactory.getCurrentSession();
 		session = sessionFactory.openSession();
 		CriteriaBuilder builder = session.getCriteriaBuilder();
 		CriteriaQuery<Product> criteria = builder.createQuery(Product.class);
-		Root<Product> userRoot = (Root<Product>) criteria.from(Product.class);
+		Root<Product> userRoot = criteria.from(Product.class);
 		criteria.select(userRoot).where(builder.equal(userRoot.get("id"), productId),builder.equal(userRoot.get("isactive"), true));
 		TypedQuery<Product> query = session.createQuery(criteria);
 		  List<Product> list = query.getResultList();

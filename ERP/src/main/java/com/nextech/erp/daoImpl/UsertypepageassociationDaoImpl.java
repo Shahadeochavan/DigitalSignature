@@ -37,7 +37,7 @@ public class UsertypepageassociationDaoImpl extends SuperDaoImpl<Usertypepageass
 
 	@Override
 	public boolean checkPageAccess(long usertypeId, long pageId) {
-		session = sessionFactory.getCurrentSession();
+		
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Usertypepageassociation.class);
 		criteria.add(Restrictions.eq("isactive", true));

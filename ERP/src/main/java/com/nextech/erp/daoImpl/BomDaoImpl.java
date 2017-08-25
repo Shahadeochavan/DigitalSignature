@@ -48,7 +48,7 @@ public class BomDaoImpl extends SuperDaoImpl<Bom> implements BomDao{
 	@Override
 	public List<Long> getProductList() {
 		// TODO Auto-generated method stub
-		session = sessionFactory.getCurrentSession();
+		
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Productrawmaterialassociation.class);
 		
@@ -61,7 +61,7 @@ public class BomDaoImpl extends SuperDaoImpl<Bom> implements BomDao{
 	@Override
 	public Bom getBomByProductId(long productID) throws Exception {
 		// TODO Auto-generated method stub
-		session = sessionFactory.getCurrentSession();
+		
 		session = sessionFactory.openSession();
 		CriteriaBuilder builder = session.getCriteriaBuilder();
 		CriteriaQuery<Bom> criteria = builder.createQuery(Bom.class);

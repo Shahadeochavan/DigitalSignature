@@ -18,7 +18,7 @@ public class DispatchDaoImpl extends SuperDaoImpl<Dispatch> implements DispatchD
 	@Override
 	public Dispatch getDispatchByProductOrderIdAndProductId(long orderID,
 			long productID) throws Exception {
-		session = sessionFactory.getCurrentSession();
+		
 		session = sessionFactory.openSession();
 		CriteriaBuilder builder = session.getCriteriaBuilder();
 		CriteriaQuery<Dispatch> criteria = builder.createQuery(Dispatch.class);
