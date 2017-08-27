@@ -65,7 +65,7 @@ public class ProductorderassociationDaoImpl extends
 		CriteriaBuilder builder = session.getCriteriaBuilder();
 		CriteriaQuery<Productorderassociation> criteria = builder.createQuery(Productorderassociation.class);
 		Root<Productorderassociation> userRoot  = (Root<Productorderassociation>) criteria.from(Productorderassociation.class);
-		criteria.select(userRoot).where(builder.equal(userRoot.get("product"), productId),builder.equal(userRoot.get("remainingQuantity"),  new Long(0)),builder.equal(userRoot.get("isactive"), true));
+		criteria.select(userRoot).where(builder.equal(userRoot.get("product"), productId),builder.notEqual(userRoot.get("remainingQuantity"),  new Long(0)),builder.equal(userRoot.get("isactive"), true));
 		TypedQuery<Productorderassociation> query = session.createQuery(criteria);
 		return query.getResultList();
 	}

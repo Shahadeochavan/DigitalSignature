@@ -184,30 +184,31 @@ public class ProductionplanningServiceImpl extends
 			cal.setTime(new Date());
 			cal.set(Calendar.DAY_OF_MONTH, 1);
 			int myMonth=cal.get(Calendar.MONTH);
-
-			while (myMonth==cal.get(Calendar.MONTH)) {
-				List<Productorderassociation> productorderassociations = productorderassociationDao.getIncompleteProductOrderAssoByProdutId(product.getId());
-				if(productorderassociations !=null&&!productorderassociations.isEmpty()){
-				productionplanning = new Productionplanning();
-				productionplanning.setProduct(product);
-				productionplanning.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-				productionplanning.setIsactive(true);
-				productionplanning.setStatus(statusService.getEntityById(Status.class, Long.parseLong(messageSource.getMessage(ERPConstants.PROD_PLAN_NEW, null, null))));
-				productionplanning.setDate(cal.getTime());
-				if (productorderassociationService.getProductionPlanningforCurrentMonthByProductIdAndDate(
-						productionplanning.getProduct().getId(),
-						productionplanning.getDate())== null){
-					productionplanningDao.add(productionplanning);
-				} }else{
-					System.out.println("production plan already exit");
-
+			List<Productorderassociation> productorderassociations = productorderassociationDao.getIncompleteProductOrderAssoByProdutId(product.getId());
+			if(productorderassociations != null && !productorderassociations.isEmpty()){
+					while (myMonth==cal.get(Calendar.MONTH)) {
+				
+						productionplanning = productorderassociationService.getProductionPlanningforCurrentMonthByProductIdAndDate(
+								product.getId(),
+								cal.getTime());
+						if ( productionplanning == null){
+							productionplanning = new Productionplanning();
+							productionplanning.setProduct(product);
+							productionplanning.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+							productionplanning.setIsactive(true);
+							productionplanning.setStatus(statusService.getEntityById(Status.class, Long.parseLong(messageSource.getMessage(ERPConstants.PROD_PLAN_NEW, null, null))));
+							productionplanning.setDate(cal.getTime());
+							productionplanningDao.add(productionplanning);
+						} else {
+							System.out.println("Production Plan exists for Product : " + product.getId());
+						}
+						productionPlanList.add(productionplanning);
+						System.out.print("product : " + product.getId() +" Date :" + new SimpleDateFormat("dd-MM-yyyy").format(cal.getTime()));
+						  cal.add(Calendar.DAY_OF_MONTH, 1);
+					}
+				}else{
+					System.out.println("There are no orders for Product so there is no need to create a production plan : " + product.getId());
 				}
-
-				productionPlanList.add(productionplanning);
-			  System.out.print("product : " + product.getId() +" Date :" + new SimpleDateFormat("dd-MM-yyyy").format(cal.getTime()));
-			  cal.add(Calendar.DAY_OF_MONTH, 1);
-			}
-
 		}
 
 		return productionPlanList;

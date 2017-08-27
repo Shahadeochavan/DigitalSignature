@@ -151,17 +151,21 @@ public class ProductorderServiceImpl extends CRUDServiceImpl<Productorder> imple
 		for (ProductOrderAssociationDTO productOrderAssociationDTO : productOrderAssociationDTOs) {
 			float totalRate=0;
 			ProductDTO product = productService.getProductDTO(productOrderAssociationDTO.getProductId().getId());
-			ProductOrderData productOrderData = new ProductOrderData();
 			Bom bom = bomService.getBomByProductId(productOrderAssociationDTO.getProductId().getId());
-			List<Bomrmvendorassociation> bomrmvendorassociations = bomrmVendorAssociationDao.getBomRMVendorByBomId(bom.getId());
-			for (Bomrmvendorassociation bomrmvendorassociation : bomrmvendorassociations) {
-			totalRate = totalRate+bomrmvendorassociation.getCost();
-			productOrderData.setProductName(product.getName());
-			productOrderData.setQuantity(productOrderAssociationDTO.getQuantity());
-			productOrderData.setRate((long)(totalRate));
-			productOrderData.setAmount((long)totalRate*productOrderAssociationDTO.getQuantity());
+			if(bom !=null){
+				ProductOrderData productOrderData = new ProductOrderData();
+				List<Bomrmvendorassociation> bomrmvendorassociations = bomrmVendorAssociationDao.getBomRMVendorByBomId(bom.getId());
+				for (Bomrmvendorassociation bomrmvendorassociation : bomrmvendorassociations) {
+					totalRate = totalRate+bomrmvendorassociation.getCost();
+					productOrderData.setProductName(product.getName());
+					productOrderData.setQuantity(productOrderAssociationDTO.getQuantity());
+					productOrderData.setRate((long)(totalRate));
+					productOrderData.setAmount((long)totalRate*productOrderAssociationDTO.getQuantity());
+				}
+				productOrderDatas.add(productOrderData);
+			} else {
+				System.out.println("It looks like BOM is not created for this product : " + product.getId() );
 			}
-			productOrderDatas.add(productOrderData);
 		}
 		return productOrderDatas;
 	}
