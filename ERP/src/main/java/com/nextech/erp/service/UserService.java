@@ -37,7 +37,6 @@ public interface UserService extends CRUDService<User>{
 	
 	public  Mail  emailNotification(NotificationDTO  notificationDTO) throws Exception;
 	
-	public List<User> getMultipleUsersById(String id) throws Exception;
 	
 	
 }

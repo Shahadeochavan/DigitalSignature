@@ -15,8 +15,6 @@ import org.springframework.stereotype.Repository;
 
 import com.nextech.erp.dao.RawmaterialorderDao;
 import com.nextech.erp.model.Rawmaterialorder;
-import com.nextech.erp.model.Usertypepageassociation;
-import com.nextech.erp.model.Vendor;
 
 @Repository
 

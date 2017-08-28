@@ -37,7 +37,11 @@ public class SuperDaoImpl<T> implements SuperDao<T>{
 		Root<T> userRoot = (Root<T>) criteria.from(z);
 		criteria.select(userRoot).where(builder.equal(userRoot.get("id"), id),builder.equal(userRoot.get("isactive"), true));
 		TypedQuery<T> query = session.createQuery(criteria);
-		return query.getResultList().get(0);
+		List<T> results = query.getResultList();
+		  if (results.isEmpty()) {
+		        return null;
+		    }
+		    return results.get(0);
 	}
 	
 	@Override

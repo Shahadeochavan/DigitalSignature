@@ -30,6 +30,7 @@ public class CreatePDFProductOrder {
 	private static Font TIME_ROMAN = new Font(Font.FontFamily.TIMES_ROMAN, 18,Font.BOLD);
 	private static Font TIME_ROMAN_SMALL = new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.BOLD);
 	private static float total = 0;
+	private static float tax= 0;
 
 	/**
 	 * @param args
@@ -169,7 +170,15 @@ public class CreatePDFProductOrder {
 	    insertCell(table, (Float.toString(rmOrderModelData.getPricePerUnit())), Element.ALIGN_RIGHT, 1, bf12);
 	    insertCell(table, (Float.toString(rmOrderModelData.getAmount())), Element.ALIGN_RIGHT, 1, bf12);
 	    total = total+rmOrderModelData.getAmount();
+	    tax = rmOrderModelData.getTax();
     }
+     insertCell(table, "Sub Total", Element.ALIGN_RIGHT, 3, bfBold12);
+     insertCell(table, df.format(total), Element.ALIGN_RIGHT, 1, bfBold12);
+     
+     insertCell(table, "Tax", Element.ALIGN_RIGHT, 3, bfBold12);
+     insertCell(table, Float.toString(tax), Element.ALIGN_RIGHT, 1, bfBold12);
+     
+     total = total+tax;
      insertCell(table, "Total", Element.ALIGN_RIGHT, 3, bfBold12);
      insertCell(table, df.format(total), Element.ALIGN_RIGHT, 1, bfBold12);
      document.add(table);
