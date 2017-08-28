@@ -114,7 +114,7 @@ public class ProductionplanningServiceImpl extends
 		for (Iterator<Entry<Long, List<ProductProductionPlan>>> iterator = productionPlanEntries.iterator(); iterator.hasNext();) {
 			Entry<Long, List<ProductProductionPlan>> entry = (Entry<Long, List<ProductProductionPlan>>) iterator.next();
 			Productinventory productinventory = productinventoryService.getProductinventoryByProductId(entry.getKey());
-			List<Productorderassociation> productorderassociations = productorderassociationService.getProductorderassociationByProdcutId(entry.getKey());
+			List<Productorderassociation> productorderassociations = productorderassociationService.getProductorderassociationByProductId(entry.getKey());
 			long remainingAmt = 0;
 			if(productorderassociations != null){
 				for (Productorderassociation productorderassociation : productorderassociations) {
@@ -184,7 +184,7 @@ public class ProductionplanningServiceImpl extends
 			cal.setTime(new Date());
 			cal.set(Calendar.DAY_OF_MONTH, 1);
 			int myMonth=cal.get(Calendar.MONTH);
-			List<Productorderassociation> productorderassociations = productorderassociationDao.getIncompleteProductOrderAssoByProdutId(product.getId());
+			List<Productorderassociation> productorderassociations = productorderassociationDao.getIncompleteProductOrderAssoByProductId(product.getId());
 			if(productorderassociations != null && !productorderassociations.isEmpty()){
 					while (myMonth==cal.get(Calendar.MONTH)) {
 				

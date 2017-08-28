@@ -1,5 +1,8 @@
 package com.nextech.erp.factory;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import com.nextech.erp.model.Productorderassociation;
@@ -44,5 +47,13 @@ public class ProductOrderAssoRequestResponseFactory {
 		productOrderAssociationDTO.setUpdatedDate(productorderassociation.getUpdatedDate());
 		return productOrderAssociationDTO;
 }
+	public static List<ProductOrderAssociationDTO> getProductOrderAssociationDTOs(List<Productorderassociation> productorderassociations){
+		List<ProductOrderAssociationDTO> productOrderAssociationDTOs =  new ArrayList<ProductOrderAssociationDTO>();
+		for (Productorderassociation productorderassociation : productorderassociations) {
+			ProductOrderAssociationDTO productOrderAssociationDTO = ProductOrderAssoRequestResponseFactory.setProductOrderAssoDto(productorderassociation);
+			productOrderAssociationDTOs.add(productOrderAssociationDTO);
+		}
+		return productOrderAssociationDTOs;
+	}
 
 }
