@@ -2,8 +2,11 @@ package com.nextech.erp.serviceImpl;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,9 +29,9 @@ ProductorderassociationDao productorderassociationDao;
 	}
 
 	@Override
-	public List<Productorderassociation> getProductorderassociationByProdcutId(
+	public List<Productorderassociation> getProductorderassociationByProductId(
 			long pId) throws Exception {
-		return productorderassociationDao.getProductorderassociationByProdcutId( pId);
+		return productorderassociationDao.getProductorderassociationByProductId( pId);
 	}
 
 	@Override
@@ -42,13 +45,28 @@ ProductorderassociationDao productorderassociationDao;
 		}
 		return productOrderAssociationDTOs;
 	}
-
+	
 	@Override
-	public List<ProductOrderAssociationDTO> getIncompleteProductOrderAssoByProdutId(long productId)
+	public List<ProductOrderAssociationDTO> getIncompleteProductOrderAssociations() throws Exception{
+		List<Productorderassociation> productorderassociations = productorderassociationDao.getIncompleteProductOrderAssociations();
+		HashMap<Long, Long> productQuantityMap = new HashMap<Long, Long>();
+		for (Iterator<Productorderassociation> iterator = productorderassociations.iterator(); iterator
+				.hasNext();) {
+			Productorderassociation productorderassociation = (Productorderassociation) iterator
+					.next();
+			Long val = productQuantityMap.containsKey(productorderassociation.getProduct().getId()) 
+					? productQuantityMap.put(productorderassociation.getProduct().getId(), productQuantityMap.get(productorderassociation.getProduct().getId()) + productorderassociation.getRemainingQuantity()) 
+					: productQuantityMap.put(productorderassociation.getProduct().getId(), productorderassociation.getRemainingQuantity());
+			
+		}
+		return ProductOrderAssoRequestResponseFactory.getProductOrderAssociationDTOs(productorderassociations);
+	}
+	
+	@Override
+	public List<ProductOrderAssociationDTO> getIncompleteProductOrderAssoByProductId(long productId)
 			throws Exception {
-		// TODO Auto-generated method stub
 		List<ProductOrderAssociationDTO> productOrderAssociationDTOs =  new ArrayList<ProductOrderAssociationDTO>();
-		List<Productorderassociation> productorderassociations = productorderassociationDao.getIncompleteProductOrderAssoByProdutId(productId);
+		List<Productorderassociation> productorderassociations = productorderassociationDao.getIncompleteProductOrderAssoByProductId(productId);
 		for (Productorderassociation productorderassociation : productorderassociations) {
 			ProductOrderAssociationDTO productOrderAssociationDTO = ProductOrderAssoRequestResponseFactory.setProductOrderAssoDto(productorderassociation);
 			productOrderAssociationDTOs.add(productOrderAssociationDTO);
@@ -59,35 +77,30 @@ ProductorderassociationDao productorderassociationDao;
 	@Override
 	public Productionplanning getProductionPlanningforCurrentMonthByProductIdAndDate(
 			long pId, Date date) throws Exception {
-		// TODO Auto-generated method stub
 		return productorderassociationDao.getProductionPlanningforCurrentMonthByProductIdAndDate(pId, date);
 	}
 
 	@Override
 	public List<Productorderassociation> getProductOrderAssoByOrderId(
 			long orderId) throws Exception {
-		// TODO Auto-generated method stub
 		return productorderassociationDao.getProductOrderAssoByOrderId(orderId);
 	}
 
 	@Override
-	public Productorderassociation getProdcutAssoByProdcutId(long prodcutId)
+	public Productorderassociation getProdcutAssoByProductId(long prodcutId)
 			throws Exception {
-		// TODO Auto-generated method stub
-		return productorderassociationDao.getProdcutAssoByProdcutId(prodcutId);
+		return productorderassociationDao.getProdcutAssoByProductId(prodcutId);
 	}
 
 	@Override
 	public Productorderassociation getProdcutAssoByOrder(long orderId)
 			throws Exception {
-		// TODO Auto-generated method stub
 		return productorderassociationDao.getProdcutAssoByOrder(orderId);
 	}
 
 	@Override
 	public List<ProductOrderAssociationDTO> getProductOrderAssoList()
 			throws Exception {
-		// TODO Auto-generated method stub
 		List<ProductOrderAssociationDTO> productOrderAssociationDTOs = new ArrayList<ProductOrderAssociationDTO>();
 		List<Productorderassociation> productorderassociations = productorderassociationDao.getList(Productorderassociation.class);
 		for (Productorderassociation productorderassociation : productorderassociations) {
@@ -100,7 +113,6 @@ ProductorderassociationDao productorderassociationDao;
 	@Override
 	public ProductOrderAssociationDTO getProductOrderAsoById(long id)
 			throws Exception {
-		// TODO Auto-generated method stub
 		Productorderassociation productorderassociation = productorderassociationDao.getById(Productorderassociation.class, id);
 		ProductOrderAssociationDTO productOrderAssociationDTO = ProductOrderAssoRequestResponseFactory.setProductOrderAssoDto(productorderassociation);
 		return productOrderAssociationDTO;
@@ -108,7 +120,6 @@ ProductorderassociationDao productorderassociationDao;
 
 	@Override
 	public void deleteProductOrderAsso(long id) throws Exception {
-		// TODO Auto-generated method stub
 		Productorderassociation productorderassociation = productorderassociationDao.getById(Productorderassociation.class, id);
 		productorderassociation.setIsactive(false);
 		productorderassociationDao.update(productorderassociation);

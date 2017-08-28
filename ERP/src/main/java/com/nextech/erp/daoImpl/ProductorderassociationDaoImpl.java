@@ -36,7 +36,7 @@ public class ProductorderassociationDaoImpl extends
 	}
 
 	@Override
-	public List<Productorderassociation> getProductorderassociationByProdcutId(long pId) throws Exception {
+	public List<Productorderassociation> getProductorderassociationByProductId(long pId) throws Exception {
 		session = sessionFactory.openSession();
 		CriteriaBuilder builder = session.getCriteriaBuilder();
 		CriteriaQuery<Productorderassociation> criteria = builder.createQuery(Productorderassociation.class);
@@ -59,13 +59,13 @@ public class ProductorderassociationDaoImpl extends
 	}
 
 	@Override
-	public List<Productorderassociation> getIncompleteProductOrderAssoByProdutId(long productId)
+	public List<Productorderassociation> getIncompleteProductOrderAssoByProductId(long productId)
 			throws Exception {
 		session = sessionFactory.openSession();
 		CriteriaBuilder builder = session.getCriteriaBuilder();
 		CriteriaQuery<Productorderassociation> criteria = builder.createQuery(Productorderassociation.class);
 		Root<Productorderassociation> userRoot  = (Root<Productorderassociation>) criteria.from(Productorderassociation.class);
-		criteria.select(userRoot).where(builder.equal(userRoot.get("product"), productId),builder.equal(userRoot.get("remainingQuantity"),  new Long(0)),builder.equal(userRoot.get("isactive"), true));
+		criteria.select(userRoot).where(builder.equal(userRoot.get("product"), productId),builder.notEqual(userRoot.get("remainingQuantity"),  new Long(0)),builder.equal(userRoot.get("isactive"), true));
 		TypedQuery<Productorderassociation> query = session.createQuery(criteria);
 		return query.getResultList();
 	}
@@ -99,9 +99,8 @@ public class ProductorderassociationDaoImpl extends
 	}
 
 	@Override
-	public Productorderassociation getProdcutAssoByProdcutId(long prodcutId)
+	public Productorderassociation getProdcutAssoByProductId(long prodcutId)
 			throws Exception {
-		// TODO Auto-generated method stub
 		session = sessionFactory.openSession();
 		CriteriaBuilder builder = session.getCriteriaBuilder();
 		CriteriaQuery<Productorderassociation> criteria = builder.createQuery(Productorderassociation.class);
@@ -118,7 +117,6 @@ public class ProductorderassociationDaoImpl extends
 	@Override
 	public Productorderassociation getProdcutAssoByOrder(long orderId)
 			throws Exception {
-		// TODO Auto-generated method stub
 		session = sessionFactory.openSession();
 		CriteriaBuilder builder = session.getCriteriaBuilder();
 		CriteriaQuery<Productorderassociation> criteria = builder.createQuery(Productorderassociation.class);
@@ -130,6 +128,19 @@ public class ProductorderassociationDaoImpl extends
 		        return null;
 		    }
 		    return list.get(0);
+	}
+
+	@Override
+	public List<Productorderassociation> getIncompleteProductOrderAssociations() throws Exception {
+		session = sessionFactory.openSession();
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<Productorderassociation> criteria = builder.createQuery(Productorderassociation.class);
+		Root<Productorderassociation> userRoot = (Root<Productorderassociation>) criteria.from(Productorderassociation.class);
+		criteria.select(userRoot).where(builder.notEqual(userRoot.get("remainingQuantity"), 0),builder.equal(userRoot.get("isactive"), true));
+		TypedQuery<Productorderassociation> query = session.createQuery(criteria);
+		List<Productorderassociation> list = query.getResultList();
+		return list.isEmpty() ? null : list;
+		
 	}
 
 }

@@ -18,7 +18,7 @@ public class ProductinventoryDaoImpl extends SuperDaoImpl<Productinventory>
 	@Override
 	public Productinventory getProductinventoryByProductId(long productId)
 			throws Exception {
-		session = sessionFactory.getCurrentSession();
+		
 		session = sessionFactory.openSession();
 		CriteriaBuilder builder = session.getCriteriaBuilder();
 		CriteriaQuery<Productinventory> criteria = builder.createQuery(Productinventory.class);
@@ -35,7 +35,6 @@ public class ProductinventoryDaoImpl extends SuperDaoImpl<Productinventory>
 	@Override
 	public List<Productinventory> getProductinventoryListByProductId(
 			long productId) throws Exception {
-		// TODO Auto-generated method stub
 		session = sessionFactory.openSession();
 		CriteriaBuilder builder = session.getCriteriaBuilder();
 		CriteriaQuery<Productinventory> criteria = builder.createQuery(Productinventory.class);

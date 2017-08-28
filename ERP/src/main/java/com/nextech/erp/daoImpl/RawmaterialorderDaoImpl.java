@@ -46,7 +46,7 @@ public class RawmaterialorderDaoImpl extends SuperDaoImpl<Rawmaterialorder>
 	@Override
 	public List<Rawmaterialorder> getRawmaterialorderByStatusId(long statusId,long statusId1,long statusId2)
 			throws Exception {
-		session = sessionFactory.getCurrentSession();
+		
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Rawmaterialorder.class);
 		criteria.add(Restrictions.eq("isactive", true));
@@ -71,7 +71,7 @@ public class RawmaterialorderDaoImpl extends SuperDaoImpl<Rawmaterialorder>
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Rawmaterialorder> getRawmaterialorderByVendor(long vendorId)throws Exception {
-		session = sessionFactory.getCurrentSession();
+		
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Rawmaterialorder.class);
 		criteria.add(Restrictions.eq("isactive", true));
@@ -97,7 +97,7 @@ public class RawmaterialorderDaoImpl extends SuperDaoImpl<Rawmaterialorder>
 	public List<Rawmaterialorder> getRawmaterialorderByVendorId(long vendorId,
 			long statusId1, long statusId2) throws Exception {
 		// TODO Auto-generated method stub
-		session = sessionFactory.getCurrentSession();
+		
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Rawmaterialorder.class);
 		criteria.add(Restrictions.eq("isactive", true));

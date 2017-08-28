@@ -32,7 +32,7 @@ public class ProductionplanningDaoImpl extends SuperDaoImpl<Productionplanning>
 
 	@Override
 	public Productionplanning getProductionPlanningforCurrentMonthByProductIdAndDate(long pId, Date date) throws Exception {
-		session = sessionFactory.getCurrentSession();
+		
 		session = sessionFactory.openSession();
 		CriteriaBuilder builder = session.getCriteriaBuilder();
 		CriteriaQuery<Productionplanning> criteria = builder.createQuery(Productionplanning.class);
@@ -63,9 +63,10 @@ public class ProductionplanningDaoImpl extends SuperDaoImpl<Productionplanning>
 	@Override
 	public List<Productionplanning> getProductionPlanByMonthYear(
 			Date startDate, Date endDate) throws Exception {
-		session = sessionFactory.getCurrentSession();
+		session = sessionFactory.openSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Productionplanning.class);
+		CriteriaBuilder builder = session.getCriteriaBuilder();
 		criteria.add(Restrictions.between("date", startDate, endDate));
 		return criteria.list();
 	}
@@ -86,7 +87,7 @@ public class ProductionplanningDaoImpl extends SuperDaoImpl<Productionplanning>
 	@Override
 	public Productionplanning getProductionPlanningByDateAndProductId(
 			Date productionDateStart, Date productionDateEnd, long product_id) {
-		session = sessionFactory.getCurrentSession();
+		session = sessionFactory.openSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Productionplanning.class);
 		// criteria.add(Restrictions.eq("isactive", true));
@@ -119,7 +120,7 @@ public class ProductionplanningDaoImpl extends SuperDaoImpl<Productionplanning>
 
 	@Override
 	public List<Productionplanning> getProductionplanByDate(Date date)throws Exception {
-		session = sessionFactory.getCurrentSession();
+		
 		session = sessionFactory.openSession();
 		CriteriaBuilder builder = session.getCriteriaBuilder();
 		CriteriaQuery<Productionplanning> criteria = builder.createQuery(Productionplanning.class);
@@ -133,7 +134,7 @@ public class ProductionplanningDaoImpl extends SuperDaoImpl<Productionplanning>
 	public List<Productionplanning> getProductionplanByProdutId(Date date,long productID)
 			throws Exception {
 		// TODO Auto-generated method stub
-		session = sessionFactory.getCurrentSession();
+		
 		session = sessionFactory.openSession();
 		CriteriaBuilder builder = session.getCriteriaBuilder();
 		CriteriaQuery<Productionplanning> criteria = builder.createQuery(Productionplanning.class);

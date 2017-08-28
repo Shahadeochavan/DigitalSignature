@@ -200,7 +200,7 @@ public class ProductionplanningController {
 //						==Long.parseLong(messageSource.getMessage(ERPConstants.PROD_PLAN_COMPLETE, null, null))){
 					if(productionplanning.getTargetQuantity() > 0){
 						List<ProductOrderAssociationDTO> productorderassociations = 
-								productorderassociationService.getIncompleteProductOrderAssoByProdutId(productionplanning.getProductId().getId());
+								productorderassociationService.getIncompleteProductOrderAssoByProductId(productionplanning.getProductId().getId());
 						if(productorderassociations !=null && !productorderassociations.isEmpty()){
 							for (ProductOrderAssociationDTO productorderassociation : productorderassociations) {
 								if(productorderassociation.getRemainingQuantity() > 0){
@@ -233,7 +233,7 @@ public class ProductionplanningController {
 			for (ProductionPlanningDTO productionplanning : productionplannings) {
 				boolean isProductRemaining = false;
 				if(productionplanning.getTargetQuantity() > 0){
-					List<ProductOrderAssociationDTO> productOrderAssociationDTOs = productorderassociationService.getIncompleteProductOrderAssoByProdutId(productionplanning.getProductId().getId());
+					List<ProductOrderAssociationDTO> productOrderAssociationDTOs = productorderassociationService.getIncompleteProductOrderAssoByProductId(productionplanning.getProductId().getId());
 					if(productOrderAssociationDTOs !=null && !productOrderAssociationDTOs.isEmpty()){
 						for (ProductOrderAssociationDTO productOrderAssociationDTO : productOrderAssociationDTOs) {
 							if(productOrderAssociationDTO.getRemainingQuantity() > 0){
@@ -262,7 +262,7 @@ public class ProductionplanningController {
 			List<ProductionPlanningDTO> productionplanningList = productionplanningService.getProductionplanByDate(DateUtil.convertToDate(date));
 			for (ProductionPlanningDTO productionplanning : productionplanningList) {
 				boolean isProductRemaining = false;
-				List<ProductOrderAssociationDTO> productorderassociations = productorderassociationService.getIncompleteProductOrderAssoByProdutId(productionplanning.getProductId().getId());
+				List<ProductOrderAssociationDTO> productorderassociations = productorderassociationService.getIncompleteProductOrderAssoByProductId(productionplanning.getProductId().getId());
 				if(productorderassociations !=null && !productorderassociations.isEmpty()){
 					for (ProductOrderAssociationDTO productorderassociation : productorderassociations) {
 						if(productorderassociation.getRemainingQuantity() > 0){

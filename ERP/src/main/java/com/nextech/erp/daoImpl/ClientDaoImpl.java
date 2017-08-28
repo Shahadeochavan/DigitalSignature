@@ -28,7 +28,7 @@ public class ClientDaoImpl extends SuperDaoImpl<Client> implements ClientDao {
 	Transaction tx = null;
 	@Override
 	public Client getClientByCompanyName(String companyname) throws Exception {
-		session = sessionFactory.getCurrentSession();
+		
 		session = sessionFactory.openSession();
 		CriteriaBuilder builder = session.getCriteriaBuilder();
 		CriteriaQuery<Client> criteria = builder.createQuery(Client.class);
@@ -44,7 +44,7 @@ public class ClientDaoImpl extends SuperDaoImpl<Client> implements ClientDao {
 
 	@Override
 	public Client getClientByEmail(String emailid) throws Exception {
-		session = sessionFactory.getCurrentSession();
+		
 		session = sessionFactory.openSession();
 		CriteriaBuilder builder = session.getCriteriaBuilder();
 		CriteriaQuery<Client> criteria = builder.createQuery(Client.class);

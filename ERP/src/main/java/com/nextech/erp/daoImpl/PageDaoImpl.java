@@ -26,7 +26,7 @@ public class PageDaoImpl extends SuperDaoImpl<Page> implements PageDao{
 
 	@Override
 	public Page getPageByUrl(String url) throws Exception {
-		session = sessionFactory.getCurrentSession();
+		
 		session = sessionFactory.openSession();
 		CriteriaBuilder builder = session.getCriteriaBuilder();
 		CriteriaQuery<Page> criteria = builder.createQuery(Page.class);

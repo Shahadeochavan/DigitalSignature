@@ -74,7 +74,7 @@ public class ProductqualityController {
 			List<ProductionPlanningDTO> productionplannings = productionplanningService.getProductionplanByDate(DateUtil.convertToDate(date));
 			for (ProductionPlanningDTO productionplanning : productionplannings) {
 				boolean isProductRemaining = false;
-				List<ProductOrderAssociationDTO> productorderassociations = productorderassociationService.getIncompleteProductOrderAssoByProdutId(productionplanning.getProductId().getId());
+				List<ProductOrderAssociationDTO> productorderassociations = productorderassociationService.getIncompleteProductOrderAssoByProductId(productionplanning.getProductId().getId());
 				if(productorderassociations !=null && !productorderassociations.isEmpty()){
 					for (ProductOrderAssociationDTO productorderassociation : productorderassociations) {
 						if(productorderassociation.getRemainingQuantity() > 0){

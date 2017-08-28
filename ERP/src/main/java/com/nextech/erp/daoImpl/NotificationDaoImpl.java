@@ -18,7 +18,7 @@ public class NotificationDaoImpl extends SuperDaoImpl<Notification> implements N
 
 	@Override
 	public Notification getNotifiactionByStatus(long statusId) throws Exception {
-		session = sessionFactory.getCurrentSession();
+		
 		session = sessionFactory.openSession();
 		CriteriaBuilder builder = session.getCriteriaBuilder();
 		CriteriaQuery<Notification> criteria = builder.createQuery(Notification.class);
@@ -35,7 +35,7 @@ public class NotificationDaoImpl extends SuperDaoImpl<Notification> implements N
 	@Override
 	public Notification getNotificationByCode(String code) throws Exception {
 		// TODO Auto-generated method stub
-		session = sessionFactory.getCurrentSession();
+		
 		session = sessionFactory.openSession();
 		CriteriaBuilder builder = session.getCriteriaBuilder();
 		CriteriaQuery<Notification> criteria = builder.createQuery(Notification.class);

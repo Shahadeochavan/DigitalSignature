@@ -20,7 +20,7 @@ public class NotificationUserassociationDaoImpl extends
 	public Notificationuserassociation getNotifiactionByUserId(long userId)
 			throws Exception {
 		// TODO Auto-generated method stub
-		session = sessionFactory.getCurrentSession();
+		
 		session = sessionFactory.openSession();
 		CriteriaBuilder builder = session.getCriteriaBuilder();
 		CriteriaQuery<Notificationuserassociation> criteria = builder.createQuery(Notificationuserassociation.class);

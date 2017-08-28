@@ -9,6 +9,7 @@ import javax.persistence.criteria.Root;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -62,7 +63,10 @@ public class SuperDaoImpl<T> implements SuperDao<T>{
 	@Override
 	public T update(T bean) throws Exception {
 		session = sessionFactory.openSession();
-		session.merge(bean);
-		return bean;
+		Transaction tx =session.beginTransaction();
+		@SuppressWarnings("unchecked")
+		T mergedBean = (T) session.merge(bean);
+		tx.commit();
+		return mergedBean;
 	}
 }
