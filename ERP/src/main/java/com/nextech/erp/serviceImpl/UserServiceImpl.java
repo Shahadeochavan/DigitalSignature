@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.support.StaticApplicationContext;
 import org.springframework.stereotype.Service;
 
 import com.nextech.erp.dao.UserDao;
@@ -43,6 +44,10 @@ public class UserServiceImpl extends CRUDServiceImpl<User> implements UserServic
 
 	@Autowired
 	MailService mailService;
+	
+	static StringBuilder stringBuilder = new StringBuilder();
+	static String prefix = "";
+	static String id = "";
 
 	@Override
 	public User findByUserId(String string) throws Exception {
@@ -140,6 +145,17 @@ public class UserServiceImpl extends CRUDServiceImpl<User> implements UserServic
 		List<NotificationUserAssociatinsDTO> notificationUserAssociatinsDTOs = notificationUserAssService.getNotificationUserAssociatinsDTOs(notificationDTO.getId());
 		
 		// By Nikhil on 21/08/2017 : Form comma separated list of notificationuserassociation.getUserId().getId() and fetch all e-mails in single DB call.
+		List<UserDTO> userDTOs =  new ArrayList<UserDTO>();
+		System.out.println(userDTOs);
+		for (NotificationUserAssociatinsDTO notificationUserAssociatinsDTO : notificationUserAssociatinsDTOs) {
+			stringBuilder.append(prefix);
+			prefix = ",";
+			stringBuilder.append(notificationUserAssociatinsDTO.getUserId().getId());
+			id = stringBuilder.toString();
+			
+		}
+		List<User> userList = userdao.getMultipleUsersById(id);
+		System.out.println(userList);
 		for (NotificationUserAssociatinsDTO notificationuserassociation : notificationUserAssociatinsDTOs) {
 			User user = userdao.getById(User.class, notificationuserassociation.getUserId().getId());
 			if (notificationuserassociation.getTo()) {
@@ -163,5 +179,11 @@ public class UserServiceImpl extends CRUDServiceImpl<User> implements UserServic
 		mail.setMailBcc(multipleBCC);
 		mail.setMailCc(multipleCC);
 		return mail;
+	}
+
+	@Override
+	public List<User> getMultipleUsersById(String id) throws Exception {
+		// TODO Auto-generated method stub
+		return userdao.getMultipleUsersById(id);
 	}
 }
