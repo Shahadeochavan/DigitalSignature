@@ -54,14 +54,17 @@ public class UnitController {
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody UnitDTO getUnit(@PathVariable("id") long id) {
+	public @ResponseBody UserStatus getUnit(@PathVariable("id") long id) {
 		UnitDTO unit = null;
 		try {
 			unit = unitservice.getUnitByID(id);
+			if(unit==null){
+				return new UserStatus(1,"There is no any unit");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return unit;
+		return new UserStatus(1,unit);
 	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
@@ -76,24 +79,30 @@ public class UnitController {
 	}
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<UnitDTO> getUnit() {
+	public @ResponseBody UserStatus getUnit() {
 
 		List<UnitDTO> unitList = null;
 		try {
 			unitList = unitservice.getUnitList();
+			if(unitList.isEmpty()){
+				return new UserStatus(1,"There is no any unit list");
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		return unitList;
+		return new UserStatus(1,unitList);
 	}
 
 	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus deleteUnit(@PathVariable("id") long id) {
 
 		try {
-			unitservice.deleteUnit(id);
+			UnitDTO unitDTO =unitservice.deleteUnit(id);
+			if(unitDTO==null){
+				return new UserStatus(1,"There is no any unit");
+			}
 			return new UserStatus(1, "Unit deleted Successfully !");
 		} catch (Exception e) {
 			return new UserStatus(0, e.toString());

@@ -17,5 +17,5 @@ public interface VendorService extends CRUDService<Vendor>{
 	
 	public VendorDTO getVendorById(long id) throws Exception;
 	
-	public void deleteVendor(long id) throws Exception;
+	public VendorDTO deleteVendor(long id) throws Exception;
 }

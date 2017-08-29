@@ -27,6 +27,9 @@ public class PageServiceImpl extends CRUDServiceImpl<Page> implements PageServic
 		 pageDTOs = new ArrayList<PageDTO>();
 		List<Page> pages = null;
 		pages = pageDao.getList(Page.class);
+		if(pages.isEmpty()){
+			return null;
+		}
 		for (Page page : pages) {
 			PageDTO pageDTO = PageFactory.setPageList(page);
 			pageDTOs.add(pageDTO);
@@ -37,15 +40,24 @@ public class PageServiceImpl extends CRUDServiceImpl<Page> implements PageServic
 	public PageDTO getPageDTOById(long id) throws Exception {
 		// TODO Auto-generated method stub
 		Page page = pageDao.getById(Page.class, id);
+		if(page==null){
+			return null;
+		}
 		PageDTO pageDTO = PageFactory.setPageList(page);
 		return pageDTO;
 	}
 	@Override
-	public void deletePageById(long id) throws Exception {
+	public PageDTO deletePageById(long id) throws Exception {
 		// TODO Auto-generated method stub
 		Page page = pageDao.getById(Page.class, id);
+		
+		if(page==null){
+			return null;
+		}
 		page.setIsactive(false);
 		pageDao.update(page);
+		PageDTO pageDTO = PageFactory.setPageList(page);
+		return pageDTO;
 	}
 	
 }

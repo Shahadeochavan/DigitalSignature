@@ -58,14 +58,17 @@ public class NotificationuserassociationController {
 	}
 
 	@Transactional @RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody NotificationUserAssociatinsDTO getNotification(@PathVariable("id") long id) {
+	public @ResponseBody UserStatus getNotification(@PathVariable("id") long id) {
 		NotificationUserAssociatinsDTO notification = null;
 		try {
 			notification = notificationservice.getNotificationUserById(id);
+			if(notification==null){
+				return new UserStatus(1,"There is no any notification user assocition");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return notification;
+		return new UserStatus(1,notification);
 	}
 
 	@Transactional @RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
@@ -82,17 +85,20 @@ public class NotificationuserassociationController {
 	}
 
 	@Transactional @RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<NotificationUserAssociatinsDTO> getNotification() {
+	public @ResponseBody UserStatus getNotification() {
 
 		List<NotificationUserAssociatinsDTO> notificationList = null;
 		try {
 			notificationList = notificationservice.getNotificationUserAssoList();
+			if(notificationList.isEmpty()){
+				return new UserStatus(1,"There is no any user notification list");
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		return notificationList;
+		return new UserStatus(1,notificationList);
 	}
 
 	@Transactional @RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")

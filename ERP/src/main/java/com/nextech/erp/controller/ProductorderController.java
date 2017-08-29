@@ -170,26 +170,32 @@ public class ProductorderController {
 	}
 
 	@Transactional @RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody ProductOrderDTO getProductorder(@PathVariable("id") long id) {
+	public @ResponseBody UserStatus getProductorder(@PathVariable("id") long id) {
 		ProductOrderDTO productorder = null;
 		try {
 			productorder = productorderService.getProductById(id);
+			if(productorder==null){
+				return new UserStatus(1,"There is no product order");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return productorder;
+		return new UserStatus(1,productorder);
 	}
 
 	@Transactional @RequestMapping(value = "productorderId/{orderId}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<ProductOrderAssociationDTO> getProductOrder(
+	public @ResponseBody UserStatus getProductOrder(
 			@PathVariable("orderId") long id) {
 		List<ProductOrderAssociationDTO> productorderassociations = null;
 		try {
 			productorderassociations = productorderassociationService.getProductorderassociationByOrderId(id);
+			if(productorderassociations.isEmpty()){
+				
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return productorderassociations;
+		return new UserStatus(1,productorderassociations);
 	}
 
 	@Transactional @RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
@@ -205,19 +211,22 @@ public class ProductorderController {
 	}
 
 	@Transactional @RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<ProductOrderDTO> getProductorder() {
+	public @ResponseBody UserStatus getProductorder() {
 		List<ProductOrderDTO> productorderList = null;
 		try {
 			productorderList = productorderService.getProductOrderList();
+			if(productorderList.isEmpty()){
+				return new UserStatus(1,"There is no product order list");
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return productorderList;
+		return new UserStatus(1,productorderList);
 	}
 
 	@Transactional @RequestMapping(value = "/pendingList", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<ProductOrderDTO> getPendingsProductorders() {
+	public @ResponseBody UserStatus getPendingsProductorders() {
 		List<ProductOrderDTO> productorderList = null;
 		try {
 			// TODO afterwards you need to change it from properties.
@@ -226,27 +235,33 @@ public class ProductorderController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return productorderList;
+		return new UserStatus(1,productorderList);
 	}
 
 	@Transactional @RequestMapping(value = "incompleteProductOrder/{CLIENT-ID}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<ProductOrderDTO> getInCompleteProductOrder(@PathVariable("CLIENT-ID") long clientId) {
+	public @ResponseBody UserStatus getInCompleteProductOrder(@PathVariable("CLIENT-ID") long clientId) {
 		List<ProductOrderDTO> productorderList = null;
 		try {
 			// TODO afterwards you need to change it from properties.
 			productorderList = productorderService.getInCompleteProductOrder(clientId,Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_PRODUCT_ORDER_INCOMPLETE, null, null)),
 			Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_PRODUCT_ORDER_COMPLETE, null, null)));
+			if(productorderList.isEmpty()){
+				return new UserStatus(1,"There is no product order");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return productorderList;
+		return new UserStatus(1,productorderList);
 	}
 
 	@Transactional @RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus deleteProductorder(
 			@PathVariable("id") long id) {
 		try {
-			productorderService.deleteProductOrder(id);
+		ProductOrderDTO  productOrderDTO =	productorderService.deleteProductOrder(id);
+		if(productOrderDTO==null){
+			return  new UserStatus(1,"There is no product order");
+		}
 			return new UserStatus(1, "Product Order deleted Successfully !");
 		} catch (Exception e) {
 			return new UserStatus(0, e.toString());

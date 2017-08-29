@@ -41,16 +41,15 @@ public class RawmaterialorderDaoImpl extends SuperDaoImpl<Rawmaterialorder>
 		    return results.get(0);
 	}
 
+	@SuppressWarnings({ "unchecked", "deprecation" })
 	@Override
 	public List<Rawmaterialorder> getRawmaterialorderByStatusId(long statusId,long statusId1,long statusId2)
 			throws Exception {
-		
-		@SuppressWarnings("deprecation")
+		session = sessionFactory.openSession();
 		Criteria criteria = session.createCriteria(Rawmaterialorder.class);
 		criteria.add(Restrictions.eq("isactive", true));
 		Criterion criterion = Restrictions.in("status.id", Arrays.asList(statusId,statusId1,statusId2));
 		criteria.add(Restrictions.and(criterion));
-		@SuppressWarnings("unchecked")
 		List<Rawmaterialorder> rawmaterialorder = criteria.list().size() > 0 ? (List<Rawmaterialorder>) criteria.list() : null;
 		return rawmaterialorder;
 	}

@@ -149,8 +149,13 @@ public class UserDaoImpl extends SuperDaoImpl<User> implements UserDao {
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(User.class);
 		criteria.add(Restrictions.eq("isactive", true));
-		long[] id = {200,201};
-		Long[] longs = ArrayUtils.toObject(id);
+		
+        String[] users = userId.split(",");
+		long[] data = new long[users.length];   
+		for (int i = 0; i < users.length; i++) {   
+		    data[i] = Long.parseLong(users[i]);   
+		}
+		Long[] longs = ArrayUtils.toObject(data);
 		List<Long> list = Arrays.asList(longs);
  		Criterion criterion = Restrictions.in("id", list);
 		criteria.add(Restrictions.and(criterion));

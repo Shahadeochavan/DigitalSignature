@@ -57,14 +57,17 @@ public class UserTypeController {
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody UserTypeDTO getUserType(@PathVariable("id") long id) {
+	public @ResponseBody UserStatus getUserType(@PathVariable("id") long id) {
 		UserTypeDTO userTypeDTO = null;
 		try {
 			userTypeDTO = userTypeService.getUserTypeDto(id);
+			if(userTypeDTO==null){
+				return new UserStatus(1,"There is no any user type");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return userTypeDTO;
+		return new UserStatus(1,userTypeDTO);
 	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
@@ -80,24 +83,30 @@ public class UserTypeController {
 	}
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<UserTypeDTO> getUserType() {
+	public @ResponseBody UserStatus getUserType() {
 
 		List<UserTypeDTO> userList = null;
 		try {
 			userList = userTypeService.getUserTypeDTO();
+			if(userList.isEmpty()){
+				return new UserStatus(1,"There is no any user type list");
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		return userList;
+		return new UserStatus(1,userList);
 	}
 
 	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus deleteUserType(@PathVariable("id") long id) {
 
 		try {
-			userTypeService.deleteUserType(id);
+			UserTypeDTO userTypeDTO =userTypeService.deleteUserType(id);
+			if (userTypeDTO==null) {
+				return new UserStatus(1,"there is no any user type");
+			}
 			return new UserStatus(1, "UserType deleted Successfully !");
 		} catch (Exception e) {
 			return new UserStatus(0, e.toString());

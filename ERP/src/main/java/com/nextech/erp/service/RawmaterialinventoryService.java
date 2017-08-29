@@ -13,6 +13,6 @@ public interface RawmaterialinventoryService extends CRUDService<Rawmaterialinve
 	
 	public List<RMInventoryDTO> getRMInventoryList() throws Exception;
 	
-	public void deleteRMInventory(long id) throws Exception;
+	public RMInventoryDTO deleteRMInventory(long id) throws Exception;
 	
 }

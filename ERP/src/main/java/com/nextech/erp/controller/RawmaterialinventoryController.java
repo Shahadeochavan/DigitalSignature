@@ -89,14 +89,17 @@ public class RawmaterialinventoryController {
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody RMInventoryDTO getRawMaterialInventory(@PathVariable("id") long id) {
+	public @ResponseBody UserStatus getRawMaterialInventory(@PathVariable("id") long id) {
 		RMInventoryDTO rawmaterialinventory = null;
 		try {
 			rawmaterialinventory = rawmaterialinventoryService.getRMInventoryById(id);
+			if(rawmaterialinventory==null){
+				return new UserStatus(1,"There is no rm inventory");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return rawmaterialinventory;
+		return new UserStatus(1,rawmaterialinventory);
 	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
@@ -111,21 +114,27 @@ public class RawmaterialinventoryController {
 	}
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<RMInventoryDTO> getRawMaterialInventory() {
+	public @ResponseBody UserStatus getRawMaterialInventory() {
 
 		List<RMInventoryDTO> rawmaterialinventoryList = null;
 		try {
 			rawmaterialinventoryList = rawmaterialinventoryService.getRMInventoryList();
+			if(rawmaterialinventoryList.isEmpty()){
+				return new UserStatus(1,"There is no rm inventory");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return rawmaterialinventoryList;
+		return new UserStatus(1,rawmaterialinventoryList);
 	}
 
 	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus deleteRawMaterialInventory(@PathVariable("id") long id) {
 		try {
-			rawmaterialinventoryService.deleteRMInventory(id);
+			RMInventoryDTO rmInventoryDTO =	rawmaterialinventoryService.deleteRMInventory(id);
+			if(rmInventoryDTO==null){
+				return new UserStatus(1,"There is no rm inventroy");
+			}
 			return new UserStatus(1, "Rawmaterialinventory deleted Successfully !");
 		} catch (Exception e) {
 			return new UserStatus(0, e.toString());
@@ -140,6 +149,7 @@ public class RawmaterialinventoryController {
 		RMInventoryDTO  rmInventoryDTO = new RMInventoryDTO();
 		try { 
 			rawmaterialinventoryList = rawmaterialinventoryService.getRMInventoryList();
+			if(rawmaterialinventoryList.isEmpty()){
 			for (RMInventoryDTO rawmaterialinventory : rawmaterialinventoryList) {
 				RawMaterialDTO rawmaterial = rawmaterialService.getRMDTO(rawmaterialinventory.getRawmaterialId().getId());
 				if(rawmaterialinventory.getQuantityAvailable()>=rawmaterialinventory.getMinimumQuantity()){
@@ -149,6 +159,7 @@ public class RawmaterialinventoryController {
 					rmInventoryDTO.setMinimumQuantity(rawmaterialinventory.getMinimumQuantity());
 					rmInventoryDTOs.add(rmInventoryDTO);
 				}
+			}
 			}
 			if(rmInventoryDTOs != null&& ! rmInventoryDTOs.isEmpty()){
 				mailSendingRMInventroy(rmInventoryDTOs);

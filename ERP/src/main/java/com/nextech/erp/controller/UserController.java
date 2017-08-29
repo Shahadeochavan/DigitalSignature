@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 
+import org.apache.velocity.app.event.ReferenceInsertionEventHandler.referenceInsertExecutor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
@@ -195,14 +196,17 @@ public class UserController {
 	
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody UserDTO getUser(@PathVariable("id") long id) {
+	public @ResponseBody UserStatus getUser(@PathVariable("id") long id) {
 		UserDTO userDTO = null;
 		try {
 			userDTO = userservice.getUserDTO(id);
+			if(userDTO==null){
+				return  new UserStatus(1,"There is no any user");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return userDTO;
+		return new UserStatus(1,userDTO);
 	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
@@ -249,30 +253,36 @@ public class UserController {
 	}
 	
 	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<UserDTO> getUser() {
+	public @ResponseBody UserStatus getUser() {
 
 		List<UserDTO> userList = null;
 		try {
 			userList = userservice.getUserList(userList);
+			if(userList.isEmpty()){
+				return new UserStatus(1,"There is no any user list");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		return userList;
+		return new UserStatus(1,userList);
 	}
 
 	@RequestMapping(value = "userProfile/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<User> getUserProfile(@PathVariable("id") long id) {
+	public @ResponseBody UserStatus getUserProfile(@PathVariable("id") long id) {
 
 		List<User> userProfileList = null;
 		try {
 			userProfileList = userservice.getUserProfileByUserId(id);
+			if(userProfileList.isEmpty()){
+				return new UserStatus(1,"There is no any user list");
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		return userProfileList;
+		return new UserStatus(1,userProfileList);
 	}
 
 	/* Delete an object from DB in Spring Restful Services */
@@ -280,7 +290,10 @@ public class UserController {
 	public @ResponseBody UserStatus deleteEmployee(@PathVariable("id") long id) {
 
 		try {
-			 userservice.getUserDTOByid(id);
+			 UserDTO user =userservice.getUserDTOByid(id);
+			 if (user==null) {
+				 return new UserStatus(1,"There is no any user for delete");
+			}
 			return new UserStatus(1, "User deleted Successfully !");
 		} catch (Exception e) {
 			return new UserStatus(0, e.toString());

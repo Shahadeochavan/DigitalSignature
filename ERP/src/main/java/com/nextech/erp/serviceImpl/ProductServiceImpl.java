@@ -80,16 +80,22 @@ public class ProductServiceImpl extends CRUDServiceImpl<Product> implements Prod
 	public ProductDTO getProductDTO(long id) throws Exception {
 		// TODO Auto-generated method stub
 		Product product = productDao.getById(Product.class, id);
+		if(product ==null){
+			return null;
+		}
 		ProductDTO productDTO = ProductRequestResponseFactory.setProductDto(product);
 		return productDTO;
 	}
 
 	@Override
-	public void deleteProduct(long id) throws Exception {
+	public ProductDTO deleteProduct(long id) throws Exception {
 		// TODO Auto-generated method stub
 		Product product = productDao.getById(Product.class, id);
-		product.setIsactive(false);
-		productDao.update(product);
+		if(product ==null){
+			return null;
+		}
+		ProductDTO productDTO = ProductRequestResponseFactory.setProductDto(product);
+		return productDTO;
 		
 	}
 

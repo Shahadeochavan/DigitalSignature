@@ -73,6 +73,9 @@ public class ProductorderServiceImpl extends CRUDServiceImpl<Productorder> imple
 	public List<ProductOrderDTO> getPendingProductOrders(long statusId,long statusId1) {
 		List<ProductOrderDTO> productOrderDTOs =  new ArrayList<ProductOrderDTO>();
 		List<Productorder> productorders = productorderDao.getPendingProductOrders(statusId,statusId1);
+		if(productorders.isEmpty()){
+			return null;
+		}
 		for (Productorder productorder : productorders) {
 			ProductOrderDTO productOrderDTO = ProductOrderRequestResponseFactory.setProductOrderDTO(productorder);
 			productOrderDTOs.add(productOrderDTO);
@@ -84,6 +87,9 @@ public class ProductorderServiceImpl extends CRUDServiceImpl<Productorder> imple
 		// TODO Auto-generated method stub
 		List<ProductOrderDTO> productOrderDTOs =  new ArrayList<ProductOrderDTO>();
 		List<Productorder> productorders = productorderDao.getInCompleteProductOrder(clientId,statusId,statusId1);
+		if(productorders.isEmpty()){
+			return null;
+		}
 		for (Productorder productorder : productorders) {
 			ProductOrderDTO productOrderDTO = ProductOrderRequestResponseFactory.setProductOrderDTO(productorder);
 			productOrderDTOs.add(productOrderDTO);
@@ -124,15 +130,23 @@ public class ProductorderServiceImpl extends CRUDServiceImpl<Productorder> imple
 	public ProductOrderDTO getProductById(long id) throws Exception {
 		// TODO Auto-generated method stub
 		Productorder productorder = productorderDao.getById(Productorder.class, id);
+		if(productorder==null){
+			return null;
+		}
 		ProductOrderDTO productOrderDTO = ProductOrderRequestResponseFactory.setProductOrderDTO(productorder);
 		return productOrderDTO;
 	}
 	@Override
-	public void deleteProductOrder(long id) throws Exception {
+	public ProductOrderDTO deleteProductOrder(long id) throws Exception {
 		// TODO Auto-generated method stub
 		Productorder productorder = productorderDao.getById(Productorder.class, id);
+		if(productorder==null){
+			return null;
+		}
 		productorder.setIsactive(false);
 		productorderDao.update(productorder);
+		ProductOrderDTO productOrderDTO = ProductOrderRequestResponseFactory.setProductOrderDTO(productorder);
+		return productOrderDTO;
 		
 	}
 	@Override
@@ -175,6 +189,9 @@ public class ProductorderServiceImpl extends CRUDServiceImpl<Productorder> imple
 			throws Exception {
 		// TODO Auto-generated method stub
 		Productorder productorder = ProductOrderRequestResponseFactory.setProductOrder(productOrderDTO);
+		if(productorder==null){
+			return null;
+		}
 		productorder.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 		productorder.setStatus(statusDao.getById(Status.class,Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_NEW_PRODUCT_ORDER, null, null))));
 		productorderDao.update(productorder);

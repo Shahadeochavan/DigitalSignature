@@ -131,14 +131,17 @@ public class ProductController {
 	}
 
 	@Transactional @RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody ProductDTO getProduct(@PathVariable("id") long id) {
+	public @ResponseBody UserStatus getProduct(@PathVariable("id") long id) {
 		ProductDTO product = null;
 		try {
 			product = productService.getProductDTO(id);
+			if(product==null){
+				return new UserStatus(1,"There is no any product");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return product;
+		return new UserStatus(1,product);
 	}
 	
 	@Transactional @RequestMapping(value = "/update",headers = "Content-Type=*/*", method = RequestMethod.POST)
@@ -188,16 +191,19 @@ public class ProductController {
 	}
 	
 	@Transactional @RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<ProductDTO> getProduct() {
+	public @ResponseBody UserStatus getProduct() {
 
-		List<ProductDTO> ProductList = null;
+		List<ProductDTO> productList = null;
 		try {
-			ProductList = productService.getProductList();
+			productList = productService.getProductList();
+			if(productList.isEmpty()){
+				return new UserStatus(1,"There is no product list");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		return ProductList;
+		return new UserStatus(1,productList);
 	}
 	@Transactional @RequestMapping(value = "/list/newProductRMAssociation", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody Response getNewProductRMAsso() {
@@ -208,7 +214,7 @@ public class ProductController {
 			productList = productService.getEntityList(Product.class);
 			for(Product product : productList){
 				List<Productrawmaterialassociation> productrawmaterialassociations = productRMAssoService.getProductRMAssoListByProductID(product.getId());
-				if(productrawmaterialassociations==null){
+				if(productrawmaterialassociations.isEmpty()){
 					ProductNewAssoicatedList productNewAssoicatedList = new ProductNewAssoicatedList();
 					productNewAssoicatedList.setId(product.getId());
 					productNewAssoicatedList.setPartNumber(product.getPartNumber());
@@ -228,7 +234,10 @@ public class ProductController {
 	public @ResponseBody UserStatus deleteProduct(@PathVariable("id") long id) {
 
 		try {
-			productService.deleteProduct(id);
+			ProductDTO productDTO =productService.deleteProduct(id);
+			if(productDTO==null){
+				return new UserStatus(1,"There is no product id");
+			}
 			return new UserStatus(1, "Product deleted Successfully !");
 		} catch (Exception e) {
 			return new UserStatus(0, e.toString());

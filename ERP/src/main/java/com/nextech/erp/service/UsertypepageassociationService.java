@@ -14,7 +14,7 @@ public interface UsertypepageassociationService extends CRUDService<Usertypepage
 	
 	public UserTypePageAssoDTO getUserTypeDto(long id) throws Exception;
 	
-	public void  deleteUserTypePage(long id)throws Exception;
+	public UserTypePageAssoDTO  deleteUserTypePage(long id)throws Exception;
 	
 	public UserTypePageAssoDTO addMultipleUserTypePageAsso(UserTypePageAssoDTO userTypePageAssoDTO,String user) throws Exception;
 	

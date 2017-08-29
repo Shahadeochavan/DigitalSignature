@@ -46,6 +46,9 @@ public class RawmaterialServiceImpl extends CRUDServiceImpl<Rawmaterial> impleme
 		// TODO Auto-generated method stub
 		List<RMVendorAssociationDTO> rmVendorAssociationDTOs = new ArrayList<RMVendorAssociationDTO>();
 		List<Rawmaterialvendorassociation> rawmaterialvendorassociations = rawmaterialDao.getRawmaterialByVenodrId(id);
+		if(rawmaterialvendorassociations.isEmpty()){
+			return null;
+		}
 		for (Rawmaterialvendorassociation rawmaterialvendorassociation : rawmaterialvendorassociations) {
 			RMVendorAssociationDTO rmVendorAssociationDTO = RMVendorAssoRequestResponseFactory.setRMVendorList(rawmaterialvendorassociation);
 			rmVendorAssociationDTOs.add(rmVendorAssociationDTO);
@@ -65,6 +68,9 @@ public class RawmaterialServiceImpl extends CRUDServiceImpl<Rawmaterial> impleme
 		// TODO Auto-generated method stub
 		List<RawMaterialDTO> rawMaterialDTOs = new ArrayList<RawMaterialDTO>();
 		List<Rawmaterial> rawmaterials = rawmaterialDao.getList(Rawmaterial.class);
+		if(rawmaterials.isEmpty()){
+			return null;
+		}
 		for (Rawmaterial rawmaterial : rawmaterials) {
 			RawMaterialDTO rawMaterialDTO = RMRequestResponseFactory.setRawMaterialDTO(rawmaterial);
 			rawMaterialDTOs.add(rawMaterialDTO);
@@ -76,16 +82,24 @@ public class RawmaterialServiceImpl extends CRUDServiceImpl<Rawmaterial> impleme
 	public RawMaterialDTO getRMDTO(long id) throws Exception {
 		// TODO Auto-generated method stub
 		Rawmaterial rawmaterial = rawmaterialDao.getById(Rawmaterial.class, id);
+		if(rawmaterial==null){
+			return null;
+		}
 		RawMaterialDTO rawMaterialDTO = RMRequestResponseFactory.setRawMaterialDTO(rawmaterial);
 		return rawMaterialDTO;
 	}
 
 	@Override
-	public void deleteRM(long id) throws Exception {
+	public RawMaterialDTO deleteRM(long id) throws Exception {
 		// TODO Auto-generated method stub
 		Rawmaterial rawmaterial = rawmaterialDao.getById(Rawmaterial.class, id);
+		if(rawmaterial==null){
+			return null;
+		}
 		rawmaterial.setIsactive(false);
 		rawmaterialDao.update(rawmaterial);
+		RawMaterialDTO rawMaterialDTO = RMRequestResponseFactory.setRawMaterialDTO(rawmaterial);
+		return rawMaterialDTO;
 		
 	}
 
@@ -94,6 +108,9 @@ public class RawmaterialServiceImpl extends CRUDServiceImpl<Rawmaterial> impleme
 		// TODO Auto-generated method stub
 		List<RawMaterialDTO> rawMaterialDTOs =  new ArrayList<RawMaterialDTO>();
 		List<Rawmaterial> rawmaterials = rawmaterialDao.getRMByRMTypeId(id);
+		if(rawmaterials.isEmpty()){
+			return null;
+		}
 		for (Rawmaterial rawmaterial : rawmaterials) {
 			RawMaterialDTO rawMaterialDTO = RMRequestResponseFactory.setRawMaterialDTO(rawmaterial);
 			rawMaterialDTOs.add(rawMaterialDTO);

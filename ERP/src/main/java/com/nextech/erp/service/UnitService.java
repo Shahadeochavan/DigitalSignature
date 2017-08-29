@@ -13,6 +13,6 @@ public interface UnitService extends CRUDService<Unit>{
 	
 	public UnitDTO getUnitByID(long id) throws Exception;
 	
-	public void deleteUnit(long id) throws Exception;
+	public UnitDTO deleteUnit(long id) throws Exception;
 	
 }

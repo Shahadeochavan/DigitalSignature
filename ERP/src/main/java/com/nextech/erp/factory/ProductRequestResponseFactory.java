@@ -49,6 +49,7 @@ public class ProductRequestResponseFactory {
 		productDTO.setCreatedDate(product.getCreatedDate());
 		productDTO.setUpdatedBy(product.getUpdatedBy());
 		productDTO.setUpdatedDate(product.getUpdatedDate());
+		productDTO.setDesign(product.getDesign());
 		return productDTO;
 	}
 

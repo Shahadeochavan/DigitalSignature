@@ -39,6 +39,9 @@ public class VendorServiceImpl extends CRUDServiceImpl<Vendor> implements Vendor
 		// TODO Auto-generated method stub
 		vendorDTOs = new ArrayList<VendorDTO>();
 		List<Vendor> vendors = vendorDao.getList(Vendor.class);
+		if(vendors.isEmpty()){
+			return null;
+		}
 		for (Vendor vendor : vendors) {
 		VendorDTO vendorDTO =	VendorFactory.setVendorList(vendor);
 			vendorDTOs.add(vendorDTO);	
@@ -50,16 +53,24 @@ public class VendorServiceImpl extends CRUDServiceImpl<Vendor> implements Vendor
 	public VendorDTO getVendorById(long id) throws Exception {
 		// TODO Auto-generated method stub
 		Vendor vendor = vendorDao.getById(Vendor.class, id);
+		if(vendor==null){
+			return null;
+		}
 		VendorDTO vendorDTO = VendorFactory.setVendorList(vendor);
 		return vendorDTO;
 	}
 
 	@Override
-	public void deleteVendor(long id) throws Exception {
+	public VendorDTO deleteVendor(long id) throws Exception {
 		// TODO Auto-generated method stub
 		Vendor vendor = vendorDao.getById(Vendor.class, id);
+		if(vendor==null){
+			return null;
+		}
 		vendor.setIsactive(false);
 		vendorDao.update(vendor);
+		VendorDTO vendorDTO = VendorFactory.setVendorList(vendor);
+		return vendorDTO;
 	}
 
 }

@@ -97,14 +97,17 @@ public class VendorController {
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody VendorDTO getVendor(@PathVariable("id") long id) {
+	public @ResponseBody UserStatus getVendor(@PathVariable("id") long id) {
 		VendorDTO vendorDTO = null;
 		try {
 			vendorDTO = vendorService.getVendorById(id);
+			if(vendorDTO==null){
+				return new UserStatus(1,"There is no vendor");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return vendorDTO;
+		return new UserStatus(1,vendorDTO);
 	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
@@ -136,24 +139,30 @@ public class VendorController {
 	}
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<VendorDTO> getVendor() {
+	public @ResponseBody UserStatus getVendor() {
 
 		List<VendorDTO> vendorDTOs = null;
 		try {
 			vendorDTOs = vendorService.getVendorList(vendorDTOs);
+			if(vendorDTOs.isEmpty()){
+				return new UserStatus(1,"There is no vendor list");
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		return vendorDTOs;
+		return new UserStatus(1,vendorDTOs);
 	}
 
 	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus deleteVendor(@PathVariable("id") long id) {
 
 		try {
-			vendorService.deleteVendor(id);
+			VendorDTO vendorDTO = vendorService.deleteVendor(id);
+			if(vendorDTO==null){
+				return new UserStatus(1,"There is no any vendor for delete");
+			}
 			return new UserStatus(1, "Vendor deleted Successfully !");
 		} catch (Exception e) {
 			return new UserStatus(0, e.toString());

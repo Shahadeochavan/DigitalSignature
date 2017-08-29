@@ -37,6 +37,9 @@ public class ProductinventoryServiceImpl extends CRUDServiceImpl<Productinventor
 	public List<ProductInventoryDTO> getproductInventoryDTO() throws Exception {
 		List<ProductInventoryDTO> productInventoryDTOs = new ArrayList<ProductInventoryDTO>();
 		List<Productinventory> productinventories = productinventoryDao.getList(Productinventory.class);
+		if(productinventories==null){
+			return null;
+		}
 		for (Productinventory productinventory : productinventories) {
 			ProductInventoryDTO productInventoryDTO = ProductInventoryRequestResponseFactory.setProductDTO(productinventory);
 			productInventoryDTOs.add(productInventoryDTO);
@@ -47,14 +50,22 @@ public class ProductinventoryServiceImpl extends CRUDServiceImpl<Productinventor
 	@Override
 	public ProductInventoryDTO getProductInventory(long id) throws Exception {
 		Productinventory productinventory = productinventoryDao.getById(Productinventory.class, id);
+		if(productinventory==null){
+			return null;
+		}
 		ProductInventoryDTO productInventoryDTO = ProductInventoryRequestResponseFactory.setProductDTO(productinventory);
 		return productInventoryDTO;
 	}
 	@Override
-	public void deleteProductInventory(long id) throws Exception {
+	public ProductInventoryDTO deleteProductInventory(long id) throws Exception {
 		Productinventory productinventory = productinventoryDao.getById(Productinventory.class, id);
+		if(productinventory==null){
+			return null;
+		}
 		productinventory.setIsactive(false);
 		productinventoryDao.update(productinventory);
+		ProductInventoryDTO productInventoryDTO = ProductInventoryRequestResponseFactory.setProductDTO(productinventory);
+		return productInventoryDTO;
 		
 	}
 

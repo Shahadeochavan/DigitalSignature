@@ -20,6 +20,9 @@ public class UserTypeServiceImpl extends CRUDServiceImpl<Usertype> implements Us
 	public UserTypeDTO getUserTypeDto(long id) throws Exception {
 		// TODO Auto-generated method stub
 		Usertype usertype = userTypeDao.getById(Usertype.class, id);
+		if(usertype==null){
+			return null;
+		}
 		UserTypeDTO userTypeDTO = UserTypeFactory.setUserTypeDto(usertype);
 		return userTypeDTO;
 	}
@@ -28,6 +31,9 @@ public class UserTypeServiceImpl extends CRUDServiceImpl<Usertype> implements Us
 		// TODO Auto-generated method stub
 		List<UserTypeDTO> userTypeDTOs = new ArrayList<UserTypeDTO>();
 		List<Usertype> usertypes = userTypeDao.getList(Usertype.class);
+		if(usertypes.isEmpty()){
+			return null;
+		}
 		for (Usertype usertype : usertypes) {
 			UserTypeDTO userTypeDTO =  UserTypeFactory.setUserTypeDto(usertype);
 			userTypeDTOs.add(userTypeDTO);
@@ -35,11 +41,16 @@ public class UserTypeServiceImpl extends CRUDServiceImpl<Usertype> implements Us
 		return userTypeDTOs;
 	}
 	@Override
-	public void deleteUserType(long id) throws Exception {
+	public UserTypeDTO deleteUserType(long id) throws Exception {
 		// TODO Auto-generated method stub
 		Usertype usertype = userTypeDao.getById(Usertype.class, id);
+		if(usertype==null){
+			return null;
+		}
 		usertype.setIsactive(false);
 		userTypeDao.update(usertype);
+		UserTypeDTO userTypeDTO = UserTypeFactory.setUserTypeDto(usertype);
+		return userTypeDTO;
 		
 	}
 

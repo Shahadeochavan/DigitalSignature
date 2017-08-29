@@ -101,6 +101,9 @@ public class UserServiceImpl extends CRUDServiceImpl<User> implements UserServic
 		userDTOs = new ArrayList<UserDTO>();
 		List<User> userList = null;
 		userList = userdao.getList(User.class);
+		if(userList==null){
+			return null;
+		}
 		for (User user : userList) {
 			UserDTO userDTO = UserFactory.setUserList(user);
 			userDTOs.add(userDTO);
@@ -111,15 +114,23 @@ public class UserServiceImpl extends CRUDServiceImpl<User> implements UserServic
 	@Override
 	public UserDTO getUserDTO(long id) throws Exception {
 		User user = userdao.getById(User.class, id);
+		if(user==null){
+			return null;
+		}
 		UserDTO userDTO = UserFactory.setUserList(user);
 		return userDTO;
 	}
 
 	@Override
-	public void getUserDTOByid(long id) throws Exception {
+	public UserDTO getUserDTOByid(long id) throws Exception {
 		User user = userdao.getById(User.class, id);
+		if(user==null){
+			return null;
+		}
 		user.setIsactive(false);
 		userdao.update(user);
+		UserDTO userDTO = UserFactory.setUserList(user);
+		return userDTO;
 	}
 
 	@Override
@@ -158,24 +169,31 @@ public class UserServiceImpl extends CRUDServiceImpl<User> implements UserServic
 		List<User> userList = userdao.getMultipleUsersById(id);
 		//System.out.println(userList);
 		for (NotificationUserAssociatinsDTO notificationuserassociation : notificationUserAssociatinsDTOs) {
-			User user = userdao.getById(User.class, notificationuserassociation.getUserId().getId());
+			for (User user : userList) {
 			if (notificationuserassociation.getTo()) {
+				if(notificationuserassociation.getUserId().getId()==user.getId()){
 				stringBuilderTO.append(prefixTO);
 				prefixTO = ",";
 				stringBuilderTO.append(user.getEmail());
 				multipleTO = stringBuilderTO.toString();
+				}
 			} else if (notificationuserassociation.getBcc()) {
+				if(notificationuserassociation.getUserId().getId()==user.getId()){
 				stringBuilderBCC.append(prefixBCC);
 				prefixBCC = ",";
 				stringBuilderBCC.append(user.getEmail());
 				multipleBCC = stringBuilderBCC.toString();
+				}
 			} else if (notificationuserassociation.getCc()) {
+				if(notificationuserassociation.getUserId().getId()==user.getId()){
 				stringBuilderCC.append(prefixCC);
 				prefixCC = ",";
 				stringBuilderCC.append(user.getEmail());
 				multipleCC = stringBuilderCC.toString();
+				}
 			}
 		}
+		}	
 		mail.setMailTo(multipleTO);
 		mail.setMailBcc(multipleBCC);
 		mail.setMailCc(multipleCC);

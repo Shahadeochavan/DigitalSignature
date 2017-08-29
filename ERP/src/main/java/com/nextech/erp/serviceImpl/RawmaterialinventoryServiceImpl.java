@@ -21,6 +21,9 @@ public class RawmaterialinventoryServiceImpl extends CRUDServiceImpl<Rawmaterial
 	@Override
 	public RMInventoryDTO getByRMId(long id) throws Exception {
 		Rawmaterialinventory rawmaterialinventory = rawmaterialinventoryDao.getByRMId(id);
+		if(rawmaterialinventory==null){
+			return null;
+		}
 		RMInventoryDTO rmInventoryDTO = RMInventoryRequestResponseFactory.setRMInvetoryDTO(rawmaterialinventory);
 		return rmInventoryDTO;
 	}
@@ -29,6 +32,9 @@ public class RawmaterialinventoryServiceImpl extends CRUDServiceImpl<Rawmaterial
 	public RMInventoryDTO getRMInventoryById(long id) throws Exception {
 		// TODO Auto-generated method stub
 		Rawmaterialinventory rmRawmaterialinventory = rawmaterialinventoryDao.getById(Rawmaterialinventory.class, id);
+		if(rmRawmaterialinventory==null){
+			return null;
+		}
 		RMInventoryDTO rmInventoryDTO = RMInventoryRequestResponseFactory.setRMInvetoryDTO(rmRawmaterialinventory);
 		return rmInventoryDTO;
 	}
@@ -38,6 +44,9 @@ public class RawmaterialinventoryServiceImpl extends CRUDServiceImpl<Rawmaterial
 		// TODO Auto-generated method stub
 		List<RMInventoryDTO> rmInventoryDTOs =  new ArrayList<RMInventoryDTO>();
 		List<Rawmaterialinventory> rawmaterialinventories= rawmaterialinventoryDao.getList(Rawmaterialinventory.class);
+		if(rawmaterialinventories==null){
+			return null;
+		}
 		for (Rawmaterialinventory rawmaterialinventory : rawmaterialinventories) {
 			RMInventoryDTO rmInventoryDTO = RMInventoryRequestResponseFactory.setRMInvetoryDTO(rawmaterialinventory);
 			rmInventoryDTOs.add(rmInventoryDTO);
@@ -46,11 +55,16 @@ public class RawmaterialinventoryServiceImpl extends CRUDServiceImpl<Rawmaterial
 	}
 
 	@Override
-	public void deleteRMInventory(long id) throws Exception {
+	public RMInventoryDTO deleteRMInventory(long id) throws Exception {
 		// TODO Auto-generated method stub
 		Rawmaterialinventory rmRawmaterialinventory = rawmaterialinventoryDao.getById(Rawmaterialinventory.class, id);
+		if(rmRawmaterialinventory==null){
+			return null;
+		}
 		rmRawmaterialinventory.setIsactive(false);
 		rawmaterialinventoryDao.update(rmRawmaterialinventory);
+		RMInventoryDTO rmInventoryDTO = RMInventoryRequestResponseFactory.setRMInvetoryDTO(rmRawmaterialinventory);
+		return rmInventoryDTO;
 		
 	}
 

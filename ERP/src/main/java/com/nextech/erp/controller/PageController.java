@@ -56,14 +56,17 @@ public class PageController {
 	}
 
 	@Transactional @RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody PageDTO getPage(@PathVariable("id") long id) {
+	public @ResponseBody UserStatus getPage(@PathVariable("id") long id) {
 		PageDTO pageDTO = null;
 		try {
 			pageDTO = pageservice.getPageDTOById(id);
+			if(pageDTO==null){
+				return new UserStatus(1,"There is no any page");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return pageDTO;
+		return new UserStatus(1,pageDTO);
 	}
 
 	@Transactional @RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
@@ -79,24 +82,30 @@ public class PageController {
 	}
 
 	@Transactional @RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<PageDTO> getPage() {
+	public @ResponseBody UserStatus getPage() {
 
-		List<PageDTO> PageList = null;
+		List<PageDTO> pageList = null;
 		try {
-			PageList = pageservice.getPageDTOList(PageList);
+			pageList = pageservice.getPageDTOList(pageList);
+			if(pageList.isEmpty()){
+				return new UserStatus(1,"There is no any page list");
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		return PageList;
+		return new UserStatus(1,pageList);
 	}
 
 	@Transactional @RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus deletePage(@PathVariable("id") long id) {
 
 		try {
-			 pageservice.deletePageById(id);
+			PageDTO pageDTO= pageservice.deletePageById(id);
+			if(pageDTO==null){
+				return  new UserStatus(1,"There is no any page");
+			}
 			return new UserStatus(1, "Page deleted Successfully !");
 		} catch (Exception e) {
 			return new UserStatus(0, e.toString());

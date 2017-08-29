@@ -15,6 +15,6 @@ public interface ProductinventoryService extends CRUDService<Productinventory>{
 	
 	public ProductInventoryDTO  getProductInventory(long id) throws Exception;
 	
-	public void deleteProductInventory(long id)throws Exception;
+	public ProductInventoryDTO deleteProductInventory(long id)throws Exception;
 	
 }

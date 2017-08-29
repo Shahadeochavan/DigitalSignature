@@ -86,14 +86,17 @@ public class RawmaterialController {
 		}
 	}
 	@Transactional @RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody RawMaterialDTO getRawmaterial(@PathVariable("id") long id) {
+	public @ResponseBody UserStatus getRawmaterial(@PathVariable("id") long id) {
 		RawMaterialDTO rawmaterial = null;
 		try {
 			rawmaterial = rawmaterialService.getRMDTO(id);
+			if(rawmaterial==null){
+				return new UserStatus(1,"There is no any rm");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return rawmaterial;
+		return new UserStatus(1,rawmaterial);
 	}
 
 	@Transactional @RequestMapping(value = "/update",headers = "Content-Type=*/*", method = RequestMethod.POST)
@@ -127,20 +130,26 @@ public class RawmaterialController {
 	}
 
 	@Transactional @RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<RawMaterialDTO> getRawmaterial() {
+	public @ResponseBody UserStatus getRawmaterial() {
 		List<RawMaterialDTO> rawmaterialList = null;
 		try {
 			rawmaterialList = rawmaterialService.getRMList();
+			if (rawmaterialList.isEmpty()) {
+				return  new UserStatus(1,"There is no any rm list");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return rawmaterialList;
+		return new UserStatus(1,rawmaterialList);
 	}
 
 	@Transactional @RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus deleteRawmaterial(@PathVariable("id") long id) {
 		try {
-			rawmaterialService.deleteRM(id);
+			RawMaterialDTO rawMaterialDTO =rawmaterialService.deleteRM(id);
+			if(rawMaterialDTO==null){
+				return new UserStatus(1,"There is no any rm");
+			}
 			return new UserStatus(1, messageSource.getMessage(ERPConstants.RAW_MATERAIL_DELETE, null, null));
 		} catch (Exception e) {
 			return new UserStatus(0, e.toString());
@@ -148,25 +157,32 @@ public class RawmaterialController {
 	}
 
 	@Transactional @RequestMapping(value = "/getRMaterial/{VendorId}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<RMVendorAssociationDTO> getRawmaterialForVendor(@PathVariable("VendorId") long id) {
+	public @ResponseBody UserStatus getRawmaterialForVendor(@PathVariable("VendorId") long id) {
 		List<RMVendorAssociationDTO> rawmaterialvendorassociationList = null;
 		try {
 			rawmaterialvendorassociationList = rawmaterialService.getRawmaterialByVenodrId(id);
+			if(rawmaterialvendorassociationList.isEmpty()){
+				return  new UserStatus(1,"There is no any rm assocition list");
+			}
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return rawmaterialvendorassociationList;
+		return new UserStatus(1,rawmaterialvendorassociationList);
 	}
 
 	@Transactional @RequestMapping(value = "/getRMForRMOrder/{RMOrderId}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<RawMaterialDTO> getRawmaterialForRMOrder(@PathVariable("RMOrderId") long id) {
+	public @ResponseBody UserStatus getRawmaterialForRMOrder(@PathVariable("RMOrderId") long id) {
 		List<RawMaterialDTO> rawmaterialList = null;
 		try {
 			rawmaterialList = rawmaterialService.getRawMaterialByRMOrderId(id);
+			if(rawmaterialList.isEmpty()){
+				return  new UserStatus(1,"There is no any rm list");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return rawmaterialList;
+		return new UserStatus(1,rawmaterialList);
 	}
 
 	private void addRMInventory(RawMaterialDTO rawMaterialDTO,long userId) throws Exception{
@@ -174,14 +190,17 @@ public class RawmaterialController {
 	}
 	
 	@Transactional @RequestMapping(value = "/getRMaterialList/{RMTypeId}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<RawMaterialDTO> getRawmaterialForRMType(@PathVariable("RMTypeId") long id) {
+	public @ResponseBody UserStatus getRawmaterialForRMType(@PathVariable("RMTypeId") long id) {
 		List<RawMaterialDTO> rawmaterialList = null;
 		try {
 			rawmaterialList = rawmaterialService.getRMByRMTypeId(id);
+			if(rawmaterialList.isEmpty()){
+				return new UserStatus(1,"There is no any rm list");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return rawmaterialList;
+		return new UserStatus(1,rawmaterialList);
 	}
 	@Transactional @RequestMapping(value = "/image/{RM-ID}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody ResponseEntity<byte[]> getRawmaterailImage(@PathVariable("RM-ID") long id,HttpServletRequest request){

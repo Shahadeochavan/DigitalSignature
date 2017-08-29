@@ -88,14 +88,17 @@ public class QualityCheckGuidelineController {
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody Qualitycheckguideline getQualityCheckGuidline(@PathVariable("id") long id) {
+	public @ResponseBody UserStatus getQualityCheckGuidline(@PathVariable("id") long id) {
 		Qualitycheckguideline qualitycheckguideline = null;
 		try {
 			qualitycheckguideline = qualityCheckGuidelineService.getEntityById(Qualitycheckguideline.class, id);
+			if(qualitycheckguideline == null){
+				return new UserStatus(1,"There is no qc guidlines for this id");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return qualitycheckguideline;
+		return new UserStatus(1,qualitycheckguideline);
 	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
@@ -110,36 +113,40 @@ public class QualityCheckGuidelineController {
 	}
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<QualitycheckguidelineDTO> getQualityCheckGuidline() {
+	public @ResponseBody UserStatus getQualityCheckGuidline() {
 
 		List<Qualitycheckguideline> qualitycheckguidelines = null;
 		List<QualitycheckguidelineDTO> qualitycheckguidelineDTOs =  new ArrayList<QualitycheckguidelineDTO>();
 		try {
 			qualitycheckguidelines = qualityCheckGuidelineService.getEntityList(Qualitycheckguideline.class);
+			if(qualitycheckguidelines != null && !qualitycheckguidelines.isEmpty()){
 			for (Qualitycheckguideline qualitycheckguideline : qualitycheckguidelines) {
 				QualitycheckguidelineDTO qualitycheckguidelineDTO = new QualitycheckguidelineDTO();
+				qualitycheckguidelineDTO.setGuidelines(qualitycheckguideline.getGuidelines());
+				qualitycheckguidelineDTO.setActive(true);
 				if(qualitycheckguideline.getProductId()>0){
 					Product product = productService.getEntityById(Product.class, qualitycheckguideline.getProductId());
 					qualitycheckguidelineDTO.setProductPartNumber(product.getPartNumber());
 					qualitycheckguidelineDTO.setId(qualitycheckguideline.getId());
-					qualitycheckguidelineDTO.setGuidelines(qualitycheckguideline.getGuidelines());
 					qualitycheckguidelineDTO.setProductId(qualitycheckguideline.getProductId());
 					qualitycheckguidelineDTOs.add(qualitycheckguidelineDTO);
 				}else if(qualitycheckguideline.getRawMaterialId()>0){
 					Rawmaterial rawmaterial =  rawmaterialService.getEntityById(Rawmaterial.class, qualitycheckguideline.getRawMaterialId());
 					qualitycheckguidelineDTO.setRmPartNumber(rawmaterial.getPartNumber());
 					qualitycheckguidelineDTO.setId(qualitycheckguideline.getId());
-					qualitycheckguidelineDTO.setGuidelines(qualitycheckguideline.getGuidelines());
-					qualitycheckguidelineDTO.setProductId(qualitycheckguideline.getRawMaterialId());
+					qualitycheckguidelineDTO.setRawMaterialId(qualitycheckguideline.getRawMaterialId());
 					qualitycheckguidelineDTOs.add(qualitycheckguidelineDTO);
 				}
+			}
+			}else{
+				return new UserStatus(1,"There is no quality check guidlines list");
 			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		return qualitycheckguidelineDTOs;
+		return new UserStatus(1,qualitycheckguidelineDTOs);
 	}
 
 	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
@@ -147,6 +154,9 @@ public class QualityCheckGuidelineController {
 		Qualitycheckguideline qualitycheckguideline = null;
 		try {
 			qualitycheckguideline = qualityCheckGuidelineService.getEntityById(Qualitycheckguideline.class, id);
+			if(qualitycheckguideline==null){
+				return new UserStatus(1,"There is no qc guidlines for delete");
+			}
 			qualitycheckguideline.setIsactive(false);
 			qualityCheckGuidelineService.updateEntity(qualitycheckguideline);
 			

@@ -62,6 +62,7 @@ public class RMRequestResponseFactory {
 		rawMaterialDTO.setCreatedDate(rawmaterial.getCreatedDate());
 		rawMaterialDTO.setUpdatedBy(rawmaterial.getUpdatedBy());
 		rawMaterialDTO.setUpdatedDate(rawmaterial.getUpdatedDate());
+		rawMaterialDTO.setDesign(rawmaterial.getDesign());
 		return rawMaterialDTO;
 	}
 

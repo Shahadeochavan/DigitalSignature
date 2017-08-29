@@ -32,6 +32,9 @@ public class NotificationServiceImpl extends CRUDServiceImpl<Notification> imple
 		// TODO Auto-generated method stub
 		notificationDTOs =  new ArrayList<NotificationDTO>();
 		List<Notification> notifications = notificationDao.getList(Notification.class);
+		if(notifications.isEmpty()){
+			return null;
+		}
 		for (Notification notification : notifications) {
 			NotificationDTO notificationDTO = NotificationRequestResponseFactory.setNotificationDTO(notification);
 			notificationDTOs.add(notificationDTO);
@@ -43,16 +46,24 @@ public class NotificationServiceImpl extends CRUDServiceImpl<Notification> imple
 	public NotificationDTO getNotificationDTOById(long id) throws Exception {
 		// TODO Auto-generated method stub
 		Notification notification = notificationDao.getById(Notification.class, id);
+		if(notification==null){
+			return null;
+		}
 		NotificationDTO notificationDTO = NotificationRequestResponseFactory.setNotificationDTO(notification);
 		return notificationDTO;
 	}
 
 	@Override
-	public void deleteNofificationById(long id) throws Exception {
+	public NotificationDTO deleteNofificationById(long id) throws Exception {
 		// TODO Auto-generated method stub
 		Notification notification = notificationDao.getById(Notification.class, id);
+		if(notification==null){
+			return null;
+		}
 		notification.setIsactive(false);
 		notificationDao.update(notification);
+		NotificationDTO notificationDTO = NotificationRequestResponseFactory.setNotificationDTO(notification);
+		return notificationDTO;
 	}
 
 	@Override

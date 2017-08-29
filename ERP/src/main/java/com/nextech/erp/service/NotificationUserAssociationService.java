@@ -19,6 +19,6 @@ public interface NotificationUserAssociationService extends CRUDService<Notifica
 	
 	public NotificationUserAssociatinsDTO getNotificationUserById(long id) throws Exception;
 	
-	public void deleteNotificationUserAsso(long id) throws Exception;
+	public NotificationUserAssociatinsDTO deleteNotificationUserAsso(long id) throws Exception;
 
 }

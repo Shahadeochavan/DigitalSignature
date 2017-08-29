@@ -15,6 +15,6 @@ public interface RawmaterialorderassociationService extends
 	
 	public List<RMOrderAssociationDTO> getRMOrderAssoList() throws Exception;
 	
-	public void deleteRMOrderAsso(long id)throws Exception;
+	public RMOrderAssociationDTO deleteRMOrderAsso(long id)throws Exception;
 
 }

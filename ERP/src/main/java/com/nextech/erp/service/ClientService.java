@@ -15,5 +15,5 @@ public interface ClientService extends CRUDService<Client>{
 	
 	public ClientDTO  getClientDTOById(long id) throws Exception;
 	
-	public void deleteClient(long id) throws Exception;
+	public ClientDTO deleteClient(long id) throws Exception;
 }

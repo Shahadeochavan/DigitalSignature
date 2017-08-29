@@ -25,7 +25,7 @@ public interface ProductorderService extends CRUDService<Productorder>{
 	
 	public ProductOrderDTO getProductById(long id) throws Exception;
 	
-	public void deleteProductOrder(long id) throws Exception;
+	public ProductOrderDTO deleteProductOrder(long id) throws Exception;
 	
 	public List<ProductOrderData> createProductorderAsso(ProductOrderDTO productOrderDTO,HttpServletRequest request) throws Exception;
 }

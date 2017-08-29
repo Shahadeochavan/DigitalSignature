@@ -57,6 +57,9 @@ public class NotificationUserAssociationServiceImpl extends CRUDServiceImpl<Noti
 		// TODO Auto-generated method stub
 		List<NotificationUserAssociatinsDTO> notificationUserAssociatinsDTOs = new ArrayList<NotificationUserAssociatinsDTO>();
 		List<Notificationuserassociation> notificationuserassociations = notificationUserassociationDao.getList(Notificationuserassociation.class);
+		if (notificationuserassociations.isEmpty()) {
+			return null;
+		}
 		for (Notificationuserassociation notificationuserassociation : notificationuserassociations) {
 			NotificationUserAssociatinsDTO notificationUserAssociatinsDTO = NotificationUserAssRequestResponseFactory.setNotifiactionDTO(notificationuserassociation);
 			notificationUserAssociatinsDTOs.add(notificationUserAssociatinsDTO);
@@ -69,16 +72,24 @@ public class NotificationUserAssociationServiceImpl extends CRUDServiceImpl<Noti
 			throws Exception {
 		// TODO Auto-generated method stub
 		Notificationuserassociation notificationuserassociation = notificationUserassociationDao.getById(Notificationuserassociation.class, id);
+		if (notificationuserassociation==null) {
+			return null;
+		}
 		NotificationUserAssociatinsDTO notificationUserAssociatinsDTO = NotificationUserAssRequestResponseFactory.setNotifiactionDTO(notificationuserassociation);
 		return notificationUserAssociatinsDTO;
 	}
 
 	@Override
-	public void deleteNotificationUserAsso(long id) throws Exception {
+	public NotificationUserAssociatinsDTO deleteNotificationUserAsso(long id) throws Exception {
 		// TODO Auto-generated method stub
 		Notificationuserassociation notificationuserassociation = notificationUserassociationDao.getById(Notificationuserassociation.class, id);
+		if (notificationuserassociation==null) {
+			return null;
+		}
 		notificationuserassociation.setIsactive(false);
 		notificationUserassociationDao.update(notificationuserassociation);
+		NotificationUserAssociatinsDTO notificationUserAssociatinsDTO = NotificationUserAssRequestResponseFactory.setNotifiactionDTO(notificationuserassociation);
+		return notificationUserAssociatinsDTO;
 		
 	}
 

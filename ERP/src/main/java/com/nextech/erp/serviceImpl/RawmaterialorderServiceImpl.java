@@ -42,6 +42,9 @@ public class RawmaterialorderServiceImpl extends CRUDServiceImpl<Rawmaterialorde
 		// TODO Auto-generated method stub
 		List<RawmaterialOrderDTO> rawmaterialOrderDTOs = new ArrayList<RawmaterialOrderDTO>();
 		List<Rawmaterialorder> rawmaterialorders = rawmaterialorderDao.getRawmaterialorderByStatusId(statusId,statusId1,statusId2);
+		if(rawmaterialorders.isEmpty()){
+			return null;
+		}
 		for (Rawmaterialorder rawmaterialorder : rawmaterialorders) {
 			RawmaterialOrderDTO rawmaterialOrderDTO = RMOrderRequestResponseFactory.setRMOrderDTO(rawmaterialorder);
 			rawmaterialOrderDTOs.add(rawmaterialOrderDTO);

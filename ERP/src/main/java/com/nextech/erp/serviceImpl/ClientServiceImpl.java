@@ -33,6 +33,9 @@ public class ClientServiceImpl extends CRUDServiceImpl<Client> implements Client
 		// TODO Auto-generated method stub
 		clientDTOs =  new ArrayList<ClientDTO>();
 		List<Client> clList = clientDao.getList(Client.class);
+		if(clList.isEmpty()){
+			return null;
+		}
 		for (Client client : clList) {
 			ClientDTO clientDTO = ClientFactory.setClientDTO(client);
 			clientDTOs.add(clientDTO);
@@ -44,16 +47,24 @@ public class ClientServiceImpl extends CRUDServiceImpl<Client> implements Client
 	public ClientDTO getClientDTOById(long id) throws Exception {
 		// TODO Auto-generated method stub
 		Client client = clientDao.getById(Client.class, id);
+		if(client ==null){
+			return null;
+		}
 		ClientDTO clientDTO = ClientFactory.setClientDTO(client);
 		return clientDTO;
 	}
 
 	@Override
-	public void deleteClient(long id) throws Exception {
+	public ClientDTO deleteClient(long id) throws Exception {
 		// TODO Auto-generated method stub
 		Client client = clientDao.getById(Client.class, id);
+		if(client ==null){
+			return null;
+		}
 		client.setIsactive(false);
 		clientDao.update(client);
+		ClientDTO clientDTO = ClientFactory.setClientDTO(client);
+		return clientDTO;
 		
 	}
 }

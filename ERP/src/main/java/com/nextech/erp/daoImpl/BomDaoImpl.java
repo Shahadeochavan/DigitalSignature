@@ -49,9 +49,9 @@ public class BomDaoImpl extends SuperDaoImpl<Bom> implements BomDao{
 	public List<Long> getProductList() {
 		// TODO Auto-generated method stub
 		
+		session = sessionFactory.openSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Productrawmaterialassociation.class);
-		
 		criteria.setProjection(Projections.distinct(Projections.property("product.id")));
 		criteria.add(Restrictions.eq("isactive", true));
 		return (List<Long>) (criteria.list().size() > 0 ? criteria.list() : null);

@@ -66,11 +66,16 @@ public class UsertypepageassociationServiceImpl extends CRUDServiceImpl<Usertype
 	}
 
 	@Override
-	public void deleteUserTypePage(long id) throws Exception {
+	public UserTypePageAssoDTO deleteUserTypePage(long id) throws Exception {
 		// TODO Auto-generated method stub
 		Usertypepageassociation usertypepageassociation = usertypepageassociationDao.getById(Usertypepageassociation.class, id);
+		if(usertypepageassociation==null){
+			return null;
+		}
 		usertypepageassociation.setIsactive(false);
 		usertypepageassociationDao.update(usertypepageassociation);
+		UserTypePageAssoDTO userTypePageAssoDTO = UserTypePageAssoFactory.setUserTypePageDTO(usertypepageassociation);
+		return userTypePageAssoDTO;
 		
 	}
 

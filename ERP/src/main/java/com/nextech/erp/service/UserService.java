@@ -31,7 +31,7 @@ public interface UserService extends CRUDService<User>{
 	
 	public UserDTO getUserDTO(long id) throws Exception;
 	
-	public void getUserDTOByid(long id)throws Exception;
+	public UserDTO getUserDTOByid(long id)throws Exception;
 	
 	public UserDTO getUserDTOByUserId(String userId) throws Exception;
 	

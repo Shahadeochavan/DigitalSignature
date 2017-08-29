@@ -61,15 +61,18 @@ public class RawmaterialorderassociationController {
 	}
 
 	@Transactional @RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody RMOrderAssociationDTO getRawmaterialorderassociation(
+	public @ResponseBody UserStatus getRawmaterialorderassociation(
 			@PathVariable("id") long id) {
 		RMOrderAssociationDTO rawmaterialorderassociation = null;
 		try {
 			rawmaterialorderassociation = rawmaterialorderassociationService.getRMOrderAssoById(id);
+			if (rawmaterialorderassociation==null) {
+				return new UserStatus(1,"There is no rm association");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return rawmaterialorderassociation;
+		return new UserStatus(1,rawmaterialorderassociation);
 	}
 
 	@Transactional @RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
@@ -85,15 +88,18 @@ public class RawmaterialorderassociationController {
 	}
 
 	@Transactional @RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<RMOrderAssociationDTO> getRawmaterialorderassociation() {
+	public @ResponseBody UserStatus  getRawmaterialorderassociation() {
 
 		List<RMOrderAssociationDTO> rawmaterialorderassociationList = null;
 		try {
 			rawmaterialorderassociationList = rawmaterialorderassociationService.getRMOrderAssoList();
+			if(rawmaterialorderassociationList.isEmpty()){
+				return new UserStatus(1,"There is no any rm assocition list");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return rawmaterialorderassociationList;
+		return new UserStatus(1,rawmaterialorderassociationList);
 	}
 
 	@Transactional @RequestMapping(value = "getRMForRMOrder/{RMOrderId}", method = RequestMethod.GET, headers = "Accept=application/json")
@@ -119,7 +125,10 @@ public class RawmaterialorderassociationController {
 	public @ResponseBody UserStatus deleteRawmaterialorderassociation(
 			@PathVariable("id") long id) {
 		try {
-			rawmaterialorderassociationService.deleteRMOrderAsso(id);
+			RMOrderAssociationDTO rawAssociationDTO = 	rawmaterialorderassociationService.deleteRMOrderAsso(id);
+			if(rawAssociationDTO==null){
+				return new UserStatus(1,"There is no rm association");
+			}
 			return new UserStatus(1,
 					"Rawmaterialorderassociation deleted Successfully !");
 		} catch (Exception e) {

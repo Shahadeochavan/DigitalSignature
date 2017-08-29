@@ -59,14 +59,17 @@ public class NotificationController {
 	}
 
 	@Transactional @RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody NotificationDTO getNotification(@PathVariable("id") long id) {
+	public @ResponseBody UserStatus getNotification(@PathVariable("id") long id) {
 		NotificationDTO notification = null;
 		try {
 			notification = notificationservice.getNotificationDTOById(id);
+			if(notification==null){
+				return  new UserStatus(1,"There is no any notification");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return notification;
+		return new UserStatus(1,notification);
 	}
 
 	@Transactional @RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
@@ -83,24 +86,30 @@ public class NotificationController {
 	}
 
 	@Transactional @RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<NotificationDTO> getNotification() {
+	public @ResponseBody UserStatus getNotification() {
 
 		List<NotificationDTO> notificationList = null;
 		try {
 			notificationList = notificationservice.getNofificationList(notificationList);
+			if(notificationList.isEmpty()){
+				return new UserStatus(1,"There is no any list");
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		return notificationList;
+		return new UserStatus(1,notificationList);
 	}
 
 	@Transactional @RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus deleteNotification(@PathVariable("id") long id) {
 
 		try {
-			notificationservice.deleteNofificationById(id);
+			NotificationDTO notificationDTO =notificationservice.deleteNofificationById(id);
+			if(notificationDTO==null){
+				return  new UserStatus(1,"There is no any notification for delete");
+			}
 			return new UserStatus(1, "Notification deleted Successfully !");
 		} catch (Exception e) {
 			return new UserStatus(0, e.toString());

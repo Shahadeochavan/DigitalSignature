@@ -99,14 +99,17 @@ public class ClientController {
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody ClientDTO getClient(@PathVariable("id") long id) {
+	public @ResponseBody UserStatus getClient(@PathVariable("id") long id) {
 		ClientDTO clientDTO = null;
 		try {
 			clientDTO = clientService.getClientDTOById(id);
+			if(clientDTO==null){
+				return new UserStatus(1,"Thare is no client");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return clientDTO;
+		return new UserStatus(1,clientDTO);
 	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
@@ -142,24 +145,30 @@ public class ClientController {
 	}
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<ClientDTO> getClient() {
+	public @ResponseBody UserStatus getClient() {
 
 		List<ClientDTO> clientList = null;
 		try {
 			clientList = clientService.getClientList(clientList);
+			if(clientList.isEmpty()){
+				return new UserStatus(1,"There is no client list");
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		return clientList;
+		return new UserStatus(1,clientList);
 	}
 
 	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus deleteClient(@PathVariable("id") long id) {
 
 		try {
-		    clientService.deleteClient(id);
+			ClientDTO clientDTO =clientService.deleteClient(id);
+			if(clientDTO==null){
+				return new UserStatus(1,"There is no client for delete");
+			}
 			return new UserStatus(1, messageSource.getMessage(
 					ERPConstants.CLIENT_DELETE, null, null));
 		} catch (Exception e) {

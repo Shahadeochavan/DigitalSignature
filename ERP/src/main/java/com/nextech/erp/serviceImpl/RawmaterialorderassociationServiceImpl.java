@@ -57,11 +57,16 @@ public class RawmaterialorderassociationServiceImpl extends CRUDServiceImpl<Rawm
 	}
 
 	@Override
-	public void deleteRMOrderAsso(long id) throws Exception {
+	public RMOrderAssociationDTO deleteRMOrderAsso(long id) throws Exception {
 		// TODO Auto-generated method stub
 		Rawmaterialorderassociation rawmaterialorderassociation = rawmaterialorderassociationDao.getById(Rawmaterialorderassociation.class, id);
+		if(rawmaterialorderassociation==null){
+			return null;
+		}
 		rawmaterialorderassociation.setIsactive(false);
 		rawmaterialorderassociationDao.update(rawmaterialorderassociation);
+		RMOrderAssociationDTO rmOrderAssociationDTO = RMOrderAssociationRequestResponseFactory.setRMOrderDTO(rawmaterialorderassociation);
+		return rmOrderAssociationDTO;
 	}
 
 }

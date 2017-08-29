@@ -97,14 +97,17 @@ public class ProductinventoryController {
 	}
 
 	@Transactional @RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody ProductInventoryDTO getProductinventory(@PathVariable("id") long id) {
+	public @ResponseBody UserStatus getProductinventory(@PathVariable("id") long id) {
 		ProductInventoryDTO productinventory = null;
 		try {
 			productinventory = productinventoryService.getProductInventory(id);
+			if(productinventory==null){
+				return new UserStatus(1,"There is no any product inventory");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return productinventory;
+		return new UserStatus(1,productinventory);
 	}
 
 	@Transactional @RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
@@ -141,7 +144,10 @@ public class ProductinventoryController {
 	public @ResponseBody UserStatus deleteProductinventory(@PathVariable("id") long id) {
 
 		try {
-			productinventoryService.deleteProductInventory(id);
+			ProductInventoryDTO productInventoryDTO = productinventoryService.deleteProductInventory(id);
+			if (productInventoryDTO==null) {
+				return new UserStatus(1,"There is no any product Inventory");
+			}
 			return new UserStatus(1, "Productinventory deleted Successfully !");
 		} catch (Exception e) {
 			return new UserStatus(0, e.toString());

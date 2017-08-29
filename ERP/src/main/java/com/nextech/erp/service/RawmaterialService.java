@@ -18,7 +18,7 @@ public interface RawmaterialService extends CRUDService<Rawmaterial>{
 	
 	public RawMaterialDTO  getRMDTO(long id) throws Exception;
 	
-	public void deleteRM(long id) throws Exception;
+	public RawMaterialDTO deleteRM(long id) throws Exception;
 	
 	List<RawMaterialDTO> getRMByRMTypeId(long id) throws Exception;
 	

@@ -13,7 +13,7 @@ public interface NotificationService extends CRUDService<Notification>{
 	
 	public NotificationDTO getNotificationDTOById(long id) throws Exception;
 	
-	public void deleteNofificationById(long id) throws Exception;
+	public NotificationDTO deleteNofificationById(long id) throws Exception;
 	
 	public NotificationDTO getNotificationByCode(String code)throws Exception;
 
