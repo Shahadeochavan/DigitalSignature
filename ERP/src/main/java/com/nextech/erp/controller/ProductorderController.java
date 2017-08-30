@@ -56,6 +56,7 @@ import com.nextech.erp.service.RawmaterialService;
 import com.nextech.erp.service.RawmaterialinventoryService;
 import com.nextech.erp.service.StatusService;
 import com.nextech.erp.service.UserService;
+import com.nextech.erp.status.Response;
 import com.nextech.erp.status.UserStatus;
 
 @Controller
@@ -170,21 +171,21 @@ public class ProductorderController {
 	}
 
 	@Transactional @RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody UserStatus getProductorder(@PathVariable("id") long id) {
+	public @ResponseBody Response getProductorder(@PathVariable("id") long id) {
 		ProductOrderDTO productorder = null;
 		try {
 			productorder = productorderService.getProductById(id);
 			if(productorder==null){
-				return new UserStatus(1,"There is no product order");
+				return new Response(1,"There is no product order");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return new UserStatus(1,productorder);
+		return new Response(1,productorder);
 	}
 
 	@Transactional @RequestMapping(value = "productorderId/{orderId}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody UserStatus getProductOrder(
+	public @ResponseBody Response getProductOrder(
 			@PathVariable("orderId") long id) {
 		List<ProductOrderAssociationDTO> productorderassociations = null;
 		try {
@@ -195,7 +196,7 @@ public class ProductorderController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return new UserStatus(1,productorderassociations);
+		return new Response(1,productorderassociations);
 	}
 
 	@Transactional @RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
@@ -211,60 +212,63 @@ public class ProductorderController {
 	}
 
 	@Transactional @RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody UserStatus getProductorder() {
+	public @ResponseBody Response getProductorder() {
 		List<ProductOrderDTO> productorderList = null;
 		try {
 			productorderList = productorderService.getProductOrderList();
-			if(productorderList.isEmpty()){
-				return new UserStatus(1,"There is no product order list");
+			if(productorderList==null){
+				return new Response(1,"There is no product order list");
 			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return new UserStatus(1,productorderList);
+		return new Response(1,productorderList);
 	}
 
 	@Transactional @RequestMapping(value = "/pendingList", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody UserStatus getPendingsProductorders() {
+	public @ResponseBody Response getPendingsProductorders() {
 		List<ProductOrderDTO> productorderList = null;
 		try {
 			// TODO afterwards you need to change it from properties.
 			productorderList = productorderService.getPendingProductOrders(Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_NEW_PRODUCT_ORDER, null, null)),
 					Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_PRODUCT_ORDER_INCOMPLETE, null, null)));
+			if(productorderList==null){
+				return new Response(1,"There is no any pending list");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return new UserStatus(1,productorderList);
+		return new Response(1,productorderList);
 	}
 
 	@Transactional @RequestMapping(value = "incompleteProductOrder/{CLIENT-ID}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody UserStatus getInCompleteProductOrder(@PathVariable("CLIENT-ID") long clientId) {
+	public @ResponseBody Response getInCompleteProductOrder(@PathVariable("CLIENT-ID") long clientId) {
 		List<ProductOrderDTO> productorderList = null;
 		try {
 			// TODO afterwards you need to change it from properties.
 			productorderList = productorderService.getInCompleteProductOrder(clientId,Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_PRODUCT_ORDER_INCOMPLETE, null, null)),
 			Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_PRODUCT_ORDER_COMPLETE, null, null)));
-			if(productorderList.isEmpty()){
-				return new UserStatus(1,"There is no product order");
+			if(productorderList==null){
+				return new Response(1,"There is no product order");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return new UserStatus(1,productorderList);
+		return new Response(1,productorderList);
 	}
 
 	@Transactional @RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus deleteProductorder(
+	public @ResponseBody Response deleteProductorder(
 			@PathVariable("id") long id) {
 		try {
 		ProductOrderDTO  productOrderDTO =	productorderService.deleteProductOrder(id);
 		if(productOrderDTO==null){
-			return  new UserStatus(1,"There is no product order");
+			return  new Response(1,"There is no product order");
 		}
-			return new UserStatus(1, "Product Order deleted Successfully !");
+			return new Response(1, "Product Order deleted Successfully !");
 		} catch (Exception e) {
-			return new UserStatus(0, e.toString());
+			return new Response(0, e.toString());
 		}
 	}
 

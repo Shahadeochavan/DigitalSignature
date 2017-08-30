@@ -17,6 +17,6 @@ public interface RMVAssoService extends CRUDService<Rawmaterialvendorassociation
 	
 	public RMVendorAssociationDTO  getRMVendor(long id) throws Exception;
 	
-	public void deleteRMVendor(long id)throws Exception;
+	public RMVendorAssociationDTO deleteRMVendor(long id)throws Exception;
 	
 }

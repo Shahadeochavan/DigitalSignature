@@ -153,12 +153,9 @@ public class ProductRMAssoController {
 		try {
 			List<ProductRMAssociationDTO> productrawmaterialassociations = productRMAssoService.getProductRMAssoList(productRMAssociationDTO.getProduct());
 			for(ProductRMAssociationDTO productrawmaterialassociation : productrawmaterialassociations){
-				//Remove all Product RM Associations
-				//productRMAssoService.deleteEntity(Productrawmaterialassociation.class, productrawmaterialassociation.getId());
 				deleteProductrawmaterialassociation(productrawmaterialassociation.getId());
 			}
 			productRMAssoService.addMultipleRawmaterialorder(productRMAssociationDTO, request.getAttribute("current_user").toString());
-			//createMultipleRMAssociations(productRMAssociationModel, request.getAttribute("current_user").toString());
 			return new UserStatus(1,"Productrawmaterialassociation update Successfully !");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -187,11 +184,8 @@ public class ProductRMAssoController {
 				List<RMVendorAssociationDTO> rmVendorAssociationDTOs = RMVAssoService.getRawmaterialvendorassociationListByRMId(productRMAssociationDTO.getRawmaterialId().getId());
 				for(RMVendorAssociationDTO rawmaterialvendorassociation : rmVendorAssociationDTOs){
 					RMVendorData rawRmVendorData = new RMVendorData();
-					//Rawmaterial rawmaterial = rawmaterialService.getEntityById(Rawmaterial.class, productRMAssociationDTO.getRawmaterialId().getId());
 					VendorDTO vendor = vendorService.getVendorById(rawmaterialvendorassociation.getVendorId().getId());
-					//rawRmVendorData.setRawmaterial(rawmaterial);
 					rawRmVendorData.setVendor(vendor.getId());
-				//	rawRmVendorData.setQuantity(productrawmaterialassociation.getQuantity());
 					rmVendorDatas.add(rawRmVendorData);
 				}
 			}
@@ -202,7 +196,7 @@ public class ProductRMAssoController {
 	}
 
 	@Transactional @RequestMapping(value = "/list/multiple", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<ProductRMAssociationDTO> getMultipleProductrawmaterialassociation() {
+	public @ResponseBody Response getMultipleProductrawmaterialassociation() {
 		List<ProductRMAssociationDTO> productRMAssociationModels = new ArrayList<ProductRMAssociationDTO>();
 		try {
 			List<ProductRMAssociationDTO> productrawmaterialassociationList = null;
@@ -216,10 +210,8 @@ public class ProductRMAssoController {
 					productRMAssociationModelParts = multplePRMAsso.get(productrawmaterialassociation.getProduct());
 				}
 				ProductRMAssociationModelParts productRMAssociationModelPart = new ProductRMAssociationModelParts();
-				//Product product = productService.getEntityById(Product.class, productrawmaterialassociation.getProduct());
 				productRMAssociationModelPart.setQuantity(productrawmaterialassociation.getQuantity());
 				productRMAssociationModelPart.setRawmaterial(productrawmaterialassociation.getRawmaterialId());
-				//productRMAssociationModelPart.setPartNumber(product.getPartNumber());
 				productRMAssociationModelParts.add(productRMAssociationModelPart);
 				multplePRMAsso.put(productrawmaterialassociation.getProduct(), productRMAssociationModelParts);
 			}
@@ -229,14 +221,13 @@ public class ProductRMAssoController {
 				ProductDTO product = productService.getProductDTO( multplePRMAssoEntry.getKey());
 				productRMAssociationModel.setName(product.getPartNumber());
 				productRMAssociationModel.setProduct(multplePRMAssoEntry.getKey());
-				//productRMAssociationModel.setName(multplePRMAssoEntry.getKey());
 				productRMAssociationModel.setProductRMAssociationModelParts(multplePRMAssoEntry.getValue());
 				productRMAssociationModels.add(productRMAssociationModel);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return productRMAssociationModels;
+		return new Response(1,productRMAssociationModels);
 	}
 
 	@Transactional @RequestMapping(value = "productRMAssoList/{productId}", method = RequestMethod.GET, headers = "Accept=application/json")
@@ -271,29 +262,35 @@ public class ProductRMAssoController {
 	}
 
 	@Transactional @RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus deleteProductrawmaterialassociation(
+	public @ResponseBody Response deleteProductrawmaterialassociation(
 			@PathVariable("id") long id) {
 		try {
-				productRMAssoService.deleteProductRMAssoById(id);
-			return new UserStatus(1,"Productrawmaterialassociation deleted Successfully !");
+			ProductRMAssociationDTO productRMAssociationDTO =	productRMAssoService.deleteProductRMAssoById(id);
+			if(productRMAssociationDTO==null){
+				return new Response(1,"There is no any product rm association");
+			}
+			return new Response(1,"Productrawmaterialassociation deleted Successfully !");
 		} catch (Exception e) {
-			return new UserStatus(0, e.toString());
+			return new Response(0, e.toString());
 		}
 	}
 	
 	@Transactional @RequestMapping(value = "delete/multiple/{productId}", method = RequestMethod.DELETE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus deleteProductrawmaterialassociationByProductId(
+	public @ResponseBody Response deleteProductrawmaterialassociationByProductId(
 			@PathVariable("productId") long productId) {
 		try {
 			List<ProductRMAssociationDTO> productrawmaterialassociations = productRMAssoService.getProductRMAssoList(productId);
+			if(productrawmaterialassociations==null){
+				return new Response(1,"There is no any product rm association");
+			}
 			for(ProductRMAssociationDTO productrawmaterialassociation : productrawmaterialassociations){
 				//Remove all Product RM Associations
 				//productRMAssoService.deleteEntity(Productrawmaterialassociation.class, productrawmaterialassociation.getId());
 				deleteProductrawmaterialassociation(productrawmaterialassociation.getId());
 			}
-			return new UserStatus(1,"Product Raw Material Associations deleted Successfully !");
+			return new Response(1,"Product Raw Material Associations deleted Successfully !");
 		} catch (Exception e) {
-			return new UserStatus(0, e.toString());
+			return new Response(0, e.toString());
 		}
 	}
 }

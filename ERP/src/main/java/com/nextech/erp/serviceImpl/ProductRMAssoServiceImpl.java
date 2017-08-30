@@ -64,6 +64,9 @@ public class ProductRMAssoServiceImpl extends CRUDServiceImpl<Productrawmaterial
 		// TODO Auto-generated method stub
 		List<ProductRMAssociationDTO> productRMAssociationDTOs = new ArrayList<ProductRMAssociationDTO>();
 		List<Productrawmaterialassociation> productrawmaterialassociations = productrmassDao.getProductRMAssoListByProductId(productId);
+		if(productrawmaterialassociations.isEmpty()){
+			return null;
+		}
 		for (Productrawmaterialassociation productrawmaterialassociation : productrawmaterialassociations) {
 			ProductRMAssociationDTO productRMAssociationDTO = ProductRMAssoRequestResponseFactory.setProductRMAssoList(productrawmaterialassociation);
 			productRMAssociationDTOs.add(productRMAssociationDTO);
@@ -97,6 +100,9 @@ public class ProductRMAssoServiceImpl extends CRUDServiceImpl<Productrawmaterial
 		// TODO Auto-generated method stub
 		List<ProductRMAssociationDTO> productRMAssociationDTOs = new ArrayList<ProductRMAssociationDTO>();
 		List<Productrawmaterialassociation> productrawmaterialassociations = productrmassDao.getList(Productrawmaterialassociation.class);
+		if(productrawmaterialassociations.isEmpty()){
+			return null;
+		}
 		for (Productrawmaterialassociation productrawmaterialassociation : productrawmaterialassociations) {
 			ProductRMAssociationDTO productRMAssociationDTO = ProductRMAssoRequestResponseFactory.setProductRMAssoList(productrawmaterialassociation);
 			productRMAssociationDTOs.add(productRMAssociationDTO);
@@ -109,16 +115,24 @@ public class ProductRMAssoServiceImpl extends CRUDServiceImpl<Productrawmaterial
 			throws Exception {
 		// TODO Auto-generated method stub
 		Productrawmaterialassociation productrawmaterialassociation = productrmassDao.getById(Productrawmaterialassociation.class, Id);
+		if(productrawmaterialassociation==null){
+			return null;
+		}
 		ProductRMAssociationDTO productRMAssociationDTO = ProductRMAssoRequestResponseFactory.setProductRMAssoList(productrawmaterialassociation);
 		return productRMAssociationDTO;
 	}
 
 	@Override
-	public void deleteProductRMAssoById(long id) throws Exception {
+	public ProductRMAssociationDTO deleteProductRMAssoById(long id) throws Exception {
 		// TODO Auto-generated method stub
 		Productrawmaterialassociation productrawmaterialassociation = productrmassDao.getById(Productrawmaterialassociation.class, id);
+		if(productrawmaterialassociation==null){
+			return null;
+		}
 		productrawmaterialassociation.setIsactive(false);
 		productrmassDao.update(productrawmaterialassociation);
+		ProductRMAssociationDTO productRMAssociationDTO = ProductRMAssoRequestResponseFactory.setProductRMAssoList(productrawmaterialassociation);
+		return productRMAssociationDTO;
 	}
 
 	@Override
@@ -134,6 +148,9 @@ public class ProductRMAssoServiceImpl extends CRUDServiceImpl<Productrawmaterial
 		// TODO Auto-generated method stub
 		List<ProductRMAssociationDTO> productRMAssociationDTOs =  new ArrayList<ProductRMAssociationDTO>();
 		List<Productrawmaterialassociation> productrawmaterialassociations = productrmassDao.getProductRMListByProductId(rmId);
+		if(productrawmaterialassociations.isEmpty()){
+			return null;
+		}
 		for (Productrawmaterialassociation productrawmaterialassociation : productrawmaterialassociations) {
 			ProductRMAssociationDTO productRMAssociationDTO = ProductRMAssoRequestResponseFactory.setProductRMAssoList(productrawmaterialassociation);
 			productRMAssociationDTOs.add(productRMAssociationDTO);

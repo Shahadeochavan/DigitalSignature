@@ -28,6 +28,9 @@ public class StatustransitionServiceImpl extends CRUDServiceImpl<Statustransitio
 		// TODO Auto-generated method stub
 		List<StatusTransitionDTO> statusTransitionDTOs =  new ArrayList<StatusTransitionDTO>();
 		List<Statustransition> statustransitions = statustransitionDao.getList(Statustransition.class);
+		if(statustransitions.isEmpty()){
+			return null;
+		}
 		for (Statustransition statustransition : statustransitions) {
 			StatusTransitionDTO statusTransitionDTO = StatusTransitionRequestResponseFactory.setStatusTransitinDTO(statustransition);
 			statusTransitionDTOs.add(statusTransitionDTO);
@@ -39,16 +42,24 @@ public class StatustransitionServiceImpl extends CRUDServiceImpl<Statustransitio
 	public StatusTransitionDTO getStatusTranstionbyId(long id) throws Exception {
 		// TODO Auto-generated method stub
 		Statustransition statustransition = statustransitionDao.getById(Statustransition.class, id);
+		if(statustransition==null){
+			return null;
+		}
 		StatusTransitionDTO statusTransitionDTO = StatusTransitionRequestResponseFactory.setStatusTransitinDTO(statustransition);
 		return statusTransitionDTO;
 	}
 
 	@Override
-	public void deleteStatusTranstion(long id) throws Exception {
+	public StatusTransitionDTO deleteStatusTranstion(long id) throws Exception {
 		// TODO Auto-generated method stub
 		Statustransition statustransition = statustransitionDao.getById(Statustransition.class, id);
+		if(statustransition==null){
+			return null;
+		}
 		statustransition.setIsactive(false);
 		statustransitionDao.update(statustransition);
+		StatusTransitionDTO statusTransitionDTO = StatusTransitionRequestResponseFactory.setStatusTransitinDTO(statustransition);
+		return statusTransitionDTO;
 		
 	}
 

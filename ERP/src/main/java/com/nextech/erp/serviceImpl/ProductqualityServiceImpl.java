@@ -152,6 +152,9 @@ public class ProductqualityServiceImpl extends CRUDServiceImpl<Productquality> i
 		// TODO Auto-generated method stub
 		List<ProductQualityDTO> productQualityDTOs  = new ArrayList<ProductQualityDTO>();
 		List<Productquality> productqualities = productqualityDao.getList(Productquality.class);
+		if(productqualities==null){
+			return null;
+		}
 		for (Productquality productquality : productqualities) {
 			ProductQualityDTO productQualityDTO = ProductQualityRequestResponseFactory.setProductQualityList(productquality);
 			productQualityDTOs.add(productQualityDTO);
@@ -163,16 +166,24 @@ public class ProductqualityServiceImpl extends CRUDServiceImpl<Productquality> i
 	public ProductQualityDTO getProductQualityById(long id) throws Exception {
 		// TODO Auto-generated method stub
 		Productquality productquality = productqualityDao.getById(Productquality.class, id);
+		if(productquality==null){
+			return null;
+		}
 		ProductQualityDTO productQualityDTO = ProductQualityRequestResponseFactory.setProductQualityList(productquality);
 		return productQualityDTO;
 	}
 
 	@Override
-	public void deleteproductQuality(long id) throws Exception {
+	public ProductQualityDTO deleteproductQuality(long id) throws Exception {
 		// TODO Auto-generated method stub
 		Productquality productquality = productqualityDao.getById(Productquality.class, id);
+		if(productquality==null){
+			return null;
+		}
 		productquality.setIsactive(false);
 		productqualityDao.update(productquality);
+		ProductQualityDTO productQualityDTO = ProductQualityRequestResponseFactory.setProductQualityList(productquality);
+		return productQualityDTO;
 		
 	}
 

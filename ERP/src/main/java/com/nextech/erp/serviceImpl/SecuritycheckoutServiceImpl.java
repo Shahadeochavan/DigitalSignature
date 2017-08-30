@@ -78,6 +78,9 @@ public class SecuritycheckoutServiceImpl extends CRUDServiceImpl<Securitycheckou
 			throws Exception {
 		// TODO Auto-generated method stub
 		Securitycheckout securitycheckout = securitycheckoutDao.getById(Securitycheckout.class, id);
+		if(securitycheckout==null){
+			return null;
+		}
 		SecurityCheckOutDTO securityCheckOutDTO = SecurityCheckOutRequestResponseFactory.setSecurityCheckOutDTO(securitycheckout);
 		return securityCheckOutDTO;
 	}
@@ -87,6 +90,9 @@ public class SecuritycheckoutServiceImpl extends CRUDServiceImpl<Securitycheckou
 		// TODO Auto-generated method stub
 		List<SecurityCheckOutDTO> securityCheckOutDTOs =  new ArrayList<SecurityCheckOutDTO>();
 		List<Securitycheckout> securitycheckouts = securitycheckoutDao.getList(Securitycheckout.class);
+		if(securitycheckouts.isEmpty()){
+			return null;
+		}
 		for (Securitycheckout securitycheckout : securitycheckouts) {
 			SecurityCheckOutDTO securityCheckOutDTO = SecurityCheckOutRequestResponseFactory.setSecurityCheckOutDTO(securitycheckout);
 			securityCheckOutDTOs.add(securityCheckOutDTO);
@@ -95,11 +101,16 @@ public class SecuritycheckoutServiceImpl extends CRUDServiceImpl<Securitycheckou
 	}
 
 	@Override
-	public void deleteSecurityCheckOut(long id) throws Exception {
+	public SecurityCheckOutDTO deleteSecurityCheckOut(long id) throws Exception {
 		// TODO Auto-generated method stub
 		Securitycheckout securitycheckout = securitycheckoutDao.getById(Securitycheckout.class, id);
+		if(securitycheckout==null){
+			return null;
+		}
 		securitycheckout.setIsactive(false);
 		securitycheckoutDao.update(securitycheckout);
+		SecurityCheckOutDTO securityCheckOutDTO = SecurityCheckOutRequestResponseFactory.setSecurityCheckOutDTO(securitycheckout);
+		return securityCheckOutDTO;
 	}
 
 }

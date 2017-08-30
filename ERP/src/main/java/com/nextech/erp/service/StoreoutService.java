@@ -16,6 +16,6 @@ public interface StoreoutService extends CRUDService<Storeout>{
 	
 	public StoreOutDTO getStoreOutById(long id) throws Exception;
 	
-	public void deleteStoreOutById(long id) throws Exception;
+	public StoreOutDTO deleteStoreOutById(long id) throws Exception;
 
 }

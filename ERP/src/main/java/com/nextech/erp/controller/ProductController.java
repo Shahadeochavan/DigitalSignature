@@ -191,19 +191,19 @@ public class ProductController {
 	}
 	
 	@Transactional @RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody UserStatus getProduct() {
+	public @ResponseBody Response getProduct() {
 
 		List<ProductDTO> productList = null;
 		try {
 			productList = productService.getProductList();
-			if(productList.isEmpty()){
-				return new UserStatus(1,"There is no product list");
+			if(productList==null){
+				return new Response(1,"There is no product list");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		return new UserStatus(1,productList);
+		return new Response(1,productList);
 	}
 	@Transactional @RequestMapping(value = "/list/newProductRMAssociation", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody Response getNewProductRMAsso() {
@@ -231,16 +231,16 @@ public class ProductController {
 	}
 
 	@Transactional @RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus deleteProduct(@PathVariable("id") long id) {
+	public @ResponseBody Response deleteProduct(@PathVariable("id") long id) {
 
 		try {
 			ProductDTO productDTO =productService.deleteProduct(id);
 			if(productDTO==null){
-				return new UserStatus(1,"There is no product id");
+				return new Response(1,"There is no product id");
 			}
-			return new UserStatus(1, "Product deleted Successfully !");
+			return new Response(1, "Product deleted Successfully !");
 		} catch (Exception e) {
-			return new UserStatus(0, e.toString());
+			return new Response(0, e.toString());
 		}
 
 	}

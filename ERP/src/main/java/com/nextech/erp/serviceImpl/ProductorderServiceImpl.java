@@ -73,7 +73,7 @@ public class ProductorderServiceImpl extends CRUDServiceImpl<Productorder> imple
 	public List<ProductOrderDTO> getPendingProductOrders(long statusId,long statusId1) {
 		List<ProductOrderDTO> productOrderDTOs =  new ArrayList<ProductOrderDTO>();
 		List<Productorder> productorders = productorderDao.getPendingProductOrders(statusId,statusId1);
-		if(productorders.isEmpty()){
+		if(productorders==null){
 			return null;
 		}
 		for (Productorder productorder : productorders) {
@@ -87,7 +87,7 @@ public class ProductorderServiceImpl extends CRUDServiceImpl<Productorder> imple
 		// TODO Auto-generated method stub
 		List<ProductOrderDTO> productOrderDTOs =  new ArrayList<ProductOrderDTO>();
 		List<Productorder> productorders = productorderDao.getInCompleteProductOrder(clientId,statusId,statusId1);
-		if(productorders.isEmpty()){
+		if(productorders==null){
 			return null;
 		}
 		for (Productorder productorder : productorders) {
@@ -120,6 +120,9 @@ public class ProductorderServiceImpl extends CRUDServiceImpl<Productorder> imple
 		// TODO Auto-generated method stub
 		List<ProductOrderDTO> productOrderDTOs =  new ArrayList<ProductOrderDTO>();
 		List<Productorder> productorders = productorderDao.getList(Productorder.class);
+		if(productorders.isEmpty()){
+			return null;
+		}
 		for (Productorder productorder : productorders) {
 			ProductOrderDTO productOrderDTO  =  ProductOrderRequestResponseFactory.setProductOrderDTO(productorder);
 			productOrderDTOs.add(productOrderDTO);

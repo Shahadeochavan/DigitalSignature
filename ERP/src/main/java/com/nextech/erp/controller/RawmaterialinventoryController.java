@@ -35,6 +35,7 @@ import com.nextech.erp.service.NotificationUserAssociationService;
 import com.nextech.erp.service.RawmaterialService;
 import com.nextech.erp.service.RawmaterialinventoryService;
 import com.nextech.erp.service.UserService;
+import com.nextech.erp.status.Response;
 import com.nextech.erp.status.UserStatus;
 
 @RestController
@@ -89,17 +90,17 @@ public class RawmaterialinventoryController {
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody UserStatus getRawMaterialInventory(@PathVariable("id") long id) {
+	public @ResponseBody Response getRawMaterialInventory(@PathVariable("id") long id) {
 		RMInventoryDTO rawmaterialinventory = null;
 		try {
 			rawmaterialinventory = rawmaterialinventoryService.getRMInventoryById(id);
 			if(rawmaterialinventory==null){
-				return new UserStatus(1,"There is no rm inventory");
+				return new Response(1,"There is no rm inventory");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return new UserStatus(1,rawmaterialinventory);
+		return new Response(1,rawmaterialinventory);
 	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
@@ -114,42 +115,42 @@ public class RawmaterialinventoryController {
 	}
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody UserStatus getRawMaterialInventory() {
+	public @ResponseBody Response getRawMaterialInventory() {
 
 		List<RMInventoryDTO> rawmaterialinventoryList = null;
 		try {
 			rawmaterialinventoryList = rawmaterialinventoryService.getRMInventoryList();
 			if(rawmaterialinventoryList.isEmpty()){
-				return new UserStatus(1,"There is no rm inventory");
+				return new Response(1,"There is no rm inventory");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return new UserStatus(1,rawmaterialinventoryList);
+		return new Response(1,rawmaterialinventoryList);
 	}
 
 	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus deleteRawMaterialInventory(@PathVariable("id") long id) {
+	public @ResponseBody Response deleteRawMaterialInventory(@PathVariable("id") long id) {
 		try {
 			RMInventoryDTO rmInventoryDTO =	rawmaterialinventoryService.deleteRMInventory(id);
 			if(rmInventoryDTO==null){
-				return new UserStatus(1,"There is no rm inventroy");
+				return new Response(1,"There is no rm inventroy");
 			}
-			return new UserStatus(1, "Rawmaterialinventory deleted Successfully !");
+			return new Response(1, "Rawmaterialinventory deleted Successfully !");
 		} catch (Exception e) {
-			return new UserStatus(0, e.toString());
+			return new Response(0, e.toString());
 		}
 	}
 
 	//@Scheduled(initialDelay=60000, fixedRate=60000)
-	public void executeSchedular() throws Exception{
+	public Response executeSchedular() throws Exception{
 		List<RMInventoryDTO> rawmaterialinventoryList = null;
 		System.out.println("RM Inventory Check");
 		List<RMInventoryDTO> rmInventoryDTOs = new ArrayList<RMInventoryDTO>();
 		RMInventoryDTO  rmInventoryDTO = new RMInventoryDTO();
 		try { 
 			rawmaterialinventoryList = rawmaterialinventoryService.getRMInventoryList();
-			if(rawmaterialinventoryList.isEmpty()){
+			if(rawmaterialinventoryList !=null){
 			for (RMInventoryDTO rawmaterialinventory : rawmaterialinventoryList) {
 				RawMaterialDTO rawmaterial = rawmaterialService.getRMDTO(rawmaterialinventory.getRawmaterialId().getId());
 				if(rawmaterialinventory.getQuantityAvailable()>=rawmaterialinventory.getMinimumQuantity()){
@@ -160,6 +161,8 @@ public class RawmaterialinventoryController {
 					rmInventoryDTOs.add(rmInventoryDTO);
 				}
 			}
+			}else{
+				return new Response(1,"There is no any rm inventory list");
 			}
 			if(rmInventoryDTOs != null&& ! rmInventoryDTOs.isEmpty()){
 				mailSendingRMInventroy(rmInventoryDTOs);
@@ -167,6 +170,7 @@ public class RawmaterialinventoryController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		return null;
 	}
 	
 	private void mailSendingRMInventroy(List<RMInventoryDTO> rmInventoryDTOs) throws Exception {

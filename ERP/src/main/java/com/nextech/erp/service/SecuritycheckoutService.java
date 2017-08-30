@@ -15,6 +15,6 @@ public interface SecuritycheckoutService extends CRUDService<Securitycheckout>{
 	
 	public List<SecurityCheckOutDTO> getSecurityCheckOutList() throws Exception;
 	
-	public void deleteSecurityCheckOut(long id)throws Exception;
+	public SecurityCheckOutDTO deleteSecurityCheckOut(long id)throws Exception;
 
 }

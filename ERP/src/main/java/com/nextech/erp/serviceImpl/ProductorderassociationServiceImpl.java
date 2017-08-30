@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,6 +38,9 @@ ProductorderassociationDao productorderassociationDao;
 			long orderId) throws Exception {
 		List<ProductOrderAssociationDTO> productOrderAssociationDTOs =  new ArrayList<ProductOrderAssociationDTO>();
 		List<Productorderassociation> productorderassociations = productorderassociationDao.getProductorderassociationByOrderId(orderId);
+		if(productorderassociations.isEmpty()){
+			return null;
+		}
 		for (Productorderassociation productorderassociation : productorderassociations) {
 			ProductOrderAssociationDTO  productOrderAssociationDTO = ProductOrderAssoRequestResponseFactory.setProductOrderAssoDto(productorderassociation);
 			productOrderAssociationDTOs.add(productOrderAssociationDTO);
@@ -103,6 +105,9 @@ ProductorderassociationDao productorderassociationDao;
 			throws Exception {
 		List<ProductOrderAssociationDTO> productOrderAssociationDTOs = new ArrayList<ProductOrderAssociationDTO>();
 		List<Productorderassociation> productorderassociations = productorderassociationDao.getList(Productorderassociation.class);
+		if(productorderassociations.isEmpty()){
+			return null;
+		}
 		for (Productorderassociation productorderassociation : productorderassociations) {
 			ProductOrderAssociationDTO productOrderAssociationDTO = ProductOrderAssoRequestResponseFactory.setProductOrderAssoDto(productorderassociation);
 			productOrderAssociationDTOs.add(productOrderAssociationDTO);
@@ -114,15 +119,23 @@ ProductorderassociationDao productorderassociationDao;
 	public ProductOrderAssociationDTO getProductOrderAsoById(long id)
 			throws Exception {
 		Productorderassociation productorderassociation = productorderassociationDao.getById(Productorderassociation.class, id);
+		if(productorderassociation==null){
+			return null;
+		}
 		ProductOrderAssociationDTO productOrderAssociationDTO = ProductOrderAssoRequestResponseFactory.setProductOrderAssoDto(productorderassociation);
 		return productOrderAssociationDTO;
 	}
 
 	@Override
-	public void deleteProductOrderAsso(long id) throws Exception {
+	public ProductOrderAssociationDTO deleteProductOrderAsso(long id) throws Exception {
 		Productorderassociation productorderassociation = productorderassociationDao.getById(Productorderassociation.class, id);
+		if(productorderassociation==null){
+			return null;
+		}
 		productorderassociation.setIsactive(false);
 		productorderassociationDao.update(productorderassociation);
+		ProductOrderAssociationDTO productOrderAssociationDTO = ProductOrderAssoRequestResponseFactory.setProductOrderAssoDto(productorderassociation);
+		return productOrderAssociationDTO;
 		
 		
 	}

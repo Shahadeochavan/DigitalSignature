@@ -22,6 +22,6 @@ public interface DispatchService  extends CRUDService<Dispatch>{
 	
 	public DispatchDTO getDispatchById(long id) throws Exception;
 	
-	public void deleteDispatchById(long id) throws Exception;
+	public DispatchDTO deleteDispatchById(long id) throws Exception;
 	
 }

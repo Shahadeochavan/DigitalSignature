@@ -59,6 +59,7 @@ public class ProductRMAssoDaoImpl extends SuperDaoImpl<Productrawmaterialassocia
 	public List<Long> getProductList()
 			throws Exception {
 		
+		session = sessionFactory.openSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Productrawmaterialassociation.class);
 		

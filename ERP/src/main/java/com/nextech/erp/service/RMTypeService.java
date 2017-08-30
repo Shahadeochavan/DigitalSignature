@@ -11,6 +11,6 @@ public interface RMTypeService extends CRUDService<Rmtype>{
 	
 	public RMTypeDTO getRMTypeById(long id) throws Exception;
 	
-	public void deleteRMType(long id)throws Exception;
+	public RMTypeDTO deleteRMType(long id)throws Exception;
 
 }

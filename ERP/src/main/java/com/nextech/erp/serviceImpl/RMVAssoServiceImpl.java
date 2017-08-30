@@ -29,6 +29,9 @@ public class RMVAssoServiceImpl extends CRUDServiceImpl<Rawmaterialvendorassocia
 		// TODO Auto-generated method stub
 		List<RMVendorAssociationDTO> rmVendorAssociationDTOs = new ArrayList<RMVendorAssociationDTO>();
 		List<Rawmaterialvendorassociation> rawmaterialvendorassociations = rMVAssoDao.getRawmaterialvendorassociationListByRMId(id);
+		if(rawmaterialvendorassociations.isEmpty()){
+			return null;
+		}
 		for (Rawmaterialvendorassociation rawmaterialvendorassociation : rawmaterialvendorassociations) {
 			RMVendorAssociationDTO rmVendorAssociationDTO = RMVendorAssoRequestResponseFactory.setRMVendorList(rawmaterialvendorassociation);
 			rmVendorAssociationDTOs.add(rmVendorAssociationDTO);
@@ -41,6 +44,9 @@ public class RMVAssoServiceImpl extends CRUDServiceImpl<Rawmaterialvendorassocia
 			throws Exception {
 		// TODO Auto-generated method stub
 		Rawmaterialvendorassociation rawmaterialvendorassociation = rMVAssoDao.getRMVAssoByRMId(rmId);
+		if(rawmaterialvendorassociation==null){
+			return null;
+		}
 		RMVendorAssociationDTO rmVendorAssociationDTO = RMVendorAssoRequestResponseFactory.setRMVendorList(rawmaterialvendorassociation);
 		return rmVendorAssociationDTO;
 	}
@@ -50,6 +56,9 @@ public class RMVAssoServiceImpl extends CRUDServiceImpl<Rawmaterialvendorassocia
 		// TODO Auto-generated method stub
 		List<RMVendorAssociationDTO> rmVendorAssociationDTOs =  new ArrayList<RMVendorAssociationDTO>();
 		List<Rawmaterialvendorassociation> rawmaterialvendorassociations = rMVAssoDao.getList(Rawmaterialvendorassociation.class);
+		if(rawmaterialvendorassociations.isEmpty()){
+			return null;
+		}
 		for (Rawmaterialvendorassociation rawmaterialvendorassociation : rawmaterialvendorassociations) {
 			RMVendorAssociationDTO rmVendorAssociationDTO = RMVendorAssoRequestResponseFactory.setRMVendorList(rawmaterialvendorassociation);
 			rmVendorAssociationDTOs.add(rmVendorAssociationDTO);
@@ -62,17 +71,24 @@ public class RMVAssoServiceImpl extends CRUDServiceImpl<Rawmaterialvendorassocia
 	public RMVendorAssociationDTO getRMVendor(long id) throws Exception {
 		// TODO Auto-generated method stub
 		Rawmaterialvendorassociation rawmaterialvendorassociation = rMVAssoDao.getById(Rawmaterialvendorassociation.class, id);
+		if(rawmaterialvendorassociation==null){
+			return null;
+		}
 		RMVendorAssociationDTO rmVendorAssociationDTO = RMVendorAssoRequestResponseFactory.setRMVendorList(rawmaterialvendorassociation);
-		
 		return rmVendorAssociationDTO;
 	}
 
 	@Override
-	public void deleteRMVendor(long id) throws Exception {
+	public RMVendorAssociationDTO deleteRMVendor(long id) throws Exception {
 		// TODO Auto-generated method stub
 		Rawmaterialvendorassociation rawmaterialvendorassociation = rMVAssoDao.getById(Rawmaterialvendorassociation.class, id);
+		if(rawmaterialvendorassociation==null){
+			return null;
+		}
 		rawmaterialvendorassociation.setIsactive(false);
 		rMVAssoDao.update(rawmaterialvendorassociation);
+         RMVendorAssociationDTO rmVendorAssociationDTO = RMVendorAssoRequestResponseFactory.setRMVendorList(rawmaterialvendorassociation);
+		return rmVendorAssociationDTO;
 		
 	}
 	

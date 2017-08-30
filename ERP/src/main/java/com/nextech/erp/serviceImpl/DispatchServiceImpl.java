@@ -223,6 +223,9 @@ public class DispatchServiceImpl extends CRUDServiceImpl<Dispatch> implements Di
 			// TODO Auto-generated method stub
 			List<DispatchDTO> dispatchDTOs =  new ArrayList<DispatchDTO>();
 			List<Dispatch> dispatchs =  dispatchDao.getList(Dispatch.class);
+			if(dispatchs.isEmpty()){
+				return null;
+			}
 			for (Dispatch dispatch : dispatchs) {
 				DispatchDTO dispatchDTO = DispatchRequestResponseFactory.setDispatchDTO(dispatch);
 				dispatchDTOs.add(dispatchDTO);
@@ -234,17 +237,24 @@ public class DispatchServiceImpl extends CRUDServiceImpl<Dispatch> implements Di
 		public DispatchDTO getDispatchById(long id) throws Exception {
 			// TODO Auto-generated method stub
 			Dispatch dispatch = dispatchDao.getById(Dispatch.class, id);
+			if(dispatch==null){
+				return null;
+			}
 			DispatchDTO dispatchDTO = DispatchRequestResponseFactory.setDispatchDTO(dispatch);
 			return dispatchDTO;
 		}
 
 		@Override
-		public void deleteDispatchById(long id) throws Exception {
+		public DispatchDTO deleteDispatchById(long id) throws Exception {
 			// TODO Auto-generated method stub
 			Dispatch dispatch = dispatchDao.getById(Dispatch.class, id);
+			if(dispatch==null){
+				return null;
+			}
 			dispatch.setIsactive(false);
 			dispatchDao.update(dispatch);
-			
+			DispatchDTO dispatchDTO = DispatchRequestResponseFactory.setDispatchDTO(dispatch);
+			return dispatchDTO;
 		}
 		
 

@@ -52,6 +52,7 @@ import com.nextech.erp.service.RmorderinvoiceintakquantityService;
 import com.nextech.erp.service.StatusService;
 import com.nextech.erp.service.UserService;
 import com.nextech.erp.service.VendorService;
+import com.nextech.erp.status.Response;
 import com.nextech.erp.status.UserStatus;
 
 @Controller
@@ -161,11 +162,14 @@ public class QualitycheckrawmaterialController {
 	}
 	
 	@RequestMapping(value = "listrm/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<QualityCheckRMDTO> getRmorderinvoiceintakquantityByRMOInvoiceId(
+	public @ResponseBody Response getRmorderinvoiceintakquantityByRMOInvoiceId(
 			@PathVariable("id") long id) {
 		List<QualityCheckRMDTO> qualityCheckRMDTOs = new ArrayList<QualityCheckRMDTO>();
 		try {
 			List<Rmorderinvoiceintakquantity> rmorderinvoiceintakquantities = rmorderinvoiceintakquantityService.getRmorderinvoiceintakquantityByRMOInvoiceId(id);
+			if(rmorderinvoiceintakquantities.isEmpty()){
+				return  new Response(1,"There is no any qc rm");
+			}
 			for (Rmorderinvoiceintakquantity rmorderinvoiceintakquantity : rmorderinvoiceintakquantities) {
 				QualityCheckRMDTO qualityCheckRMDTO = QualityRequestResponseFactory.createQualityResonse(rmorderinvoiceintakquantity);
 				qualityCheckRMDTO.setId(rmorderinvoiceintakquantity.getRawmaterial().getId());
@@ -174,50 +178,29 @@ public class QualitycheckrawmaterialController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return qualityCheckRMDTOs;
+		return new Response(1,qualityCheckRMDTOs);
 	}
 	
 	@RequestMapping(value = "listrmGoodQuantity/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<StoreInDTO> getRmorderinvoiceintakquantity(
+	public @ResponseBody Response getRmorderinvoiceintakquantity(
 			@PathVariable("id") long id) {
 		List<StoreInDTO> storeInDTOs = new ArrayList<StoreInDTO>();
 		try {
 			List<Qualitycheckrawmaterial> qualitycheckrawmaterials = qualitycheckrawmaterialService.getQualitycheckrawmaterialByInvoiceId(id);
+			if(qualitycheckrawmaterials.isEmpty()){
+				return new Response(1,"there is no any qc rm list");
+			}
 			for (Qualitycheckrawmaterial qualitycheckrawmaterial : qualitycheckrawmaterials) {
 				storeInDTOs.add(StoreRequestResponseFactory.createStoreInResonse(qualitycheckrawmaterial));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return storeInDTOs;
+		return new Response(1,storeInDTOs);
 	}
 	
 	private void mailSending(NotificationDTO notification,Vendor vendor,List<QualityCheckRMDTO> qualityCheckRMDTOs,Rawmaterialorder rawmaterialorder) throws Exception{
-/*		  List<NotificationUserAssociatinsDTO> notificationUserAssociatinsDTOs = notificationUserAssociationService.getNotificationUserAssociatinsDTOs(notification.getId());
-		  for (NotificationUserAssociatinsDTO notificationuserassociation : notificationUserAssociatinsDTOs) {
-			  UserDTO user = userService.getUserDTO( notificationuserassociation.getUserId().getId());
-			  if(notificationuserassociation.getTo()){
-				  stringBuilderTO.append(prefixTO);
-				  prefixTO=",";
-				  stringBuilderTO.append(vendor.getEmail());
-					multipleTO = stringBuilderTO.toString();
-					mail.setMailTo(multipleTO);
-			  }else if(notificationuserassociation.getBcc()){
-				  stringBuilderBCC.append(prefixBCC);
-					prefixBCC=",";
-					stringBuilderBCC.append(user.getEmailId());
-					multipleBCC = stringBuilderBCC.toString();
-					mail.setMailBcc(multipleBCC);
-			  }else if(notificationuserassociation.getCc()){
-				  stringBuilderCC.append(prefixCC);
-				  prefixCC=",";
-					stringBuilderCC.append(user.getEmailId());
-					multipleCC = stringBuilderCC.toString();
-					mail.setMailCc(multipleCC);
-			  }
-		}*/
 		  Mail mail = userService.emailNotification(notification);
-		  
         mail.setMailSubject(notification.getSubject());
         Map < String, Object > model = new HashMap < String, Object > ();
         model.put("firstName", vendor.getFirstName());

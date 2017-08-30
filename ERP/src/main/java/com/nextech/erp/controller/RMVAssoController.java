@@ -24,6 +24,7 @@ import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.factory.RMVendorAssoRequestResponseFactory;
 import com.nextech.erp.newDTO.RMVendorAssociationDTO;
 import com.nextech.erp.service.RMVAssoService;
+import com.nextech.erp.status.Response;
 import com.nextech.erp.status.UserStatus;
 
 @Controller
@@ -69,15 +70,18 @@ public class RMVAssoController {
 	}
 
 	@Transactional @RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody RMVendorAssociationDTO getRawMaterialVendorAssociation(
+	public @ResponseBody Response getRawMaterialVendorAssociation(
 			@PathVariable("id") long id) {
 		RMVendorAssociationDTO rawmaterialvendorassociation = null;
 		try {
 			rawmaterialvendorassociation = rmvAssoService.getRMVendor(id);
+			if(rawmaterialvendorassociation==null){
+				return  new Response(1,"There is no any rm vendor association");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return rawmaterialvendorassociation;
+		return new Response(1,rawmaterialvendorassociation);
 	}
 
 	@Transactional @RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
@@ -94,40 +98,50 @@ public class RMVAssoController {
 	}
 
 	@Transactional @RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<RMVendorAssociationDTO> getRawMaterialVendorAssociation() {
+	public @ResponseBody Response getRawMaterialVendorAssociation() {
 
 		List<RMVendorAssociationDTO> rawmaterialvendorassociationList = null;
 		try {
 			rawmaterialvendorassociationList = rmvAssoService.getRMVendorList();
+			if(rawmaterialvendorassociationList==null){
+				return  new Response(1,"There is no rm vendor association");
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		return rawmaterialvendorassociationList;
+		return new Response(1,rawmaterialvendorassociationList);
 	}
 	
 	@Transactional @RequestMapping(value = "rmVendorList/{rmId}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<RMVendorAssociationDTO> getRMVendorList(@PathVariable("rmId") long rmId) {
+	public @ResponseBody Response getRMVendorList(@PathVariable("rmId") long rmId) {
 		List<RMVendorAssociationDTO> rmRawmaterialvendorassociations = null;
 		try {
 			rmRawmaterialvendorassociations	 = rmvAssoService.getRawmaterialvendorassociationListByRMId(rmId);
+			if(rmRawmaterialvendorassociations==null){
+				return new Response(1,"There is no any rm vendor association");
+			}
+			
 		} catch (Exception e) {
 			
 		}
-		return rmRawmaterialvendorassociations;
+		return new Response(1,rmRawmaterialvendorassociations);
 	}
 	
 	@Transactional @RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus deleteRawMaterialVendorAssociation(
+	public @ResponseBody Response deleteRawMaterialVendorAssociation(
 			@PathVariable("id") long id) {
 
 		try {
-			rmvAssoService.deleteRMVendor(id);
-			return new UserStatus(1,
+			RMVendorAssociationDTO rmVendorAssociationDTO = rmvAssoService.deleteRMVendor(id);
+			if(rmVendorAssociationDTO==null){
+				return new Response(1,"There is no rm vendor association");
+			}
+			return new Response(1,
 					"Rawmaterialvendorassociation deleted Successfully !");
 		} catch (Exception e) {
-			return new UserStatus(0, e.toString());
+			return new Response(0, e.toString());
 		}
 	}
 }

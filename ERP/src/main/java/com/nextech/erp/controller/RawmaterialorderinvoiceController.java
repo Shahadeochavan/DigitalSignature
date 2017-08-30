@@ -56,6 +56,7 @@ import com.nextech.erp.service.RmorderinvoiceintakquantityService;
 import com.nextech.erp.service.StatusService;
 import com.nextech.erp.service.UserService;
 import com.nextech.erp.service.VendorService;
+import com.nextech.erp.status.Response;
 import com.nextech.erp.status.UserStatus;
 
 @Controller
@@ -157,17 +158,20 @@ public class RawmaterialorderinvoiceController {
 	}
 
 	@Transactional @RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<Rawmaterialorderinvoice> getRawmaterialorderinvoice() {
+	public @ResponseBody Response getRawmaterialorderinvoice() {
 
 		List<Rawmaterialorderinvoice> rawmaterialorderinvoiceList = null;
 		try {
 			rawmaterialorderinvoiceList = rawmaterialorderinvoiceservice
 					.getEntityList(Rawmaterialorderinvoice.class);
+			if(rawmaterialorderinvoiceList.isEmpty()){
+				return new Response(1,"There is no rm invoice list");
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return rawmaterialorderinvoiceList;
+		return new Response(1,rawmaterialorderinvoiceList);
 	}
 
 	@Transactional @RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
@@ -187,13 +191,12 @@ public class RawmaterialorderinvoiceController {
 	}
 
 	@Transactional @RequestMapping(value = "security-in-invoices", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<QualityCheckInvoiceDTO> getRawmaterialorderinvoiceByStatusId() {
+	public @ResponseBody Response getRawmaterialorderinvoiceByStatusId() {
 		List<QualityCheckInvoiceDTO> rawmaterialorderinvoiceList = null;
 		try {
 			List<Rawmaterialorderinvoice> rawmaterialorderinvoices = rawmaterialorderinvoiceservice
 					.getRawmaterialorderinvoiceByStatusId(Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_SECURITY_CHECK_INVOICE_IN, null, null)));
 			rawmaterialorderinvoiceList = new ArrayList<QualityCheckInvoiceDTO>();
-			System.out.println("list size " + rawmaterialorderinvoices.size());
 			if (rawmaterialorderinvoices != null && !rawmaterialorderinvoices.isEmpty()) {
 				for (Rawmaterialorderinvoice rawmaterialorderinvoice : rawmaterialorderinvoices) {
 					QualityCheckInvoiceDTO checkInvoiceDTO = new QualityCheckInvoiceDTO();
@@ -201,21 +204,22 @@ public class RawmaterialorderinvoiceController {
 					checkInvoiceDTO.setName(rawmaterialorderinvoice.getInvoice_No());
 					rawmaterialorderinvoiceList.add(checkInvoiceDTO);
 				}
+			}else{
+				return new Response(1,"There is no any rm security list");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return rawmaterialorderinvoiceList;
+		return new Response(1,rawmaterialorderinvoiceList);
 	}
 
 	@Transactional @RequestMapping(value = "quality-check-invoices", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<QualityCheckInvoiceDTO> getRawmaterialorderinvoiceQualityCheckByStatusId() {
+	public @ResponseBody Response  getRawmaterialorderinvoiceQualityCheckByStatusId() {
 		List<QualityCheckInvoiceDTO> rawmaterialorderinvoiceList = null;
 		try {
 			List<Rawmaterialorderinvoice> rawmaterialorderinvoices = rawmaterialorderinvoiceservice
 					.getRawmaterialorderinvoiceByStatusId(Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_READY_STORE_IN, null, null)));
 			rawmaterialorderinvoiceList = new ArrayList<QualityCheckInvoiceDTO>();
-			System.out.println("list size " + rawmaterialorderinvoices.size());
 			if (rawmaterialorderinvoices != null&& !rawmaterialorderinvoices.isEmpty()) {
 				for (Rawmaterialorderinvoice rawmaterialorderinvoice : rawmaterialorderinvoices) {
 					QualityCheckInvoiceDTO checkInvoiceDTO = new QualityCheckInvoiceDTO();
@@ -223,11 +227,13 @@ public class RawmaterialorderinvoiceController {
 					checkInvoiceDTO.setName(rawmaterialorderinvoice.getInvoice_No());
 					rawmaterialorderinvoiceList.add(checkInvoiceDTO);
 				}
+			}else{
+				return new Response(1,"There is no any rm qc invoice list");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return rawmaterialorderinvoiceList;
+		return new Response(1,rawmaterialorderinvoiceList);
 	}
 
 	private String addRawmaterialOrderInvoice(Rawmaterialorderinvoice rawmaterialorderinvoice,HttpServletRequest request,HttpServletResponse response) throws RMOrderInvoiceExistsException,Exception{

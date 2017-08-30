@@ -20,6 +20,9 @@ public class StatusServiceImpl extends CRUDServiceImpl<Status> implements Status
 	public StatusDTO getStatusById(long id) throws Exception {
 		// TODO Auto-generated method stub
 		Status status =  statusDao.getById(Status.class, id);
+		if(status==null){
+			return null;
+		}
 		StatusDTO statusDTO = StatusRequestResponseFactory.setStatusDTO(status);
 		return statusDTO;
 	}
@@ -28,6 +31,9 @@ public class StatusServiceImpl extends CRUDServiceImpl<Status> implements Status
 		// TODO Auto-generated method stub
 		List<StatusDTO> statusDTOs = new ArrayList<StatusDTO>();
 		List<Status> statusList= statusDao.getList(Status.class);
+		if(statusList.isEmpty()){
+			return null;
+		}
 		for (Status status : statusList) {
 			StatusDTO statusDTO = StatusRequestResponseFactory.setStatusDTO(status);
 			statusDTOs.add(statusDTO);
@@ -35,16 +41,30 @@ public class StatusServiceImpl extends CRUDServiceImpl<Status> implements Status
 		return statusDTOs;
 	}
 	@Override
-	public void deleteStatus(long id) throws Exception {
+	public StatusDTO deleteStatus(long id) throws Exception {
 		// TODO Auto-generated method stub
 		Status status =  statusDao.getById(Status.class, id);
+		if(status==null){
+			return null;
+		}
 		status.setIsactive(false);
 		statusDao.update(status);
+		StatusDTO statusDTO = StatusRequestResponseFactory.setStatusDTO(status);
+		return statusDTO;
 	}
 	@Override
-	public List<Status> getStatusByType(String type) throws Exception {
+	public List<StatusDTO> getStatusByType(String type) throws Exception {
 		// TODO Auto-generated method stub
-		return statusDao.getStatusByType(type);
+		List<StatusDTO> statusDTOs = new ArrayList<StatusDTO>();
+		List<Status> statusList= statusDao.getStatusByType(type);
+		if(statusList.isEmpty()){
+			return null;
+		}
+		for (Status status : statusList) {
+			StatusDTO statusDTO = StatusRequestResponseFactory.setStatusDTO(status);
+			statusDTOs.add(statusDTO);
+		}
+		return statusDTOs;
 	}
 	
 }

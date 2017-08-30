@@ -23,6 +23,7 @@ import com.nextech.erp.factory.StatusRequestResponseFactory;
 import com.nextech.erp.model.Status;
 import com.nextech.erp.newDTO.StatusDTO;
 import com.nextech.erp.service.StatusService;
+import com.nextech.erp.status.Response;
 import com.nextech.erp.status.UserStatus;
 
 @RestController
@@ -57,14 +58,17 @@ public class StatusController {
 	}
 
 	@Transactional @RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody StatusDTO getStatus(@PathVariable("id") long id) {
+	public @ResponseBody Response getStatus(@PathVariable("id") long id) {
 		StatusDTO status = null;
 		try {
 			status = statusService.getStatusById(id);
+			if(status==null){
+				return  new Response(1,"There is no any status ");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return status;
+		return new Response(1,status);
 	}
 
 	@Transactional @RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
@@ -79,40 +83,49 @@ public class StatusController {
 	}
 
 	@Transactional @RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<StatusDTO> getStatus() {
+	public @ResponseBody Response getStatus() {
 
 		List<StatusDTO> statusList = null;
 		try {
 			statusList = statusService.getStatusList();
+			if(statusList==null){
+				return  new Response(1,"There is no any status list");
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		return statusList;
+		return new Response(1,statusList);
 	}
 
 	@Transactional @RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus deleteStatus(@PathVariable("id") long id) {
+	public @ResponseBody Response deleteStatus(@PathVariable("id") long id) {
 
 		try {
-			statusService.deleteStatus(id);
-			return new UserStatus(1, "Status deleted Successfully !");
+		StatusDTO statusDTO = statusService.deleteStatus(id);
+		if(statusDTO==null){
+			return  new Response(1,"There is no any status");
+		}
+			return new Response(1, "Status deleted Successfully !");
 		} catch (Exception e) {
-			return new UserStatus(0, e.toString());
+			return new Response(0, e.toString());
 		}
 
 	}
 	@Transactional @RequestMapping(value = "type/{type}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<Status> getStatusType(@PathVariable("type") String type) {
-		List<Status> statuList =null;
+	public @ResponseBody Response getStatusType(@PathVariable("type") String type) {
+		List<StatusDTO> statuList =null;
 
 		try {
 			statuList = statusService.getStatusByType(type);
+			if(statuList==null){
+				return  new Response(1,"There is no any status type list");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return statuList;
+		return new Response(1,statuList);
 
 	}
 }

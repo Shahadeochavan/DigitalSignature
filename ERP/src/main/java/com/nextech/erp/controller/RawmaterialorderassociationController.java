@@ -88,18 +88,18 @@ public class RawmaterialorderassociationController {
 	}
 
 	@Transactional @RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody UserStatus  getRawmaterialorderassociation() {
+	public @ResponseBody Response  getRawmaterialorderassociation() {
 
 		List<RMOrderAssociationDTO> rawmaterialorderassociationList = null;
 		try {
 			rawmaterialorderassociationList = rawmaterialorderassociationService.getRMOrderAssoList();
-			if(rawmaterialorderassociationList.isEmpty()){
-				return new UserStatus(1,"There is no any rm assocition list");
+			if(rawmaterialorderassociationList==null){
+				return new Response(1,"There is no any rm assocition list");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return new UserStatus(1,rawmaterialorderassociationList);
+		return new Response(1,rawmaterialorderassociationList);
 	}
 
 	@Transactional @RequestMapping(value = "getRMForRMOrder/{RMOrderId}", method = RequestMethod.GET, headers = "Accept=application/json")
@@ -122,17 +122,17 @@ public class RawmaterialorderassociationController {
 	}
 
 	@Transactional @RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus deleteRawmaterialorderassociation(
+	public @ResponseBody Response deleteRawmaterialorderassociation(
 			@PathVariable("id") long id) {
 		try {
 			RMOrderAssociationDTO rawAssociationDTO = 	rawmaterialorderassociationService.deleteRMOrderAsso(id);
 			if(rawAssociationDTO==null){
-				return new UserStatus(1,"There is no rm association");
+				return new Response(1,"There is no rm association");
 			}
-			return new UserStatus(1,
+			return new Response(1,
 					"Rawmaterialorderassociation deleted Successfully !");
 		} catch (Exception e) {
-			return new UserStatus(0, e.toString());
+			return new Response(0, e.toString());
 		}
 	}
 }

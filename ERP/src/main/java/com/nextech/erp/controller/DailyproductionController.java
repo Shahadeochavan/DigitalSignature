@@ -26,6 +26,7 @@ import com.nextech.erp.service.DailyproductionService;
 import com.nextech.erp.service.ProductService;
 import com.nextech.erp.service.ProductionplanningService;
 import com.nextech.erp.service.StatusService;
+import com.nextech.erp.status.Response;
 import com.nextech.erp.status.UserStatus;
 
 @RestController
@@ -69,14 +70,17 @@ public class DailyproductionController {
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody DailyProductionPlanDTO getDailyproduction(@PathVariable("id") long id) {
-		DailyProductionPlanDTO Dailyproduction = null;
+	public @ResponseBody Response getDailyproduction(@PathVariable("id") long id) {
+		DailyProductionPlanDTO dailyproduction = null;
 		try {
-			Dailyproduction = dailyproductionservice.getDailyProductionById(id);
+			dailyproduction = dailyproductionservice.getDailyProductionById(id);
+			if(dailyproduction== null){
+				return  new Response(1,"There is no any daily production");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return Dailyproduction;
+		return new Response(1,dailyproduction);
 	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
@@ -91,26 +95,32 @@ public class DailyproductionController {
 	}
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<DailyProductionPlanDTO> getDailyproduction() {
+	public @ResponseBody Response getDailyproduction() {
 
-		List<DailyProductionPlanDTO> DailyproductionList = null;
+		List<DailyProductionPlanDTO> dailyproductionList = null;
 		try {
-			DailyproductionList = dailyproductionservice.getDailyProductionList();
+			dailyproductionList = dailyproductionservice.getDailyProductionList();
+			if(dailyproductionList==null){
+				return  new Response(1,"There is no any dailyproduction list");
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return DailyproductionList;
+		return new Response(1,dailyproductionList);
 	}
 
 	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus deleteDailyproduction(@PathVariable("id") long id) {
+	public @ResponseBody Response deleteDailyproduction(@PathVariable("id") long id) {
 
 		try {
-			dailyproductionservice.deleteDailyProduction(id);
-			return new UserStatus(1, "Dailyproduction deleted Successfully !");
+			DailyProductionPlanDTO dailyProductionPlanDTO =dailyproductionservice.deleteDailyProduction(id);
+			if(dailyProductionPlanDTO==null){
+				return  new Response(1,"There is no any daily production plan");
+			}
+			return new Response(1, "Dailyproduction deleted Successfully !");
 		} catch (Exception e) {
-			return new UserStatus(0, e.toString());
+			return new Response(0, e.toString());
 		}
 	}
 	

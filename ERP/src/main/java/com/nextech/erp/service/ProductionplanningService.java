@@ -36,6 +36,6 @@ public interface ProductionplanningService extends CRUDService<Productionplannin
 	
 	public ProductionPlanningDTO getProductionPlanById(long id)throws Exception;
 	
-	public void deleteProduction(long id)throws Exception;
+	public ProductionPlanningDTO deleteProduction(long id)throws Exception;
 
 }

@@ -42,7 +42,7 @@ public class RawmaterialorderServiceImpl extends CRUDServiceImpl<Rawmaterialorde
 		// TODO Auto-generated method stub
 		List<RawmaterialOrderDTO> rawmaterialOrderDTOs = new ArrayList<RawmaterialOrderDTO>();
 		List<Rawmaterialorder> rawmaterialorders = rawmaterialorderDao.getRawmaterialorderByStatusId(statusId,statusId1,statusId2);
-		if(rawmaterialorders.isEmpty()){
+		if(rawmaterialorders==null){
 			return null;
 		}
 		for (Rawmaterialorder rawmaterialorder : rawmaterialorders) {
@@ -58,6 +58,9 @@ public class RawmaterialorderServiceImpl extends CRUDServiceImpl<Rawmaterialorde
 		// TODO Auto-generated method stub
 		List<RawmaterialOrderDTO> rawmaterialOrderDTOs = new ArrayList<RawmaterialOrderDTO>();
 		List<Rawmaterialorder> rawmaterialorders = rawmaterialorderDao.getRawmaterialorderByQualityCheckStatusId(statusId);
+		if(rawmaterialorders.isEmpty()){
+			return null;
+		}
 		for (Rawmaterialorder rawmaterialorder : rawmaterialorders) {
 			RawmaterialOrderDTO rawmaterialOrderDTO = RMOrderRequestResponseFactory.setRMOrderDTO(rawmaterialorder);
 			rawmaterialOrderDTOs.add(rawmaterialOrderDTO);
@@ -71,6 +74,9 @@ public class RawmaterialorderServiceImpl extends CRUDServiceImpl<Rawmaterialorde
 		// TODO Auto-generated method stub
 		List<RawmaterialOrderDTO> rawmaterialOrderDTOs =  new ArrayList<RawmaterialOrderDTO>();
 		List<Rawmaterialorder> rawmaterialorders = rawmaterialorderDao.getRawmaterialorderByVendor(vendorId);
+		if(rawmaterialorders.isEmpty()){
+			return null; 
+		}
 		for (Rawmaterialorder rawmaterialorder : rawmaterialorders) {
 			RawmaterialOrderDTO rawmaterialOrderDTO = RMOrderRequestResponseFactory.setRMOrderDTO(rawmaterialorder);
 			rawmaterialOrderDTOs.add(rawmaterialOrderDTO);
@@ -113,6 +119,9 @@ public class RawmaterialorderServiceImpl extends CRUDServiceImpl<Rawmaterialorde
 		// TODO Auto-generated method stub
 		List<RawmaterialOrderDTO> rawmaterialOrderDTOs = new ArrayList<RawmaterialOrderDTO>();
 		List<Rawmaterialorder> rawmaterialorders = rawmaterialorderDao.getList(Rawmaterialorder.class);
+		if(rawmaterialorders.isEmpty()){
+			return null;
+		}
 		for (Rawmaterialorder rawmaterialorder : rawmaterialorders) {
 			RawmaterialOrderDTO  rawmaterialOrderDTO = RMOrderRequestResponseFactory.setRMOrderDTO(rawmaterialorder);
 			rawmaterialOrderDTOs.add(rawmaterialOrderDTO);
@@ -124,6 +133,9 @@ public class RawmaterialorderServiceImpl extends CRUDServiceImpl<Rawmaterialorde
 	public RawmaterialOrderDTO getRMOrderById(long id) throws Exception {
 		// TODO Auto-generated method stub
 		Rawmaterialorder rawmaterialorder = rawmaterialorderDao.getById(Rawmaterialorder.class, id);
+		if(rawmaterialorder==null){
+			return null;
+		}
 		RawmaterialOrderDTO  rawmaterialOrderDTO = RMOrderRequestResponseFactory.setRMOrderDTO(rawmaterialorder);
 		return rawmaterialOrderDTO;
 	}
@@ -132,9 +144,13 @@ public class RawmaterialorderServiceImpl extends CRUDServiceImpl<Rawmaterialorde
 	public RawmaterialOrderDTO deleteRMOrder(long id) throws Exception {
 		// TODO Auto-generated method stub
 		Rawmaterialorder rawmaterialorder = rawmaterialorderDao.getById(Rawmaterialorder.class, id);
+		if(rawmaterialorder==null){
+			return null;
+		}
 		rawmaterialorder.setIsactive(false);
 		rawmaterialorderDao.update(rawmaterialorder);
-		return null;
+		RawmaterialOrderDTO  rawmaterialOrderDTO = RMOrderRequestResponseFactory.setRMOrderDTO(rawmaterialorder);
+		return rawmaterialOrderDTO;
 	}
 	private String generateInvoiceId(){
 		String year="";

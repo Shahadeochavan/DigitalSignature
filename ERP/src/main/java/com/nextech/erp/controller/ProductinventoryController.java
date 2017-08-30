@@ -97,17 +97,17 @@ public class ProductinventoryController {
 	}
 
 	@Transactional @RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody UserStatus getProductinventory(@PathVariable("id") long id) {
+	public @ResponseBody Response getProductinventory(@PathVariable("id") long id) {
 		ProductInventoryDTO productinventory = null;
 		try {
 			productinventory = productinventoryService.getProductInventory(id);
 			if(productinventory==null){
-				return new UserStatus(1,"There is no any product inventory");
+				return new Response(1,"There is no any product inventory");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return new UserStatus(1,productinventory);
+		return new Response(1,productinventory);
 	}
 
 	@Transactional @RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
@@ -127,7 +127,7 @@ public class ProductinventoryController {
 		List<ProductInventoryDTO> productinventoryList = null;
 		try {
 			productinventoryList = productinventoryService.getproductInventoryDTO();
-			if (productinventoryList.isEmpty()) {
+			if (productinventoryList==null) {
 				System.out.println("Please add product inventory");
 				return new Response(1, "Product Inventory is empty",
 						productinventoryList);
@@ -141,16 +141,16 @@ public class ProductinventoryController {
 	}
 
 	@Transactional @RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus deleteProductinventory(@PathVariable("id") long id) {
+	public @ResponseBody Response deleteProductinventory(@PathVariable("id") long id) {
 
 		try {
 			ProductInventoryDTO productInventoryDTO = productinventoryService.deleteProductInventory(id);
 			if (productInventoryDTO==null) {
-				return new UserStatus(1,"There is no any product Inventory");
+				return new Response(1,"There is no any product Inventory");
 			}
-			return new UserStatus(1, "Productinventory deleted Successfully !");
+			return new Response(1, "Productinventory deleted Successfully !");
 		} catch (Exception e) {
-			return new UserStatus(0, e.toString());
+			return new Response(0, e.toString());
 		}
 
 	}

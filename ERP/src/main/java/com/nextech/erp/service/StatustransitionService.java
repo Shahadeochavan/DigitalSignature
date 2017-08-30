@@ -13,6 +13,6 @@ public interface StatustransitionService extends CRUDService<Statustransition>{
 	
 	public StatusTransitionDTO getStatusTranstionbyId(long id) throws Exception;
 	
-	public void deleteStatusTranstion(long id)throws Exception;
+	public StatusTransitionDTO deleteStatusTranstion(long id)throws Exception;
 }
 

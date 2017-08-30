@@ -45,6 +45,7 @@ import com.nextech.erp.service.ReportusertypeassociationService;
 import com.nextech.erp.service.UserService;
 import com.nextech.erp.service.UserTypeService;
 import com.nextech.erp.service.UsertypepageassociationService;
+import com.nextech.erp.status.Response;
 import com.nextech.erp.status.UserStatus;
 import com.nextech.erp.util.EncryptDecrypt;
 
@@ -196,17 +197,17 @@ public class UserController {
 	
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody UserStatus getUser(@PathVariable("id") long id) {
+	public @ResponseBody Response getUser(@PathVariable("id") long id) {
 		UserDTO userDTO = null;
 		try {
 			userDTO = userservice.getUserDTO(id);
 			if(userDTO==null){
-				return  new UserStatus(1,"There is no any user");
+				return  new Response(1,"There is no any user");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return new UserStatus(1,userDTO);
+		return new Response(1,userDTO);
 	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
@@ -253,50 +254,50 @@ public class UserController {
 	}
 	
 	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody UserStatus getUser() {
+	public @ResponseBody Response getUser() {
 
 		List<UserDTO> userList = null;
 		try {
 			userList = userservice.getUserList(userList);
-			if(userList.isEmpty()){
-				return new UserStatus(1,"There is no any user list");
+			if(userList==null){
+				return new Response(1,"There is no any user list");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		return new UserStatus(1,userList);
+		return new Response(1,userList);
 	}
 
 	@RequestMapping(value = "userProfile/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody UserStatus getUserProfile(@PathVariable("id") long id) {
+	public @ResponseBody Response getUserProfile(@PathVariable("id") long id) {
 
 		List<User> userProfileList = null;
 		try {
 			userProfileList = userservice.getUserProfileByUserId(id);
 			if(userProfileList.isEmpty()){
-				return new UserStatus(1,"There is no any user list");
+				return new Response(1,"There is no any user list");
 			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		return new UserStatus(1,userProfileList);
+		return new Response(1,userProfileList);
 	}
 
 	/* Delete an object from DB in Spring Restful Services */
 	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus deleteEmployee(@PathVariable("id") long id) {
+	public @ResponseBody Response deleteEmployee(@PathVariable("id") long id) {
 
 		try {
 			 UserDTO user =userservice.getUserDTOByid(id);
 			 if (user==null) {
-				 return new UserStatus(1,"There is no any user for delete");
+				 return new Response(1,"There is no any user for delete");
 			}
-			return new UserStatus(1, "User deleted Successfully !");
+			return new Response(1, "User deleted Successfully !");
 		} catch (Exception e) {
-			return new UserStatus(0, e.toString());
+			return new Response(0, e.toString());
 		}
 
 	}

@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.nextech.erp.factory.PageFactory;
 import com.nextech.erp.newDTO.PageDTO;
 import com.nextech.erp.service.PageService;
+import com.nextech.erp.status.Response;
 import com.nextech.erp.status.UserStatus;
 
 @Controller
@@ -56,17 +57,17 @@ public class PageController {
 	}
 
 	@Transactional @RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody UserStatus getPage(@PathVariable("id") long id) {
+	public @ResponseBody Response getPage(@PathVariable("id") long id) {
 		PageDTO pageDTO = null;
 		try {
 			pageDTO = pageservice.getPageDTOById(id);
 			if(pageDTO==null){
-				return new UserStatus(1,"There is no any page");
+				return new Response(1,"There is no any page");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return new UserStatus(1,pageDTO);
+		return new Response(1,pageDTO);
 	}
 
 	@Transactional @RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
@@ -82,33 +83,33 @@ public class PageController {
 	}
 
 	@Transactional @RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody UserStatus getPage() {
+	public @ResponseBody Response getPage() {
 
 		List<PageDTO> pageList = null;
 		try {
 			pageList = pageservice.getPageDTOList(pageList);
-			if(pageList.isEmpty()){
-				return new UserStatus(1,"There is no any page list");
+			if(pageList==null){
+				return new Response(1,"There is no any page list");
 			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		return new UserStatus(1,pageList);
+		return new Response(1,pageList);
 	}
 
 	@Transactional @RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus deletePage(@PathVariable("id") long id) {
+	public @ResponseBody Response deletePage(@PathVariable("id") long id) {
 
 		try {
 			PageDTO pageDTO= pageservice.deletePageById(id);
 			if(pageDTO==null){
-				return  new UserStatus(1,"There is no any page");
+				return  new Response(1,"There is no any page");
 			}
-			return new UserStatus(1, "Page deleted Successfully !");
+			return new Response(1, "Page deleted Successfully !");
 		} catch (Exception e) {
-			return new UserStatus(0, e.toString());
+			return new Response(0, e.toString());
 		}
 
 	}

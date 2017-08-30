@@ -23,6 +23,9 @@ public class RMTypeServiceImpl extends CRUDServiceImpl<Rmtype> implements RMType
 		// TODO Auto-generated method stub
 		List<RMTypeDTO> rmTypeDTOs = new ArrayList<RMTypeDTO>();
 		List<Rmtype> rmtypes = rMTypeDao.getList(Rmtype.class);
+		if(rmtypes.isEmpty()){
+			return null;
+		}
 		for (Rmtype rmtype : rmtypes) {
 			RMTypeDTO rmTypeDTO = RMTypeRequestResponseFactory.setRMTypeDTO(rmtype);
 			rmTypeDTOs.add(rmTypeDTO);
@@ -34,16 +37,24 @@ public class RMTypeServiceImpl extends CRUDServiceImpl<Rmtype> implements RMType
 	public RMTypeDTO getRMTypeById(long id) throws Exception {
 		// TODO Auto-generated method stub
 		Rmtype rmtype  = rMTypeDao.getById(Rmtype.class, id);
+		if(rmtype==null){
+			return null;
+		}
 		RMTypeDTO rmTypeDTO = RMTypeRequestResponseFactory.setRMTypeDTO(rmtype);
 		return rmTypeDTO;
 	}
 
 	@Override
-	public void deleteRMType(long id) throws Exception {
+	public RMTypeDTO deleteRMType(long id) throws Exception {
 		// TODO Auto-generated method stub
 		Rmtype rmtype  = rMTypeDao.getById(Rmtype.class, id);
+		if(rmtype==null){
+			return null;
+		}
 		rmtype.setIsactive(false);
 		rMTypeDao.update(rmtype);
+		RMTypeDTO rmTypeDTO = RMTypeRequestResponseFactory.setRMTypeDTO(rmtype);
+		return rmTypeDTO;
 		
 	}
 

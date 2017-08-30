@@ -214,9 +214,9 @@ public class QualitycheckrawmaterialServiceImpl extends CRUDServiceImpl<Qualityc
 	
 	@SuppressWarnings("unused")
 	private Rawmaterialinventory updateInventory(Qualitycheckrawmaterial qualitycheckrawmaterial,Rawmaterial rawmaterial,HttpServletRequest request,HttpServletResponse response) throws Exception{
-		RMInventoryDTO rmInventoryDTO =  rawmaterialinventoryService.getByRMId(qualitycheckrawmaterial.getRawmaterial().getId());
+	
 		Rawmaterialinventory	rawmaterialinventory = new Rawmaterialinventory();
-		rawmaterialinventory.setId(rmInventoryDTO.getId());
+		RMInventoryDTO rmInventoryDTO =  rawmaterialinventoryService.getByRMId(qualitycheckrawmaterial.getRawmaterial().getId());
 		if(rmInventoryDTO == null){
 		
 			rawmaterialinventory.setRawmaterial(rawmaterial);
@@ -225,6 +225,7 @@ public class QualitycheckrawmaterialServiceImpl extends CRUDServiceImpl<Qualityc
 			rawmaterialinventory.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			rawmaterialinventoryService.addEntity(rawmaterialinventory);
 		}else{
+			rawmaterialinventory.setId(rmInventoryDTO.getId());
 			rawmaterialinventory.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			rawmaterialinventory.setIsactive(true);
 			rawmaterialinventory.setRawmaterial(rmInventoryDTO.getRawmaterialId());

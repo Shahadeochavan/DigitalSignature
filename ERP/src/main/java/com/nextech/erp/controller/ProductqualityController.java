@@ -33,6 +33,7 @@ import com.nextech.erp.service.ProductorderService;
 import com.nextech.erp.service.ProductorderassociationService;
 import com.nextech.erp.service.ProductqualityService;
 import com.nextech.erp.service.StatusService;
+import com.nextech.erp.status.Response;
 import com.nextech.erp.status.UserStatus;
 import com.nextech.erp.util.DateUtil;
 
@@ -145,15 +146,18 @@ public class ProductqualityController {
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody ProductQualityDTO getProductquality(@PathVariable("id") long id) {
+	public @ResponseBody Response getProductquality(@PathVariable("id") long id) {
 		ProductQualityDTO productquality = null;
 		try {
 
 			productquality = productqualityService.getProductQualityById(id);
+			if(productquality==null){
+				return new Response(1,"There is no any product quality");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return productquality;
+		return new Response(1,productquality);
 	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
@@ -168,24 +172,30 @@ public class ProductqualityController {
 	}
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<ProductQualityDTO> getProductquality() {
+	public @ResponseBody Response getProductquality() {
 		List<ProductQualityDTO> productqualityList = null;
 		try {
 			productqualityList = productqualityService.getProductQualityList();
+			if(productqualityList==null){
+				return  new Response(1,"There is no any product quality list");
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return productqualityList;
+		return new Response(1,productqualityList);
 	}
 
 	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus deleteProductquality(@PathVariable("id") long id) {
+	public @ResponseBody Response deleteProductquality(@PathVariable("id") long id) {
 		try {
-			productqualityService.deleteproductQuality(id);
-			return new UserStatus(1, "Productquality deleted Successfully !");
+			ProductQualityDTO productQualityDTO =	productqualityService.deleteproductQuality(id);
+			if(productQualityDTO==null){
+				return new Response(1,"There is no any product quality");
+			}
+			return new Response(1, "Productquality deleted Successfully !");
 		} catch (Exception e) {
-			return new UserStatus(0, e.toString());
+			return new Response(0, e.toString());
 		}
 	}
 }

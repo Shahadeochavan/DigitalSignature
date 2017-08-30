@@ -17,6 +17,6 @@ public interface ProductqualityService  extends CRUDService<Productquality>{
 	
 	public ProductQualityDTO getProductQualityById(long id) throws Exception;
 	
-	public void deleteproductQuality(long id) throws Exception;
+	public ProductQualityDTO deleteproductQuality(long id) throws Exception;
 
 }

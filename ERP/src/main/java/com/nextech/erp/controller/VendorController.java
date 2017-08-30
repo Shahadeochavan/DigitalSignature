@@ -32,6 +32,7 @@ import com.nextech.erp.service.NotificationService;
 import com.nextech.erp.service.NotificationUserAssociationService;
 import com.nextech.erp.service.UserService;
 import com.nextech.erp.service.VendorService;
+import com.nextech.erp.status.Response;
 import com.nextech.erp.status.UserStatus;
 
 @Controller
@@ -97,17 +98,17 @@ public class VendorController {
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody UserStatus getVendor(@PathVariable("id") long id) {
+	public @ResponseBody Response getVendor(@PathVariable("id") long id) {
 		VendorDTO vendorDTO = null;
 		try {
 			vendorDTO = vendorService.getVendorById(id);
 			if(vendorDTO==null){
-				return new UserStatus(1,"There is no vendor");
+				return new Response(1,"There is no vendor");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return new UserStatus(1,vendorDTO);
+		return new Response(1,vendorDTO);
 	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
@@ -139,33 +140,33 @@ public class VendorController {
 	}
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody UserStatus getVendor() {
+	public @ResponseBody Response getVendor() {
 
 		List<VendorDTO> vendorDTOs = null;
 		try {
 			vendorDTOs = vendorService.getVendorList(vendorDTOs);
-			if(vendorDTOs.isEmpty()){
-				return new UserStatus(1,"There is no vendor list");
+			if(vendorDTOs==null){
+				return new Response(1,"There is no vendor list");
 			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		return new UserStatus(1,vendorDTOs);
+		return new Response(1,vendorDTOs);
 	}
 
 	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus deleteVendor(@PathVariable("id") long id) {
+	public @ResponseBody Response deleteVendor(@PathVariable("id") long id) {
 
 		try {
 			VendorDTO vendorDTO = vendorService.deleteVendor(id);
 			if(vendorDTO==null){
-				return new UserStatus(1,"There is no any vendor for delete");
+				return new Response(1,"There is no any vendor for delete");
 			}
-			return new UserStatus(1, "Vendor deleted Successfully !");
+			return new Response(1, "Vendor deleted Successfully !");
 		} catch (Exception e) {
-			return new UserStatus(0, e.toString());
+			return new Response(0, e.toString());
 		}
 
 	}

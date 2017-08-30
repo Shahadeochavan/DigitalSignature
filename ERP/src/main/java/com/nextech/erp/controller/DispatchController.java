@@ -14,6 +14,7 @@ import javax.persistence.PersistenceException;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -51,6 +52,7 @@ import com.nextech.erp.service.ProductorderService;
 import com.nextech.erp.service.ProductorderassociationService;
 import com.nextech.erp.service.StatusService;
 import com.nextech.erp.service.UserService;
+import com.nextech.erp.status.Response;
 import com.nextech.erp.status.UserStatus;
 
 @Controller
@@ -140,14 +142,17 @@ public class DispatchController {
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody DispatchDTO getDispatch(@PathVariable("id") long id) {
+	public @ResponseBody Response getDispatch(@PathVariable("id") long id) {
 		DispatchDTO dispatch = null;
 		try {
 			dispatch = dispatchservice.getDispatchById(id);
+			if(dispatch==null){
+				return new Response(1,"There is no any dispatch product");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return dispatch;
+		return new Response(1,dispatch);
 	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
@@ -164,27 +169,33 @@ public class DispatchController {
 	}
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<DispatchDTO> getDispatch() {
+	public @ResponseBody Response getDispatch() {
 
 		List<DispatchDTO> dispatchList = null;
 		try {
 			dispatchList = dispatchservice.getDispatchList();
+			if(dispatchList==null){
+				return new Response(1,dispatchList);
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		return dispatchList;
+		return new Response(1,dispatchList);
 	}
 
 	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus deleteDispatch(@PathVariable("id") long id) {
+	public @ResponseBody Response deleteDispatch(@PathVariable("id") long id) {
 
 		try {
-			dispatchservice.deleteDispatchById(id);
-			return new UserStatus(1, "Dispatch deleted Successfully !");
+			DispatchDTO dispatchDTO = dispatchservice.deleteDispatchById(id);
+			if(dispatchDTO==null){
+				return new Response(1,"There is no any dispatch product");
+			}
+			return new Response(1, "Dispatch deleted Successfully !");
 		} catch (Exception e) {
-			return new UserStatus(0, e.toString());
+			return new Response(0, e.toString());
 		}
 
 	}

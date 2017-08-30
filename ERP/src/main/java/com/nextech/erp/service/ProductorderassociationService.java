@@ -13,6 +13,7 @@ public interface ProductorderassociationService extends CRUDService<Productorder
 			long pOrderId,long pId) throws Exception;
 
 	public List<Productorderassociation> getProductorderassociationByProductId(long pId) throws Exception;
+	
 	public List<ProductOrderAssociationDTO> getProductorderassociationByOrderId(long orderId) throws Exception;
 
 	public List<ProductOrderAssociationDTO> getIncompleteProductOrderAssoByProductId(long productId) throws Exception;
@@ -29,7 +30,7 @@ public interface ProductorderassociationService extends CRUDService<Productorder
 	
 	public ProductOrderAssociationDTO getProductOrderAsoById(long id)throws Exception;
 	
-	public void deleteProductOrderAsso(long id) throws Exception;
+	public ProductOrderAssociationDTO deleteProductOrderAsso(long id) throws Exception;
 	
 	public List<ProductOrderAssociationDTO> getIncompleteProductOrderAssociations() throws Exception;
 	

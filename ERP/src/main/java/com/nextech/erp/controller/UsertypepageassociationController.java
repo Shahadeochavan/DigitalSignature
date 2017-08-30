@@ -26,6 +26,7 @@ import com.nextech.erp.newDTO.UserTypePageAssoPart;
 import com.nextech.erp.service.PageService;
 import com.nextech.erp.service.UserTypeService;
 import com.nextech.erp.service.UsertypepageassociationService;
+import com.nextech.erp.status.Response;
 import com.nextech.erp.status.UserStatus;
 
 @Controller
@@ -79,18 +80,18 @@ public class UsertypepageassociationController {
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody UserStatus getUserTypePageAsso(
+	public @ResponseBody Response getUserTypePageAsso(
 			@PathVariable("id") long id) {
 		UserTypePageAssoDTO userTypePageAssoDTO = null;
 		try {
 			userTypePageAssoDTO = usertypepageassociationService.getUserTypeDto(id);
 			if(userTypePageAssoDTO==null){
-				return new UserStatus(1,"There is no any user type page assocition");
+				return new Response(1,"There is no any user type page association");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return new UserStatus(1,userTypePageAssoDTO);
+		return new Response(1,userTypePageAssoDTO);
 	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
@@ -106,53 +107,53 @@ public class UsertypepageassociationController {
 	}
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody UserStatus getUserTypePageAsso() {
+	public @ResponseBody Response getUserTypePageAsso() {
 
 		List<UserTypePageAssoDTO> userTypePageAssoDTOs = null;
 		try {
 			userTypePageAssoDTOs = usertypepageassociationService.getUserTypePageAssList();
 			if(userTypePageAssoDTOs.isEmpty()){
-				return new UserStatus(1,"There is no any user type page assocition list");
+				return new Response(1,"There is no any user type page association list");
 			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		return new UserStatus(1,userTypePageAssoDTOs);
+		return new Response(1,userTypePageAssoDTOs);
 	}
 	
 	@RequestMapping(value = "/UserTypePageAsso/{UserTypeId}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody UserStatus getPageAssByUserTypeId(@PathVariable("UserTypeId") long id) {
+	public @ResponseBody Response getPageAssByUserTypeId(@PathVariable("UserTypeId") long id) {
 
 		List<UserTypePageAssoDTO> UserTypePageAssoDTO = null;
 		try {
 			UserTypePageAssoDTO = usertypepageassociationService.getPagesByUsertype(id);
-			if(UserTypePageAssoDTO.isEmpty()){
-				return new UserStatus(1,"There is no user type page assocition");
+			if(UserTypePageAssoDTO==null){
+				return new Response(1,"There is no user type page association");
 			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		return new UserStatus(1,UserTypePageAssoDTO);
+		return new Response(1,UserTypePageAssoDTO);
 	}
 
 	/* Delete an object from DB in Spring Restful Services */
 	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus deleteUserTypePageAsso(@PathVariable("id") long id) {
+	public @ResponseBody Response deleteUserTypePageAsso(@PathVariable("id") long id) {
 
 		try {
 			UserTypePageAssoDTO userTypePageAssoDTO =	usertypepageassociationService.deleteUserTypePage(id);
 			if(userTypePageAssoDTO==null){
-				return new UserStatus(1,"There is no any user type page assocition");
+				return new Response(1,"There is no any user type page assocition");
 			}
-			return new UserStatus(1,
+			return new Response(1,
 					"Usertypepageassociation deleted Successfully !");
 		} catch (Exception e) {
 			e.printStackTrace();
-			return new UserStatus(0, e.toString());
+			return new Response(0, e.toString());
 		}
 
 	}

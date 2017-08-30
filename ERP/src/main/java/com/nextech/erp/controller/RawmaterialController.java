@@ -34,6 +34,7 @@ import com.nextech.erp.newDTO.RMVendorAssociationDTO;
 import com.nextech.erp.newDTO.RawMaterialDTO;
 import com.nextech.erp.service.RawmaterialService;
 import com.nextech.erp.service.RawmaterialinventoryService;
+import com.nextech.erp.status.Response;
 import com.nextech.erp.status.UserStatus;
 import com.nextech.erp.util.ImageUploadUtil;
 @Controller
@@ -86,17 +87,17 @@ public class RawmaterialController {
 		}
 	}
 	@Transactional @RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody UserStatus getRawmaterial(@PathVariable("id") long id) {
+	public @ResponseBody Response getRawmaterial(@PathVariable("id") long id) {
 		RawMaterialDTO rawmaterial = null;
 		try {
 			rawmaterial = rawmaterialService.getRMDTO(id);
 			if(rawmaterial==null){
-				return new UserStatus(1,"There is no any rm");
+				return new Response(1,"There is no any rm");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return new UserStatus(1,rawmaterial);
+		return new Response(1,rawmaterial);
 	}
 
 	@Transactional @RequestMapping(value = "/update",headers = "Content-Type=*/*", method = RequestMethod.POST)
@@ -130,59 +131,59 @@ public class RawmaterialController {
 	}
 
 	@Transactional @RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody UserStatus getRawmaterial() {
+	public @ResponseBody Response getRawmaterial() {
 		List<RawMaterialDTO> rawmaterialList = null;
 		try {
 			rawmaterialList = rawmaterialService.getRMList();
-			if (rawmaterialList.isEmpty()) {
-				return  new UserStatus(1,"There is no any rm list");
+			if (rawmaterialList==null) {
+				return  new Response(1,"There is no any rm list");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return new UserStatus(1,rawmaterialList);
+		return new Response(1,rawmaterialList);
 	}
 
 	@Transactional @RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus deleteRawmaterial(@PathVariable("id") long id) {
+	public @ResponseBody Response deleteRawmaterial(@PathVariable("id") long id) {
 		try {
 			RawMaterialDTO rawMaterialDTO =rawmaterialService.deleteRM(id);
 			if(rawMaterialDTO==null){
-				return new UserStatus(1,"There is no any rm");
+				return new Response(1,"There is no any rm");
 			}
-			return new UserStatus(1, messageSource.getMessage(ERPConstants.RAW_MATERAIL_DELETE, null, null));
+			return new Response(1, messageSource.getMessage(ERPConstants.RAW_MATERAIL_DELETE, null, null));
 		} catch (Exception e) {
-			return new UserStatus(0, e.toString());
+			return new Response(0, e.toString());
 		}
 	}
 
 	@Transactional @RequestMapping(value = "/getRMaterial/{VendorId}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody UserStatus getRawmaterialForVendor(@PathVariable("VendorId") long id) {
+	public @ResponseBody Response getRawmaterialForVendor(@PathVariable("VendorId") long id) {
 		List<RMVendorAssociationDTO> rawmaterialvendorassociationList = null;
 		try {
 			rawmaterialvendorassociationList = rawmaterialService.getRawmaterialByVenodrId(id);
 			if(rawmaterialvendorassociationList.isEmpty()){
-				return  new UserStatus(1,"There is no any rm assocition list");
+				return  new Response(1,"There is no any rm assocition list");
 			}
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return new UserStatus(1,rawmaterialvendorassociationList);
+		return new Response(1,rawmaterialvendorassociationList);
 	}
 
 	@Transactional @RequestMapping(value = "/getRMForRMOrder/{RMOrderId}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody UserStatus getRawmaterialForRMOrder(@PathVariable("RMOrderId") long id) {
+	public @ResponseBody Response getRawmaterialForRMOrder(@PathVariable("RMOrderId") long id) {
 		List<RawMaterialDTO> rawmaterialList = null;
 		try {
 			rawmaterialList = rawmaterialService.getRawMaterialByRMOrderId(id);
-			if(rawmaterialList.isEmpty()){
-				return  new UserStatus(1,"There is no any rm list");
+			if(rawmaterialList==null){
+				return  new Response(1,"There is no any rm list");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return new UserStatus(1,rawmaterialList);
+		return new Response(1,rawmaterialList);
 	}
 
 	private void addRMInventory(RawMaterialDTO rawMaterialDTO,long userId) throws Exception{
@@ -190,29 +191,32 @@ public class RawmaterialController {
 	}
 	
 	@Transactional @RequestMapping(value = "/getRMaterialList/{RMTypeId}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody UserStatus getRawmaterialForRMType(@PathVariable("RMTypeId") long id) {
+	public @ResponseBody Response getRawmaterialForRMType(@PathVariable("RMTypeId") long id) {
 		List<RawMaterialDTO> rawmaterialList = null;
 		try {
 			rawmaterialList = rawmaterialService.getRMByRMTypeId(id);
-			if(rawmaterialList.isEmpty()){
-				return new UserStatus(1,"There is no any rm list");
+			if(rawmaterialList==null){
+				return new Response(1,"There is no any rm list");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return new UserStatus(1,rawmaterialList);
+		return new Response(1,rawmaterialList);
 	}
 	@Transactional @RequestMapping(value = "/image/{RM-ID}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody ResponseEntity<byte[]> getRawmaterailImage(@PathVariable("RM-ID") long id,HttpServletRequest request){
 		try {
 			Rawmaterial rawmaterial = rawmaterialService.getRMByRMId(id);
+			if(rawmaterial==null){
+				
+			}
 			String FILE_PATH = rawmaterial.getDesign();
 			
 			InputStream in = request.getServletContext().getResourceAsStream(FILE_PATH);
 			in = new FileInputStream(new File(FILE_PATH));
 		    final HttpHeaders headers = new HttpHeaders();
 		    headers.setContentType(MediaType.IMAGE_PNG);
-
+            
 		    return new ResponseEntity<byte[]>(IOUtils.toByteArray(in), headers, HttpStatus.CREATED);
 		} catch (Exception e) {
 			e.printStackTrace();

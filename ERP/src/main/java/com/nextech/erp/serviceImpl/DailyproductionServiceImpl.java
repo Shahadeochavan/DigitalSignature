@@ -46,6 +46,9 @@ public class DailyproductionServiceImpl extends CRUDServiceImpl<Dailyproduction>
 		// TODO Auto-generated method stub
 		List<DailyProductionPlanDTO> dailyProductionPlanDTOs = new ArrayList<DailyProductionPlanDTO>();
 		List<Dailyproduction> dailyproductions =  dailyproductionDao.getList(Dailyproduction.class);
+		if(dailyproductions.isEmpty()){
+			return null;
+		}
 		for (Dailyproduction dailyproduction : dailyproductions) {
 		DailyProductionPlanDTO dailyProductionPlanDTO =  DailyProductionRequestResponseFactory.setDailyProductionDTO(dailyproduction);
 		dailyProductionPlanDTOs.add(dailyProductionPlanDTO);
@@ -58,16 +61,24 @@ public class DailyproductionServiceImpl extends CRUDServiceImpl<Dailyproduction>
 			throws Exception {
 		// TODO Auto-generated method stub
 		Dailyproduction  dailyproduction = dailyproductionDao.getById(Dailyproduction.class, id);
+		if(dailyproduction==null){
+			return null;
+		}
 		DailyProductionPlanDTO dailyProductionPlanDTO =  DailyProductionRequestResponseFactory.setDailyProductionDTO(dailyproduction);
 		return dailyProductionPlanDTO;
 	}
 
 	@Override
-	public void deleteDailyProduction(long id) throws Exception {
+	public DailyProductionPlanDTO deleteDailyProduction(long id) throws Exception {
 		// TODO Auto-generated method stub
 		Dailyproduction  dailyproduction = dailyproductionDao.getById(Dailyproduction.class, id);
+		if(dailyproduction==null){
+			return null;
+		}
 		dailyproduction.setIsactive(false);
 		dailyproductionDao.update(dailyproduction);
+		DailyProductionPlanDTO dailyProductionPlanDTO =  DailyProductionRequestResponseFactory.setDailyProductionDTO(dailyproduction);
+		return dailyProductionPlanDTO;
 	}
 
 	@Override

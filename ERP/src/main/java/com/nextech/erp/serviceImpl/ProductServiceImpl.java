@@ -57,6 +57,9 @@ public class ProductServiceImpl extends CRUDServiceImpl<Product> implements Prod
 		// TODO Auto-generated method stub
 		List<ProductDTO> productDTOs = new ArrayList<ProductDTO>();
 		List<Product> products = productDao.getProductList(productIdList);
+		if(products.isEmpty()){
+			return null;
+		}
 		for (Product product : products) {
 			ProductDTO productDTO = ProductRequestResponseFactory.setProductDto(product);
 			productDTOs.add(productDTO);

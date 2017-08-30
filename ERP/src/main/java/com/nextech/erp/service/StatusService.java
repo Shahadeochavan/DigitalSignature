@@ -12,9 +12,9 @@ public interface StatusService extends CRUDService<Status>{
 	
 	public List<StatusDTO> getStatusList() throws Exception;
 	
-	public void deleteStatus(long id) throws Exception;
+	public StatusDTO deleteStatus(long id) throws Exception;
 	
-	public List<Status> getStatusByType(String type) throws Exception;
+	public List<StatusDTO> getStatusByType(String type) throws Exception;
 	
 }
 

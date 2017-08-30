@@ -79,6 +79,9 @@ public class ProductionplanningServiceImpl extends
 		// TODO Auto-generated method stub
 		List<ProductionPlanningDTO> productionPlanningDTOs =  new ArrayList<ProductionPlanningDTO>();
 		List<Productionplanning> productionplannings =  productionplanningDao.getProductionplanningByCurrentMonth(month);
+		if(productionplannings.isEmpty()){
+			return null;
+		}
 		for (Productionplanning productionplanning : productionplannings) {
 			ProductionPlanningDTO productionPlanningDTO = ProductionPlanningRequestResponseFactory.setProductionPlanningDTO(productionplanning);
 			productionPlanningDTOs.add(productionPlanningDTO);
@@ -89,6 +92,9 @@ public class ProductionplanningServiceImpl extends
 	public ProductionPlanningDTO getProductionplanByDateAndProductId(Date date,long pId) throws Exception {
 		// TODO Auto-generated method stub
 		Productionplanning productionplanning = productionplanningDao.getProductionplanByDateAndProductId(date,pId);
+		if(productionplanning==null){
+			return null;
+		}
 		ProductionPlanningDTO productionPlanningDTO = ProductionPlanningRequestResponseFactory.setProductionPlanningDTO(productionplanning);
 		return productionPlanningDTO;
 	}
@@ -166,6 +172,9 @@ public class ProductionplanningServiceImpl extends
 		// TODO Auto-generated method stub
 		List<ProductionPlanningDTO> productionPlanningDTOs =  new ArrayList<ProductionPlanningDTO>();
 		List<Productionplanning> productionplannings =  productionplanningDao.updateProductionPlanByMonthYear(month_year);
+		if(productionplannings.isEmpty()){
+			return null;
+		}
 		for (Productionplanning productionplanning : productionplannings) {
 			ProductionPlanningDTO productionPlanningDTO = ProductionPlanningRequestResponseFactory.setProductionPlanningDTO(productionplanning);
 			productionPlanningDTOs.add(productionPlanningDTO);
@@ -252,6 +261,9 @@ public class ProductionplanningServiceImpl extends
 			throws Exception {
 		List<ProductionPlanningDTO> productionPlanningDTOs =  new ArrayList<ProductionPlanningDTO>();
 		List<Productionplanning> productionplannings = productionplanningDao.getProductionplanByDate(date);
+		if(productionplannings.isEmpty()){
+			return null;
+		}
 		for (Productionplanning productionplanning : productionplannings) {
 			ProductionPlanningDTO productionPlanningDTO = ProductionPlanningRequestResponseFactory.setProductionPlanningDTO(productionplanning);
 			productionPlanningDTOs.add(productionPlanningDTO);
@@ -265,6 +277,9 @@ public class ProductionplanningServiceImpl extends
 		// TODO Auto-generated method stub
 		List<ProductionPlanningDTO> productionPlanningDTOs =  new ArrayList<ProductionPlanningDTO>();
 		List<Productionplanning> productionplannings = productionplanningDao.getProductionplanByProdutId(date,productID);
+		if(productionplannings.isEmpty()){
+			return null;
+		}
 		for (Productionplanning productionplanning : productionplannings) {
 			ProductionPlanningDTO productionPlanningDTO = ProductionPlanningRequestResponseFactory.setProductionPlanningDTO(productionplanning);
 			productionPlanningDTOs.add(productionPlanningDTO);
@@ -277,6 +292,9 @@ public class ProductionplanningServiceImpl extends
 		// TODO Auto-generated method stub
 		List<ProductionPlanningDTO> productionPlanningDTOs =  new ArrayList<ProductionPlanningDTO>();
 		List<Productionplanning> productionplannings = productionplanningDao.getList(Productionplanning.class);
+		if(productionplannings.isEmpty()){
+			return null;
+		}
 		for (Productionplanning productionplanning : productionplannings) {
 			ProductionPlanningDTO productionPlanningDTO = ProductionPlanningRequestResponseFactory.setProductionPlanningDTO(productionplanning);
 			productionPlanningDTOs.add(productionPlanningDTO);
@@ -289,16 +307,24 @@ public class ProductionplanningServiceImpl extends
 			throws Exception {
 		// TODO Auto-generated method stub
 		Productionplanning productionplanning = productionplanningDao.getById(Productionplanning.class, id);
+		if(productionplanning==null){
+			return null;
+		}
 		ProductionPlanningDTO productionPlanningDTO = ProductionPlanningRequestResponseFactory.setProductionPlanningDTO(productionplanning);
 		return productionPlanningDTO;
 	}
 
 	@Override
-	public void deleteProduction(long id) throws Exception {
+	public ProductionPlanningDTO deleteProduction(long id) throws Exception {
 		// TODO Auto-generated method stub
 		Productionplanning productionplanning = productionplanningDao.getById(Productionplanning.class, id);
+		if(productionplanning==null){
+			return null;
+		}
 		productionplanning.setIsactive(false);
 		productionplanningDao.update(productionplanning);
+		ProductionPlanningDTO productionPlanningDTO = ProductionPlanningRequestResponseFactory.setProductionPlanningDTO(productionplanning);
+		return productionPlanningDTO;
 		
 	}
 }

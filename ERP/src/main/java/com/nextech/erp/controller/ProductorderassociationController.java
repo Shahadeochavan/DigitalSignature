@@ -68,14 +68,18 @@ public class ProductorderassociationController {
 	}
 
 	@Transactional @RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody ProductOrderAssociationDTO getProductorderassociation(@PathVariable("id") long id) {
+	public @ResponseBody Response getProductorderassociation(@PathVariable("id") long id) {
 		ProductOrderAssociationDTO productorderassociation = null;
 		try {
 			productorderassociation = productorderassociationService.getProductOrderAsoById(id);
+			if (productorderassociation==null) {
+				return new Response(1,"There is no any product order association");
+				
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return productorderassociation;
+		return new Response(1,productorderassociation);
 	}
 
 	@Transactional @RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
@@ -90,14 +94,17 @@ public class ProductorderassociationController {
 	}
 
 	@Transactional @RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<ProductOrderAssociationDTO> getProductorderassociation() {
+	public @ResponseBody Response getProductorderassociation() {
 		List<ProductOrderAssociationDTO> productorderassociationList = null;
 		try {
 			productorderassociationList = productorderassociationService.getProductOrderAssoList();
+			if(productorderassociationList==null){
+				return new Response(1,"There is no any product order assocition list");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return productorderassociationList;
+		return new Response(1,productorderassociationList);
 	}
 	
 	@Transactional @RequestMapping(value = "getProductOrderInventoryData/{orderId}", method = RequestMethod.GET, headers = "Accept=application/json")
@@ -106,8 +113,10 @@ public class ProductorderassociationController {
 		List<ProductOrderInventoryData> productOrderInventoryList = new ArrayList<ProductOrderInventoryData>();
 		try {
 			productorderassociationList = productorderassociationService.getProductorderassociationByOrderId(orderId);
+			if(productorderassociationList !=null){
 			for(ProductOrderAssociationDTO productorderassociation : productorderassociationList){
 				List<ProductInventoryDTO> productinventories = productinventoryService.getProductinventoryListByProductId(productorderassociation.getProductId().getId());
+				if(productinventories !=null){
 				for(ProductInventoryDTO productinventory : productinventories){
 					ProductOrderInventoryData productOrderInventoryData = new ProductOrderInventoryData();
 					ProductDTO product = productService.getProductDTO(productorderassociation.getProductId().getId());
@@ -117,6 +126,12 @@ public class ProductorderassociationController {
 					productOrderInventoryData.setRemainingQuantity(productorderassociation.getRemainingQuantity());
 					productOrderInventoryList.add(productOrderInventoryData);
 				}
+				}else{
+					return new Response(1,"There is no any product inventories");
+				}
+			}
+			}else{
+				return new Response(1,"There is no any product rm assocition");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -125,12 +140,15 @@ public class ProductorderassociationController {
 	}
 
 	@Transactional @RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus deleteProductorderassociation(@PathVariable("id") long id) {
+	public @ResponseBody Response deleteProductorderassociation(@PathVariable("id") long id) {
 		try {
-			productorderassociationService.deleteProductOrderAsso(id);
-			return new UserStatus(1, "Productorderassociation deleted Successfully !");
+			ProductOrderAssociationDTO productOrderAssociationDTO =	productorderassociationService.deleteProductOrderAsso(id);
+			if(productOrderAssociationDTO==null){
+			return  new Response(1,"There is no any product order association");
+			}
+			return new Response(1, "Productorderassociation deleted Successfully !");
 		} catch (Exception e) {
-			return new UserStatus(0, e.toString());
+			return new Response(0, e.toString());
 		}
 	}
 }

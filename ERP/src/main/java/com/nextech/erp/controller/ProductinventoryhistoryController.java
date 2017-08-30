@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nextech.erp.model.Productinventoryhistory;
 import com.nextech.erp.service.ProductinventoryhistoryService;
+import com.nextech.erp.status.Response;
 import com.nextech.erp.status.UserStatus;
 
 @Controller
@@ -60,14 +61,17 @@ public class ProductinventoryhistoryController {
 	}
 
 	@Transactional @RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody Productinventoryhistory getProductinventoryhistory(@PathVariable("id") long id) {
+	public @ResponseBody Response getProductinventoryhistory(@PathVariable("id") long id) {
 		Productinventoryhistory productinventoryhistory = null;
 		try {
 			productinventoryhistory = productinventoryhistoryService.getEntityById(Productinventoryhistory.class,id);
+			if(productinventoryhistory==null){
+				return new Response(1,"There is no any product history");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return productinventoryhistory;
+		return new Response(1,productinventoryhistory);
 	}
 
 	@Transactional @RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
@@ -84,17 +88,20 @@ public class ProductinventoryhistoryController {
 	}
 
 	@Transactional @RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<Productinventoryhistory> getProductinventoryhistory() {
+	public @ResponseBody Response getProductinventoryhistory() {
 
 		List<Productinventoryhistory> productinventoryhistoryList = null;
 		try {
 			productinventoryhistoryList = productinventoryhistoryService.getEntityList(Productinventoryhistory.class);
+			if(productinventoryhistoryList.isEmpty()){
+				return new Response(1,"There is no any product invetory list");
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		return productinventoryhistoryList;
+		return new Response(1,productinventoryhistoryList);
 	}
 
 	@Transactional @RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
@@ -102,6 +109,9 @@ public class ProductinventoryhistoryController {
 
 		try {
 			Productinventoryhistory productinventoryhistory = productinventoryhistoryService.getEntityById(Productinventoryhistory.class,id);
+			if(productinventoryhistory==null){
+				return  new UserStatus(1,"there is no any product inventory history");
+			}
 			productinventoryhistory.setIsactive(false);
 			productinventoryhistoryService.updateEntity(productinventoryhistory);
 			return new UserStatus(1, "Productinventoryhistory deleted Successfully !");

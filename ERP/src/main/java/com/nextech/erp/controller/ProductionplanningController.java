@@ -141,37 +141,47 @@ public class ProductionplanningController {
 		return productionplanningList;
 	}
 	@Transactional @RequestMapping(value = "updateProductionPlanMonthYear/{MONTH-YEAR}", method = RequestMethod.PUT, headers = "Accept=application/json")
-	public @ResponseBody List<ProductionPlanningDTO> updateProductionPlanMonthYear(@PathVariable("MONTH-YEAR") String month_year) {
+	public @ResponseBody Response updateProductionPlanMonthYear(@PathVariable("MONTH-YEAR") String month_year) {
 		List<ProductionPlanningDTO> productionplanningList = null;
 		try {
 			productionplanningList = productionplanningService.updateProductionPlanByMonthYear(month_year);
+			if(productionplanningList==null){
+				return  new Response(1,"There is no any production planning list");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return productionplanningList;
+		return new Response(1,productionplanningList);
 	}
 	@RequestMapping(value = "createProductionPlanMonthYear/{MONTH-YEAR}", method = RequestMethod.POST, headers = "Accept=application/json")
-	public @ResponseBody List<Productionplanning> createProductionPlanMonthYear(@PathVariable("MONTH-YEAR") String month_year,HttpServletRequest request,HttpServletResponse response) {
+	public @ResponseBody Response createProductionPlanMonthYear(@PathVariable("MONTH-YEAR") String month_year,HttpServletRequest request,HttpServletResponse response) {
 		List<Productionplanning> productionplanningList = null;
 		List<Product> productList = null;
 		try {
 			productList = productService.getEntityList(Product.class);
 								productionplanningList = productionplanningService.createProductionPlanMonthYear( productList, month_year, request, response);
+								if(productionplanningList==null){
+									return  new Response(1,"There is no any production planning list");
+								}
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		return productionplanningList;
+		return new Response(1,productionplanningList);
 	}
 
 	@Transactional @RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus deleteProductionplanning(@PathVariable("id") long id) {
+	public @ResponseBody Response deleteProductionplanning(@PathVariable("id") long id) {
 		try {
-			productionplanningService.deleteProduction(id);
-			return new UserStatus(1, "Productionplanning deleted Successfully !");
+		ProductionPlanningDTO productionPlanningDTO = 	productionplanningService.deleteProduction(id);
+		if (productionPlanningDTO==null) {
+			return  new Response(1,"There is no any production planning");
+			
+		}
+			return new Response(1, "Productionplanning deleted Successfully !");
 		} catch (Exception e) {
-			return new UserStatus(0, e.toString());
+			return new Response(0, e.toString());
 		}
 	}
 
@@ -191,6 +201,7 @@ public class ProductionplanningController {
 		List<ProductionPlanningDTO> productionplanningFinalList = new ArrayList<ProductionPlanningDTO>();
 		try {
 			List<ProductionPlanningDTO> productionplannings = productionplanningService.getProductionplanByDate(DateUtil.convertToDate(date));
+			if(productionplannings!=null){
 			for (ProductionPlanningDTO productionplanning : productionplannings) {
 				boolean isProductionRemaining = false;
 				//TODO Can we add this if condition below to Query along with condition target quantity?
@@ -217,6 +228,9 @@ public class ProductionplanningController {
 				if(isProductionRemaining)
 					productionplanningFinalList.add(productionplanning);
 			}
+			}else{
+				return  new Response(1,"There is no any production planning lisy");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -225,11 +239,12 @@ public class ProductionplanningController {
 	
 	
 	@Transactional @RequestMapping(value = "getProductionPlanListByDate/{date}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<ProductionPlanningDTO> getProductionPlanDate1(@PathVariable("date") String date) {
+	public @ResponseBody Response getProductionPlanDate1(@PathVariable("date") String date) {
 
 		List<ProductionPlanningDTO> productionplanningFinalList = new ArrayList<ProductionPlanningDTO>();
 		try {
 			List<ProductionPlanningDTO> productionplannings = productionplanningService.getProductionplanByDate(DateUtil.convertToDate(date));
+			if(productionplannings!=null){
 			for (ProductionPlanningDTO productionplanning : productionplannings) {
 				boolean isProductRemaining = false;
 				if(productionplanning.getTargetQuantity() > 0){
@@ -246,20 +261,24 @@ public class ProductionplanningController {
 				if(isProductRemaining)
 					productionplanningFinalList.add(productionplanning);
 			}
+			}else{
+				return  new Response(1,"There is no any production planning list");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return productionplanningFinalList;
+		return new Response(1,productionplanningFinalList);
 	}
 	
 
 	@Transactional @RequestMapping(value = "getProductionPlanByDate/{date}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<ProductionPlanningDTO> getProductionPlanDate(@PathVariable("date") String date) {
+	public @ResponseBody Response getProductionPlanDate(@PathVariable("date") String date) {
 
 		List<ProductionPlanningDTO> productionplanningFinalList = new ArrayList<ProductionPlanningDTO>();
 		try {
 
 			List<ProductionPlanningDTO> productionplanningList = productionplanningService.getProductionplanByDate(DateUtil.convertToDate(date));
+			if(productionplanningList!=null){
 			for (ProductionPlanningDTO productionplanning : productionplanningList) {
 				boolean isProductRemaining = false;
 				List<ProductOrderAssociationDTO> productorderassociations = productorderassociationService.getIncompleteProductOrderAssoByProductId(productionplanning.getProductId().getId());
@@ -274,12 +293,15 @@ public class ProductionplanningController {
 				if(isProductRemaining)
 					productionplanningFinalList.add(productionplanning);
 			}
+			}else{
+				return new Response(1,"There is no any production planning list");
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		return productionplanningFinalList;
+		return new Response(1,productionplanningFinalList);
 	}
 
 
@@ -290,6 +312,7 @@ public class ProductionplanningController {
 		List<ProductinPlanPRMAssoData> productinPlanPRMAssoDataList = new ArrayList<ProductinPlanPRMAssoData>();
 		try {
 			productionplanningList = productionplanningService.getProductionplanByProdutId(DateUtil.convertToDate(date),productID);
+			if(productionplanningList!=null){
 			for(ProductionPlanningDTO productionplanning : productionplanningList){
 				List<ProductRMAssociationDTO> productrawmaterialassociations = productRMAssoService.getProductRMAssoListByProductId(productionplanning.getProductId().getId());
 				if(productrawmaterialassociations !=null && !productrawmaterialassociations.isEmpty()){
@@ -311,6 +334,9 @@ public class ProductionplanningController {
 				}else{
 					return new Response(0,"Please Add Product Raw Material Association for doing RM Store Out",null);
 				}
+			}
+			}else{
+				return  new Response(1,"There is no any productionplanning list");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

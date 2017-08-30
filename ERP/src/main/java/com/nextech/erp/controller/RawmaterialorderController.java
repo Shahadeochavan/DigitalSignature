@@ -54,6 +54,7 @@ import com.nextech.erp.service.RawmaterialorderassociationService;
 import com.nextech.erp.service.StatusService;
 import com.nextech.erp.service.UserService;
 import com.nextech.erp.service.VendorService;
+import com.nextech.erp.status.Response;
 import com.nextech.erp.status.UserStatus;
 
 @Controller
@@ -153,15 +154,18 @@ public class RawmaterialorderController {
 	}
 
 	@Transactional @RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody RawmaterialOrderDTO getRawmaterialorder(
+	public @ResponseBody Response getRawmaterialorder(
 			@PathVariable("id") long id) {
 		RawmaterialOrderDTO rawmaterialorder = null;
 		try {
 			rawmaterialorder = rawmaterialorderService.getRMOrderById(id);
+			if(rawmaterialorder==null){
+				return new Response(1,"There is no rm order");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return rawmaterialorder;
+		return new Response(1,rawmaterialorder);
 	}
 
 	@Transactional @RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
@@ -177,64 +181,79 @@ public class RawmaterialorderController {
 	}
 
 	@Transactional @RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<RawmaterialOrderDTO> getRawmaterialorder() {
+	public @ResponseBody Response getRawmaterialorder() {
 		List<RawmaterialOrderDTO> rawmaterialorderList = null;
 		try {
 			rawmaterialorderList = rawmaterialorderService.getRMOrderList();
+			if(rawmaterialorderList==null){
+				return new Response(1,"There is no rm order list");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return rawmaterialorderList;
+		return new Response(1,rawmaterialorderList);
 	}
 	
 	@Transactional @RequestMapping(value = "/list/securityCheck", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<RawmaterialOrderDTO> getRMOrderForSecurityCheck() {
+	public @ResponseBody Response getRMOrderForSecurityCheck() {
 		List<RawmaterialOrderDTO> rawmaterialorderList = null;
 		try {
 			rawmaterialorderList = rawmaterialorderService
 					.getRawmaterialorderByStatusId(Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_INVOICE_IN, null, null)),
 							Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_RAW_MATERIAL_INPROCESS, null, null))
 							,Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_RAW_MATERIAL_INCOMPLETE, null, null)));
+			if(rawmaterialorderList==null){
+				return new Response(1,"There is no rm order list");
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return rawmaterialorderList;
+		return new Response(1,rawmaterialorderList);
 	}
 
 	@Transactional @RequestMapping(value = "/list/qualityCheck", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<RawmaterialOrderDTO> getRMOrderForQualityCheck() {
+	public @ResponseBody Response getRMOrderForQualityCheck() {
 		List<RawmaterialOrderDTO> rawmaterialorderList = null;
 		try {
 			rawmaterialorderList = rawmaterialorderService
 					.getRawmaterialorderByQualityCheckStatusId(Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_QUALITY_CHECK, null, null)));
+			if(rawmaterialorderList==null){
+				return new Response(1,"There is no rm order list");
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return rawmaterialorderList;
+		return new Response(1,rawmaterialorderList);
 	}
 
 	@Transactional @RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus deleteRawmaterialorder(
+	public @ResponseBody Response deleteRawmaterialorder(
 			@PathVariable("id") long id) {
 		try {
-			rawmaterialorderService.deleteRMOrder(id);
-			return new UserStatus(1, "Rawmaterial Order deleted Successfully !");
+			RawmaterialOrderDTO rawmaterialOrderDTO =	rawmaterialorderService.deleteRMOrder(id);
+			if(rawmaterialOrderDTO==null){
+				return new Response(1,"There is no rm order");
+			}
+			return new Response(1, "Rawmaterial Order deleted Successfully !");
 		} catch (Exception e) {
-			return new UserStatus(0, e.toString());
+			return new Response(0, e.toString());
 		}
 	}
 	
 	@Transactional @RequestMapping(value = "getVendorOrder/{VENDOR-ID}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<RawmaterialOrderDTO> getRawmaterialorderVendor(@PathVariable("VENDOR-ID") long vendorId) {
+	public @ResponseBody Response getRawmaterialorderVendor(@PathVariable("VENDOR-ID") long vendorId) {
 		List<RawmaterialOrderDTO> rawmaterialorderList = null;
 		try {
 			rawmaterialorderList = rawmaterialorderService.getRawmaterialorderByVendor(vendorId);
+			if(rawmaterialorderList==null){
+				return new Response(1,"There is no rm order list");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return rawmaterialorderList;
+		return new Response(1,rawmaterialorderList);
 	}
 
 	private void addRMOrderAsso(RawmaterialOrderDTO rawmaterialOrderDTO,HttpServletRequest request,HttpServletResponse response) throws Exception{

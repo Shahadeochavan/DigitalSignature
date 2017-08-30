@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.nextech.erp.dto.SecurityCheckOutDTO;
 import com.nextech.erp.factory.SecurityCheckOutRequestResponseFactory;
 import com.nextech.erp.service.DispatchService;
@@ -26,6 +27,7 @@ import com.nextech.erp.service.ProductorderService;
 import com.nextech.erp.service.ProductorderassociationService;
 import com.nextech.erp.service.SecuritycheckoutService;
 import com.nextech.erp.service.StatusService;
+import com.nextech.erp.status.Response;
 import com.nextech.erp.status.UserStatus;
 
 
@@ -83,14 +85,17 @@ public class SecuritycheckoutController {
 	}
 
 	@Transactional @RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody SecurityCheckOutDTO getSecuritycheckout(@PathVariable("id") long id) {
+	public @ResponseBody Response getSecuritycheckout(@PathVariable("id") long id) {
 		SecurityCheckOutDTO securitycheckout = null;
 		try {
 			securitycheckout = securitycheckoutService.getSecurityCheckOutById(id);
+			if(securitycheckout==null){
+				return  new Response(1,"There is no any security check out");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return securitycheckout;
+		return new Response(1,securitycheckout);
 	}
 
 	@Transactional @RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
@@ -106,27 +111,33 @@ public class SecuritycheckoutController {
 	}
 
 	@Transactional @RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<SecurityCheckOutDTO> getSecuritycheckout() {
+	public @ResponseBody Response getSecuritycheckout() {
 
 		List<SecurityCheckOutDTO> securitycheckoutList = null;
 		try {
 			securitycheckoutList = securitycheckoutService.getSecurityCheckOutList();
+			if(securitycheckoutList==null){
+				return  new Response(1,"There is no any secruty check out list");
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		return securitycheckoutList;
+		return new Response(1,securitycheckoutList);
 	}
 
 	@Transactional @RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus deleteSecuritycheckout(@PathVariable("id") long id) {
+	public @ResponseBody Response deleteSecuritycheckout(@PathVariable("id") long id) {
 
 		try {
-			securitycheckoutService.deleteSecurityCheckOut(id);
-			return new UserStatus(1, "Securitycheckout deleted Successfully !");
+		SecurityCheckOutDTO  securityCheckOutDTO =	securitycheckoutService.deleteSecurityCheckOut(id);
+		if(securityCheckOutDTO==null){
+			return  new Response(1,"There is no any security check out");
+		}
+			return new Response(1, "Securitycheckout deleted Successfully !");
 		} catch (Exception e) {
-			return new UserStatus(0, e.toString());
+			return new Response(0, e.toString());
 		}
 
 	}            

@@ -17,9 +17,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.nextech.erp.factory.RMTypeRequestResponseFactory;
 import com.nextech.erp.newDTO.RMTypeDTO;
 import com.nextech.erp.service.RMTypeService;
+import com.nextech.erp.status.Response;
 import com.nextech.erp.status.UserStatus;
 
 @RestController
@@ -54,14 +56,17 @@ public class RMTypeController {
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody RMTypeDTO getRMType(@PathVariable("id") long id) {
+	public @ResponseBody Response getRMType(@PathVariable("id") long id) {
 		RMTypeDTO rmTypeDTO = null;
 		try {
 			rmTypeDTO = rmTypeService.getRMTypeById(id);
+			if(rmTypeDTO==null){
+				return new Response(1,"There is no any rm type ");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return rmTypeDTO;
+		return new Response(1,rmTypeDTO);
 	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
@@ -76,27 +81,33 @@ public class RMTypeController {
 	}
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<RMTypeDTO> getRMType() {
+	public @ResponseBody Response getRMType() {
 
 		List<RMTypeDTO> rmTypeDTOs = null;
 		try {
 			rmTypeDTOs = rmTypeService.getRMTypeList();
+			if(rmTypeDTOs==null){
+				return  new Response(1,"There is no any rm type list");
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		return rmTypeDTOs;
+		return new Response(1,rmTypeDTOs);
 	}
 
 	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus deleteRMType(@PathVariable("id") long id) {
+	public @ResponseBody Response deleteRMType(@PathVariable("id") long id) {
 
 		try {
-			rmTypeService.deleteRMType(id);
-			return new UserStatus(1, "RM Type deleted Successfully !");
+			RMTypeDTO rmTypeDTO =rmTypeService.deleteRMType(id);
+			if(rmTypeDTO==null){
+				return  new Response(1,"There is no rm type");
+			}
+			return new Response(1, "RM Type deleted Successfully !");
 		} catch (Exception e) {
-			return new UserStatus(0, e.toString());
+			return new Response(0, e.toString());
 		}
 
 	}

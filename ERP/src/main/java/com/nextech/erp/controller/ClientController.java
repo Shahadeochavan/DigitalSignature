@@ -31,6 +31,7 @@ import com.nextech.erp.service.MailService;
 import com.nextech.erp.service.NotificationService;
 import com.nextech.erp.service.NotificationUserAssociationService;
 import com.nextech.erp.service.UserService;
+import com.nextech.erp.status.Response;
 import com.nextech.erp.status.UserStatus;
 
 @Controller
@@ -99,17 +100,17 @@ public class ClientController {
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody UserStatus getClient(@PathVariable("id") long id) {
+	public @ResponseBody Response getClient(@PathVariable("id") long id) {
 		ClientDTO clientDTO = null;
 		try {
 			clientDTO = clientService.getClientDTOById(id);
 			if(clientDTO==null){
-				return new UserStatus(1,"Thare is no client");
+				return new Response(1,"Thare is no client");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return new UserStatus(1,clientDTO);
+		return new Response(1,clientDTO);
 	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
@@ -145,34 +146,34 @@ public class ClientController {
 	}
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody UserStatus getClient() {
+	public @ResponseBody Response getClient() {
 
 		List<ClientDTO> clientList = null;
 		try {
 			clientList = clientService.getClientList(clientList);
-			if(clientList.isEmpty()){
-				return new UserStatus(1,"There is no client list");
+			if(clientList==null){
+				return new Response(1,"There is no client list");
 			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		return new UserStatus(1,clientList);
+		return new Response(1,clientList);
 	}
 
 	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus deleteClient(@PathVariable("id") long id) {
+	public @ResponseBody Response deleteClient(@PathVariable("id") long id) {
 
 		try {
 			ClientDTO clientDTO =clientService.deleteClient(id);
 			if(clientDTO==null){
-				return new UserStatus(1,"There is no client for delete");
+				return new Response(1,"There is no client for delete");
 			}
-			return new UserStatus(1, messageSource.getMessage(
+			return new Response(1, messageSource.getMessage(
 					ERPConstants.CLIENT_DELETE, null, null));
 		} catch (Exception e) {
-			return new UserStatus(0, e.toString());
+			return new Response(0, e.toString());
 		}
 
 	}

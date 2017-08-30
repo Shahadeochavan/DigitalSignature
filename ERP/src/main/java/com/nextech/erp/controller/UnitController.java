@@ -17,9 +17,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.nextech.erp.factory.UnitFactory;
 import com.nextech.erp.newDTO.UnitDTO;
 import com.nextech.erp.service.UnitService;
+import com.nextech.erp.status.Response;
 import com.nextech.erp.status.UserStatus;
 
 @RestController
@@ -54,17 +56,17 @@ public class UnitController {
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody UserStatus getUnit(@PathVariable("id") long id) {
+	public @ResponseBody Response getUnit(@PathVariable("id") long id) {
 		UnitDTO unit = null;
 		try {
 			unit = unitservice.getUnitByID(id);
 			if(unit==null){
-				return new UserStatus(1,"There is no any unit");
+				return new Response(1,"There is no any unit");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return new UserStatus(1,unit);
+		return new Response(1,unit);
 	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
@@ -79,33 +81,33 @@ public class UnitController {
 	}
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody UserStatus getUnit() {
+	public @ResponseBody Response getUnit() {
 
 		List<UnitDTO> unitList = null;
 		try {
 			unitList = unitservice.getUnitList();
-			if(unitList.isEmpty()){
-				return new UserStatus(1,"There is no any unit list");
+			if(unitList==null){
+				return new Response(1,"There is no any unit list");
 			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		return new UserStatus(1,unitList);
+		return new Response(1,unitList);
 	}
 
 	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus deleteUnit(@PathVariable("id") long id) {
+	public @ResponseBody Response deleteUnit(@PathVariable("id") long id) {
 
 		try {
 			UnitDTO unitDTO =unitservice.deleteUnit(id);
 			if(unitDTO==null){
-				return new UserStatus(1,"There is no any unit");
+				return new Response(1,"There is no any unit");
 			}
-			return new UserStatus(1, "Unit deleted Successfully !");
+			return new Response(1, "Unit deleted Successfully !");
 		} catch (Exception e) {
-			return new UserStatus(0, e.toString());
+			return new Response(0, e.toString());
 		}
 
 	}

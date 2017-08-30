@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.nextech.erp.factory.NotificationUserAssRequestResponseFactory;
 import com.nextech.erp.newDTO.NotificationUserAssociatinsDTO;
 import com.nextech.erp.service.NotificationUserAssociationService;
+import com.nextech.erp.status.Response;
 import com.nextech.erp.status.UserStatus;
 
 @Controller
@@ -58,17 +59,17 @@ public class NotificationuserassociationController {
 	}
 
 	@Transactional @RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody UserStatus getNotification(@PathVariable("id") long id) {
+	public @ResponseBody Response getNotification(@PathVariable("id") long id) {
 		NotificationUserAssociatinsDTO notification = null;
 		try {
 			notification = notificationservice.getNotificationUserById(id);
 			if(notification==null){
-				return new UserStatus(1,"There is no any notification user assocition");
+				return new Response(1,"There is no any notification user assocition");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return new UserStatus(1,notification);
+		return new Response(1,notification);
 	}
 
 	@Transactional @RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
@@ -85,30 +86,30 @@ public class NotificationuserassociationController {
 	}
 
 	@Transactional @RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody UserStatus getNotification() {
+	public @ResponseBody Response getNotification() {
 
 		List<NotificationUserAssociatinsDTO> notificationList = null;
 		try {
 			notificationList = notificationservice.getNotificationUserAssoList();
-			if(notificationList.isEmpty()){
-				return new UserStatus(1,"There is no any user notification list");
+			if(notificationList==null){
+				return new Response(1,"There is no any user notification list");
 			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		return new UserStatus(1,notificationList);
+		return new Response(1,notificationList);
 	}
 
 	@Transactional @RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus deleteNotification(@PathVariable("id") long id) {
+	public @ResponseBody Response deleteNotification(@PathVariable("id") long id) {
 
 		try {
 			notificationservice.deleteNotificationUserAsso(id);
-			return new UserStatus(1, "Notification deleted Successfully !");
+			return new Response(1, "Notification deleted Successfully !");
 		} catch (Exception e) {
-			return new UserStatus(0, e.toString());
+			return new Response(0, e.toString());
 		}
 
 	}

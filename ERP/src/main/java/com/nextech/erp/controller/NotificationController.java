@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.nextech.erp.factory.NotificationRequestResponseFactory;
 import com.nextech.erp.newDTO.NotificationDTO;
 import com.nextech.erp.service.NotificationService;
+import com.nextech.erp.status.Response;
 import com.nextech.erp.status.UserStatus;
 
 
@@ -59,17 +60,17 @@ public class NotificationController {
 	}
 
 	@Transactional @RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody UserStatus getNotification(@PathVariable("id") long id) {
+	public @ResponseBody Response getNotification(@PathVariable("id") long id) {
 		NotificationDTO notification = null;
 		try {
 			notification = notificationservice.getNotificationDTOById(id);
 			if(notification==null){
-				return  new UserStatus(1,"There is no any notification");
+				return  new Response(1,"There is no any notification");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return new UserStatus(1,notification);
+		return new Response(1,notification);
 	}
 
 	@Transactional @RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
@@ -86,33 +87,33 @@ public class NotificationController {
 	}
 
 	@Transactional @RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody UserStatus getNotification() {
+	public @ResponseBody Response getNotification() {
 
 		List<NotificationDTO> notificationList = null;
 		try {
 			notificationList = notificationservice.getNofificationList(notificationList);
-			if(notificationList.isEmpty()){
-				return new UserStatus(1,"There is no any list");
+			if(notificationList==null){
+				return new Response(1,"There is no any list");
 			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		return new UserStatus(1,notificationList);
+		return new Response(1,notificationList);
 	}
 
 	@Transactional @RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus deleteNotification(@PathVariable("id") long id) {
+	public @ResponseBody Response deleteNotification(@PathVariable("id") long id) {
 
 		try {
 			NotificationDTO notificationDTO =notificationservice.deleteNofificationById(id);
 			if(notificationDTO==null){
-				return  new UserStatus(1,"There is no any notification for delete");
+				return  new Response(1,"There is no any notification for delete");
 			}
-			return new UserStatus(1, "Notification deleted Successfully !");
+			return new Response(1, "Notification deleted Successfully !");
 		} catch (Exception e) {
-			return new UserStatus(0, e.toString());
+			return new Response(0, e.toString());
 		}
 
 	}
