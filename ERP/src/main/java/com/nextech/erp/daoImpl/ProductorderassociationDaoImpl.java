@@ -6,8 +6,11 @@ import java.util.List;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Root;
+
 import org.springframework.stereotype.Repository;
+
 import com.nextech.erp.dao.ProductorderassociationDao;
 import com.nextech.erp.model.Productionplanning;
 import com.nextech.erp.model.Productorderassociation;
@@ -35,13 +38,15 @@ public class ProductorderassociationDaoImpl extends
 
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Productorderassociation> getProductorderassociationByProductId(long pId) throws Exception {
 		session = sessionFactory.openSession();
 		CriteriaBuilder builder = session.getCriteriaBuilder();
 		CriteriaQuery<Productorderassociation> criteria = builder.createQuery(Productorderassociation.class);
 		Root<Productorderassociation> userRoot  = (Root<Productorderassociation>) criteria.from(Productorderassociation.class);
-		criteria.select(userRoot).where(builder.equal(userRoot.get("product"), pId),builder.equal(userRoot.get("remainingQuantity"),  new Long(0)),builder.equal(userRoot.get("isactive"), true));
+		criteria.select(userRoot).where(builder.equal(userRoot.get("product"), pId),builder.greaterThan((Path<Comparable>) userRoot.<Comparable> get("remainingQuantity"),
+				(Comparable) new Long(0)/*userRoot.get("remainingQuantity"),  new Long(0)*/),builder.equal(userRoot.get("isactive"), true));
 		TypedQuery<Productorderassociation> query = session.createQuery(criteria);
 		return query.getResultList();
 	}

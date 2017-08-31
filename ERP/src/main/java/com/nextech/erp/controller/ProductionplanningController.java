@@ -321,7 +321,7 @@ public class ProductionplanningController {
 						RawMaterialDTO rawmaterial = rawmaterialService.getRMDTO( productrawmaterialassociation.getRawmaterialId().getId());
 						RMInventoryDTO rawmaterialinventory = rawmaterialinventoryService.getByRMId(productrawmaterialassociation.getRawmaterialId().getId());
 					    if(rawmaterialinventory==null)
-					    	return new Response(0,"Please Add RM In RM Inventory",null);
+					    	return new Response(0,"Please Add Raw Material " + rawmaterial.getPartNumber() + " to Raw Material Inventory",null);
 					    else
 					    {
 							productinPlanPRMAssoData.setName(rawmaterial.getPartNumber());
@@ -332,7 +332,7 @@ public class ProductionplanningController {
 						}
 					}
 				}else{
-					return new Response(0,"Please Add Product Raw Material Association for doing RM Store Out",null);
+					return new Response(0, "Please Add Product Raw Material Association for Product " + productionplanning.getProductId().getPartNumber(), null);
 				}
 			}
 			}else{
