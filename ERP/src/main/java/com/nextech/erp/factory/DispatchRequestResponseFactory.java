@@ -4,7 +4,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.nextech.erp.dto.DispatchDTO;
 import com.nextech.erp.model.Dispatch;
-import com.nextech.erp.model.Productorder;
 
 public class DispatchRequestResponseFactory {
 	

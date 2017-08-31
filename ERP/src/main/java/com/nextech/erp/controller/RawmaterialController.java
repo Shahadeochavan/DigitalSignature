@@ -59,22 +59,19 @@ public class RawmaterialController {
 			@RequestParam("description") String description, @RequestParam("pricePerUnit") float pricePerUnit,
 			@RequestParam("unitId") long unitId, @RequestParam("rmTypeId") long rmTypeId) {
 		try {
-			String destinationFilePath = ImageUploadUtil.imgaeUpload(inputFile);
-			RawMaterialDTO rawMaterialDTO = new RawMaterialDTO();
-			rawMaterialDTO.setRmName(rmName);
-			rawMaterialDTO.setDescription(description);
-			rawMaterialDTO.setDesign(destinationFilePath);
-			rawMaterialDTO.setPricePerUnit(pricePerUnit);
-			rawMaterialDTO.setPartNumber(partNumber);
-			Unit unit = new Unit();
-			unit.setId(unitId);
-			rawMaterialDTO.setUnitId(unit);
-			Rmtype rmtype = new Rmtype();
-			rmtype.setId(rmTypeId);
-			rawMaterialDTO.setRmTypeId(rmtype);
+			if(inputFile==null){
+			RawMaterialDTO  rawMaterialDTO =	addRM(rmName, description, pricePerUnit, partNumber, unitId, rmTypeId);
 			long id = rawmaterialService.addEntity(RMRequestResponseFactory.setRawMaterial(rawMaterialDTO, request));
 			rawMaterialDTO.setId(id);
 			addRMInventory(rawMaterialDTO, Long.parseLong(request.getAttribute("current_user").toString()));
+			}else{
+				String destinationFilePath = ImageUploadUtil.imgaeUpload(inputFile);
+				RawMaterialDTO  rawMaterialDTO =	addRM(rmName, description, pricePerUnit, partNumber, unitId, rmTypeId);
+				rawMaterialDTO.setDesign(destinationFilePath);
+				long id = rawmaterialService.addEntity(RMRequestResponseFactory.setRawMaterial(rawMaterialDTO, request));
+				rawMaterialDTO.setId(id);
+				addRMInventory(rawMaterialDTO, Long.parseLong(request.getAttribute("current_user").toString()));
+			}
 			return new UserStatus(1, messageSource.getMessage(ERPConstants.RAW_MATERAIL_ADD, null, null));
 		} catch (ConstraintViolationException cve) {
 			cve.printStackTrace();
@@ -106,26 +103,23 @@ public class RawmaterialController {
 	@Transactional
 	@RequestMapping(value = "/update", headers = "Content-Type=*/*", method = RequestMethod.POST)
 	public @ResponseBody UserStatus upddateRawmaterial(HttpServletRequest request,
-			@RequestParam("file") MultipartFile inputFile, @RequestParam("rmName") String rmName,
+			@RequestParam(value = "file", required = false) MultipartFile inputFile,
+			@RequestParam("rmName") String rmName,
 			@RequestParam("id") long id, @RequestParam("partNumber") String partNumber,
 			@RequestParam("description") String description, @RequestParam("pricePerUnit") float pricePerUnit,
 			@RequestParam("unitId") long unitId, @RequestParam("rmTypeId") long rmTypeId) {
 		try {
-			String destinationFilePath = ImageUploadUtil.imgaeUpload(inputFile);
-			RawMaterialDTO rawMaterialDTO = new RawMaterialDTO();
-			rawMaterialDTO.setRmName(rmName);
-			rawMaterialDTO.setDescription(description);
-			rawMaterialDTO.setDesign(destinationFilePath);
-			rawMaterialDTO.setPricePerUnit(pricePerUnit);
-			rawMaterialDTO.setPartNumber(partNumber);
-			rawMaterialDTO.setId(id);
-			Unit unit = new Unit();
-			unit.setId(unitId);
-			rawMaterialDTO.setUnitId(unit);
-			Rmtype rmtype = new Rmtype();
-			rmtype.setId(rmTypeId);
-			rawMaterialDTO.setRmTypeId(rmtype);
-			rawmaterialService.updateEntity(RMRequestResponseFactory.setRawMaterialUpdate(rawMaterialDTO, request));
+			if(inputFile==null){
+				RawMaterialDTO  rawMaterialDTO =	addRM(rmName, description, pricePerUnit, partNumber, unitId, rmTypeId);
+				rawMaterialDTO.setId(id);
+				rawmaterialService.updateEntity(RMRequestResponseFactory.setRawMaterialUpdate(rawMaterialDTO, request));
+			}else{
+				String destinationFilePath = ImageUploadUtil.imgaeUpload(inputFile);
+				RawMaterialDTO  rawMaterialDTO =	addRM(rmName, description, pricePerUnit, partNumber, unitId, rmTypeId);
+				rawMaterialDTO.setId(id);
+				rawMaterialDTO.setDesign(destinationFilePath);
+				rawmaterialService.updateEntity(RMRequestResponseFactory.setRawMaterialUpdate(rawMaterialDTO, request));
+			}
 			return new UserStatus(1, messageSource.getMessage(ERPConstants.RAW_MATERAIL_UPDATE, null, null));
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -230,5 +224,19 @@ public class RawmaterialController {
 			e.printStackTrace();
 			return null;
 		}
+	}
+	public RawMaterialDTO addRM(String rmName,String description,float pricePerUnit,String partNumber,long unitId,long rmTypeId){
+		RawMaterialDTO rawMaterialDTO = new RawMaterialDTO();
+		rawMaterialDTO.setRmName(rmName);
+		rawMaterialDTO.setDescription(description);
+		rawMaterialDTO.setPricePerUnit(pricePerUnit);
+		rawMaterialDTO.setPartNumber(partNumber);
+		Unit unit = new Unit();
+		unit.setId(unitId);
+		rawMaterialDTO.setUnitId(unit);
+		Rmtype rmtype = new Rmtype();
+		rmtype.setId(rmTypeId);
+		rawMaterialDTO.setRmTypeId(rmtype);
+		return rawMaterialDTO;
 	}
 }

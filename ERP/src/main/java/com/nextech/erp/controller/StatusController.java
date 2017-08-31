@@ -18,9 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.nextech.erp.factory.StatusRequestResponseFactory;
-import com.nextech.erp.model.Status;
 import com.nextech.erp.newDTO.StatusDTO;
 import com.nextech.erp.service.StatusService;
 import com.nextech.erp.status.Response;

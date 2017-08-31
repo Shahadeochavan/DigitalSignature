@@ -4,14 +4,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
 import javax.persistence.PersistenceException;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
-
 import org.apache.commons.io.IOUtils;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,18 +24,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-
 import com.nextech.erp.constants.ERPConstants;
-import com.nextech.erp.dto.Mail;
 import com.nextech.erp.dto.ProductNewAssoicatedList;
 import com.nextech.erp.factory.ProductInventoryRequestResponseFactory;
 import com.nextech.erp.factory.ProductRequestResponseFactory;
 import com.nextech.erp.model.Product;
 import com.nextech.erp.model.Productrawmaterialassociation;
-import com.nextech.erp.newDTO.NotificationDTO;
-import com.nextech.erp.newDTO.NotificationUserAssociatinsDTO;
 import com.nextech.erp.newDTO.ProductDTO;
-import com.nextech.erp.newDTO.UserDTO;
 import com.nextech.erp.service.MailService;
 import com.nextech.erp.service.NotificationService;
 import com.nextech.erp.service.NotificationUserAssociationService;
@@ -89,8 +80,8 @@ public class ProductController {
 	
 	
 	@Transactional @RequestMapping(value = "/create",headers = "Content-Type=*/*", method = RequestMethod.POST)
-	public @ResponseBody UserStatus addProduct(
-			HttpServletRequest request,@RequestParam("file") MultipartFile inputFile,
+	public @ResponseBody UserStatus addProduct(HttpServletRequest request,
+			@RequestParam(value = "file", required = false) MultipartFile inputFile,
 			@RequestParam("clientPartNumber") String clientPartNumber,
 			@RequestParam("name") String name,@RequestParam("description")String description,
 			@RequestParam("partNumber") String partNumber) {
@@ -104,17 +95,19 @@ public class ProductController {
 			} else {
 				return new UserStatus(0, messageSource.getMessage(ERPConstants.PART_NUMBER, null, null));
 			}
-			String destinationFilePath = ImageUploadUtil.imgaeUpload(inputFile);
-			  ProductDTO productDTO =  new ProductDTO();
-			   productDTO.setClientPartNumber(clientPartNumber);
-			   productDTO.setName(name);
-			   productDTO.setPartNumber(partNumber);
-			   productDTO.setDescription(description);
-			Product product = ProductRequestResponseFactory.setProduct(productDTO, request);
-			 product.setDesign(destinationFilePath);
-		    long id =	productService.addEntity(product);
-	    	productDTO.setId(id); 
-			addProductInventory(productDTO,Long.parseLong(request.getAttribute("current_user").toString()));
+			if(inputFile==null){
+			    ProductDTO productDTO =	addProduct(clientPartNumber, name, description, partNumber);
+			    long id =	productService.addEntity(ProductRequestResponseFactory.setProduct(productDTO, request));
+		       	productDTO.setId(id); 
+				addProductInventory(productDTO,Long.parseLong(request.getAttribute("current_user").toString()));
+			}else{
+				String destinationFilePath = ImageUploadUtil.imgaeUpload(inputFile);
+				ProductDTO productDTO =	addProduct(clientPartNumber, name, description, partNumber);
+				productDTO.setDesign(destinationFilePath);
+			    long id =	productService.addEntity(ProductRequestResponseFactory.setProduct(productDTO, request));
+			   	productDTO.setId(id); 
+				addProductInventory(productDTO,Long.parseLong(request.getAttribute("current_user").toString()));
+			}
 			return new UserStatus(1, "product added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			cve.printStackTrace();
@@ -145,8 +138,8 @@ public class ProductController {
 	}
 	
 	@Transactional @RequestMapping(value = "/update",headers = "Content-Type=*/*", method = RequestMethod.POST)
-	public @ResponseBody UserStatus updateProduct(
-			HttpServletRequest request,@RequestParam("file") MultipartFile inputFile,
+	public @ResponseBody UserStatus updateProduct(HttpServletRequest request,
+			@RequestParam(value = "file", required = false) MultipartFile inputFile,
 			@RequestParam("clientPartNumber") String clientPartNumber,	@RequestParam("id") long id,
 			@RequestParam("name") String name,@RequestParam("description")String description,
 			@RequestParam("partNumber") String partNumber) {
@@ -165,16 +158,17 @@ public class ProductController {
 				    	return new UserStatus(0, messageSource.getMessage(ERPConstants.PART_NUMBER, null, null));
 					}
 				 }
-			String destinationFilePath = ImageUploadUtil.imgaeUpload(inputFile);
-			  ProductDTO productDTO =  new ProductDTO();
-			   productDTO.setClientPartNumber(clientPartNumber);
-			   productDTO.setName(name);
-			   productDTO.setId(id);
-			   productDTO.setPartNumber(partNumber);
-			   productDTO.setDescription(description);
-			   productDTO.setDesign(destinationFilePath);
-				productService.updateEntity(ProductRequestResponseFactory.setProductUpdate(productDTO, request));
-				mailSendingUpdate();
+	    		if(inputFile==null){
+				    ProductDTO productDTO =	addProduct(clientPartNumber, name, description, partNumber);
+				    productDTO.setId(id);
+				    productService.updateEntity(ProductRequestResponseFactory.setProductUpdate(productDTO, request));
+				}else{
+					String destinationFilePath = ImageUploadUtil.imgaeUpload(inputFile);
+					ProductDTO productDTO =	addProduct(clientPartNumber, name, description, partNumber);
+					productDTO.setId(id);
+					productDTO.setDesign(destinationFilePath);
+					productService.updateEntity(ProductRequestResponseFactory.setProductUpdate(productDTO, request));
+				}
 			return new UserStatus(1, "product added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			cve.printStackTrace();
@@ -268,27 +262,15 @@ public class ProductController {
 		productinventoryService.addEntity(ProductInventoryRequestResponseFactory.setProductIn(productDTO, userId));
 	}
 	
-	private void mailSendingUpdate() throws Exception{
-		  Mail mail = new Mail();
-		  NotificationDTO  notificationDTO = notificationService.getNotificationDTOById(Long.parseLong(messageSource.getMessage(ERPConstants.PRODUCT_MODIFICATION, null, null)));
-		  List<NotificationUserAssociatinsDTO> notificationUserAssociatinsDTOs = notificationUserAssociationService.getNotificationUserAssociatinsDTOs(notificationDTO.getId());
-		  for (NotificationUserAssociatinsDTO notificationuserassociation : notificationUserAssociatinsDTOs) {
-			  UserDTO userDTO = userService.getUserDTO(notificationuserassociation.getUserId().getId());
-			  if(notificationuserassociation.getTo()==true){
-				  mail.setMailTo(userDTO.getEmailId()); 
-			  }else if(notificationuserassociation.getBcc()==true){
-				  mail.setMailBcc(userDTO.getEmailId());
-			  }else if(notificationuserassociation.getCc()==true){
-				  mail.setMailCc(userDTO.getEmailId());
-			  }
-		}
-	        mail.setMailSubject(notificationDTO.getSubject());
-	        Map < String, Object > model = new HashMap < String, Object > ();
-	        model.put("companyName","EK ELECTRONICS");
-	        model.put("location", "Pune");
-	        model.put("signature", "www.NextechServices.in");
-	        mail.setModel(model);
-		mailService.sendEmailWithoutPdF(mail, notificationDTO);
+
+	
+	public ProductDTO addProduct(String clientPartNumber,String name,String description,String partNumber){
+		  ProductDTO productDTO =  new ProductDTO();
+		   productDTO.setClientPartNumber(clientPartNumber);
+		   productDTO.setName(name);
+		   productDTO.setPartNumber(partNumber);
+		   productDTO.setDescription(description);
+		return productDTO;
 	}
 	
 }
