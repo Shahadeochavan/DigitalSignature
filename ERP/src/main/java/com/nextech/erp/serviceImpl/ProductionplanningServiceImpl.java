@@ -29,8 +29,6 @@ import com.nextech.erp.model.Productinventory;
 import com.nextech.erp.model.Productionplanning;
 import com.nextech.erp.model.Productorderassociation;
 import com.nextech.erp.model.Status;
-import com.nextech.erp.newDTO.ProductDTO;
-import com.nextech.erp.newDTO.ProductOrderAssociationDTO;
 import com.nextech.erp.newDTO.ProductionPlanningDTO;
 import com.nextech.erp.service.ProductService;
 import com.nextech.erp.service.ProductinventoryService;

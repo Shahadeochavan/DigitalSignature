@@ -9,7 +9,6 @@ import javax.servlet.http.HttpServletResponse;
 import com.nextech.erp.dto.ProductionPlan;
 import com.nextech.erp.model.Product;
 import com.nextech.erp.model.Productionplanning;
-import com.nextech.erp.newDTO.ProductDTO;
 import com.nextech.erp.newDTO.ProductionPlanningDTO;
 
 public interface ProductionplanningService extends CRUDService<Productionplanning>{
