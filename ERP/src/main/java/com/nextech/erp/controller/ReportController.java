@@ -44,7 +44,6 @@ import com.nextech.erp.service.ReptOptAssoService;
 import com.nextech.erp.service.ReptOptParaService;
 import com.nextech.erp.status.UserStatus;
 import com.nextech.erp.util.DateUtil;
-
 import net.sf.dynamicreports.jasper.builder.JasperReportBuilder;
 import net.sf.dynamicreports.report.builder.DynamicReports;
 import net.sf.dynamicreports.report.builder.column.Columns;
