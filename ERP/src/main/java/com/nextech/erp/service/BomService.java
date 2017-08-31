@@ -24,6 +24,6 @@ public interface BomService extends CRUDService<Bom> {
 	
 	public BomDTO getBomById(long id) throws Exception;
 	
-	public void deleteBom(long id) throws Exception;
+	public BomDTO deleteBom(long id) throws Exception;
 	
 }

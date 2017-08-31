@@ -104,14 +104,17 @@ public class BomController {
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody BomDTO getUnit(@PathVariable("id") long id) {
+	public @ResponseBody Response getUnit(@PathVariable("id") long id) {
 		BomDTO bom = null;
 		try {
 			bom = bomService.getBomById(id);
+			if(bom==null){
+				return new Response(1,"There is no any bom");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return bom;
+		return new Response(1,bom);
 	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
@@ -127,17 +130,20 @@ public class BomController {
 	}
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<BomDTO> getBom(HttpServletRequest request,HttpServletResponse response) throws IOException {
+	public @ResponseBody Response getBom(HttpServletRequest request,HttpServletResponse response) throws IOException {
 
 		List<BomDTO> bomList = null;
 		try {
 			bomList = bomService.getBomList();
+			if(bomList==null){
+				return  new Response(1,"There is no any bom list");
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		//  downloadPDF(request, response, bomList);
-		return bomList;
+		return new Response(1,bomList);
 	}
 	
 	@RequestMapping(value = "/BomCompletedList", method = RequestMethod.GET, headers = "Accept=application/json")
@@ -184,33 +190,39 @@ public class BomController {
 	}
 
 	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus deleteClient(@PathVariable("id") long id) {
+	public @ResponseBody Response deleteClient(@PathVariable("id") long id) {
 
 		try {
-			bomService.deleteBom(id);
-			return new UserStatus(1, "Bom deleted Successfully !");
+		BomDTO bomDTO =	bomService.deleteBom(id);
+		if(bomDTO==null){
+			return  new Response(1,"There is no any bom");
+		}
+			return new Response(1, "Bom deleted Successfully !");
 		} catch (Exception e) {
-			return new UserStatus(0, e.toString());
+			return new Response(0, e.toString());
 		}
 
 	}
 	
 	@RequestMapping(value = "bomList/{PRODUCT-ID}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<BomDTO> getBomByProductId(@PathVariable("PRODUCT-ID") long productId) {
+	public @ResponseBody Response getBomByProductId(@PathVariable("PRODUCT-ID") long productId) {
 
 		List<BomDTO> boList = null;
 		try {
 			// TODO afterwards you need to change it from properties
 			boList = bomService.getBomListByProductId(productId);
+			if(boList==null){
+				return new Response(1,"There is no any bom list");
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		return boList;
+		return new Response(1,boList);
 	}
 	@RequestMapping(value = "downloadBomPdf/{PRODUCT-ID}/{BOM-ID}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody void getBomPdfByProductIdAndBomId(@PathVariable("PRODUCT-ID") long productId,@PathVariable("BOM-ID") long bomId,HttpServletRequest request, HttpServletResponse response) throws IOException {
+	public @ResponseBody Response getBomPdfByProductIdAndBomId(@PathVariable("PRODUCT-ID") long productId,@PathVariable("BOM-ID") long bomId,HttpServletRequest request, HttpServletResponse response) throws IOException {
 
 		List<BomDTO> boList = null;
 		List<BomRMVendorModel> bomRMVendorModels = new ArrayList<BomRMVendorModel>();
@@ -218,27 +230,35 @@ public class BomController {
 		try {
 			// TODO afterwards you need to change it from properties
 			boList = bomService.getBomListByProductIdAndBomId(productId, bomId);
+			if(boList!=null){
 			for (BomDTO bom : boList) {
 				List<BomRMVendorAssociationsDTO> bOMRMVendorAssociations = bOMRMVendorAssociationService.getBomRMVendorByBomId(bom.getId());
+				if(bOMRMVendorAssociations!=null){
 				for (BomRMVendorAssociationsDTO bomrmVendorAssociation : bOMRMVendorAssociations) {
 					BomRMVendorModel bomRMVendorModel  = new BomRMVendorModel();
 					RawMaterialDTO rawmaterial = rawmaterialService.getRMDTO(bomrmVendorAssociation.getRawmaterialId().getId());
 					VendorDTO vendor = vendorService.getVendorById(bomrmVendorAssociation.getVendorId().getId());
 					ProductDTO product = productService.getProductDTO( bom.getProduct().getId());
-					RMVendorAssociationDTO rawmaterialvendorassociation = rMVAssoService.getRMVendor(rawmaterial.getId());
+				//	RMVendorAssociationDTO rawmaterialvendorassociation = rMVAssoService.getRMVendor(rawmaterial.getId());
 					bomRMVendorModel.setDescription(rawmaterial.getDescription());
 					bomRMVendorModel.setVendorName(vendor.getCompanyName());
 					bomRMVendorModel.setProductName(product.getName());
-					bomRMVendorModel.setPricePerUnit(rawmaterialvendorassociation.getPricePerUnit());
+					bomRMVendorModel.setPricePerUnit(rawmaterial.getPricePerUnit());
 					bomRMVendorModel.setQuantity(bomrmVendorAssociation.getQuantity());
-					bomRMVendorModel.setAmount(bomrmVendorAssociation.getQuantity()*rawmaterialvendorassociation.getPricePerUnit());
+					bomRMVendorModel.setAmount(bomrmVendorAssociation.getQuantity()*rawmaterial.getPricePerUnit());
 					productBomDTO.setClinetPartNumber(product.getClientPartNumber());
 					productBomDTO.setProductPartNumber(product.getPartNumber()); 
 					productBomDTO.setCreatedDate(bom.getCreatedDate());
 					bomRMVendorModels.add(bomRMVendorModel);
 					
 				}
+				}else{
+					return new Response(1,"There is no any bom rm vendor association");
+				}
 				
+			}
+			}else{
+				return new Response(1,"There is no any bom list for download pdf");
 			}
 			
 		} catch (Exception e) {
@@ -246,6 +266,7 @@ public class BomController {
 		}
     downloadPDF(request, response, bomRMVendorModels,productBomDTO);
 //		return boList;
+	return new Response(1,"Pdf downloaded successfully");
 	}
 	
 	private void addBomRMVendorAsso(BomDTO bomDTO,HttpServletRequest request,HttpServletResponse response) throws Exception {

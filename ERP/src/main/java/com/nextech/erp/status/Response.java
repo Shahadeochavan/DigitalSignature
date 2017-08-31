@@ -2,6 +2,7 @@ package com.nextech.erp.status;
 
 
 
+
 public class Response {
 	private int code;
 	private String message;
@@ -22,6 +23,7 @@ public class Response {
 	public Response(Object data){
 		this.data=data;
 	}
+
 
 	public int getCode() {
 		return code;
@@ -46,5 +48,7 @@ public class Response {
 	public void setData(Object data) {
 		this.data = data;
 	}
+
+	
 
 }

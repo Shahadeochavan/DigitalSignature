@@ -22,6 +22,9 @@ public class BOMRMVendorAssociationServiceImpl extends CRUDServiceImpl<Bomrmvend
 		// TODO Auto-generated method stub
 		List<BomRMVendorAssociationsDTO> bomRMVendorAssociationsDTOs = new ArrayList<BomRMVendorAssociationsDTO>();
 		List<Bomrmvendorassociation> bomrmvendorassociations = bOMRMVendorAssociationDao.getBomRMVendorByBomId(bomId);
+		if(bomrmvendorassociations.isEmpty()){
+			return null;
+		}
 		for (Bomrmvendorassociation bomrmvendorassociation : bomrmvendorassociations) {
 			BomRMVendorAssociationsDTO bomRMVendorAssociationsDTO = BomRMVendorRequestResponseFactory.setBOMRMVendorAssoDTO(bomrmvendorassociation);
 			bomRMVendorAssociationsDTOs.add(bomRMVendorAssociationsDTO);

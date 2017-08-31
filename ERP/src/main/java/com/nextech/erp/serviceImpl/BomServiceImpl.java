@@ -31,6 +31,9 @@ public class BomServiceImpl extends CRUDServiceImpl<Bom> implements BomService {
 		// TODO Auto-generated method stub
 		List<BomDTO> bomDTOs = new ArrayList<BomDTO>();
 		List<Bom> boms = bomDao.getBomListByProductId(productID);
+		if(boms.isEmpty()){
+			return null;
+		}
 		for (Bom bom : boms) {
 			BomDTO  bomDTO =  BOMFactory.setBomDTO(bom);
 			bomDTOs.add(bomDTO);
@@ -43,6 +46,9 @@ public class BomServiceImpl extends CRUDServiceImpl<Bom> implements BomService {
 			throws Exception {
 		List<BomDTO> bomDTOs = new ArrayList<BomDTO>();
 		List<Bom> boms = bomDao.getBomListByProductIdAndBomId(productId, bomId);
+		if(boms.isEmpty()){
+			return null;
+		}
 		for (Bom bom : boms) {
 			BomDTO bomDTO = BOMFactory.setBomDTO(bom);
 			bomDTOs.add(bomDTO);
@@ -91,6 +97,9 @@ public class BomServiceImpl extends CRUDServiceImpl<Bom> implements BomService {
 		// TODO Auto-generated method stub
 		List<BomDTO> bomDTOs =  new ArrayList<BomDTO>();
 		List<Bom> boms = bomDao.getList(Bom.class);
+		if(boms.isEmpty()){
+			return null;
+		}
 		for (Bom bom : boms) {
 			BomDTO bomDTO = BOMFactory.setBomDTO(bom);
 			bomDTOs.add(bomDTO);
@@ -102,16 +111,24 @@ public class BomServiceImpl extends CRUDServiceImpl<Bom> implements BomService {
 	public BomDTO getBomById(long id) throws Exception {
 		// TODO Auto-generated method stub
 		Bom bom = bomDao.getById(Bom.class, id);
+		if(bom==null){
+			return null;
+		}
 		BomDTO bomDTO = BOMFactory.setBomDTO(bom);
 		return bomDTO;
 	}
 
 	@Override
-	public void deleteBom(long id) throws Exception {
+	public BomDTO deleteBom(long id) throws Exception {
 		// TODO Auto-generated method stub
 		Bom bom = bomDao.getById(Bom.class, id);
+		if(bom==null){
+			return null;
+		}
 		bom.setIsactive(false);
 		bomDao.update(bom);
+		BomDTO bomDTO = BOMFactory.setBomDTO(bom);
+		return bomDTO;
 		
 	}
 
