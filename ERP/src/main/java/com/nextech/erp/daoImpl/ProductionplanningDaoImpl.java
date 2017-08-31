@@ -18,7 +18,6 @@ import org.springframework.stereotype.Repository;
 
 import com.nextech.erp.dao.ProductionplanningDao;
 import com.nextech.erp.model.Productionplanning;
-import com.nextech.erp.model.Productorderassociation;
 
 @Repository
 
