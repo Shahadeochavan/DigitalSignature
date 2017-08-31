@@ -4,7 +4,6 @@ import com.nextech.erp.dto.QualityCheckRMDTO;
 import com.nextech.erp.dto.RawMaterialInvoiceDTO;
 import com.nextech.erp.model.Rawmaterial;
 import com.nextech.erp.model.Rawmaterialorder;
-import com.nextech.erp.model.Rawmaterialorderassociation;
 import com.nextech.erp.model.Rawmaterialorderinvoice;
 import com.nextech.erp.model.Rawmaterialorderinvoiceassociation;
 import com.nextech.erp.model.Rmorderinvoiceintakquantity;

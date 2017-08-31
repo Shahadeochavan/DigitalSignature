@@ -9,7 +9,6 @@ import javax.servlet.http.HttpServletResponse;
 import com.nextech.erp.model.Rawmaterialorder;
 import com.nextech.erp.model.Rawmaterialorderhistory;
 import com.nextech.erp.model.Rawmaterialorderinvoice;
-import com.nextech.erp.newDTO.RMOrderHistoryDTO;
 
 public class RMOrderHistoryRequestResponseFactory {
 	
