@@ -37,7 +37,6 @@ import com.nextech.erp.factory.BOMFactory;
 import com.nextech.erp.factory.BomRMVendorRequestResponseFactory;
 import com.nextech.erp.newDTO.BomRMVendorAssociationsDTO;
 import com.nextech.erp.newDTO.ProductDTO;
-import com.nextech.erp.newDTO.RMVendorAssociationDTO;
 import com.nextech.erp.newDTO.RawMaterialDTO;
 import com.nextech.erp.newDTO.VendorDTO;
 import com.nextech.erp.service.BOMRMVendorAssociationService;
@@ -84,8 +83,6 @@ public class BomController {
 			bomDTO.setId(bomDTO2.getId());
 			bomDTO.setProduct(bomDTO2.getProduct());
 			addBomRMVendorAsso(bomDTO, request, response);
-			
-
 			return new UserStatus(1, "Bom added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			System.out.println("Inside ConstraintViolationException");

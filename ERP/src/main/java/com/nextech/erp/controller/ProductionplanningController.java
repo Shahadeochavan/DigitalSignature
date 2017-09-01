@@ -262,7 +262,7 @@ public class ProductionplanningController {
 					productionplanningFinalList.add(productionplanning);
 			}
 			}else{
-				return  new Response(1,"There is no any production planning list");
+				return  new Response(1,"There is no any production planning list ! you can update production plan for current date");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

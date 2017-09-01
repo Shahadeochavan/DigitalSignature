@@ -79,11 +79,6 @@ public class UserServiceImpl extends CRUDServiceImpl<User> implements UserServic
 	}
 
 	@Override
-	public User getUserByNotifictionId(long notificatinId) throws Exception {
-		return null;
-	}
-
-	@Override
 	public User getEmailUserById(long id) throws Exception {
 		return userdao.getEmailUserById(id);
 	}
@@ -164,7 +159,6 @@ public class UserServiceImpl extends CRUDServiceImpl<User> implements UserServic
 			id = stringBuilder.toString();
 		}
 		List<User> userList = userdao.getMultipleUsersById(id);
-		//System.out.println(userList);
 		for (NotificationUserAssociatinsDTO notificationuserassociation : notificationUserAssociatinsDTOs) {
 			for (User user : userList) {
 			if (notificationuserassociation.getTo()) {

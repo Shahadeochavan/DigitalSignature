@@ -21,7 +21,6 @@ public interface UserService extends CRUDService<User>{
 	
 	public User getUserByFirstNamLastName(String firstName,String lastName) throws Exception;
 	
-	public User getUserByNotifictionId(long notificatinId) throws Exception;
 	
 	public User getEmailUserById(long id) throws Exception;
 	

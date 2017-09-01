@@ -262,8 +262,6 @@ public class ProductController {
 		productinventoryService.addEntity(ProductInventoryRequestResponseFactory.setProductIn(productDTO, userId));
 	}
 	
-
-	
 	public ProductDTO addProduct(String clientPartNumber,String name,String description,String partNumber){
 		  ProductDTO productDTO =  new ProductDTO();
 		   productDTO.setClientPartNumber(clientPartNumber);
