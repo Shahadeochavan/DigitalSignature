@@ -61,12 +61,14 @@ public class QualityCheckGuidelineController {
 			if(qualitycheckguidelineDTO.getProductId()== qualitycheckguidelineDTO.getRawMaterialId()){
 				return new UserStatus(0,"Please don't enter same product Id and rm Id");
 			}
+			if(qualitycheckguidelineDTO.getProductId()==0){
 			if (qualityCheckGuidelineService.getQCGuidlineByRMId(qualitycheckguidelineDTO.getRawMaterialId()) == null) {
 
 			} else {
 				return new UserStatus(0, messageSource.getMessage(ERPConstants.QC_GUIDLINES_FOR_RM, null, null));
 			}
-			if (qualityCheckGuidelineService.getQCGuidelineByProductId(qualitycheckguidelineDTO.getRawMaterialId()) == null) {
+			}
+			if (qualityCheckGuidelineService.getQCGuidelineByProductId(qualitycheckguidelineDTO.getProductId()) == null) {
 
 			} else {
 				return new UserStatus(0, messageSource.getMessage(ERPConstants.QC_GUIDLINES_FOR_PRODUCT, null, null));

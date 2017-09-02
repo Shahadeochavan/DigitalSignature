@@ -100,7 +100,7 @@ public class BomController {
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody Response getUnit(@PathVariable("id") long id) {
+	public @ResponseBody Response getBom(@PathVariable("id") long id) {
 		BomDTO bom = null;
 		try {
 			bom = bomService.getBomById(id);
@@ -114,7 +114,7 @@ public class BomController {
 	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
-	public @ResponseBody UserStatus updateUnit(@RequestBody BomDTO bomDTO,HttpServletRequest request,HttpServletResponse response) {
+	public @ResponseBody UserStatus updateBom(@RequestBody BomDTO bomDTO,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			bomDTO.setUpdatedBy((long) request.getAttribute("current_user"));
 			bomService.updateEntity(BOMFactory.setBom(bomDTO,request));
@@ -126,7 +126,7 @@ public class BomController {
 	}
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody Response getBom(HttpServletRequest request,HttpServletResponse response) throws IOException {
+	public @ResponseBody Response getBomList(HttpServletRequest request,HttpServletResponse response) throws IOException {
 
 		List<BomDTO> bomList = null;
 		try {
@@ -186,7 +186,7 @@ public class BomController {
 	}
 
 	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
-	public @ResponseBody Response deleteClient(@PathVariable("id") long id) {
+	public @ResponseBody Response deleteBom(@PathVariable("id") long id) {
 
 		try {
 		BomDTO bomDTO =	bomService.deleteBom(id);

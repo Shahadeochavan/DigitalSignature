@@ -96,13 +96,13 @@ public class ProductController {
 				return new UserStatus(0, messageSource.getMessage(ERPConstants.PART_NUMBER, null, null));
 			}
 			if(inputFile==null){
-			    ProductDTO productDTO =	addProduct(clientPartNumber, name, description, partNumber);
+			    ProductDTO productDTO =	setProductDTO(clientPartNumber, name, description, partNumber);
 			    long id =	productService.addEntity(ProductRequestResponseFactory.setProduct(productDTO, request));
 		       	productDTO.setId(id); 
 				addProductInventory(productDTO,Long.parseLong(request.getAttribute("current_user").toString()));
 			}else{
 				String destinationFilePath = ImageUploadUtil.imgaeUpload(inputFile);
-				ProductDTO productDTO =	addProduct(clientPartNumber, name, description, partNumber);
+				ProductDTO productDTO =	setProductDTO(clientPartNumber, name, description, partNumber);
 				productDTO.setDesign(destinationFilePath);
 			    long id =	productService.addEntity(ProductRequestResponseFactory.setProduct(productDTO, request));
 			   	productDTO.setId(id); 
@@ -159,12 +159,12 @@ public class ProductController {
 					}
 				 }
 	    		if(inputFile==null){
-				    ProductDTO productDTO =	addProduct(clientPartNumber, name, description, partNumber);
+				    ProductDTO productDTO =	setProductDTO(clientPartNumber, name, description, partNumber);
 				    productDTO.setId(id);
 				    productService.updateEntity(ProductRequestResponseFactory.setProductUpdate(productDTO, request));
 				}else{
 					String destinationFilePath = ImageUploadUtil.imgaeUpload(inputFile);
-					ProductDTO productDTO =	addProduct(clientPartNumber, name, description, partNumber);
+					ProductDTO productDTO =	setProductDTO(clientPartNumber, name, description, partNumber);
 					productDTO.setId(id);
 					productDTO.setDesign(destinationFilePath);
 					productService.updateEntity(ProductRequestResponseFactory.setProductUpdate(productDTO, request));
@@ -185,7 +185,7 @@ public class ProductController {
 	}
 	
 	@Transactional @RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody Response getProduct() {
+	public @ResponseBody Response getProductList() {
 
 		List<ProductDTO> productList = null;
 		try {
@@ -262,7 +262,7 @@ public class ProductController {
 		productinventoryService.addEntity(ProductInventoryRequestResponseFactory.setProductIn(productDTO, userId));
 	}
 	
-	public ProductDTO addProduct(String clientPartNumber,String name,String description,String partNumber){
+	public ProductDTO setProductDTO(String clientPartNumber,String name,String description,String partNumber){
 		  ProductDTO productDTO =  new ProductDTO();
 		   productDTO.setClientPartNumber(clientPartNumber);
 		   productDTO.setName(name);

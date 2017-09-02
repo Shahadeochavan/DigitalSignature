@@ -1,5 +1,9 @@
 package com.nextech.erp.status;
 
+import java.util.List;
+
+import com.nextech.erp.dto.DispatchProductDTO;
+
 
 
 
@@ -7,10 +11,14 @@ public class Response {
 	private int code;
 	private String message;
 	private Object data;
+	private List<DispatchProductDTO> dispatchProductDTOs;
 	public Response() {
 
 	}
-
+  public Response(List<DispatchProductDTO> dispatchProductDTOs){
+	  this.dispatchProductDTOs=dispatchProductDTOs;
+  }
+	
 	public Response(int code, String message, Object data) {
 		this.code = code;
 		this.message = message;
@@ -47,6 +55,14 @@ public class Response {
 
 	public void setData(Object data) {
 		this.data = data;
+	}
+
+	public List<DispatchProductDTO> getDispatchProductDTOs() {
+		return dispatchProductDTOs;
+	}
+
+	public void setDispatchProductDTOs(List<DispatchProductDTO> dispatchProductDTOs) {
+		this.dispatchProductDTOs = dispatchProductDTOs;
 	}
 
 	

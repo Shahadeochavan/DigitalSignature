@@ -33,7 +33,7 @@ public class NotificationuserassociationController {
 	NotificationUserAssociationService notificationservice;
 	
 	@Transactional @RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus addNotification(@Valid @RequestBody NotificationUserAssociatinsDTO notificationUserAssociatinsDTO,
+	public @ResponseBody UserStatus addNotificationUserAsso(@Valid @RequestBody NotificationUserAssociatinsDTO notificationUserAssociatinsDTO,
 			BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			if (bindingResult.hasErrors()) {
@@ -59,7 +59,7 @@ public class NotificationuserassociationController {
 	}
 
 	@Transactional @RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody Response getNotification(@PathVariable("id") long id) {
+	public @ResponseBody Response getNotificationUserAsso(@PathVariable("id") long id) {
 		NotificationUserAssociatinsDTO notification = null;
 		try {
 			notification = notificationservice.getNotificationUserById(id);
@@ -73,7 +73,7 @@ public class NotificationuserassociationController {
 	}
 
 	@Transactional @RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
-	public @ResponseBody UserStatus updateNotification(@RequestBody NotificationUserAssociatinsDTO notificationUserAssociatinsDTO,
+	public @ResponseBody UserStatus updateNotificationUserAsso(@RequestBody NotificationUserAssociatinsDTO notificationUserAssociatinsDTO,
 			HttpServletRequest request, HttpServletResponse response) {
 		try {
 			notificationUserAssociatinsDTO.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
@@ -86,7 +86,7 @@ public class NotificationuserassociationController {
 	}
 
 	@Transactional @RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody Response getNotification() {
+	public @ResponseBody Response getNotificationUserAssoList() {
 
 		List<NotificationUserAssociatinsDTO> notificationList = null;
 		try {
@@ -103,7 +103,7 @@ public class NotificationuserassociationController {
 	}
 
 	@Transactional @RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
-	public @ResponseBody Response deleteNotification(@PathVariable("id") long id) {
+	public @ResponseBody Response deleteNotificationUserAsso(@PathVariable("id") long id) {
 
 		try {
 			notificationservice.deleteNotificationUserAsso(id);

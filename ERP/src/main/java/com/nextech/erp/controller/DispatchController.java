@@ -119,10 +119,13 @@ public class DispatchController {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
-		List<DispatchProductDTO> dispatchProductDTOs=	dispatchservice.addDispatchProduct(dispatchDTO, request);
+		Response responseList=	dispatchservice.addDispatchProduct(dispatchDTO, request);
 			ProductOrderDTO productorder = productorderService.getProductById(dispatchDTO.getOrderId());
 			ClientDTO client = clientService.getClientDTOById(productorder.getClientId().getId());
-			
+		List<DispatchProductDTO> 	dispatchProductDTOs = responseList.getDispatchProductDTOs();
+		if(dispatchProductDTOs==null){
+			return new UserStatus(1,"Please create bom for dispatch product");
+		}
 			//mailSending(productorder, request, response, client, status);
 			downloadPDF(request, response, productorder, dispatchProductDTOs, client,dispatchDTO);
 			return new UserStatus(1, "Dispatch added Successfully !");
@@ -169,7 +172,7 @@ public class DispatchController {
 	}
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody Response getDispatch() {
+	public @ResponseBody Response getDispatchList() {
 
 		List<DispatchDTO> dispatchList = null;
 		try {
@@ -202,8 +205,8 @@ public class DispatchController {
 
 	private void mailSending(ProductOrderDTO productorder,HttpServletRequest request, HttpServletResponse response,ClientDTO client, StatusDTO status,String fileName,List<DispatchProductDTO> dispatchProductDTOs,DispatchDTO dispatchDTO) throws NumberFormatException,Exception {
 		  NotificationDTO  notificationDTO = notificationService.getNotifiactionByStatus(status.getId());
-			Mail mail = userService.emailNotification(notificationDTO);
-	        mail.setAttachment(fileName);
+	    Mail mail = userService.emailNotification(notificationDTO);
+	    mail.setAttachment(fileName);
 		mail.setMailSubject(notificationDTO.getSubject());
 		mail.setMailTo(client.getEmailId());
 		Map<String, Object> model = new HashMap<String, Object>();

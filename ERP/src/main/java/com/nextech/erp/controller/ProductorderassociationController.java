@@ -45,7 +45,7 @@ public class ProductorderassociationController {
 	ProductService productService;
 
 	@Transactional @RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus addProductorderassociation(
+	public @ResponseBody UserStatus addProductOrderAssociation(
 			@Valid @RequestBody ProductOrderAssociationDTO productOrderAssociationDTO, BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			if (bindingResult.hasErrors()) {
@@ -68,7 +68,7 @@ public class ProductorderassociationController {
 	}
 
 	@Transactional @RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody Response getProductorderassociation(@PathVariable("id") long id) {
+	public @ResponseBody Response getProductOrderAssociation(@PathVariable("id") long id) {
 		ProductOrderAssociationDTO productorderassociation = null;
 		try {
 			productorderassociation = productorderassociationService.getProductOrderAsoById(id);
@@ -83,7 +83,7 @@ public class ProductorderassociationController {
 	}
 
 	@Transactional @RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
-	public @ResponseBody UserStatus updateProductorderassociation(@RequestBody ProductOrderAssociationDTO productOrderAssociationDTO,HttpServletRequest request,HttpServletResponse response) {
+	public @ResponseBody UserStatus updateProductOrderAssociation(@RequestBody ProductOrderAssociationDTO productOrderAssociationDTO,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			productorderassociationService.updateEntity(ProductOrderAssoRequestResponseFactory.setProductPrderAssoUpdate(productOrderAssociationDTO, request));
 			return new UserStatus(1, "Productorderassociation update Successfully !");
@@ -94,7 +94,7 @@ public class ProductorderassociationController {
 	}
 
 	@Transactional @RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody Response getProductorderassociation() {
+	public @ResponseBody Response getProductOrderAssociation() {
 		List<ProductOrderAssociationDTO> productorderassociationList = null;
 		try {
 			productorderassociationList = productorderassociationService.getProductOrderAssoList();
@@ -140,7 +140,7 @@ public class ProductorderassociationController {
 	}
 
 	@Transactional @RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
-	public @ResponseBody Response deleteProductorderassociation(@PathVariable("id") long id) {
+	public @ResponseBody Response deleteProductOrderAssociation(@PathVariable("id") long id) {
 		try {
 			ProductOrderAssociationDTO productOrderAssociationDTO =	productorderassociationService.deleteProductOrderAsso(id);
 			if(productOrderAssociationDTO==null){

@@ -83,7 +83,7 @@ public class PageController {
 	}
 
 	@Transactional @RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody Response getPage() {
+	public @ResponseBody Response getPageList() {
 
 		List<PageDTO> pageList = null;
 		try {

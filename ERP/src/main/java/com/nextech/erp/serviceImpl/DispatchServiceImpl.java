@@ -35,6 +35,7 @@ import com.nextech.erp.model.Productorder;
 import com.nextech.erp.model.Productorderassociation;
 import com.nextech.erp.model.Status;
 import com.nextech.erp.service.DispatchService;
+import com.nextech.erp.status.Response;
 @Service
 public class DispatchServiceImpl extends CRUDServiceImpl<Dispatch> implements DispatchService {
 
@@ -84,7 +85,7 @@ public class DispatchServiceImpl extends CRUDServiceImpl<Dispatch> implements Di
 	}
 
 	@Override
-	public List<DispatchProductDTO> addDispatchProduct(DispatchDTO dispatchDTO,HttpServletRequest request) throws Exception {
+	public Response addDispatchProduct(DispatchDTO dispatchDTO,HttpServletRequest request) throws Exception {
 		// TODO Auto-generated method stub
 		List<DispatchProductDTO> dispatchProductDTOs = new ArrayList<DispatchProductDTO>();
 		for (DispatchPartDTO dispatchPartDTO : dispatchDTO.getDispatchPartDTOs()) {
@@ -107,6 +108,9 @@ public class DispatchServiceImpl extends CRUDServiceImpl<Dispatch> implements Di
 						dispatch.setStatus(statusDao.getById(Status.class,Long.parseLong(messageSource.getMessage(ERPConstants.ORDER_DISPATCHED,null, null))));
 						Product product = productDao.getById(Product.class,productorderassociation.getProduct().getId());
 						Bom bom = bomDao.getBomByProductId(product.getId());
+						if(bom==null){
+							return new Response(1,"Please create bom for this product");
+						}else{
 						List<Bomrmvendorassociation> bomrmvendorassociations = bOMRMVendorAssociationDao.getBomRMVendorByBomId(bom.getId());
 						float totalCost = 0;
 						DispatchProductDTO  dispatchProductDTO = new DispatchProductDTO();
@@ -119,6 +123,7 @@ public class DispatchServiceImpl extends CRUDServiceImpl<Dispatch> implements Di
 						dispatchProductDTO.setTotalCost(totalCost);
 						}
 						dispatchProductDTOs.add(dispatchProductDTO);
+						}
 						dispatchDao.add(dispatch);
 					}
 				}
@@ -140,7 +145,7 @@ public class DispatchServiceImpl extends CRUDServiceImpl<Dispatch> implements Di
 			// TODO update product order
 			updateProductOrder(productorder, request);
 		}
-		return dispatchProductDTOs;
+		return new Response(dispatchProductDTOs);
 	
 	}
 	private void updateProductOrderAssoRemainingQuantity(Productorder productorder, Dispatch dispatch,HttpServletRequest request)

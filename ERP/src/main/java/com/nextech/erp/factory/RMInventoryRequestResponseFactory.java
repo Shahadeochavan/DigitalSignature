@@ -37,6 +37,7 @@ public class RMInventoryRequestResponseFactory {
 		rmInventoryDTO.setCreatedBy(rawmaterialinventory.getCreatedBy());
 		rmInventoryDTO.setCreatedDate(rawmaterialinventory.getCreatedDate());
 		rmInventoryDTO.setId(rawmaterialinventory.getId());
+		rmInventoryDTO.setRmPartNumber(rawmaterialinventory.getRawmaterial().getPartNumber());
 		rmInventoryDTO.setMaximumQuantity(rawmaterialinventory.getMaximum_quantity());
 		rmInventoryDTO.setMinimumQuantity(rawmaterialinventory.getMinimum_quantity());
 		rmInventoryDTO.setQuantityAvailable(rawmaterialinventory.getQuantityAvailable());

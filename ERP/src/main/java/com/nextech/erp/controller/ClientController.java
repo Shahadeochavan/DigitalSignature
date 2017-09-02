@@ -146,7 +146,7 @@ public class ClientController {
 	}
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody Response getClient() {
+	public @ResponseBody Response getClientList() {
 
 		List<ClientDTO> clientList = null;
 		try {
