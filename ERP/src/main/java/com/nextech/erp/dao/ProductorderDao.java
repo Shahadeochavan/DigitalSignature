@@ -12,4 +12,6 @@ public interface ProductorderDao extends SuperDao<Productorder> {
 
 	public List<Productorder> getInCompleteProductOrder(long clientId,long statusId,long statusId1);
 
+	public List<Productorder> getInCompleteProductOrders(long statusId);
+
 }

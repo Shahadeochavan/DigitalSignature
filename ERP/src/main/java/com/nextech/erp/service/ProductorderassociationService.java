@@ -24,7 +24,7 @@ public interface ProductorderassociationService extends CRUDService<Productorder
 	
 	public Productorderassociation getProdcutAssoByProductId(long prodcutId) throws Exception;
 	
-	public Productorderassociation getProdcutAssoByOrder(long orderId) throws Exception;
+	public Productorderassociation getProductAssoByOrder(long orderId) throws Exception;
 	
 	public List<ProductOrderAssociationDTO> getProductOrderAssoList() throws Exception;
 	

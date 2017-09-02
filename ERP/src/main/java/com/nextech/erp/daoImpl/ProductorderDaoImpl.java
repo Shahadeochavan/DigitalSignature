@@ -61,5 +61,18 @@ public class ProductorderDaoImpl extends SuperDaoImpl<Productorder> implements
 		criteria.add(Restrictions.eq("isactive", true));
 		return (List<Productorder>) (criteria.list().size() > 0 ? criteria.list() : null);
 	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Productorder> getInCompleteProductOrders(long statusId) {
+		// TODO Auto-generated method stub
+		session = sessionFactory.openSession();
+		@SuppressWarnings("deprecation")
+		Criteria criteria = session.createCriteria(Productorder.class);
+		Criterion criterion = Restrictions.not(Restrictions.eq("status.id", statusId));
+		criteria.add(Restrictions.and(criterion));
+		criteria.add(Restrictions.eq("isactive", true));
+		return (List<Productorder>) (criteria.list().size() > 0 ? criteria.list() : null);
+	}
 
 }
