@@ -3,7 +3,9 @@ package com.nextech.erp.factory;
 import javax.servlet.http.HttpServletRequest;
 
 import com.nextech.erp.model.User;
+import com.nextech.erp.model.Usertype;
 import com.nextech.erp.newDTO.UserDTO;
+import com.nextech.erp.newDTO.UserTypeDTO;
 
 
 
@@ -21,7 +23,9 @@ public class UserFactory {
 		user.setDob(userDTO.getDob());
 		user.setDoj(userDTO.getDoj());
 		user.setEmail(userDTO.getEmailId());
-		user.setUsertype(userDTO.getUserType());
+		Usertype  usertype =  new Usertype();
+		usertype.setId(userDTO.getUserType());
+		user.setUsertype(usertype);
 		user.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 		user.setIsactive(true);
 		return user;
@@ -37,7 +41,9 @@ public class UserFactory {
 		user.setDob(userDTO.getDob());
 		user.setDoj(userDTO.getDoj());
 		user.setEmail(userDTO.getEmailId());
-		user.setUsertype(userDTO.getUserType());
+		Usertype  usertype =  new Usertype();
+		usertype.setId(userDTO.getUserType());
+		user.setUsertype(usertype);
 		user.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 		user.setIsactive(true);
 		return user;
@@ -53,7 +59,10 @@ public class UserFactory {
 		userDTO.setDob(user.getDob());
 		userDTO.setDoj(user.getDoj());
 		userDTO.setEmailId(user.getEmail());
-		userDTO.setUserType(user.getUsertype());
+		UserTypeDTO userTypeDTO =  new UserTypeDTO();
+		userTypeDTO.setId(user.getUsertype().getId());
+		userTypeDTO.setUsertypeName(user.getUsertype().getUsertypeName());
+		userDTO.setUserTypeDTO(userTypeDTO);
 		userDTO.setActive(true);
 		userDTO.setCreatedBy(user.getCreatedBy());
 		userDTO.setCreatedDate(user.getCreatedDate());

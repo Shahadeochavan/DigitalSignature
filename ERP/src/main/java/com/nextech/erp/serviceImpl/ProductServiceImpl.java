@@ -46,11 +46,6 @@ public class ProductServiceImpl extends CRUDServiceImpl<Product> implements Prod
 		return isDispatched;
 	}
 
-	@Override
-	public Product getProductListByProductId(long id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	@Override
 	public List<ProductDTO> getProductList(List<Long> productIdList) {

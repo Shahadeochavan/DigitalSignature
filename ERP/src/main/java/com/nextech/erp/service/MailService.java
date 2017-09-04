@@ -9,5 +9,4 @@ public interface MailService extends CRUDService<Notification>{
 
 	 public void sendEmailWithoutPdF( Mail mail,NotificationDTO notification);
 
-	 public void sendEmailVendor(Mail mail);
 }

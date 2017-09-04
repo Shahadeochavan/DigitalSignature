@@ -25,21 +25,6 @@ public class RawmaterialorderDaoImpl extends SuperDaoImpl<Rawmaterialorder>
 	private static final long STATUS_RAW_MATERIAL_ORDER_COMPLETE=3;
 
 	
-	@Override
-	public Rawmaterialorder getRawmaterialorderByIdName(long id, String rmname)
-			throws Exception {
-		session = sessionFactory.openSession();
-		CriteriaBuilder builder = session.getCriteriaBuilder();
-		CriteriaQuery<Rawmaterialorder> criteria = builder.createQuery(Rawmaterialorder.class);
-		Root<Rawmaterialorder> userRoot = criteria.from(Rawmaterialorder.class);
-		criteria.select(userRoot).where(builder.equal(userRoot.get("name"), rmname),builder.equal(userRoot.get("id"), id),builder.equal(userRoot.get("isactive"), true));
-		TypedQuery<Rawmaterialorder> query = session.createQuery(criteria);
-		List<Rawmaterialorder> results = query.getResultList();
-		  if (results.isEmpty()) {
-		        return null;
-		    }
-		    return results.get(0);
-	}
 
 	@SuppressWarnings({ "unchecked", "deprecation" })
 	@Override
@@ -77,18 +62,6 @@ public class RawmaterialorderDaoImpl extends SuperDaoImpl<Rawmaterialorder>
 		return criteria.list();
 	}
 
-	@Override
-	public List<Rawmaterialorder> getRawmaterialByName(String name)
-			throws Exception {
-		// TODO Auto-generated method stub
-		session = sessionFactory.openSession();
-		CriteriaBuilder builder = session.getCriteriaBuilder();
-		CriteriaQuery<Rawmaterialorder> criteria = builder.createQuery(Rawmaterialorder.class);
-		Root<Rawmaterialorder> userRoot  = (Root<Rawmaterialorder>) criteria.from(Rawmaterialorder.class);
-		criteria.select(userRoot).where(builder.equal(userRoot.get("name"), name),builder.equal(userRoot.get("isactive"), true));
-		TypedQuery<Rawmaterialorder> query = session.createQuery(criteria);
-		return query.getResultList();
-	}
 
 	@Override
 	public List<Rawmaterialorder> getRawmaterialorderByVendorId(long vendorId,

@@ -39,15 +39,12 @@ import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.dto.CreatePDFProductOrder;
 import com.nextech.erp.dto.Mail;
 import com.nextech.erp.dto.ProductOrderDTO;
-import com.nextech.erp.dto.ProductProductionPlan;
 import com.nextech.erp.dto.ProductRMAssociationDTO;
-import com.nextech.erp.dto.ProductionPlan;
 import com.nextech.erp.dto.RMInventoryDTO;
 import com.nextech.erp.dto.RMOrderModelData;
 import com.nextech.erp.dto.RMReqirementDTO;
 import com.nextech.erp.dto.RawmaterialOrderDTO;
 import com.nextech.erp.factory.RMOrderRequestResponseFactory;
-import com.nextech.erp.model.Product;
 import com.nextech.erp.model.Productinventory;
 import com.nextech.erp.model.Productorderassociation;
 import com.nextech.erp.newDTO.NotificationDTO;
@@ -126,36 +123,6 @@ public class RawmaterialorderController {
 	@Autowired 
 	RMVAssoService rmvAssoService;
 
-
-	@Transactional @RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus addRawmaterialorder(
-			@Valid @RequestBody RawmaterialOrderDTO rawmaterialOrderDTO,
-			BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
-		try {
-			if (bindingResult.hasErrors()) {
-				return new UserStatus(0, bindingResult.getFieldError()
-						.getDefaultMessage());
-			}
-			rawmaterialOrderDTO.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-			
-			rawmaterialorderService.addEntity(RMOrderRequestResponseFactory.setRMOrder(rawmaterialOrderDTO));
-			//TODO WHy this update
-			rawmaterialorderService.updateEntity(RMOrderRequestResponseFactory.setRMOrder(rawmaterialOrderDTO));
-			return new UserStatus(1, "Rawmaterialorder added Successfully !");
-		} catch (ConstraintViolationException cve) {
-			System.out.println("Inside ConstraintViolationException");
-			cve.printStackTrace();
-			return new UserStatus(0, cve.getCause().getMessage());
-		} catch (PersistenceException pe) {
-			System.out.println("Inside PersistenceException");
-			pe.printStackTrace();
-			return new UserStatus(0, pe.getCause().getMessage());
-		} catch (Exception e) {
-			System.out.println("Inside Exception");
-			e.printStackTrace();
-			return new UserStatus(0, e.getCause().getMessage());
-		}
-	}
 
 	@Transactional @RequestMapping(value = "/createMultiple", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addMultipleRawMaterialOrder(

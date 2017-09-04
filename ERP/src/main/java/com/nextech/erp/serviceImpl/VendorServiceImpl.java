@@ -27,11 +27,6 @@ public class VendorServiceImpl extends CRUDServiceImpl<Vendor> implements Vendor
 		return vendorDao.getVendorByEmail(email);
 	}
 
-	@Override
-	public Vendor getVendorByName(String vendorName) throws Exception {
-		// TODO Auto-generated method stub
-		return vendorDao.getVendorByName(vendorName);
-	}
 
 	@Override
 	public List<VendorDTO> getVendorList(List<VendorDTO> vendorDTOs)

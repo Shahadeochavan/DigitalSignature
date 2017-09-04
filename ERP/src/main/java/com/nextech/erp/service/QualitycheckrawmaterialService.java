@@ -4,8 +4,6 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import com.nextech.erp.dto.QualityCheckRMDTO;
 import com.nextech.erp.dto.RawMaterialInvoiceDTO;
 import com.nextech.erp.model.Qualitycheckrawmaterial;
 

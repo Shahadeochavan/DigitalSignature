@@ -155,13 +155,13 @@ public class UserController {
 				HashMap<String, Object> result = new HashMap<String, Object>();
 				List<Page> pages = new ArrayList<Page>();
 				List<Report> reports = new ArrayList<Report>();
-				if(reportusertypeassociations !=null){
+				if(!reportusertypeassociations.isEmpty()){
 					for (Reportusertypeassociation reportusertypeassociation : reportusertypeassociations) {
 						reports.add(reportusertypeassociation.getReport());
 					}
 					result.put("reports", reports);
 				}
-				if(usertypepageassociations !=null){
+				if(!usertypepageassociations.isEmpty()){
 				for (UserTypePageAssoDTO usertypepageassociation : usertypepageassociations) {
 					pages.add(usertypepageassociation.getPage());
 				}
@@ -240,7 +240,6 @@ public class UserController {
 			}else{
 			    user.setPassword(new com.nextech.erp.util.EncryptDecrypt().encrypt(userDTO.getPassword()));	
 			}
-		 //	user.setPassword(new com.nextech.erp.util.EncryptDecrypt().encrypt(userDTO.getPassword()));
 	     	userservice.updateEntity(user);
             NotificationDTO  notificationDTO = notificationService.getNotificationByCode((messageSource.getMessage(ERPConstants.USER_UPDATE_NOTIFICATION, null, null)));
 		mailSending(userDTO, request, response, notificationDTO);
@@ -267,29 +266,11 @@ public class UserController {
 		return new Response(1,userList);
 	}
 
-	@RequestMapping(value = "userProfile/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody Response getUserProfile(@PathVariable("id") long id) {
-
-		List<User> userProfileList = null;
-		try {
-			userProfileList = userservice.getUserProfileByUserId(id);
-			if(userProfileList.isEmpty()){
-				return new Response(1,"There is no any user list");
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return new Response(1,userProfileList);
-	}
-
-	/* Delete an object from DB in Spring Restful Services */
 	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
 	public @ResponseBody Response deleteEmployee(@PathVariable("id") long id) {
 
 		try {
-			 UserDTO user =userservice.getUserDTOByid(id);
+			 UserDTO user =userservice.deleteUser(id);
 			 if (user==null) {
 				 return new Response(1,"There is no any user for delete");
 			}

@@ -1,9 +1,7 @@
 package com.nextech.erp.newDTO;
 import java.util.Date;
 import java.util.List;
-
 import com.nextech.erp.dto.AbstractDTO;
-import com.nextech.erp.model.Usertype;
 
 public class UserDTO extends AbstractDTO {
 	private String userId;
@@ -11,7 +9,8 @@ public class UserDTO extends AbstractDTO {
 	private String firstName;
 	private String lastName;
 	private String mobileNo;
-	private Usertype userType;
+	private long userType;
+	private UserTypeDTO userTypeDTO;
 	private Date dob;
 	private Date doj;
 	private String emailId;
@@ -46,12 +45,7 @@ public class UserDTO extends AbstractDTO {
 	public void setMobileNo(String mobileNo) {
 		this.mobileNo = mobileNo;
 	}
-	public Usertype getUserType() {
-		return userType;
-	}
-	public void setUserType(Usertype userType) {
-		this.userType = userType;
-	}
+	
 	public Date getDob() {
 		return dob;
 	}
@@ -77,4 +71,17 @@ public class UserDTO extends AbstractDTO {
 			List<NotificationUserAssociatinsDTO> notificationUserAssociatinsDTOs) {
 		this.notificationUserAssociatinsDTOs = notificationUserAssociatinsDTOs;
 	}
+	public long getUserType() {
+		return userType;
+	}
+	public void setUserType(long userType) {
+		this.userType = userType;
+	}
+	public UserTypeDTO getUserTypeDTO() {
+		return userTypeDTO;
+	}
+	public void setUserTypeDTO(UserTypeDTO userTypeDTO) {
+		this.userTypeDTO = userTypeDTO;
+	}
+	
 }

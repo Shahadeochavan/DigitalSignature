@@ -48,10 +48,6 @@ public class UserServiceImpl extends CRUDServiceImpl<User> implements UserServic
 	 String prefix = "";
 	 String id = "";
 
-	@Override
-	public User findByUserId(String string) throws Exception {
-		return null;
-	}
 
 	@Override
 	public User getUserByUserId(String userid) throws Exception {
@@ -68,25 +64,6 @@ public class UserServiceImpl extends CRUDServiceImpl<User> implements UserServic
 		return userdao.getUserByMobile(mobile);
 	}
 
-	@Override
-	public List<User> getUserProfileByUserId(long id) throws Exception {
-		return userdao.getUserProfileByUserId(id);
-	}
-
-	@Override
-	public User getUserByFirstNamLastName(String firstName, String lastName) throws Exception {
-		return userdao.getUserByFirstNamLastName(firstName, lastName);
-	}
-
-	@Override
-	public User getEmailUserById(long id) throws Exception {
-		return userdao.getEmailUserById(id);
-	}
-
-	@Override
-	public User getUserByContact(String contact) throws Exception {
-		return userdao.getUserByContact(contact);
-	}
 
 	@Override
 	public List<UserDTO> getUserList(List<UserDTO> userDTOs) throws Exception {
@@ -114,7 +91,7 @@ public class UserServiceImpl extends CRUDServiceImpl<User> implements UserServic
 	}
 
 	@Override
-	public UserDTO getUserDTOByid(long id) throws Exception {
+	public UserDTO deleteUser(long id) throws Exception {
 		User user = userdao.getById(User.class, id);
 		if(user==null){
 			return null;
@@ -125,12 +102,6 @@ public class UserServiceImpl extends CRUDServiceImpl<User> implements UserServic
 		return userDTO;
 	}
 
-	@Override
-	public UserDTO getUserDTOByUserId(String userId) throws Exception {
-		User user = userdao.getUserByUserId(userId);
-		UserDTO userDTO = UserFactory.setUserList(user);
-		return userDTO;
-	}
 
 	@Override
 	public Mail emailNotification(NotificationDTO notificationDTO) throws Exception {
@@ -149,7 +120,6 @@ public class UserServiceImpl extends CRUDServiceImpl<User> implements UserServic
 		Mail mail = new Mail();
 		List<NotificationUserAssociatinsDTO> notificationUserAssociatinsDTOs = notificationUserAssService.getNotificationUserAssociatinsDTOs(notificationDTO.getId());
 		
-		// By Nikhil on 21/08/2017 : Form comma separated list of notificationuserassociation.getUserId().getId() and fetch all e-mails in single DB call.
 		List<User> userDTOs =  new ArrayList<User>();
 		System.out.println(userDTOs);
 		for (NotificationUserAssociatinsDTO notificationUserAssociatinsDTO : notificationUserAssociatinsDTOs) {

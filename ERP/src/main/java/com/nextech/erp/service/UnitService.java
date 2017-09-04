@@ -7,8 +7,6 @@ import com.nextech.erp.newDTO.UnitDTO;
 
 public interface UnitService extends CRUDService<Unit>{
 	
-	public List<UnitDTO> getUnit(long Unit) throws Exception; 
-	
 	public  List<UnitDTO> getUnitList() throws Exception;
 	
 	public UnitDTO getUnitByID(long id) throws Exception;

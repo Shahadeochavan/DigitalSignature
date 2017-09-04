@@ -97,37 +97,5 @@ public class MailServiceImpl extends CRUDServiceImpl<Notification> implements Ma
 		}
 	}
 
-	@Async
-	@Override
-	public void sendEmailVendor(Mail mail) {
-		// TODO Auto-generated method stub
-		MimeMessage mimeMessage = mailSender.createMimeMessage();
-
-		try {
-
-		       MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
-
-	            mimeMessageHelper.setSubject(mail.getMailSubject());
-	            mimeMessageHelper.setFrom(mail.getMailFrom());
-	            mimeMessageHelper.setTo(mail.getMailTo());
-	            mail.setMailContent(geContentFromTemplate(mail.getModel()));
-	            mimeMessageHelper.setText(mail.getMailContent(), true);
-	            mailSender.send(mimeMessageHelper.getMimeMessage());
-		} catch (MessagingException e) {
-			e.printStackTrace();
-		}
-
-	}
-	   @SuppressWarnings("deprecation")
-		public String geContentFromTemplate(Map < String, Object > model) {
-	        StringBuffer content = new StringBuffer();
-	        try {
-	            content.append(VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, "/vendor-email-template.vm", model));
-	        } catch (Exception e) {
-	            e.printStackTrace();
-	        }
-	        return content.toString();
-	    }
-
 
 }

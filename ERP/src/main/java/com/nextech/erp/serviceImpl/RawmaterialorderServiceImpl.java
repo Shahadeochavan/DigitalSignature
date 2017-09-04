@@ -31,10 +31,6 @@ public class RawmaterialorderServiceImpl extends CRUDServiceImpl<Rawmaterialorde
 	@Autowired
 	private MessageSource messageSource;
 
-	@Override
-	public Rawmaterialorder getRawmaterialorderByIdName(long id,String rmname) throws Exception {
-		return rawmaterialorderDao.getRawmaterialorderByIdName(id,rmname);
-	}
 
 	@Override
 	public List<RawmaterialOrderDTO> getRawmaterialorderByStatusId(long statusId,long statusId1,long statusId2)
@@ -83,14 +79,7 @@ public class RawmaterialorderServiceImpl extends CRUDServiceImpl<Rawmaterialorde
 		}
 		return rawmaterialOrderDTOs;
 	}
-
-	@Override
-	public List<Rawmaterialorder> getRawmaterialByName(String name)
-			throws Exception {
-		// TODO Auto-generated method stub
-		return rawmaterialorderDao.getRawmaterialByName(name);
-	}
-
+	
 	@Override
 	public List<Rawmaterialorder> getRawmaterialorderByVendorId(long vendorId,
 			long statusId1, long statusId2) throws Exception {

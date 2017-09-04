@@ -63,8 +63,6 @@ public class UsertypepageassociationController {
 			}
 			
 			}
-
-			//createMultiplePageAss(userTypePageAssoDTO, request.getAttribute("current_user").toString());
 			return new UserStatus(1,
 					"Usertypepageassociation added Successfully !");
 		} catch (ConstraintViolationException cve) {
@@ -139,8 +137,7 @@ public class UsertypepageassociationController {
 
 		return new Response(1,UserTypePageAssoDTO);
 	}
-
-	/* Delete an object from DB in Spring Restful Services */
+	
 	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
 	public @ResponseBody Response deleteUserTypePageAsso(@PathVariable("id") long id) {
 

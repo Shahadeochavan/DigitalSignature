@@ -17,12 +17,6 @@ public class NotificationUserAssociationServiceImpl extends CRUDServiceImpl<Noti
 	@Autowired
 	NotificationUserassociationDao notificationUserassociationDao;
 
-	@Override
-	public Notificationuserassociation getNotifiactionByUserId(long userId)
-			throws Exception {
-		// TODO Auto-generated method stub
-		return notificationUserassociationDao.getNotifiactionByUserId(userId);
-	}
 
 	@Override
 	public List<Notificationuserassociation> getNotificationuserassociationByUserId(

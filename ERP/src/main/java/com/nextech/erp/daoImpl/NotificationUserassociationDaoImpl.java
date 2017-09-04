@@ -15,24 +15,7 @@ import com.nextech.erp.model.Notificationuserassociation;
 public class NotificationUserassociationDaoImpl extends
 		SuperDaoImpl<Notificationuserassociation> implements
 		NotificationUserassociationDao {
-
-	@Override
-	public Notificationuserassociation getNotifiactionByUserId(long userId)
-			throws Exception {
-		// TODO Auto-generated method stub
-		
-		session = sessionFactory.openSession();
-		CriteriaBuilder builder = session.getCriteriaBuilder();
-		CriteriaQuery<Notificationuserassociation> criteria = builder.createQuery(Notificationuserassociation.class);
-		Root<Notificationuserassociation> userRoot = (Root<Notificationuserassociation>) criteria.from(Notificationuserassociation.class);
-		criteria.select(userRoot).where(builder.equal(userRoot.get("user"), userId),builder.equal(userRoot.get("isactive"), true));
-		TypedQuery<Notificationuserassociation> query = session.createQuery(criteria);
-		  List<Notificationuserassociation> list = query.getResultList();
-		  if (list.isEmpty()) {
-		        return null;
-		    }
-		    return list.get(0);
-	}
+	
 
 	@Override
 	public List<Notificationuserassociation> getNotificationuserassociationByUserId(

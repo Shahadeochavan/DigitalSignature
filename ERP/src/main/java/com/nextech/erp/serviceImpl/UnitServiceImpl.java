@@ -19,12 +19,6 @@ public class UnitServiceImpl extends CRUDServiceImpl<Unit> implements UnitServic
 	UnitDao unitDao;
 
 	@Override
-	public List<UnitDTO> getUnit(long Unit) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public List<UnitDTO> getUnitList() throws Exception {
 		// TODO Auto-generated method stub
 		List<UnitDTO> unitDTOs = new ArrayList<UnitDTO>();

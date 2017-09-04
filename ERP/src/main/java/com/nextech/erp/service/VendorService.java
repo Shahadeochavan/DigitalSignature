@@ -11,8 +11,6 @@ public interface VendorService extends CRUDService<Vendor>{
 
 	public Vendor getVendorByEmail(String email) throws Exception;
 
-	public Vendor getVendorByName(String vendorName) throws Exception;
-	
 	public List<VendorDTO>  getVendorList(List<VendorDTO> vendorDTOs) throws Exception;
 	
 	public VendorDTO getVendorById(long id) throws Exception;

@@ -10,16 +10,12 @@ import com.nextech.erp.model.Rawmaterialorder;
 
 public interface RawmaterialorderService extends CRUDService<Rawmaterialorder> {
 
-	public Rawmaterialorder getRawmaterialorderByIdName(long id ,String rmname) throws Exception;
-
 	public List<RawmaterialOrderDTO> getRawmaterialorderByStatusId(long statusId,long statusId1,long statusId2) throws Exception;
 
 	public List<RawmaterialOrderDTO> getRawmaterialorderByQualityCheckStatusId(long statusId) throws Exception;
 
 	public List<RawmaterialOrderDTO> getRawmaterialorderByVendor(long  vendorId)throws Exception;
 
-	public List<Rawmaterialorder> getRawmaterialByName(String  name)throws Exception;
-	
 	public List<Rawmaterialorder> getRawmaterialorderByVendorId(long vendorId,long statusId1,long statusId2) throws Exception;
 	
 	public RawmaterialOrderDTO  addMultipleRawMaterialOrder(RawmaterialOrderDTO rawmaterialOrderDTO,HttpServletRequest request,HttpServletResponse response)throws Exception;
