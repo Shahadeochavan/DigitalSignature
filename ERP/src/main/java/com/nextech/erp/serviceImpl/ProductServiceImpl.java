@@ -46,10 +46,9 @@ public class ProductServiceImpl extends CRUDServiceImpl<Product> implements Prod
 		return isDispatched;
 	}
 
-
 	@Override
 	public List<ProductDTO> getProductList(List<Long> productIdList) {
-		// TODO Auto-generated method stub
+		
 		List<ProductDTO> productDTOs = new ArrayList<ProductDTO>();
 		List<Product> products = productDao.getProductList(productIdList);
 		if(products.isEmpty()){
@@ -64,7 +63,7 @@ public class ProductServiceImpl extends CRUDServiceImpl<Product> implements Prod
 
 	@Override
 	public List<ProductDTO> getProductList() throws Exception {
-		// TODO Auto-generated method stub
+		
 		List<ProductDTO> productDTOs = new ArrayList<ProductDTO>();
 		List<Product> products = productDao.getList(Product.class);
 		for (Product product : products) {
@@ -76,7 +75,7 @@ public class ProductServiceImpl extends CRUDServiceImpl<Product> implements Prod
 
 	@Override
 	public ProductDTO getProductDTO(long id) throws Exception {
-		// TODO Auto-generated method stub
+		
 		Product product = productDao.getById(Product.class, id);
 		if(product ==null){
 			return null;
@@ -87,7 +86,7 @@ public class ProductServiceImpl extends CRUDServiceImpl<Product> implements Prod
 
 	@Override
 	public ProductDTO deleteProduct(long id) throws Exception {
-		// TODO Auto-generated method stub
+		
 		Product product = productDao.getById(Product.class, id);
 		if(product ==null){
 			return null;
@@ -99,7 +98,7 @@ public class ProductServiceImpl extends CRUDServiceImpl<Product> implements Prod
 
 	@Override
 	public Product getProductByProductId(long productId) throws Exception {
-		// TODO Auto-generated method stub
+		
 		return productDao.getProductByProductId(productId);
 	}
 }

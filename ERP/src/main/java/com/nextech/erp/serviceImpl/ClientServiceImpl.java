@@ -30,7 +30,7 @@ public class ClientServiceImpl extends CRUDServiceImpl<Client> implements Client
 	@Override
 	public List<ClientDTO> getClientList(List<ClientDTO> clientDTOs)
 			throws Exception {
-		// TODO Auto-generated method stub
+		
 		clientDTOs =  new ArrayList<ClientDTO>();
 		List<Client> clList = clientDao.getList(Client.class);
 		if(clList.isEmpty()){
@@ -45,7 +45,7 @@ public class ClientServiceImpl extends CRUDServiceImpl<Client> implements Client
 
 	@Override
 	public ClientDTO getClientDTOById(long id) throws Exception {
-		// TODO Auto-generated method stub
+		
 		Client client = clientDao.getById(Client.class, id);
 		if(client ==null){
 			return null;
@@ -56,7 +56,7 @@ public class ClientServiceImpl extends CRUDServiceImpl<Client> implements Client
 
 	@Override
 	public ClientDTO deleteClient(long id) throws Exception {
-		// TODO Auto-generated method stub
+		
 		Client client = clientDao.getById(Client.class, id);
 		if(client ==null){
 			return null;

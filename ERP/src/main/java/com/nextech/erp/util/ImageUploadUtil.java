@@ -21,7 +21,6 @@ public class ImageUploadUtil {
 		try {
 			inputFile.transferTo(destinationFile);
 		} catch (IllegalStateException | IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		fileInfo.setFileName(destinationFile.getPath());

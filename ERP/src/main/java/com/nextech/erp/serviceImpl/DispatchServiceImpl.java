@@ -73,20 +73,21 @@ public class DispatchServiceImpl extends CRUDServiceImpl<Dispatch> implements Di
 	@Override
 	public Dispatch getDispatchByProductOrderIdAndProductId(long orderID,
 			long productID) throws Exception {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
 	@Override
 	public List<Dispatch> getDispatchByProductOrderId(long productOrderId)
 			throws Exception {
-		// TODO Auto-generated method stub
+		
 		return dispatchDao.getDispatchByProductOrderId(productOrderId);
 	}
 
 	@Override
 	public Response addDispatchProduct(DispatchDTO dispatchDTO,HttpServletRequest request) throws Exception {
 		// TODO Auto-generated method stub
+
 		List<DispatchProductDTO> dispatchProductDTOs = new ArrayList<DispatchProductDTO>();
 		for (DispatchPartDTO dispatchPartDTO : dispatchDTO.getDispatchPartDTOs()) {
 			Dispatch dispatch = setDispatchPart(dispatchPartDTO);
@@ -135,7 +136,6 @@ public class DispatchServiceImpl extends CRUDServiceImpl<Dispatch> implements Di
 			updateProductOrderAssoRemainingQuantity(productorder, dispatch,
 					request);
 
-			// TODO add product Inventroy history
 			addProductInventoryHistory(dispatch.getQuantity(), product,
 					dispatch, request);
 
@@ -225,7 +225,7 @@ public class DispatchServiceImpl extends CRUDServiceImpl<Dispatch> implements Di
 
 		@Override
 		public List<DispatchDTO> getDispatchList() throws Exception {
-			// TODO Auto-generated method stub
+			
 			List<DispatchDTO> dispatchDTOs =  new ArrayList<DispatchDTO>();
 			List<Dispatch> dispatchs =  dispatchDao.getList(Dispatch.class);
 			if(dispatchs.isEmpty()){
@@ -240,7 +240,7 @@ public class DispatchServiceImpl extends CRUDServiceImpl<Dispatch> implements Di
 
 		@Override
 		public DispatchDTO getDispatchById(long id) throws Exception {
-			// TODO Auto-generated method stub
+			
 			Dispatch dispatch = dispatchDao.getById(Dispatch.class, id);
 			if(dispatch==null){
 				return null;
@@ -251,7 +251,7 @@ public class DispatchServiceImpl extends CRUDServiceImpl<Dispatch> implements Di
 
 		@Override
 		public DispatchDTO deleteDispatchById(long id) throws Exception {
-			// TODO Auto-generated method stub
+			
 			Dispatch dispatch = dispatchDao.getById(Dispatch.class, id);
 			if(dispatch==null){
 				return null;

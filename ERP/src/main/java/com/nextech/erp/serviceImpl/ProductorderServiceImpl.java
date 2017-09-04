@@ -66,7 +66,7 @@ public class ProductorderServiceImpl extends CRUDServiceImpl<Productorder> imple
 	@Override
 	public Productorder getProductorderByProductOrderId(long pOrderId)
 			throws Exception {
-		// TODO Auto-generated method stub
+		
 		return productorderDao.getProductorderByProductOrderId(pOrderId);
 	}
 	@Override
@@ -84,7 +84,7 @@ public class ProductorderServiceImpl extends CRUDServiceImpl<Productorder> imple
 	}
 	@Override
 	public List<ProductOrderDTO> getInCompleteProductOrder(long clientId,long statusId,long statusId1) {
-		// TODO Auto-generated method stub
+		
 		List<ProductOrderDTO> productOrderDTOs =  new ArrayList<ProductOrderDTO>();
 		List<Productorder> productorders = productorderDao.getInCompleteProductOrder(clientId,statusId,statusId1);
 		if(productorders==null){
@@ -99,7 +99,7 @@ public class ProductorderServiceImpl extends CRUDServiceImpl<Productorder> imple
 	
 	@Override
 	public List<ProductOrderDTO> getInCompleteProductOrders(long statusId) {
-		// TODO Auto-generated method stub
+		
 		List<ProductOrderDTO> productOrderDTOs =  new ArrayList<ProductOrderDTO>();
 		List<Productorder> productorders = productorderDao.getInCompleteProductOrders(statusId);
 		if(productorders==null){
@@ -115,7 +115,7 @@ public class ProductorderServiceImpl extends CRUDServiceImpl<Productorder> imple
 	public ProductOrderDTO addMultipleProductOrder(ProductOrderDTO productOrderDTO,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		// TODO Auto-generated method stub
+		
 		Productorder productorder = ProductOrderRequestResponseFactory.setProductOrder(productOrderDTO);
 		productorder.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 		productorder.setClient(clientDao.getById(Client.class,productOrderDTO.getClientId().getId()));
@@ -132,7 +132,7 @@ public class ProductorderServiceImpl extends CRUDServiceImpl<Productorder> imple
 	}
 	@Override
 	public List<ProductOrderDTO> getProductOrderList() throws Exception {
-		// TODO Auto-generated method stub
+		
 		List<ProductOrderDTO> productOrderDTOs =  new ArrayList<ProductOrderDTO>();
 		List<Productorder> productorders = productorderDao.getList(Productorder.class);
 		if(productorders.isEmpty()){
@@ -146,7 +146,7 @@ public class ProductorderServiceImpl extends CRUDServiceImpl<Productorder> imple
 	}
 	@Override
 	public ProductOrderDTO getProductById(long id) throws Exception {
-		// TODO Auto-generated method stub
+		
 		Productorder productorder = productorderDao.getById(Productorder.class, id);
 		if(productorder==null){
 			return null;
@@ -156,7 +156,7 @@ public class ProductorderServiceImpl extends CRUDServiceImpl<Productorder> imple
 	}
 	@Override
 	public ProductOrderDTO deleteProductOrder(long id) throws Exception {
-		// TODO Auto-generated method stub
+		
 		Productorder productorder = productorderDao.getById(Productorder.class, id);
 		if(productorder==null){
 			return null;
@@ -170,7 +170,7 @@ public class ProductorderServiceImpl extends CRUDServiceImpl<Productorder> imple
 	@Override
 	public List<ProductOrderData> createProductorderAsso(ProductOrderDTO productOrderDTO, HttpServletRequest request)
 			throws Exception {
-		// TODO Auto-generated method stub
+		
 		
 		List<ProductOrderAssociationDTO> productOrderAssociationDTOs = productOrderDTO.getProductOrderAssociationDTOs();
 		ClientDTO client = clientService.getClientDTOById(productOrderDTO.getClientId().getId());
@@ -205,7 +205,7 @@ public class ProductorderServiceImpl extends CRUDServiceImpl<Productorder> imple
 	public ProductOrderDTO updateMultiple(ProductOrderDTO productOrderDTO,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		// TODO Auto-generated method stub
+		
 		Productorder productorder = ProductOrderRequestResponseFactory.setProductOrder(productOrderDTO);
 		if(productorder==null){
 			return null;

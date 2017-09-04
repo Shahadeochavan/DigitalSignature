@@ -18,12 +18,12 @@ public class PageServiceImpl extends CRUDServiceImpl<Page> implements PageServic
 	PageDao pageDao;
 	@Override
 	public Page getPageByUrl(String url) throws Exception {
-		// TODO Auto-generated method stub
+		
 		return pageDao.getPageByUrl(url);
 	}
 	@Override
 	public List<PageDTO> getPageDTOList(List<PageDTO> pageDTOs) throws Exception {
-		// TODO Auto-generated method stub
+		
 		 pageDTOs = new ArrayList<PageDTO>();
 		List<Page> pages = null;
 		pages = pageDao.getList(Page.class);
@@ -38,7 +38,7 @@ public class PageServiceImpl extends CRUDServiceImpl<Page> implements PageServic
 	}
 	@Override
 	public PageDTO getPageDTOById(long id) throws Exception {
-		// TODO Auto-generated method stub
+		
 		Page page = pageDao.getById(Page.class, id);
 		if(page==null){
 			return null;
@@ -48,7 +48,7 @@ public class PageServiceImpl extends CRUDServiceImpl<Page> implements PageServic
 	}
 	@Override
 	public PageDTO deletePageById(long id) throws Exception {
-		// TODO Auto-generated method stub
+		
 		Page page = pageDao.getById(Page.class, id);
 		
 		if(page==null){

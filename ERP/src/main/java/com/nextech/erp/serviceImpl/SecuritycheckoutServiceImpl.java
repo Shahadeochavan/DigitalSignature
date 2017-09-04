@@ -42,7 +42,7 @@ public class SecuritycheckoutServiceImpl extends CRUDServiceImpl<Securitycheckou
 	
 	@Override
 	public SecurityCheckOutDTO addSecurityCheckOut(SecurityCheckOutDTO securityCheckOutDTO, HttpServletRequest request)throws Exception {
-		// TODO Auto-generated method stub
+		
 		
 		Securitycheckout securitycheckout = SecurityCheckOutRequestResponseFactory.setSecurityCheckOut(securityCheckOutDTO, request);
 		securitycheckout.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
@@ -76,7 +76,7 @@ public class SecuritycheckoutServiceImpl extends CRUDServiceImpl<Securitycheckou
 	@Override
 	public SecurityCheckOutDTO getSecurityCheckOutById(long id)
 			throws Exception {
-		// TODO Auto-generated method stub
+		
 		Securitycheckout securitycheckout = securitycheckoutDao.getById(Securitycheckout.class, id);
 		if(securitycheckout==null){
 			return null;
@@ -87,7 +87,7 @@ public class SecuritycheckoutServiceImpl extends CRUDServiceImpl<Securitycheckou
 
 	@Override
 	public List<SecurityCheckOutDTO> getSecurityCheckOutList() throws Exception {
-		// TODO Auto-generated method stub
+		
 		List<SecurityCheckOutDTO> securityCheckOutDTOs =  new ArrayList<SecurityCheckOutDTO>();
 		List<Securitycheckout> securitycheckouts = securitycheckoutDao.getList(Securitycheckout.class);
 		if(securitycheckouts.isEmpty()){
@@ -102,7 +102,7 @@ public class SecuritycheckoutServiceImpl extends CRUDServiceImpl<Securitycheckou
 
 	@Override
 	public SecurityCheckOutDTO deleteSecurityCheckOut(long id) throws Exception {
-		// TODO Auto-generated method stub
+		
 		Securitycheckout securitycheckout = securitycheckoutDao.getById(Securitycheckout.class, id);
 		if(securitycheckout==null){
 			return null;

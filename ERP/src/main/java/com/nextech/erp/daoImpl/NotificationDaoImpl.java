@@ -34,7 +34,7 @@ public class NotificationDaoImpl extends SuperDaoImpl<Notification> implements N
 
 	@Override
 	public Notification getNotificationByCode(String code) throws Exception {
-		// TODO Auto-generated method stub
+		
 		
 		session = sessionFactory.openSession();
 		CriteriaBuilder builder = session.getCriteriaBuilder();

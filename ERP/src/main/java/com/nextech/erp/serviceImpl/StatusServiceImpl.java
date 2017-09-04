@@ -18,7 +18,7 @@ public class StatusServiceImpl extends CRUDServiceImpl<Status> implements Status
 	StatusDao statusDao;
 	@Override
 	public StatusDTO getStatusById(long id) throws Exception {
-		// TODO Auto-generated method stub
+		
 		Status status =  statusDao.getById(Status.class, id);
 		if(status==null){
 			return null;
@@ -28,7 +28,7 @@ public class StatusServiceImpl extends CRUDServiceImpl<Status> implements Status
 	}
 	@Override
 	public List<StatusDTO> getStatusList() throws Exception {
-		// TODO Auto-generated method stub
+		
 		List<StatusDTO> statusDTOs = new ArrayList<StatusDTO>();
 		List<Status> statusList= statusDao.getList(Status.class);
 		if(statusList.isEmpty()){
@@ -42,7 +42,7 @@ public class StatusServiceImpl extends CRUDServiceImpl<Status> implements Status
 	}
 	@Override
 	public StatusDTO deleteStatus(long id) throws Exception {
-		// TODO Auto-generated method stub
+		
 		Status status =  statusDao.getById(Status.class, id);
 		if(status==null){
 			return null;
@@ -54,7 +54,7 @@ public class StatusServiceImpl extends CRUDServiceImpl<Status> implements Status
 	}
 	@Override
 	public List<StatusDTO> getStatusByType(String type) throws Exception {
-		// TODO Auto-generated method stub
+		
 		List<StatusDTO> statusDTOs = new ArrayList<StatusDTO>();
 		List<Status> statusList= statusDao.getStatusByType(type);
 		if(statusList.isEmpty()){

@@ -59,7 +59,7 @@ public class StoreoutServiceImpl extends CRUDServiceImpl<Storeout> implements St
 	@Override
 	public UserStatus addStoreOutRM(StoreOutDTO storeOutDTO, HttpServletRequest request)
 			throws Exception {
-		// TODO Auto-generated method stub
+		
 		
 		Productionplanning productionplanning = productionplanningDao.getById(Productionplanning.class,
 				storeOutDTO.getProductionPlanId());
@@ -115,7 +115,7 @@ public class StoreoutServiceImpl extends CRUDServiceImpl<Storeout> implements St
 	}
 	@Override
 	public List<StoreOutDTO> getStoreOutlist() throws Exception {
-		// TODO Auto-generated method stub
+		
 		List<StoreOutDTO> storeOutDTOs =  new ArrayList<StoreOutDTO>();
 		List<Storeout> storeouts =  storeoutDao.getList(Storeout.class);
 		if(storeouts.isEmpty()){
@@ -130,7 +130,7 @@ public class StoreoutServiceImpl extends CRUDServiceImpl<Storeout> implements St
 	}
 	@Override
 	public StoreOutDTO getStoreOutById(long id) throws Exception {
-		// TODO Auto-generated method stub
+		
 		Storeout storeout  =  storeoutDao.getById(Storeout.class, id);
 		if(storeout==null){
 			return  null;
@@ -140,7 +140,7 @@ public class StoreoutServiceImpl extends CRUDServiceImpl<Storeout> implements St
 	}
 	@Override
 	public StoreOutDTO deleteStoreOutById(long id) throws Exception {
-		// TODO Auto-generated method stub
+		
 		Storeout storeout = storeoutDao.getById(Storeout.class, id);
 		if(storeout==null){
 			return  null;

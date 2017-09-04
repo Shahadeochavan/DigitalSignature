@@ -20,7 +20,7 @@ public class UnitServiceImpl extends CRUDServiceImpl<Unit> implements UnitServic
 
 	@Override
 	public List<UnitDTO> getUnitList() throws Exception {
-		// TODO Auto-generated method stub
+		
 		List<UnitDTO> unitDTOs = new ArrayList<UnitDTO>();
 		List<Unit> units = unitDao.getList(Unit.class);
 		if(units.isEmpty()){
@@ -35,7 +35,7 @@ public class UnitServiceImpl extends CRUDServiceImpl<Unit> implements UnitServic
 
 	@Override
 	public UnitDTO getUnitByID(long id) throws Exception {
-		// TODO Auto-generated method stub
+		
 		Unit unit = unitDao.getById(Unit.class, id);
 		if(unit==null){
 			return null;
@@ -46,7 +46,7 @@ public class UnitServiceImpl extends CRUDServiceImpl<Unit> implements UnitServic
 
 	@Override
 	public UnitDTO deleteUnit(long id) throws Exception {
-		// TODO Auto-generated method stub
+		
 		Unit unit = unitDao.getById(Unit.class, id);
 		if(unit==null){
 			return null;

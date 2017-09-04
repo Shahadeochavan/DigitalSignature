@@ -35,7 +35,7 @@ public class DispatchDaoImpl extends SuperDaoImpl<Dispatch> implements DispatchD
 	@Override
 	public List<Dispatch> getDispatchByProductOrderId(long productOrderId)
 			throws Exception {
-		// TODO Auto-generated method stub
+		
 		session = sessionFactory.openSession();
 		CriteriaBuilder builder = session.getCriteriaBuilder();
 		CriteriaQuery<Dispatch> criteria = builder.createQuery(Dispatch.class);

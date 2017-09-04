@@ -81,7 +81,7 @@ public class UserDaoImpl extends SuperDaoImpl<User> implements UserDao {
 
 	@Override
 	public List<User> getMultipleUsersById(String userId) throws Exception {
-		// TODO Auto-generated method stub
+		
 		session = sessionFactory.getCurrentSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(User.class);

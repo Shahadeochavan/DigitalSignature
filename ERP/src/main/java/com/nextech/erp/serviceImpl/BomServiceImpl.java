@@ -28,7 +28,7 @@ public class BomServiceImpl extends CRUDServiceImpl<Bom> implements BomService {
 
 	@Override
 	public List<BomDTO> getBomListByProductId(long productID) throws Exception {
-		// TODO Auto-generated method stub
+		
 		List<BomDTO> bomDTOs = new ArrayList<BomDTO>();
 		List<Bom> boms = bomDao.getBomListByProductId(productID);
 		if(boms.isEmpty()){
@@ -53,26 +53,26 @@ public class BomServiceImpl extends CRUDServiceImpl<Bom> implements BomService {
 			BomDTO bomDTO = BOMFactory.setBomDTO(bom);
 			bomDTOs.add(bomDTO);
 		}
-		// TODO Auto-generated method stub
+		
 		return bomDTOs;
 	}
 
 	@Override
 	public List<Long> getProductList() {
-		// TODO Auto-generated method stub
+		
 		return bomDao.getProductList();
 	}
 
 	@Override
 	public Bom getBomByProductId(long productID) throws Exception {
-		// TODO Auto-generated method stub
+		
 		return bomDao.getBomByProductId(productID);
 	}
 
 	@Override
 	public BomDTO addMultipleBom(BomDTO bomDTO, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
-		// TODO Auto-generated method stub
+		
 		Bom bom = BOMFactory.setBom(bomDTO, request);
 		bom.setProduct(productDao.getById(Product.class, bomDTO.getProduct()
 				.getId()));
@@ -94,7 +94,7 @@ public class BomServiceImpl extends CRUDServiceImpl<Bom> implements BomService {
 
 	@Override
 	public List<BomDTO> getBomList() throws Exception {
-		// TODO Auto-generated method stub
+		
 		List<BomDTO> bomDTOs =  new ArrayList<BomDTO>();
 		List<Bom> boms = bomDao.getList(Bom.class);
 		if(boms.isEmpty()){
@@ -109,7 +109,7 @@ public class BomServiceImpl extends CRUDServiceImpl<Bom> implements BomService {
 
 	@Override
 	public BomDTO getBomById(long id) throws Exception {
-		// TODO Auto-generated method stub
+		
 		Bom bom = bomDao.getById(Bom.class, id);
 		if(bom==null){
 			return null;
@@ -120,7 +120,7 @@ public class BomServiceImpl extends CRUDServiceImpl<Bom> implements BomService {
 
 	@Override
 	public BomDTO deleteBom(long id) throws Exception {
-		// TODO Auto-generated method stub
+		
 		Bom bom = bomDao.getById(Bom.class, id);
 		if(bom==null){
 			return null;

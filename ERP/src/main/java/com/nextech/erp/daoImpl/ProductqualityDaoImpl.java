@@ -19,7 +19,7 @@ public class ProductqualityDaoImpl extends SuperDaoImpl<Productquality> implemen
 	@Override
 	public List<Productquality> getProductqualityListByProductId(long productId)
 			throws Exception {
-		// TODO Auto-generated method stub
+		
 		session = sessionFactory.openSession();
 		CriteriaBuilder builder = session.getCriteriaBuilder();
 		CriteriaQuery<Productquality> criteria = builder.createQuery(Productquality.class);

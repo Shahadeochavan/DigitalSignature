@@ -43,7 +43,7 @@ public class RawmaterialServiceImpl extends CRUDServiceImpl<Rawmaterial> impleme
 	@Override
 	public List<RMVendorAssociationDTO> getRawmaterialByVenodrId(long id)
 			throws Exception {
-		// TODO Auto-generated method stub
+		
 		List<RMVendorAssociationDTO> rmVendorAssociationDTOs = new ArrayList<RMVendorAssociationDTO>();
 		List<Rawmaterialvendorassociation> rawmaterialvendorassociations = rawmaterialDao.getRawmaterialByVenodrId(id);
 		if(rawmaterialvendorassociations.isEmpty()){
@@ -59,13 +59,13 @@ public class RawmaterialServiceImpl extends CRUDServiceImpl<Rawmaterial> impleme
 
 	@Override
 	public Rawmaterial getRMByRMId(long id) throws Exception {
-		// TODO Auto-generated method stub
+		
 		return rawmaterialDao.getRMByRMId(id);
 	}
 
 	@Override
 	public List<RawMaterialDTO> getRMList() throws Exception {
-		// TODO Auto-generated method stub
+		
 		List<RawMaterialDTO> rawMaterialDTOs = new ArrayList<RawMaterialDTO>();
 		List<Rawmaterial> rawmaterials = rawmaterialDao.getList(Rawmaterial.class);
 		if(rawmaterials.isEmpty()){
@@ -80,7 +80,7 @@ public class RawmaterialServiceImpl extends CRUDServiceImpl<Rawmaterial> impleme
 
 	@Override
 	public RawMaterialDTO getRMDTO(long id) throws Exception {
-		// TODO Auto-generated method stub
+		
 		Rawmaterial rawmaterial = rawmaterialDao.getById(Rawmaterial.class, id);
 		if(rawmaterial==null){
 			return null;
@@ -91,7 +91,7 @@ public class RawmaterialServiceImpl extends CRUDServiceImpl<Rawmaterial> impleme
 
 	@Override
 	public RawMaterialDTO deleteRM(long id) throws Exception {
-		// TODO Auto-generated method stub
+		
 		Rawmaterial rawmaterial = rawmaterialDao.getById(Rawmaterial.class, id);
 		if(rawmaterial==null){
 			return null;
@@ -105,7 +105,7 @@ public class RawmaterialServiceImpl extends CRUDServiceImpl<Rawmaterial> impleme
 
 	@Override
 	public List<RawMaterialDTO> getRMByRMTypeId(long id) throws Exception {
-		// TODO Auto-generated method stub
+		
 		List<RawMaterialDTO> rawMaterialDTOs =  new ArrayList<RawMaterialDTO>();
 		List<Rawmaterial> rawmaterials = rawmaterialDao.getRMByRMTypeId(id);
 		if(rawmaterials.isEmpty()){

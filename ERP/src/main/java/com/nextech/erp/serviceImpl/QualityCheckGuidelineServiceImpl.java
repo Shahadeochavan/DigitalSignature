@@ -15,14 +15,14 @@ public class QualityCheckGuidelineServiceImpl extends CRUDServiceImpl<Qualityche
 	@Override
 	public Qualitycheckguideline getQCGuidlineByRMId(long rmId)
 			throws Exception {
-		// TODO Auto-generated method stub
+		
 		return qualityCheckGuidelineDao.getQCGuidlineByRMId(rmId);
 	}
 
 	@Override
 	public Qualitycheckguideline getQCGuidelineByProductId(long productId)
 			throws Exception {
-		// TODO Auto-generated method stub
+		
 		return qualityCheckGuidelineDao.getQCGuidelineByProductId(productId);
 	}
 

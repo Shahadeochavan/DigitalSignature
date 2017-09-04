@@ -112,13 +112,13 @@ public class QualitycheckrawmaterialServiceImpl extends CRUDServiceImpl<Qualityc
 	@Override
 	public List<Qualitycheckrawmaterial> getQualitycheckrawmaterialByInvoiceId(
 			long invoiceId) throws Exception {
-		// TODO Auto-generated method stub
+		
 		return qualitycheckrawmaterialDao.getQualitycheckrawmaterialByInvoiceId(invoiceId);
 	}
 
 	@Override
 	public RawMaterialInvoiceDTO addQualityCheck(RawMaterialInvoiceDTO rawMaterialInvoiceDTO,HttpServletRequest request,HttpServletResponse response) throws Exception {
-		// TODO Auto-generated method stub
+		
 		String message = "";
 		Rawmaterialorderinvoice rawmaterialorderinvoiceNew = rawmaterialorderinvoiceService.getEntityById(Rawmaterialorderinvoice.class,rawMaterialInvoiceDTO.getId());
 		Rawmaterialorder rawmaterialorder = rawmaterialorderService.getEntityById(Rawmaterialorder.class, rawmaterialorderinvoiceNew.getPo_No());
@@ -198,7 +198,7 @@ public class QualitycheckrawmaterialServiceImpl extends CRUDServiceImpl<Qualityc
 			RawMaterialInvoiceDTO rawMaterialInvoiceDTO,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		// TODO Auto-generated method stub
+		
 		Rawmaterialorderinvoice rawmaterialorderinvoiceNew = rawmaterialorderinvoiceService.getEntityById(Rawmaterialorderinvoice.class,rawMaterialInvoiceDTO.getId());
 		List<Qualitycheckrawmaterial> qualitycheckrawmaterials = qualitycheckrawmaterialDao.getQualitycheckrawmaterialByInvoiceId(rawmaterialorderinvoiceNew.getId());
 		if (qualitycheckrawmaterials != null&& !qualitycheckrawmaterials.isEmpty()) {

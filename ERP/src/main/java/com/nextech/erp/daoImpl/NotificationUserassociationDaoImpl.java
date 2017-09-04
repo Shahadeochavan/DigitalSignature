@@ -15,12 +15,12 @@ import com.nextech.erp.model.Notificationuserassociation;
 public class NotificationUserassociationDaoImpl extends
 		SuperDaoImpl<Notificationuserassociation> implements
 		NotificationUserassociationDao {
-	
+
 
 	@Override
 	public List<Notificationuserassociation> getNotificationuserassociationByUserId(
 			long userId) throws Exception {
-		// TODO Auto-generated method stub
+		
 		session = sessionFactory.openSession();
 		CriteriaBuilder builder = session.getCriteriaBuilder();
 		CriteriaQuery<Notificationuserassociation> criteria = builder.createQuery(Notificationuserassociation.class);

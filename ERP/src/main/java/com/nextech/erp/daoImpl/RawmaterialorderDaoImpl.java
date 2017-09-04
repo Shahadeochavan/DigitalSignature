@@ -63,10 +63,11 @@ public class RawmaterialorderDaoImpl extends SuperDaoImpl<Rawmaterialorder>
 	}
 
 
+
 	@Override
 	public List<Rawmaterialorder> getRawmaterialorderByVendorId(long vendorId,
 			long statusId1, long statusId2) throws Exception {
-		// TODO Auto-generated method stub
+		
 		
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Rawmaterialorder.class);

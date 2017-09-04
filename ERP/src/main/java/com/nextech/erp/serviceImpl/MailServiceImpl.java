@@ -98,4 +98,5 @@ public class MailServiceImpl extends CRUDServiceImpl<Notification> implements Ma
 	}
 
 
+
 }
