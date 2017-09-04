@@ -69,7 +69,7 @@ public class ProductqualityController {
 	DailyproductionService dailyproductionService;
 
 	@RequestMapping(value = "getQualityPendingListByDate/{date}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<ProductionPlanningDTO> getProductionPlanDate1(@PathVariable("date") String date,HttpServletRequest request,HttpServletResponse response) {
+	public @ResponseBody Response getProductionPlanDate1(@PathVariable("date") String date,HttpServletRequest request,HttpServletResponse response) {
 		List<ProductionPlanningDTO> productionplanningsList = new ArrayList<ProductionPlanningDTO>();
 		try {
 			List<ProductionPlanningDTO> productionplannings = productionplanningService.getProductionplanByDate(DateUtil.convertToDate(date));
@@ -89,8 +89,11 @@ public class ProductqualityController {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			
+			return new Response(1, e.getMessage());
 		}
-		return productionplanningsList;
+		String message = productionplanningsList.size() == 0 ? "There are no Products for Quality Check." : "Success";
+		return new Response(0, message, productionplanningsList);
 	}
 
 

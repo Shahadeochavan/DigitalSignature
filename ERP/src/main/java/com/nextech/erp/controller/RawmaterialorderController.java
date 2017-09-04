@@ -10,8 +10,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.persistence.PersistenceException;
 import javax.servlet.ServletContext;
@@ -35,9 +38,18 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.dto.CreatePDFProductOrder;
 import com.nextech.erp.dto.Mail;
+import com.nextech.erp.dto.ProductOrderDTO;
+import com.nextech.erp.dto.ProductProductionPlan;
+import com.nextech.erp.dto.ProductRMAssociationDTO;
+import com.nextech.erp.dto.ProductionPlan;
+import com.nextech.erp.dto.RMInventoryDTO;
 import com.nextech.erp.dto.RMOrderModelData;
+import com.nextech.erp.dto.RMReqirementDTO;
 import com.nextech.erp.dto.RawmaterialOrderDTO;
 import com.nextech.erp.factory.RMOrderRequestResponseFactory;
+import com.nextech.erp.model.Product;
+import com.nextech.erp.model.Productinventory;
+import com.nextech.erp.model.Productorderassociation;
 import com.nextech.erp.newDTO.NotificationDTO;
 import com.nextech.erp.newDTO.RMOrderAssociationDTO;
 import com.nextech.erp.newDTO.RMVendorAssociationDTO;
@@ -47,8 +59,13 @@ import com.nextech.erp.newDTO.VendorDTO;
 import com.nextech.erp.service.MailService;
 import com.nextech.erp.service.NotificationService;
 import com.nextech.erp.service.NotificationUserAssociationService;
+import com.nextech.erp.service.ProductRMAssoService;
+import com.nextech.erp.service.ProductinventoryService;
+import com.nextech.erp.service.ProductorderService;
+import com.nextech.erp.service.ProductorderassociationService;
 import com.nextech.erp.service.RMVAssoService;
 import com.nextech.erp.service.RawmaterialService;
+import com.nextech.erp.service.RawmaterialinventoryService;
 import com.nextech.erp.service.RawmaterialorderService;
 import com.nextech.erp.service.RawmaterialorderassociationService;
 import com.nextech.erp.service.StatusService;
@@ -66,6 +83,21 @@ public class RawmaterialorderController {
 
 	@Autowired
 	RawmaterialorderassociationService rawmaterialorderassociationService;
+	
+	@Autowired
+	RawmaterialinventoryService rawmaterialinventoryService;
+	
+	@Autowired
+	ProductorderassociationService productorderassociationService;
+	
+	@Autowired
+	ProductorderService productorderService;
+	
+	@Autowired
+	ProductinventoryService productinventoryService;
+	
+	@Autowired
+	ProductRMAssoService productRMAssoService;
 
 	@Autowired
 	StatusService statusService;
@@ -188,6 +220,8 @@ public class RawmaterialorderController {
 			if(rawmaterialorderList==null){
 				return new Response(1,"There is no rm order list");
 			}
+			
+			//getRequiredRMList();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -350,4 +384,71 @@ public class RawmaterialorderController {
 		mail.setModel(model);
 		mailService.sendEmail(mail,notification);
 	}
+	
+	@Transactional @RequestMapping(value = "/getRequiredRMList", method = RequestMethod.GET, headers = "Accept=application/json")
+	public @ResponseBody Response getRequiredRMList() {
+		try{
+		String message = messageSource.getMessage(ERPConstants.STATUS_PRODUCT_ORDER_COMPLETE, null, null);	
+		Long status = Long.parseLong(message);	
+		List<ProductOrderDTO> incompleteOrders = 
+		productorderService.getInCompleteProductOrders(status);
+		Map<Long, Long> productQuantityMap = new HashMap<Long, Long>();
+		for (Iterator<ProductOrderDTO> iterator = incompleteOrders.iterator(); iterator
+				.hasNext();) {
+			ProductOrderDTO productOrderDTO = (ProductOrderDTO) iterator.next();
+			Productorderassociation productorderassociation = productorderassociationService.getProductAssoByOrder(productOrderDTO.getId());
+			Long productId = productorderassociation.getProduct().getId();
+			if(productQuantityMap.containsKey(productId)){
+				productQuantityMap.put(productId, (productQuantityMap.get(productId) + productorderassociation.getRemainingQuantity()));
+			}else {
+				productQuantityMap.put(productId, productorderassociation.getRemainingQuantity());
+			}
+		}
+		
+		Set<Entry<Long, Long>> entries = productQuantityMap.entrySet();
+		Map<Long, Long> rmQuantityMap = new HashMap<Long, Long>();
+		for (Iterator<Entry<Long, Long>> iterator = entries.iterator(); iterator.hasNext();) {
+			Entry<Long, Long> entry = (Entry<Long, Long>) iterator.next();
+			Long productId = entry.getKey();
+			Productinventory productinventory = productinventoryService.getProductinventoryByProductId(productId);
+			Long productInventoryQty = productinventory == null ? 0 : productinventory.getQuantityavailable();
+			Long actualRequiredQuantity = entry.getValue() - productInventoryQty;
+			List<ProductRMAssociationDTO> productRMList = productRMAssoService.getProductRMAssoList(productId);
+			for (Iterator<ProductRMAssociationDTO> iterator2 = productRMList.iterator(); iterator2
+					.hasNext();) {
+				ProductRMAssociationDTO productRMAssociationDTO = (ProductRMAssociationDTO) iterator2
+						.next();
+				Long rmId = productRMAssociationDTO.getRawmaterialId().getId();
+				if(rmQuantityMap.containsKey(rmId)){
+					rmQuantityMap.put(rmId, (rmQuantityMap.get(rmId) + (productRMAssociationDTO.getQuantity()* actualRequiredQuantity)));
+				}else {
+					rmQuantityMap.put(rmId, (productRMAssociationDTO.getQuantity()* actualRequiredQuantity));
+				}
+			}
+		}
+		Set<Entry<Long, Long>> rmQuantityEntries = rmQuantityMap.entrySet();
+		List<RMReqirementDTO> rmReqirementDTOs = new ArrayList<RMReqirementDTO>();
+		for (Iterator<Entry<Long, Long>> iterator = rmQuantityEntries.iterator(); iterator
+				.hasNext();) {
+			Entry<Long, Long> rmQtyentry = (Entry<Long, Long>) iterator.next();
+			
+			RMInventoryDTO rmInventoryDTO = rawmaterialinventoryService.getByRMId(rmQtyentry.getKey());
+			RMReqirementDTO rmReqirementDTO = new RMReqirementDTO();
+			rmReqirementDTO.setRmId(rmQtyentry.getKey());
+			rmReqirementDTO.setRmPartNumber(rmInventoryDTO.getRmPartNumber());
+			rmReqirementDTO.setRequiredQuantity(rmQtyentry.getValue());
+			rmReqirementDTO.setInventoryQuantity(rmInventoryDTO.getQuantityAvailable());
+			
+			System.out.println("rmid : " + rmQtyentry.getKey() + " reqQty : " + rmQtyentry.getValue() + " invQty : " + rmReqirementDTO.getInventoryQuantity());
+			if(rmQtyentry.getValue() > rmInventoryDTO.getQuantityAvailable()){
+				rmReqirementDTOs.add(rmReqirementDTO);
+			}
+		}
+		return new Response(0, "Success", rmReqirementDTOs);
+		}catch(Exception ex){
+			ex.printStackTrace();
+			return new Response(1, "Error", null);
+		}
+	}
+	
 }

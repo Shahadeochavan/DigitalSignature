@@ -95,7 +95,7 @@ ProductorderassociationDao productorderassociationDao;
 	}
 
 	@Override
-	public Productorderassociation getProdcutAssoByOrder(long orderId)
+	public Productorderassociation getProductAssoByOrder(long orderId)
 			throws Exception {
 		return productorderassociationDao.getProdcutAssoByOrder(orderId);
 	}
