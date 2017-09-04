@@ -50,5 +50,4 @@ public class RawMaterialDTO extends AbstractDTO{
 		this.design = design;
 	}
 	
-	
 }

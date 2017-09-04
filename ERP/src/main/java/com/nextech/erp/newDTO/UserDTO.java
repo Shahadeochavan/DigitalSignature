@@ -9,7 +9,6 @@ public class UserDTO extends AbstractDTO {
 	private String firstName;
 	private String lastName;
 	private String mobileNo;
-	private long userType;
 	private UserTypeDTO userTypeDTO;
 	private Date dob;
 	private Date doj;
@@ -71,17 +70,14 @@ public class UserDTO extends AbstractDTO {
 			List<NotificationUserAssociatinsDTO> notificationUserAssociatinsDTOs) {
 		this.notificationUserAssociatinsDTOs = notificationUserAssociatinsDTOs;
 	}
-	public long getUserType() {
-		return userType;
-	}
-	public void setUserType(long userType) {
-		this.userType = userType;
-	}
 	public UserTypeDTO getUserTypeDTO() {
 		return userTypeDTO;
 	}
 	public void setUserTypeDTO(UserTypeDTO userTypeDTO) {
 		this.userTypeDTO = userTypeDTO;
 	}
+	
+	
+	
 	
 }

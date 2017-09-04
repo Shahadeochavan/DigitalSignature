@@ -23,8 +23,8 @@ public class UserFactory {
 		user.setDob(userDTO.getDob());
 		user.setDoj(userDTO.getDoj());
 		user.setEmail(userDTO.getEmailId());
-		Usertype  usertype =  new Usertype();
-		usertype.setId(userDTO.getUserType());
+		Usertype  usertype = new Usertype();
+		usertype.setId(userDTO.getUserTypeDTO().getId());
 		user.setUsertype(usertype);
 		user.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 		user.setIsactive(true);
@@ -41,8 +41,8 @@ public class UserFactory {
 		user.setDob(userDTO.getDob());
 		user.setDoj(userDTO.getDoj());
 		user.setEmail(userDTO.getEmailId());
-		Usertype  usertype =  new Usertype();
-		usertype.setId(userDTO.getUserType());
+		Usertype  usertype = new Usertype();
+		usertype.setId(userDTO.getUserTypeDTO().getId());
 		user.setUsertype(usertype);
 		user.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 		user.setIsactive(true);
@@ -59,8 +59,7 @@ public class UserFactory {
 		userDTO.setDob(user.getDob());
 		userDTO.setDoj(user.getDoj());
 		userDTO.setEmailId(user.getEmail());
-		UserTypeDTO userTypeDTO =  new UserTypeDTO();
-		userTypeDTO.setId(user.getUsertype().getId());
+		UserTypeDTO  userTypeDTO = new UserTypeDTO();
 		userTypeDTO.setUsertypeName(user.getUsertype().getUsertypeName());
 		userDTO.setUserTypeDTO(userTypeDTO);
 		userDTO.setActive(true);

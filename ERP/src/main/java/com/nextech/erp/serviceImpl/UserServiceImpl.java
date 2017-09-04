@@ -44,11 +44,6 @@ public class UserServiceImpl extends CRUDServiceImpl<User> implements UserServic
 	@Autowired
 	MailService mailService;
 	
-	StringBuilder stringBuilder = new StringBuilder();
-	 String prefix = "";
-	 String id = "";
-
-
 	@Override
 	public User getUserByUserId(String userid) throws Exception {
 		return userdao.getUserByUserId(userid);
@@ -122,38 +117,37 @@ public class UserServiceImpl extends CRUDServiceImpl<User> implements UserServic
 		
 		List<User> userDTOs =  new ArrayList<User>();
 		System.out.println(userDTOs);
+		// By Nikhil on 21/08/2017 : Form comma separated list of notificationuserassociation.getUserId().getId() and fetch all e-mails in single DB call.
+		List<Long> ids = new ArrayList<Long>();
 		for (NotificationUserAssociatinsDTO notificationUserAssociatinsDTO : notificationUserAssociatinsDTOs) {
-			stringBuilder.append(prefix);
-			prefix = ",";
-			stringBuilder.append(notificationUserAssociatinsDTO.getUserId().getId());
-			id = stringBuilder.toString();
+			ids.add(notificationUserAssociatinsDTO.getUserId().getId());
 		}
-		List<User> userList = userdao.getMultipleUsersById(id);
+		List<User> userList = userdao.getMultipleUsersById(ids);
 		for (NotificationUserAssociatinsDTO notificationuserassociation : notificationUserAssociatinsDTOs) {
 			for (User user : userList) {
-			if (notificationuserassociation.getTo()) {
-				if(notificationuserassociation.getUserId().getId()==user.getId()){
-				stringBuilderTO.append(prefixTO);
-				prefixTO = ",";
-				stringBuilderTO.append(user.getEmail());
-				multipleTO = stringBuilderTO.toString();
-				}
-			} else if (notificationuserassociation.getBcc()) {
-				if(notificationuserassociation.getUserId().getId()==user.getId()){
-				stringBuilderBCC.append(prefixBCC);
-				prefixBCC = ",";
-				stringBuilderBCC.append(user.getEmail());
-				multipleBCC = stringBuilderBCC.toString();
-				}
-			} else if (notificationuserassociation.getCc()) {
-				if(notificationuserassociation.getUserId().getId()==user.getId()){
-				stringBuilderCC.append(prefixCC);
-				prefixCC = ",";
-				stringBuilderCC.append(user.getEmail());
-				multipleCC = stringBuilderCC.toString();
+				if (notificationuserassociation.getTo()) {
+					if(notificationuserassociation.getUserId().getId()==user.getId()){
+					stringBuilderTO.append(prefixTO);
+					prefixTO = ",";
+					stringBuilderTO.append(user.getEmail());
+					multipleTO = stringBuilderTO.toString();
+					}
+				} else if (notificationuserassociation.getBcc()) {
+					if(notificationuserassociation.getUserId().getId()==user.getId()){
+					stringBuilderBCC.append(prefixBCC);
+					prefixBCC = ",";
+					stringBuilderBCC.append(user.getEmail());
+					multipleBCC = stringBuilderBCC.toString();
+					}
+				} else if (notificationuserassociation.getCc()) {
+					if(notificationuserassociation.getUserId().getId()==user.getId()){
+					stringBuilderCC.append(prefixCC);
+					prefixCC = ",";
+					stringBuilderCC.append(user.getEmail());
+					multipleCC = stringBuilderCC.toString();
+					}
 				}
 			}
-		}
 		}	
 		mail.setMailTo(multipleTO);
 		mail.setMailBcc(multipleBCC);

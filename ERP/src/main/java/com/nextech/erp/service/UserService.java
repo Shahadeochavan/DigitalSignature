@@ -23,6 +23,4 @@ public interface UserService extends CRUDService<User>{
 	
 	public  Mail  emailNotification(NotificationDTO  notificationDTO) throws Exception;
 	
-	
-	
 }
