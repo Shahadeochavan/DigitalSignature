@@ -20,13 +20,13 @@ public class RMVAssoServiceImpl extends CRUDServiceImpl<Rawmaterialvendorassocia
 	@Override
 	public Rawmaterialvendorassociation getRMVAssoByVendorIdRMId(
 			long vendorId, long rmId) throws Exception {
-		// TODO Auto-generated method stub
+		
 		return rMVAssoDao.getRMVAssoByVendorIdRMId(vendorId, rmId);
 	}
 
 	@Override
 	public List<RMVendorAssociationDTO> getRawmaterialvendorassociationListByRMId(long id) throws Exception {
-		// TODO Auto-generated method stub
+		
 		List<RMVendorAssociationDTO> rmVendorAssociationDTOs = new ArrayList<RMVendorAssociationDTO>();
 		List<Rawmaterialvendorassociation> rawmaterialvendorassociations = rMVAssoDao.getRawmaterialvendorassociationListByRMId(id);
 		if(rawmaterialvendorassociations.isEmpty()){
@@ -42,7 +42,7 @@ public class RMVAssoServiceImpl extends CRUDServiceImpl<Rawmaterialvendorassocia
 	@Override
 	public RMVendorAssociationDTO getRMVAssoByRMId(long rmId)
 			throws Exception {
-		// TODO Auto-generated method stub
+		
 		Rawmaterialvendorassociation rawmaterialvendorassociation = rMVAssoDao.getRMVAssoByRMId(rmId);
 		if(rawmaterialvendorassociation==null){
 			return null;
@@ -53,7 +53,7 @@ public class RMVAssoServiceImpl extends CRUDServiceImpl<Rawmaterialvendorassocia
 
 	@Override
 	public List<RMVendorAssociationDTO> getRMVendorList() throws Exception {
-		// TODO Auto-generated method stub
+		
 		List<RMVendorAssociationDTO> rmVendorAssociationDTOs =  new ArrayList<RMVendorAssociationDTO>();
 		List<Rawmaterialvendorassociation> rawmaterialvendorassociations = rMVAssoDao.getList(Rawmaterialvendorassociation.class);
 		if(rawmaterialvendorassociations.isEmpty()){
@@ -69,7 +69,7 @@ public class RMVAssoServiceImpl extends CRUDServiceImpl<Rawmaterialvendorassocia
 
 	@Override
 	public RMVendorAssociationDTO getRMVendor(long id) throws Exception {
-		// TODO Auto-generated method stub
+		
 		Rawmaterialvendorassociation rawmaterialvendorassociation = rMVAssoDao.getById(Rawmaterialvendorassociation.class, id);
 		if(rawmaterialvendorassociation==null){
 			return null;
@@ -80,7 +80,7 @@ public class RMVAssoServiceImpl extends CRUDServiceImpl<Rawmaterialvendorassocia
 
 	@Override
 	public RMVendorAssociationDTO deleteRMVendor(long id) throws Exception {
-		// TODO Auto-generated method stub
+		
 		Rawmaterialvendorassociation rawmaterialvendorassociation = rMVAssoDao.getById(Rawmaterialvendorassociation.class, id);
 		if(rawmaterialvendorassociation==null){
 			return null;

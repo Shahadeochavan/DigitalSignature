@@ -19,7 +19,7 @@ public class NotificationUserassociationDaoImpl extends
 	@Override
 	public Notificationuserassociation getNotifiactionByUserId(long userId)
 			throws Exception {
-		// TODO Auto-generated method stub
+		
 		
 		session = sessionFactory.openSession();
 		CriteriaBuilder builder = session.getCriteriaBuilder();
@@ -37,7 +37,7 @@ public class NotificationUserassociationDaoImpl extends
 	@Override
 	public List<Notificationuserassociation> getNotificationuserassociationByUserId(
 			long userId) throws Exception {
-		// TODO Auto-generated method stub
+		
 		session = sessionFactory.openSession();
 		CriteriaBuilder builder = session.getCriteriaBuilder();
 		CriteriaQuery<Notificationuserassociation> criteria = builder.createQuery(Notificationuserassociation.class);

@@ -39,7 +39,7 @@ public class ProductRMAssoServiceImpl extends CRUDServiceImpl<Productrawmaterial
 	@Override
 	public List<ProductRMAssociationDTO> getProductRMAssoListByProductId(
 			long productID) throws Exception {
-		// TODO Auto-generated method stub
+		
 		List<ProductRMAssociationDTO> productRMAssociationDTOs = new ArrayList<ProductRMAssociationDTO>();
 		List<Productrawmaterialassociation> productrawmaterialassociations = productrmassDao.getProductRMAssoListByProductId(productID);
 		if (productrawmaterialassociations != null && !productrawmaterialassociations.isEmpty()) {
@@ -61,7 +61,7 @@ public class ProductRMAssoServiceImpl extends CRUDServiceImpl<Productrawmaterial
 	@Override
 	public List<ProductRMAssociationDTO> getProductRMAssoList(long productId)
 			throws Exception {
-		// TODO Auto-generated method stub
+		
 		List<ProductRMAssociationDTO> productRMAssociationDTOs = new ArrayList<ProductRMAssociationDTO>();
 		List<Productrawmaterialassociation> productrawmaterialassociations = productrmassDao.getProductRMAssoListByProductId(productId);
 		if(productrawmaterialassociations.isEmpty()){
@@ -77,7 +77,7 @@ public class ProductRMAssoServiceImpl extends CRUDServiceImpl<Productrawmaterial
 	@Override
 	public ProductRMAssociationDTO addMultipleRawmaterialorder(ProductRMAssociationDTO productRMAssociationDTO,
 			String currentUser) throws Exception {
-		// TODO Auto-generated method stub
+		
 		for(ProductRMAssociationModelParts productRMAssociationModelParts : productRMAssociationDTO.getProductRMAssociationModelParts()){
 			Productrawmaterialassociation productrawmaterialassociation =  setMultipleRM(productRMAssociationModelParts);
 			productrawmaterialassociation.setProduct(productDao.getById(Product.class, productRMAssociationDTO.getProduct()));
@@ -97,7 +97,7 @@ public class ProductRMAssoServiceImpl extends CRUDServiceImpl<Productrawmaterial
 	@Override
 	public List<ProductRMAssociationDTO> getProductRMAssoList()
 			throws Exception {
-		// TODO Auto-generated method stub
+		
 		List<ProductRMAssociationDTO> productRMAssociationDTOs = new ArrayList<ProductRMAssociationDTO>();
 		List<Productrawmaterialassociation> productrawmaterialassociations = productrmassDao.getList(Productrawmaterialassociation.class);
 		if(productrawmaterialassociations.isEmpty()){
@@ -113,7 +113,7 @@ public class ProductRMAssoServiceImpl extends CRUDServiceImpl<Productrawmaterial
 	@Override
 	public ProductRMAssociationDTO getProductRMAsooById(long Id)
 			throws Exception {
-		// TODO Auto-generated method stub
+		
 		Productrawmaterialassociation productrawmaterialassociation = productrmassDao.getById(Productrawmaterialassociation.class, Id);
 		if(productrawmaterialassociation==null){
 			return null;
@@ -124,7 +124,7 @@ public class ProductRMAssoServiceImpl extends CRUDServiceImpl<Productrawmaterial
 
 	@Override
 	public ProductRMAssociationDTO deleteProductRMAssoById(long id) throws Exception {
-		// TODO Auto-generated method stub
+		
 		Productrawmaterialassociation productrawmaterialassociation = productrmassDao.getById(Productrawmaterialassociation.class, id);
 		if(productrawmaterialassociation==null){
 			return null;
@@ -138,14 +138,14 @@ public class ProductRMAssoServiceImpl extends CRUDServiceImpl<Productrawmaterial
 	@Override
 	public List<Productrawmaterialassociation> getProductRMAssoListByProductID(
 			long productID) throws Exception {
-		// TODO Auto-generated method stub
+		
 		return productrmassDao.getProductRMAssoListByProductId(productID);
 	}
 
 	@Override
 	public List<ProductRMAssociationDTO> getProductRMListByProductId(long rmId)
 			throws Exception {
-		// TODO Auto-generated method stub
+		
 		List<ProductRMAssociationDTO> productRMAssociationDTOs =  new ArrayList<ProductRMAssociationDTO>();
 		List<Productrawmaterialassociation> productrawmaterialassociations = productrmassDao.getProductRMListByProductId(rmId);
 		if(productrawmaterialassociations.isEmpty()){
@@ -161,7 +161,7 @@ public class ProductRMAssoServiceImpl extends CRUDServiceImpl<Productrawmaterial
 	@Override
 	public ProductRMAssociationDTO getProductRMListByProduct(long productId)
 			throws Exception {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 		

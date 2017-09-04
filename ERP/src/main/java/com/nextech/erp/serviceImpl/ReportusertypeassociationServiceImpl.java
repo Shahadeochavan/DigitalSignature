@@ -16,7 +16,7 @@ public class ReportusertypeassociationServiceImpl extends CRUDServiceImpl<Report
 	ReportusertypeassociationDao reportusertypeassociationDao;
 	@Override
 	public List<Reportusertypeassociation> getReportByUsertype(long usertypeId) {
-		// TODO Auto-generated method stub
+		
 		return reportusertypeassociationDao.getReportByUsertype(usertypeId);
 	}
 

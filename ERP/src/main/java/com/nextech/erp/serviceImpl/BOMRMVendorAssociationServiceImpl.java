@@ -19,7 +19,6 @@ public class BOMRMVendorAssociationServiceImpl extends CRUDServiceImpl<Bomrmvend
 	@Override
 	public List<BomRMVendorAssociationsDTO> getBomRMVendorByBomId(long bomId)
 			throws Exception {
-		// TODO Auto-generated method stub
 		List<BomRMVendorAssociationsDTO> bomRMVendorAssociationsDTOs = new ArrayList<BomRMVendorAssociationsDTO>();
 		List<Bomrmvendorassociation> bomrmvendorassociations = bOMRMVendorAssociationDao.getBomRMVendorByBomId(bomId);
 		if(bomrmvendorassociations.isEmpty()){

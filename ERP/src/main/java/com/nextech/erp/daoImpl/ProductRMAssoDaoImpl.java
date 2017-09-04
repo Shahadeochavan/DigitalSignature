@@ -71,7 +71,7 @@ public class ProductRMAssoDaoImpl extends SuperDaoImpl<Productrawmaterialassocia
 	@Override
 	public List<Productrawmaterialassociation> getProductRMListByProductId(long rmId)
 			throws Exception {
-		// TODO Auto-generated method stub
+		
 		session = sessionFactory.openSession();
 		CriteriaBuilder builder = session.getCriteriaBuilder();
 		CriteriaQuery<Productrawmaterialassociation> criteria = builder.createQuery(Productrawmaterialassociation.class);
@@ -84,7 +84,7 @@ public class ProductRMAssoDaoImpl extends SuperDaoImpl<Productrawmaterialassocia
 	@Override
 	public Productrawmaterialassociation getProductRMListByProduct(
 			long productId) throws Exception {
-		// TODO Auto-generated method stub
+		
 		session = sessionFactory.openSession();
 		CriteriaBuilder builder = session.getCriteriaBuilder();
 		CriteriaQuery<Productrawmaterialassociation> criteria = builder.createQuery(Productrawmaterialassociation.class);

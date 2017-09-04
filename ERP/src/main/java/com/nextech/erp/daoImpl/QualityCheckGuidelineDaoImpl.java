@@ -16,7 +16,7 @@ public class QualityCheckGuidelineDaoImpl extends SuperDaoImpl<Qualitycheckguide
 	@Override
 	public Qualitycheckguideline getQCGuidlineByRMId(long rmId)
 			throws Exception {
-		// TODO Auto-generated method stub
+		
 		session = sessionFactory.openSession();
 		CriteriaBuilder builder = session.getCriteriaBuilder();
 		CriteriaQuery<Qualitycheckguideline> criteria = builder.createQuery(Qualitycheckguideline.class);
@@ -33,7 +33,7 @@ public class QualityCheckGuidelineDaoImpl extends SuperDaoImpl<Qualitycheckguide
 	@Override
 	public Qualitycheckguideline getQCGuidelineByProductId(long productId)
 			throws Exception {
-		// TODO Auto-generated method stub
+		
 		session = sessionFactory.openSession();
 		CriteriaBuilder builder = session.getCriteriaBuilder();
 		CriteriaQuery<Qualitycheckguideline> criteria = builder.createQuery(Qualitycheckguideline.class);

@@ -18,7 +18,7 @@ public class StatusDaoImpl extends SuperDaoImpl<Status> implements StatusDao{
 
 	@Override
 	public List<Status> getStatusByType(String type) throws Exception {
-		// TODO Auto-generated method stub
+		
 		
 		session = sessionFactory.openSession();
 		CriteriaBuilder builder = session.getCriteriaBuilder();

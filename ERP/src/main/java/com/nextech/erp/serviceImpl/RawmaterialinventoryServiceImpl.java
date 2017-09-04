@@ -30,7 +30,7 @@ public class RawmaterialinventoryServiceImpl extends CRUDServiceImpl<Rawmaterial
 
 	@Override
 	public RMInventoryDTO getRMInventoryById(long id) throws Exception {
-		// TODO Auto-generated method stub
+		
 		Rawmaterialinventory rmRawmaterialinventory = rawmaterialinventoryDao.getById(Rawmaterialinventory.class, id);
 		if(rmRawmaterialinventory==null){
 			return null;
@@ -41,7 +41,7 @@ public class RawmaterialinventoryServiceImpl extends CRUDServiceImpl<Rawmaterial
 
 	@Override
 	public List<RMInventoryDTO> getRMInventoryList() throws Exception {
-		// TODO Auto-generated method stub
+		
 		List<RMInventoryDTO> rmInventoryDTOs =  new ArrayList<RMInventoryDTO>();
 		List<Rawmaterialinventory> rawmaterialinventories= rawmaterialinventoryDao.getList(Rawmaterialinventory.class);
 		if(rawmaterialinventories==null){
@@ -56,7 +56,7 @@ public class RawmaterialinventoryServiceImpl extends CRUDServiceImpl<Rawmaterial
 
 	@Override
 	public RMInventoryDTO deleteRMInventory(long id) throws Exception {
-		// TODO Auto-generated method stub
+		
 		Rawmaterialinventory rmRawmaterialinventory = rawmaterialinventoryDao.getById(Rawmaterialinventory.class, id);
 		if(rmRawmaterialinventory==null){
 			return null;

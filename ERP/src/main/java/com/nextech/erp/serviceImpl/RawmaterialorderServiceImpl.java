@@ -39,7 +39,7 @@ public class RawmaterialorderServiceImpl extends CRUDServiceImpl<Rawmaterialorde
 	@Override
 	public List<RawmaterialOrderDTO> getRawmaterialorderByStatusId(long statusId,long statusId1,long statusId2)
 			throws Exception {
-		// TODO Auto-generated method stub
+		
 		List<RawmaterialOrderDTO> rawmaterialOrderDTOs = new ArrayList<RawmaterialOrderDTO>();
 		List<Rawmaterialorder> rawmaterialorders = rawmaterialorderDao.getRawmaterialorderByStatusId(statusId,statusId1,statusId2);
 		if(rawmaterialorders==null){
@@ -55,7 +55,7 @@ public class RawmaterialorderServiceImpl extends CRUDServiceImpl<Rawmaterialorde
 	@Override
 	public List<RawmaterialOrderDTO> getRawmaterialorderByQualityCheckStatusId(
 			long statusId) throws Exception {
-		// TODO Auto-generated method stub
+		
 		List<RawmaterialOrderDTO> rawmaterialOrderDTOs = new ArrayList<RawmaterialOrderDTO>();
 		List<Rawmaterialorder> rawmaterialorders = rawmaterialorderDao.getRawmaterialorderByQualityCheckStatusId(statusId);
 		if(rawmaterialorders.isEmpty()){
@@ -71,7 +71,7 @@ public class RawmaterialorderServiceImpl extends CRUDServiceImpl<Rawmaterialorde
 	@Override
 	public List<RawmaterialOrderDTO> getRawmaterialorderByVendor(long vendorId)
 			throws Exception {
-		// TODO Auto-generated method stub
+		
 		List<RawmaterialOrderDTO> rawmaterialOrderDTOs =  new ArrayList<RawmaterialOrderDTO>();
 		List<Rawmaterialorder> rawmaterialorders = rawmaterialorderDao.getRawmaterialorderByVendor(vendorId);
 		if(rawmaterialorders.isEmpty()){
@@ -87,20 +87,20 @@ public class RawmaterialorderServiceImpl extends CRUDServiceImpl<Rawmaterialorde
 	@Override
 	public List<Rawmaterialorder> getRawmaterialByName(String name)
 			throws Exception {
-		// TODO Auto-generated method stub
+		
 		return rawmaterialorderDao.getRawmaterialByName(name);
 	}
 
 	@Override
 	public List<Rawmaterialorder> getRawmaterialorderByVendorId(long vendorId,
 			long statusId1, long statusId2) throws Exception {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
 	@Override
 	public RawmaterialOrderDTO addMultipleRawMaterialOrder(RawmaterialOrderDTO rawmaterialOrderDTO,HttpServletRequest request, HttpServletResponse response)throws Exception {
-		// TODO Auto-generated method stub
+		
 		Rawmaterialorder  rawmaterialorder = RMOrderRequestResponseFactory.setRMOrder(rawmaterialOrderDTO);
 		rawmaterialorder.setStatus(StatusDao.getById(Status.class,Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_NEW_RM_ORDER, null, null))));
 		rawmaterialorder.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
@@ -116,7 +116,7 @@ public class RawmaterialorderServiceImpl extends CRUDServiceImpl<Rawmaterialorde
 
 	@Override
 	public List<RawmaterialOrderDTO> getRMOrderList() throws Exception {
-		// TODO Auto-generated method stub
+		
 		List<RawmaterialOrderDTO> rawmaterialOrderDTOs = new ArrayList<RawmaterialOrderDTO>();
 		List<Rawmaterialorder> rawmaterialorders = rawmaterialorderDao.getList(Rawmaterialorder.class);
 		if(rawmaterialorders.isEmpty()){
@@ -131,7 +131,7 @@ public class RawmaterialorderServiceImpl extends CRUDServiceImpl<Rawmaterialorde
 
 	@Override
 	public RawmaterialOrderDTO getRMOrderById(long id) throws Exception {
-		// TODO Auto-generated method stub
+		
 		Rawmaterialorder rawmaterialorder = rawmaterialorderDao.getById(Rawmaterialorder.class, id);
 		if(rawmaterialorder==null){
 			return null;
@@ -142,7 +142,7 @@ public class RawmaterialorderServiceImpl extends CRUDServiceImpl<Rawmaterialorde
 
 	@Override
 	public RawmaterialOrderDTO deleteRMOrder(long id) throws Exception {
-		// TODO Auto-generated method stub
+		
 		Rawmaterialorder rawmaterialorder = rawmaterialorderDao.getById(Rawmaterialorder.class, id);
 		if(rawmaterialorder==null){
 			return null;
@@ -173,7 +173,7 @@ public class RawmaterialorderServiceImpl extends CRUDServiceImpl<Rawmaterialorde
 	@Override
 	public RawmaterialOrderDTO updateRMOrder(RawmaterialOrderDTO rawmaterialOrderDTO,HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		// TODO Auto-generated method stub
+		
 		Rawmaterialorder  rawmaterialorder = RMOrderRequestResponseFactory.setRMOrder(rawmaterialOrderDTO);
 		rawmaterialorder.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 		rawmaterialorder.setStatus(StatusDao.getById(Status.class,Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_NEW_RM_ORDER, null, null))));

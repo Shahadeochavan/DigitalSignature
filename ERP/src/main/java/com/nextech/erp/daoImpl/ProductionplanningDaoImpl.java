@@ -48,7 +48,7 @@ public class ProductionplanningDaoImpl extends SuperDaoImpl<Productionplanning>
 	@Override
 	public List<Productionplanning> getProductionplanningByCurrentMonth(
 			Date month) throws Exception {
-		// TODO Auto-generated method stub
+		
 		session = sessionFactory.openSession();
 		CriteriaBuilder builder = session.getCriteriaBuilder();
 		CriteriaQuery<Productionplanning> criteria = builder.createQuery(Productionplanning.class);
@@ -73,7 +73,7 @@ public class ProductionplanningDaoImpl extends SuperDaoImpl<Productionplanning>
 	@Override
 	public List<Productionplanning> updateProductionPlanByMonthYear(
 			String month_year) throws Exception {
-		// TODO Auto-generated method stub
+		
 		session = sessionFactory.openSession();
 		CriteriaBuilder builder = session.getCriteriaBuilder();
 		CriteriaQuery<Productionplanning> criteria = builder.createQuery(Productionplanning.class);
@@ -132,7 +132,7 @@ public class ProductionplanningDaoImpl extends SuperDaoImpl<Productionplanning>
 	@Override
 	public List<Productionplanning> getProductionplanByProdutId(Date date,long productID)
 			throws Exception {
-		// TODO Auto-generated method stub
+		
 		
 		session = sessionFactory.openSession();
 		CriteriaBuilder builder = session.getCriteriaBuilder();

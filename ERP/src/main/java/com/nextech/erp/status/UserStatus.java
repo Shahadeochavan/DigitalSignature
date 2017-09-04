@@ -35,7 +35,6 @@ public class UserStatus {
 	}
 	
 	public UserStatus(int i, String string, OutputStream outputStream) {
-		// TODO Auto-generated constructor stub
 		this.code=i;
 		this.message=string;
 		this.out=outputStream;

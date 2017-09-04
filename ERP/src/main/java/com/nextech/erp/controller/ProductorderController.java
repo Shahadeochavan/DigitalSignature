@@ -114,7 +114,6 @@ public class ProductorderController {
 				// TODO save call product order
 				ProductOrderDTO productOrderDTO2	=	productorderService.addMultipleProductOrder(productOrderDTO, request, response);
 
-				// TODO add product order association
 		        productOrderDTO.setId(productOrderDTO2.getId());
 		        productOrderDTO.setInvoiceNo(productOrderDTO2.getInvoiceNo());
 		        productOrderDTO.setCreatedDate(productOrderDTO2.getCreatedDate());
@@ -230,7 +229,6 @@ public class ProductorderController {
 	public @ResponseBody Response getPendingsProductorders() {
 		List<ProductOrderDTO> productorderList = null;
 		try {
-			// TODO afterwards you need to change it from properties.
 			productorderList = productorderService.getPendingProductOrders(Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_NEW_PRODUCT_ORDER, null, null)),
 					Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_PRODUCT_ORDER_INCOMPLETE, null, null)));
 			if(productorderList==null){
@@ -246,7 +244,6 @@ public class ProductorderController {
 	public @ResponseBody Response getInCompleteProductOrder(@PathVariable("CLIENT-ID") long clientId) {
 		List<ProductOrderDTO> productorderList = null;
 		try {
-			// TODO afterwards you need to change it from properties.
 			productorderList = productorderService.getInCompleteProductOrder(clientId,Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_PRODUCT_ORDER_INCOMPLETE, null, null)),
 			Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_PRODUCT_ORDER_COMPLETE, null, null)));
 			if(productorderList==null){

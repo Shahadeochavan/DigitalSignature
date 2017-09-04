@@ -126,5 +126,12 @@
 		</property>
 		<property name="defaultEncoding" value="UTF-8" />
 	</bean>
+	<bean class="org.dozer.spring.DozerBeanMapperFactoryBean">
+		<property name="mappingFiles">
+			<list>
+				<value>classpath:dozer/dozer-bean-mappings.xml</value>
+			</list>
+		</property>
+	</bean>
 	<bean id="superDao" class="com.nextech.erp.daoImpl.SuperDaoImpl" />
 </beans>

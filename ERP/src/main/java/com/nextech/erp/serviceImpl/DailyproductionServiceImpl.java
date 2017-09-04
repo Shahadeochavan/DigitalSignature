@@ -43,7 +43,7 @@ public class DailyproductionServiceImpl extends CRUDServiceImpl<Dailyproduction>
 	@Override
 	public List<DailyProductionPlanDTO> getDailyProductionList()
 			throws Exception {
-		// TODO Auto-generated method stub
+		
 		List<DailyProductionPlanDTO> dailyProductionPlanDTOs = new ArrayList<DailyProductionPlanDTO>();
 		List<Dailyproduction> dailyproductions =  dailyproductionDao.getList(Dailyproduction.class);
 		if(dailyproductions.isEmpty()){
@@ -59,7 +59,7 @@ public class DailyproductionServiceImpl extends CRUDServiceImpl<Dailyproduction>
 	@Override
 	public DailyProductionPlanDTO getDailyProductionById(long id)
 			throws Exception {
-		// TODO Auto-generated method stub
+		
 		Dailyproduction  dailyproduction = dailyproductionDao.getById(Dailyproduction.class, id);
 		if(dailyproduction==null){
 			return null;
@@ -70,7 +70,7 @@ public class DailyproductionServiceImpl extends CRUDServiceImpl<Dailyproduction>
 
 	@Override
 	public DailyProductionPlanDTO deleteDailyProduction(long id) throws Exception {
-		// TODO Auto-generated method stub
+		
 		Dailyproduction  dailyproduction = dailyproductionDao.getById(Dailyproduction.class, id);
 		if(dailyproduction==null){
 			return null;
@@ -84,7 +84,7 @@ public class DailyproductionServiceImpl extends CRUDServiceImpl<Dailyproduction>
 	@Override
 	public void addDailyProduction(TodaysProductionPlanDTO todaysProductionPlanDTO,
 			HttpServletRequest request) throws Exception {
-		// TODO Auto-generated method stub
+		
 		for(DailyProductionPlanDTO dailyProductionPlanDTO : todaysProductionPlanDTO.getDailyProductionPlanDTOs()){
 			Dailyproduction dailyproduction = DailyProductionRequestResponseFactory.setDailyProduction(dailyProductionPlanDTO, request);
 			dailyproduction.setStatus(statusDao.getById(Status.class, Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_QUALITY_CHECK_PENDING, null, null))));

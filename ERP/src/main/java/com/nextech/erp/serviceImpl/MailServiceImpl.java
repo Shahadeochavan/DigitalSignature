@@ -100,7 +100,7 @@ public class MailServiceImpl extends CRUDServiceImpl<Notification> implements Ma
 	@Async
 	@Override
 	public void sendEmailVendor(Mail mail) {
-		// TODO Auto-generated method stub
+		
 		MimeMessage mimeMessage = mailSender.createMimeMessage();
 
 		try {

@@ -47,7 +47,7 @@ public class UsertypepageassociationServiceImpl extends CRUDServiceImpl<Usertype
 
 	@Override
 	public List<UserTypePageAssoDTO> getUserTypePageAssList() throws Exception {
-		// TODO Auto-generated method stub
+		
 		List<UserTypePageAssoDTO> userTypePageAssoDTOs = new ArrayList<UserTypePageAssoDTO>();
 		List<Usertypepageassociation> usertypepageassociations = usertypepageassociationDao.getList(Usertypepageassociation.class);
 		for (Usertypepageassociation usertypepageassociation : usertypepageassociations) {
@@ -59,7 +59,7 @@ public class UsertypepageassociationServiceImpl extends CRUDServiceImpl<Usertype
 
 	@Override
 	public UserTypePageAssoDTO getUserTypeDto(long id) throws Exception {
-		// TODO Auto-generated method stub
+		
 		Usertypepageassociation usertypepageassociation =  usertypepageassociationDao.getById(Usertypepageassociation.class, id);
 		UserTypePageAssoDTO userTypePageAssoDTO = UserTypePageAssoFactory.setUserTypePageDTO(usertypepageassociation);
 		return userTypePageAssoDTO;
@@ -67,7 +67,7 @@ public class UsertypepageassociationServiceImpl extends CRUDServiceImpl<Usertype
 
 	@Override
 	public UserTypePageAssoDTO deleteUserTypePage(long id) throws Exception {
-		// TODO Auto-generated method stub
+		
 		Usertypepageassociation usertypepageassociation = usertypepageassociationDao.getById(Usertypepageassociation.class, id);
 		if(usertypepageassociation==null){
 			return null;
@@ -82,7 +82,7 @@ public class UsertypepageassociationServiceImpl extends CRUDServiceImpl<Usertype
 	@Override
 	public UserTypePageAssoDTO addMultipleUserTypePageAsso(UserTypePageAssoDTO userTypePageAssoDTO, String currentUser)
 			throws Exception {
-		// TODO Auto-generated method stub
+		
 		for(UserTypePageAssoPart userTypePageAssoPart : userTypePageAssoDTO.getUserTypePageAssoParts()){
 			Usertypepageassociation usertypepageassociation =	 UserTypePageAssoFactory.setUserTypePageAss(userTypePageAssoDTO);
 			 usertypepageassociation =  setMultiplePage(userTypePageAssoPart);
@@ -103,7 +103,7 @@ public class UsertypepageassociationServiceImpl extends CRUDServiceImpl<Usertype
 	@Override
 	public Usertypepageassociation getUserTypePageAssoByPageIduserTypeId(
 			long pageId, long userTypeId) throws Exception {
-		// TODO Auto-generated method stub
+		
 		return usertypepageassociationDao.getUserTypePageAssoByPageIduserTypeId(pageId, userTypeId);
 	}
 

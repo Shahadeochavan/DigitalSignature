@@ -208,7 +208,6 @@ public class BomController {
 
 		List<BomDTO> boList = null;
 		try {
-			// TODO afterwards you need to change it from properties
 			boList = bomService.getBomListByProductId(productId);
 			if(boList==null){
 				return new Response(1,"There is no any bom list");
@@ -227,7 +226,6 @@ public class BomController {
 		List<BomRMVendorModel> bomRMVendorModels = new ArrayList<BomRMVendorModel>();
 		ProductBomDTO productBomDTO = new ProductBomDTO();
 		try {
-			// TODO afterwards you need to change it from properties
 			boList = bomService.getBomListByProductIdAndBomId(productId, bomId);
 			if(boList!=null){
 			for (BomDTO bom : boList) {

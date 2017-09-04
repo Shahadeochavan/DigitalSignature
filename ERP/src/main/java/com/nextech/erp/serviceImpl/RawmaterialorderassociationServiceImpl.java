@@ -32,13 +32,13 @@ public class RawmaterialorderassociationServiceImpl extends CRUDServiceImpl<Rawm
 
 	@Override
 	public Rawmaterialorderassociation getRMOrderRMAssociationByRMOrderIdandRMId(long id, long rmId) throws Exception {
-		// TODO Auto-generated method stub
+		
 		return rawmaterialorderassociationDao.getRMOrderRMAssociationByRMOrderIdandRMId(id, rmId);
 	}
 
 	@Override
 	public RMOrderAssociationDTO getRMOrderAssoById(long id) throws Exception {
-		// TODO Auto-generated method stub
+		
 		Rawmaterialorderassociation rawmaterialorderassociation = rawmaterialorderassociationDao.getById(Rawmaterialorderassociation.class, id);
 		RMOrderAssociationDTO rmOrderAssociationDTO = RMOrderAssociationRequestResponseFactory.setRMOrderDTO(rawmaterialorderassociation);
 		return rmOrderAssociationDTO;
@@ -46,7 +46,7 @@ public class RawmaterialorderassociationServiceImpl extends CRUDServiceImpl<Rawm
 
 	@Override
 	public List<RMOrderAssociationDTO> getRMOrderAssoList() throws Exception {
-		// TODO Auto-generated method stub
+		
 		List<RMOrderAssociationDTO> rmOrderAssociationDTOs = new ArrayList<RMOrderAssociationDTO>();
 		List<Rawmaterialorderassociation> rawmaterialorderassociations = rawmaterialorderassociationDao.getList(Rawmaterialorderassociation.class);
 		for (Rawmaterialorderassociation rawmaterialorderassociation : rawmaterialorderassociations) {
@@ -58,7 +58,7 @@ public class RawmaterialorderassociationServiceImpl extends CRUDServiceImpl<Rawm
 
 	@Override
 	public RMOrderAssociationDTO deleteRMOrderAsso(long id) throws Exception {
-		// TODO Auto-generated method stub
+		
 		Rawmaterialorderassociation rawmaterialorderassociation = rawmaterialorderassociationDao.getById(Rawmaterialorderassociation.class, id);
 		if(rawmaterialorderassociation==null){
 			return null;

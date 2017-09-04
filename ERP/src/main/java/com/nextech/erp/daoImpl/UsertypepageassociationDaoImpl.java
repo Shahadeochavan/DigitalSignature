@@ -50,7 +50,7 @@ public class UsertypepageassociationDaoImpl extends SuperDaoImpl<Usertypepageass
 	@Override
 	public Usertypepageassociation getUserTypePageAssoByPageIduserTypeId(
 			long pageId, long userTypeId) throws Exception {
-		// TODO Auto-generated method stub
+		
 		session = sessionFactory.openSession();
 		CriteriaBuilder builder = session.getCriteriaBuilder();
 		CriteriaQuery<Usertypepageassociation> criteria = builder.createQuery(Usertypepageassociation.class);

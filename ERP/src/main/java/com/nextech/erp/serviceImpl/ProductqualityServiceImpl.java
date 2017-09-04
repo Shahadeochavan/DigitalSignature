@@ -58,13 +58,13 @@ public class ProductqualityServiceImpl extends CRUDServiceImpl<Productquality> i
 	@Override
 	public List<Productquality> getProductqualityListByProductId(long productId)
 			throws Exception {
-		// TODO Auto-generated method stub
+		
 		return productqualityDao.getProductqualityListByProductId(productId);
 	}
 
 	@Override
 	public ProductQualityDTO addProductQuality(ProductQualityDTO productQualityDTO,long userId) throws Exception {
-		// TODO Auto-generated method stub
+		
 		for(ProductQualityPart productQualityPart : productQualityDTO.getProductQualityParts()){
 			Productquality productquality = setProductquality(productQualityPart,userId);
 			productqualityDao.add(productquality);
@@ -104,7 +104,7 @@ public class ProductqualityServiceImpl extends CRUDServiceImpl<Productquality> i
 
 	@Override
 	public void qualityCheckStore(ProductQualityDTO productQualityDTO,long userId) throws Exception {
-		// TODO Auto-generated method stub
+		
 		for(ProductQualityPart productQualityPart : productQualityDTO.getProductQualityParts()){
 			Productquality productquality = setProductquality(productQualityPart,userId);
 			Product product =  productDao.getById(Product.class, productquality.getProduct().getId());
@@ -149,7 +149,7 @@ public class ProductqualityServiceImpl extends CRUDServiceImpl<Productquality> i
 
 	@Override
 	public List<ProductQualityDTO> getProductQualityList() throws Exception {
-		// TODO Auto-generated method stub
+		
 		List<ProductQualityDTO> productQualityDTOs  = new ArrayList<ProductQualityDTO>();
 		List<Productquality> productqualities = productqualityDao.getList(Productquality.class);
 		if(productqualities==null){
@@ -164,7 +164,7 @@ public class ProductqualityServiceImpl extends CRUDServiceImpl<Productquality> i
 
 	@Override
 	public ProductQualityDTO getProductQualityById(long id) throws Exception {
-		// TODO Auto-generated method stub
+		
 		Productquality productquality = productqualityDao.getById(Productquality.class, id);
 		if(productquality==null){
 			return null;
@@ -175,7 +175,7 @@ public class ProductqualityServiceImpl extends CRUDServiceImpl<Productquality> i
 
 	@Override
 	public ProductQualityDTO deleteproductQuality(long id) throws Exception {
-		// TODO Auto-generated method stub
+		
 		Productquality productquality = productqualityDao.getById(Productquality.class, id);
 		if(productquality==null){
 			return null;

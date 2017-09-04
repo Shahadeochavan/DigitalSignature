@@ -25,7 +25,7 @@ public class StatustransitionServiceImpl extends CRUDServiceImpl<Statustransitio
 
 	@Override
 	public List<StatusTransitionDTO> getStatusTranstionList() throws Exception {
-		// TODO Auto-generated method stub
+		
 		List<StatusTransitionDTO> statusTransitionDTOs =  new ArrayList<StatusTransitionDTO>();
 		List<Statustransition> statustransitions = statustransitionDao.getList(Statustransition.class);
 		if(statustransitions.isEmpty()){
@@ -40,7 +40,7 @@ public class StatustransitionServiceImpl extends CRUDServiceImpl<Statustransitio
 
 	@Override
 	public StatusTransitionDTO getStatusTranstionbyId(long id) throws Exception {
-		// TODO Auto-generated method stub
+		
 		Statustransition statustransition = statustransitionDao.getById(Statustransition.class, id);
 		if(statustransition==null){
 			return null;
@@ -51,7 +51,7 @@ public class StatustransitionServiceImpl extends CRUDServiceImpl<Statustransitio
 
 	@Override
 	public StatusTransitionDTO deleteStatusTranstion(long id) throws Exception {
-		// TODO Auto-generated method stub
+		
 		Statustransition statustransition = statustransitionDao.getById(Statustransition.class, id);
 		if(statustransition==null){
 			return null;

@@ -51,7 +51,7 @@ public class ProductorderDaoImpl extends SuperDaoImpl<Productorder> implements
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Productorder> getInCompleteProductOrder(long clientId,long statusId,long statusId1) {
-		// TODO Auto-generated method stub
+		
 		session = sessionFactory.openSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Productorder.class);
@@ -65,7 +65,7 @@ public class ProductorderDaoImpl extends SuperDaoImpl<Productorder> implements
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Productorder> getInCompleteProductOrders(long statusId) {
-		// TODO Auto-generated method stub
+		
 		session = sessionFactory.openSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Productorder.class);

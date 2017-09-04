@@ -16,7 +16,7 @@ public class ReportusertypeassociationDaoImpl extends SuperDaoImpl<Reportusertyp
 
 	@Override
 	public List<Reportusertypeassociation> getReportByUsertype(long usertypeId) {
-		// TODO Auto-generated method stub
+		
 		session = sessionFactory.openSession();
 		CriteriaBuilder builder = session.getCriteriaBuilder();
 		CriteriaQuery<Reportusertypeassociation> criteria = builder.createQuery(Reportusertypeassociation.class);

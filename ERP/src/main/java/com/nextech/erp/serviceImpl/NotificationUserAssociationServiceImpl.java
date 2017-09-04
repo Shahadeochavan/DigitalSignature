@@ -20,28 +20,28 @@ public class NotificationUserAssociationServiceImpl extends CRUDServiceImpl<Noti
 	@Override
 	public Notificationuserassociation getNotifiactionByUserId(long userId)
 			throws Exception {
-		// TODO Auto-generated method stub
+		
 		return notificationUserassociationDao.getNotifiactionByUserId(userId);
 	}
 
 	@Override
 	public List<Notificationuserassociation> getNotificationuserassociationByUserId(
 			long userId) throws Exception {
-		// TODO Auto-generated method stub
+		
 		return notificationUserassociationDao.getNotificationuserassociationByUserId(userId);
 	}
 
 	@Override
 	public List<Notificationuserassociation> getNotificationuserassociationBynotificationId(
 			long notificationId) throws Exception {
-		// TODO Auto-generated method stub
+		
 		return notificationUserassociationDao.getNotificationuserassociationBynotificationId(notificationId);
 	}
 
 	@Override
 	public List<NotificationUserAssociatinsDTO> getNotificationUserAssociatinsDTOs(
 			long notificationId) throws Exception {
-		// TODO Auto-generated method stub
+		
 	List<NotificationUserAssociatinsDTO>	notificationUserAssociatinsDTOs = new ArrayList<NotificationUserAssociatinsDTO>();
 		List<Notificationuserassociation> notificationuserassociations = notificationUserassociationDao.getNotificationuserassociationBynotificationId(notificationId);
 		for (Notificationuserassociation notificationuserassociation : notificationuserassociations) {
@@ -54,7 +54,7 @@ public class NotificationUserAssociationServiceImpl extends CRUDServiceImpl<Noti
 	@Override
 	public List<NotificationUserAssociatinsDTO> getNotificationUserAssoList()
 			throws Exception {
-		// TODO Auto-generated method stub
+		
 		List<NotificationUserAssociatinsDTO> notificationUserAssociatinsDTOs = new ArrayList<NotificationUserAssociatinsDTO>();
 		List<Notificationuserassociation> notificationuserassociations = notificationUserassociationDao.getList(Notificationuserassociation.class);
 		if (notificationuserassociations.isEmpty()) {
@@ -70,7 +70,7 @@ public class NotificationUserAssociationServiceImpl extends CRUDServiceImpl<Noti
 	@Override
 	public NotificationUserAssociatinsDTO getNotificationUserById(long id)
 			throws Exception {
-		// TODO Auto-generated method stub
+		
 		Notificationuserassociation notificationuserassociation = notificationUserassociationDao.getById(Notificationuserassociation.class, id);
 		if (notificationuserassociation==null) {
 			return null;
@@ -81,7 +81,7 @@ public class NotificationUserAssociationServiceImpl extends CRUDServiceImpl<Noti
 
 	@Override
 	public NotificationUserAssociatinsDTO deleteNotificationUserAsso(long id) throws Exception {
-		// TODO Auto-generated method stub
+		
 		Notificationuserassociation notificationuserassociation = notificationUserassociationDao.getById(Notificationuserassociation.class, id);
 		if (notificationuserassociation==null) {
 			return null;
