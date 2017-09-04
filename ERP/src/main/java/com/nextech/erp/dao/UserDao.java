@@ -22,5 +22,5 @@ public interface UserDao extends SuperDao<User>{
 	
 	public User getUserByNotifictionId(long notificatinId) throws Exception;
 	
-	public List<User> getMultipleUsersById(String id) throws Exception;
+	public List<User> getMultipleUsersById(List<Long> ids) throws Exception;
 }

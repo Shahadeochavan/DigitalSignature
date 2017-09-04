@@ -1,22 +1,18 @@
 package com.nextech.erp.daoImpl;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.mysql.fabric.xmlrpc.base.Array;
 import com.nextech.erp.dao.UserDao;
 import com.nextech.erp.model.User;
 
@@ -143,21 +139,13 @@ public class UserDaoImpl extends SuperDaoImpl<User> implements UserDao {
 	}
 
 	@Override
-	public List<User> getMultipleUsersById(String userId) throws Exception {
+	public List<User> getMultipleUsersById(List<Long> ids) throws Exception {
 		
 		session = sessionFactory.getCurrentSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(User.class);
 		criteria.add(Restrictions.eq("isactive", true));
-		
-        String[] users = userId.split(",");
-		long[] data = new long[users.length];   
-		for (int i = 0; i < users.length; i++) {   
-		    data[i] = Long.parseLong(users[i]);   
-		}
-		Long[] longs = ArrayUtils.toObject(data);
-		List<Long> list = Arrays.asList(longs);
- 		Criterion criterion = Restrictions.in("id", list);
+ 		Criterion criterion = Restrictions.in("id", ids);
 		criteria.add(Restrictions.and(criterion));
 		@SuppressWarnings("unchecked")
 		List<User> userList = criteria.list().size() > 0 ? (List<User>) criteria.list() : null;
