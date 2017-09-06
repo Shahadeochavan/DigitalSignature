@@ -15,6 +15,7 @@ import com.nextech.erp.dto.BomDTO;
 import com.nextech.erp.factory.BOMFactory;
 import com.nextech.erp.model.Bom;
 import com.nextech.erp.model.Product;
+import com.nextech.erp.newDTO.ProductDTO;
 import com.nextech.erp.service.BomService;
 
 @Service
@@ -82,7 +83,9 @@ public class BomServiceImpl extends CRUDServiceImpl<Bom> implements BomService {
 		bomDao.update(bom);
 		BomDTO bomDTO2 = new BomDTO();
 		bomDTO2.setId(id);
-		bomDTO2.setProduct(bom.getProduct());
+		ProductDTO productDTO = new ProductDTO();
+		productDTO.setId(bom.getProduct().getId());
+		bomDTO2.setProduct(productDTO);
 		return bomDTO2;
 	}
 

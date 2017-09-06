@@ -2,8 +2,6 @@ package com.nextech.erp.dto;
 
 import java.util.Date;
 import java.util.List;
-
-import com.nextech.erp.model.Rawmaterialorderassociation;
 import com.nextech.erp.model.Status;
 import com.nextech.erp.model.Vendor;
 import com.nextech.erp.newDTO.RMOrderAssociationDTO;
@@ -22,7 +20,13 @@ public class RawmaterialOrderDTO extends AbstractDTO{
 	private int quantity;
 	List<RMOrderAssociationDTO> rmOrderAssociationDTOs;
 
-
+   public RawmaterialOrderDTO(){
+	   
+   }
+   
+   public RawmaterialOrderDTO(int id){
+	   this.setId(id);
+   }
 	public Date getCreateDate() {
 		return createDate;
 	}

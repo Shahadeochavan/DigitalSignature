@@ -8,6 +8,13 @@ public class StatusDTO extends AbstractDTO{
 	
 	private String statusName;
 	private String statusType;
+	
+	public StatusDTO(){
+		
+	}
+	public StatusDTO(int id){
+		this.setId(id);
+	}
 	public String getStatusName() {
 		return statusName;
 	}

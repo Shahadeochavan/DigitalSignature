@@ -17,6 +17,13 @@ public class ClientDTO extends AbstractDTO{
 	private String emailId;
 	private String  renge;
 	private String vatNo;
+	
+	public  ClientDTO(){
+		
+	}
+	public  ClientDTO(int id){
+		this.setId(id);
+	}
 	public String getAddress() {
 		return address;
 	}

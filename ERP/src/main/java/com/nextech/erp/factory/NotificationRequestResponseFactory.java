@@ -2,7 +2,9 @@ package com.nextech.erp.factory;
 
 
 import com.nextech.erp.model.Notification;
+import com.nextech.erp.model.Status;
 import com.nextech.erp.newDTO.NotificationDTO;
+import com.nextech.erp.newDTO.StatusDTO;
 
 public class NotificationRequestResponseFactory {
 	
@@ -13,12 +15,13 @@ public class NotificationRequestResponseFactory {
 		notification.setId(notificationDTO.getId());
 		notification.setIsactive(true);
 		notification.setName(notificationDTO.getName());
-		notification.setStatus1(notificationDTO.getStatus1());
 		notification.setSubject(notificationDTO.getSubject());
 		notification.setTemplate(notificationDTO.getTemplate());
 		notification.setType(notificationDTO.getType());
-		notification.setStatus1(notificationDTO.getStatus1());
-		notification.setStatus2(notificationDTO.getStatus1());
+		Status  status =  new Status();
+		status.setId(notificationDTO.getStatus1().getId());
+		notification.setStatus1(status);
+		notification.setStatus2(status);
 		notification.setCode(notificationDTO.getCode());
 		return notification;
 	}
@@ -30,7 +33,10 @@ public class NotificationRequestResponseFactory {
 		notificationDTO.setId(notification.getId());
 		notificationDTO.setActive(true);
 		notificationDTO.setName(notification.getName());
-		notificationDTO.setStatus1(notification.getStatus1());
+		StatusDTO statusDTO =  new StatusDTO();
+		statusDTO.setId(notification.getStatus1().getId());
+		statusDTO.setStatusName(notification.getStatus1().getName());
+		notificationDTO.setStatus1(statusDTO);
 		notificationDTO.setSubject(notification.getSubject());
 		notificationDTO.setTemplate(notification.getTemplate());
 		notificationDTO.setType(notification.getType());
@@ -41,5 +47,4 @@ public class NotificationRequestResponseFactory {
 		notificationDTO.setCode(notification.getCode());
 		return notificationDTO;
 	}
-
 }

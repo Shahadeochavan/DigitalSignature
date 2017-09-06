@@ -11,6 +11,13 @@ public class PageDTO extends AbstractDTO{
 	private String pageName;
 	private String submenu;
 	private String url;
+	
+	public PageDTO(){
+		
+	}
+	public PageDTO(int id){
+		this.setId(id);
+	}
 
 	public String getMenu() {
 		return menu;

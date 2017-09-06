@@ -14,6 +14,12 @@ public class UserDTO extends AbstractDTO {
 	private Date doj;
 	private String emailId;
 	private List<NotificationUserAssociatinsDTO> notificationUserAssociatinsDTOs;
+	public UserDTO(int id){
+		this.setId(id);
+	}
+	public UserDTO() {
+		// TODO Auto-generated constructor stub
+	}
 	public String getUserId() {
 		return userId;
 	}
@@ -76,8 +82,5 @@ public class UserDTO extends AbstractDTO {
 	public void setUserTypeDTO(UserTypeDTO userTypeDTO) {
 		this.userTypeDTO = userTypeDTO;
 	}
-	
-	
-	
 	
 }

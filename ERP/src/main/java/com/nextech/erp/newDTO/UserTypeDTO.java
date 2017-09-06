@@ -5,6 +5,13 @@ import com.nextech.erp.dto.AbstractDTO;
 public class UserTypeDTO extends AbstractDTO{
 
 	private String usertypeName;
+	public UserTypeDTO(int id) {
+		this.setId(id);
+	}
+
+	public UserTypeDTO() {
+		// TODO Auto-generated constructor stub
+	}
 
 	public String getUsertypeName() {
 		return usertypeName;

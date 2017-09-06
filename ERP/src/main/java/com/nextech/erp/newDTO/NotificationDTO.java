@@ -3,7 +3,6 @@ package com.nextech.erp.newDTO;
 import java.util.List;
 
 import com.nextech.erp.dto.AbstractDTO;
-import com.nextech.erp.model.Status;
 
 public class NotificationDTO extends AbstractDTO{
 	
@@ -12,9 +11,16 @@ public class NotificationDTO extends AbstractDTO{
 	private String subject;
 	private String template;
 	private String type;
-	private Status status1;
-	private Status status2;
+	private StatusDTO status1;
+	private StatusDTO status2;
 	private String code;
+	
+	public NotificationDTO(){
+		
+	}
+       public NotificationDTO(int id){
+		this.setId(id);
+	}
 	
 	private List<NotificationUserAssociatinsDTO> notificationUserAssociatinsDTOs;
 	public String getBeanClass() {
@@ -47,16 +53,17 @@ public class NotificationDTO extends AbstractDTO{
 	public void setType(String type) {
 		this.type = type;
 	}
-	public Status getStatus1() {
+	
+	public StatusDTO getStatus1() {
 		return status1;
 	}
-	public void setStatus1(Status status1) {
+	public void setStatus1(StatusDTO status1) {
 		this.status1 = status1;
 	}
-	public Status getStatus2() {
+	public StatusDTO getStatus2() {
 		return status2;
 	}
-	public void setStatus2(Status status2) {
+	public void setStatus2(StatusDTO status2) {
 		this.status2 = status2;
 	}
 	public List<NotificationUserAssociatinsDTO> getNotificationUserAssociatinsDTOs() {

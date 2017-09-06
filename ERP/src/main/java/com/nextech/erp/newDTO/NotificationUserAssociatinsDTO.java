@@ -4,16 +4,22 @@ package com.nextech.erp.newDTO;
 
 
 import com.nextech.erp.dto.AbstractDTO;
-import com.nextech.erp.model.Notification;
-import com.nextech.erp.model.User;
 
 public class NotificationUserAssociatinsDTO extends AbstractDTO {
 
 	private boolean bcc;
 	private boolean cc;
 	private boolean to;
-	private Notification notificationId;
-	private User userId;
+	private NotificationDTO notificationId;
+	private UserDTO userId;
+	
+	public NotificationUserAssociatinsDTO(){
+		
+	}
+	public NotificationUserAssociatinsDTO(int id){
+		this.setId(id);
+		
+	}
 	public boolean isBcc() {
 		return bcc;
 	}
@@ -32,16 +38,17 @@ public class NotificationUserAssociatinsDTO extends AbstractDTO {
 	public void setTo(boolean to) {
 		this.to = to;
 	}
-	public Notification getNotificationId() {
+
+	public NotificationDTO getNotificationId() {
 		return notificationId;
 	}
-	public void setNotificationId(Notification notificationId) {
+	public void setNotificationId(NotificationDTO notificationId) {
 		this.notificationId = notificationId;
 	}
-	public User getUserId() {
+	public UserDTO getUserId() {
 		return userId;
 	}
-	public void setUserId(User userId) {
+	public void setUserId(UserDTO userId) {
 		this.userId = userId;
 	}
 	public boolean getBcc() {

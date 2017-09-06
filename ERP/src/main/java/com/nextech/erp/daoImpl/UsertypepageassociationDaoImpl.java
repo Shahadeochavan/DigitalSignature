@@ -1,11 +1,9 @@
 package com.nextech.erp.daoImpl;
 
 import java.util.List;
-import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import com.nextech.erp.dao.UsertypepageassociationDao;
@@ -38,13 +36,25 @@ public class UsertypepageassociationDaoImpl extends SuperDaoImpl<Usertypepageass
 	@Override
 	public boolean checkPageAccess(long usertypeId, long pageId) {
 		
-		@SuppressWarnings("deprecation")
+/*		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Usertypepageassociation.class);
 		criteria.add(Restrictions.eq("isactive", true));
 		criteria.add(Restrictions.eq("usertype.id", usertypeId));
 		criteria.add(Restrictions.eq("page.id", pageId));
 		boolean hasAccess = (criteria.list().size() > 0 ?  true: false);
-		return hasAccess;
+		return hasAccess;*/
+		
+		session = sessionFactory.openSession();
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<Usertypepageassociation> criteria = builder.createQuery(Usertypepageassociation.class);
+		Root<Usertypepageassociation> userRoot = criteria.from(Usertypepageassociation.class);
+		criteria.select(userRoot).where(builder.equal(userRoot.get("page"), pageId),builder.equal(userRoot.get("usertype"), usertypeId),builder.equal(userRoot.get("isactive"), true));
+		TypedQuery<Usertypepageassociation> query = session.createQuery(criteria);
+		List<Usertypepageassociation> results = query.getResultList();
+		  if (results.isEmpty()) {
+		        return false;
+		    }
+		    return true;
 	}
 
 	@Override

@@ -1,21 +1,16 @@
 package com.nextech.erp.daoImpl;
 
-import java.util.Arrays;
 import java.util.List;
-
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-
-import org.hibernate.Criteria;
-import org.hibernate.criterion.Criterion;
-import org.hibernate.criterion.Restrictions;
+import javax.persistence.metamodel.EntityType;
+import javax.persistence.metamodel.Metamodel;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.nextech.erp.dao.UserDao;
-import com.nextech.erp.model.Bom;
 import com.nextech.erp.model.User;
 
 @Repository
@@ -84,16 +79,14 @@ public class UserDaoImpl extends SuperDaoImpl<User> implements UserDao {
 
 	@Override
 	public List<User> getMultipleUsersById(List<Long> ids) throws Exception {
-		
-		session = sessionFactory.getCurrentSession();
-		@SuppressWarnings("deprecation")
-		Criteria criteria = session.createCriteria(User.class);
-		criteria.add(Restrictions.eq("isactive", true));
- 		Criterion criterion = Restrictions.in("id", ids);
-		criteria.add(Restrictions.and(criterion));
-		@SuppressWarnings("unchecked")
-		List<User> userList = criteria.list().size() > 0 ? (List<User>) criteria.list() : null;
-		return userList;
+		  CriteriaBuilder criteriaBuilder=session.getCriteriaBuilder();
+		    CriteriaQuery<User> criteriaQuery=criteriaBuilder.createQuery(User.class);
+		    Metamodel metamodel=session.getMetamodel();
+		    EntityType<User> entityType = metamodel.entity(User.class);
+		    Root<User> root = criteriaQuery.from(entityType);
+		    criteriaQuery.where(root.get("id").in(ids));
+		    TypedQuery<User> typedQuery = session.createQuery(criteriaQuery);
+		    return typedQuery.getResultList();
 
 	}
 }

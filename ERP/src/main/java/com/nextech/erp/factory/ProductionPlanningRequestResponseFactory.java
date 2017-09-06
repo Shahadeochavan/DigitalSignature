@@ -2,8 +2,12 @@ package com.nextech.erp.factory;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.nextech.erp.model.Product;
 import com.nextech.erp.model.Productionplanning;
+import com.nextech.erp.model.Status;
+import com.nextech.erp.newDTO.ProductDTO;
 import com.nextech.erp.newDTO.ProductionPlanningDTO;
+import com.nextech.erp.newDTO.StatusDTO;
 
 public class ProductionPlanningRequestResponseFactory {
 	
@@ -17,7 +21,9 @@ public class ProductionPlanningRequestResponseFactory {
 		productionplanning.setId(productionPlanningDTO.getId());
 		productionplanning.setIsactive(true);
 		productionplanning.setLagQuantity(productionPlanningDTO.getLagQuantity());
-		productionplanning.setProduct(productionPlanningDTO.getProductId());
+		Product product =  new Product();
+		product.setId(productionPlanningDTO.getProductId().getId());
+		productionplanning.setProduct(product);
 		productionplanning.setQualityCheckedQuantity(productionPlanningDTO.getQualityCheckedQuantity());
 		productionplanning.setQualityPendingQuantity(productionPlanningDTO.getQualityPendingQuantity());
 		productionplanning.setRemark(productionPlanningDTO.getRemark());
@@ -25,7 +31,9 @@ public class ProductionPlanningRequestResponseFactory {
 		productionplanning.setStoreOut_quantity(productionPlanningDTO.getStoreOutQuantity());
 		productionplanning.setTargetQuantity(productionPlanningDTO.getTargetQuantity());
 		productionplanning.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-		productionplanning.setStatus(productionPlanningDTO.getStatusId());
+		Status status = new Status();
+		status.setId(productionPlanningDTO.getStatusId().getId());
+		productionplanning.setStatus(status);
 		return productionplanning;
 	}
 	
@@ -39,14 +47,20 @@ public class ProductionPlanningRequestResponseFactory {
 		productionPlanningDTO.setId(productionplanning.getId());
 		productionPlanningDTO.setActive(true);
 		productionPlanningDTO.setLagQuantity(productionplanning.getLagQuantity());
-		productionPlanningDTO.setProductId(productionplanning.getProduct());
+		ProductDTO productDTO =  new ProductDTO();
+		productDTO.setId(productionplanning.getProduct().getId());
+		productDTO.setPartNumber(productionplanning.getProduct().getPartNumber());
+		productionPlanningDTO.setProductId(productDTO);
 		productionPlanningDTO.setQualityCheckedQuantity(productionplanning.getQualityCheckedQuantity());
 		productionPlanningDTO.setQualityPendingQuantity(productionplanning.getQualityPendingQuantity());
 		productionPlanningDTO.setRemark(productionplanning.getRemark());
 		productionPlanningDTO.setRepairedQuantity(productionplanning.getRepaired_quantity());
 		productionPlanningDTO.setStoreOutQuantity(productionplanning.getStoreOut_quantity());
 		productionPlanningDTO.setTargetQuantity(productionplanning.getTargetQuantity());
-		productionPlanningDTO.setStatusId(productionplanning.getStatus());
+		StatusDTO statusDTO = new StatusDTO();
+		statusDTO.setId(productionplanning.getStatus().getId());
+		statusDTO.setStatusName(productionplanning.getStatus().getName());
+		productionPlanningDTO.setStatusId(statusDTO);
 		return productionPlanningDTO;
 	}
 

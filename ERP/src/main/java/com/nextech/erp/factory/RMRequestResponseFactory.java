@@ -1,9 +1,14 @@
 package com.nextech.erp.factory;
 
 import javax.servlet.http.HttpServletRequest;
+
 import com.nextech.erp.model.Rawmaterial;
 import com.nextech.erp.model.Rawmaterialinventory;
+import com.nextech.erp.model.Rmtype;
+import com.nextech.erp.model.Unit;
+import com.nextech.erp.newDTO.RMTypeDTO;
 import com.nextech.erp.newDTO.RawMaterialDTO;
+import com.nextech.erp.newDTO.UnitDTO;
 
 public class RMRequestResponseFactory {
 	
@@ -14,8 +19,12 @@ public class RMRequestResponseFactory {
 		rawmaterial.setName(rawMaterialDTO.getRmName());
 		rawmaterial.setPartNumber(rawMaterialDTO.getPartNumber());
 		rawmaterial.setPricePerUnit(rawMaterialDTO.getPricePerUnit());
-		rawmaterial.setUnit(rawMaterialDTO.getUnitId());
-		rawmaterial.setRmtype(rawMaterialDTO.getRmTypeId());
+		Unit unit =  new Unit();
+		unit.setId(rawMaterialDTO.getUnitId().getId());
+		rawmaterial.setUnit(unit);
+		Rmtype rmtype =  new Rmtype();
+		rmtype.setId(rawMaterialDTO.getRmTypeId().getId());
+		rawmaterial.setRmtype(rmtype);
 		rawmaterial.setDesign(rawMaterialDTO.getDesign());
 		rawmaterial.setIsactive(true);
 		rawmaterial.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
@@ -29,8 +38,12 @@ public class RMRequestResponseFactory {
 		rawmaterial.setName(rawMaterialDTO.getRmName());
 		rawmaterial.setPartNumber(rawMaterialDTO.getPartNumber());
 		rawmaterial.setPricePerUnit(rawMaterialDTO.getPricePerUnit());
-		rawmaterial.setUnit(rawMaterialDTO.getUnitId());
-		rawmaterial.setRmtype(rawMaterialDTO.getRmTypeId());
+		Unit unit =  new Unit();
+		unit.setId(rawMaterialDTO.getUnitId().getId());
+		rawmaterial.setUnit(unit);
+		Rmtype rmtype =  new Rmtype();
+		rmtype.setId(rawMaterialDTO.getRmTypeId().getId());
+		rawmaterial.setRmtype(rmtype);
 		rawmaterial.setDesign(rawMaterialDTO.getDesign());
 		rawmaterial.setIsactive(true);
 		rawmaterial.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
@@ -54,8 +67,14 @@ public class RMRequestResponseFactory {
 		rawMaterialDTO.setPartNumber(rawmaterial.getPartNumber());
 		rawMaterialDTO.setPricePerUnit(rawmaterial.getPricePerUnit());
 		rawMaterialDTO.setRmName(rawmaterial.getName());
-		rawMaterialDTO.setUnitId(rawmaterial.getUnit());
-		rawMaterialDTO.setRmTypeId(rawmaterial.getRmtype());
+		UnitDTO unitDTO = new UnitDTO();
+		unitDTO.setId(rawmaterial.getUnit().getId());
+		unitDTO.setName(rawmaterial.getUnit().getName());
+		rawMaterialDTO.setUnitId(unitDTO);
+		RMTypeDTO rmTypeDTO =  new RMTypeDTO();
+		rmTypeDTO.setId(rawmaterial.getRmtype().getId());
+		rmTypeDTO.setRmTypeName(rawmaterial.getRmtype().getName());
+		rawMaterialDTO.setRmTypeId(rmTypeDTO);
 		rawMaterialDTO.setActive(true);
 		rawMaterialDTO.setId(rawmaterial.getId());
 		rawMaterialDTO.setCreatedBy(rawmaterial.getCreatedBy());

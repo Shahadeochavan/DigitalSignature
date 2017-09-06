@@ -119,7 +119,6 @@ public class ProductionplanningDaoImpl extends SuperDaoImpl<Productionplanning>
 
 	@Override
 	public List<Productionplanning> getProductionplanByDate(Date date)throws Exception {
-		
 		session = sessionFactory.openSession();
 		CriteriaBuilder builder = session.getCriteriaBuilder();
 		CriteriaQuery<Productionplanning> criteria = builder.createQuery(Productionplanning.class);
@@ -132,8 +131,6 @@ public class ProductionplanningDaoImpl extends SuperDaoImpl<Productionplanning>
 	@Override
 	public List<Productionplanning> getProductionplanByProdutId(Date date,long productID)
 			throws Exception {
-		
-		
 		session = sessionFactory.openSession();
 		CriteriaBuilder builder = session.getCriteriaBuilder();
 		CriteriaQuery<Productionplanning> criteria = builder.createQuery(Productionplanning.class);

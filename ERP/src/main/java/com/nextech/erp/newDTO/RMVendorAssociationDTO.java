@@ -2,32 +2,36 @@ package com.nextech.erp.newDTO;
 
 
 import com.nextech.erp.dto.AbstractDTO;
-import com.nextech.erp.model.Rawmaterial;
-import com.nextech.erp.model.Vendor;
 
 public class RMVendorAssociationDTO extends AbstractDTO {
 	
 	private float pricePerUnit;
-	private Rawmaterial rawmaterialId;
-	private Vendor vendorId;
+	private RawMaterialDTO rawmaterialId;
+	private VendorDTO vendorId;
+	
+	public RMVendorAssociationDTO(){
+		
+	}
+	public	RMVendorAssociationDTO(int id){
+		this.setId(id);
+	}
 	public float getPricePerUnit() {
 		return pricePerUnit;
 	}
 	public void setPricePerUnit(float pricePerUnit) {
 		this.pricePerUnit = pricePerUnit;
 	}
-	public Rawmaterial getRawmaterialId() {
+	public RawMaterialDTO getRawmaterialId() {
 		return rawmaterialId;
 	}
-	public void setRawmaterialId(Rawmaterial rawmaterialId) {
+	public void setRawmaterialId(RawMaterialDTO rawmaterialId) {
 		this.rawmaterialId = rawmaterialId;
 	}
-	public Vendor getVendorId() {
+	public VendorDTO getVendorId() {
 		return vendorId;
 	}
-	public void setVendorId(Vendor vendorId) {
+	public void setVendorId(VendorDTO vendorId) {
 		this.vendorId = vendorId;
 	}
-	
 	
 }

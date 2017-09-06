@@ -1,15 +1,15 @@
 package com.nextech.erp.daoImpl;
 
-import java.util.Arrays;
 import java.util.List;
 
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import javax.persistence.metamodel.EntityType;
+import javax.persistence.metamodel.Metamodel;
 
 import org.hibernate.Criteria;
-import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -26,17 +26,25 @@ public class RawmaterialorderDaoImpl extends SuperDaoImpl<Rawmaterialorder>
 
 	
 
-	@SuppressWarnings({ "unchecked", "deprecation" })
 	@Override
 	public List<Rawmaterialorder> getRawmaterialorderByStatusId(long statusId,long statusId1,long statusId2)
 			throws Exception {
-		session = sessionFactory.openSession();
+/*		session = sessionFactory.openSession();
 		Criteria criteria = session.createCriteria(Rawmaterialorder.class);
 		criteria.add(Restrictions.eq("isactive", true));
 		Criterion criterion = Restrictions.in("status.id", Arrays.asList(statusId,statusId1,statusId2));
 		criteria.add(Restrictions.and(criterion));
 		List<Rawmaterialorder> rawmaterialorder = criteria.list().size() > 0 ? (List<Rawmaterialorder>) criteria.list() : null;
-		return rawmaterialorder;
+		return rawmaterialorder;*/
+		
+		  CriteriaBuilder criteriaBuilder=session.getCriteriaBuilder();
+		    CriteriaQuery<Rawmaterialorder> criteriaQuery=criteriaBuilder.createQuery(Rawmaterialorder.class);
+		    Metamodel metamodel=session.getMetamodel();
+		    EntityType<Rawmaterialorder> entityType = metamodel.entity(Rawmaterialorder.class);
+		    Root<Rawmaterialorder> root = criteriaQuery.from(entityType);
+		    criteriaQuery.where(root.get("status").in(statusId,statusId1,statusId2),criteriaBuilder.equal(root.get("isactive"), true));
+		    TypedQuery<Rawmaterialorder> typedQuery = session.createQuery(criteriaQuery);
+		    return typedQuery.getResultList();
 	}
 
 	@Override
@@ -69,14 +77,23 @@ public class RawmaterialorderDaoImpl extends SuperDaoImpl<Rawmaterialorder>
 			long statusId1, long statusId2) throws Exception {
 		
 		
-		@SuppressWarnings("deprecation")
+	/*	@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Rawmaterialorder.class);
 		criteria.add(Restrictions.eq("isactive", true));
 		Criterion criterion = Restrictions.in("vendor.id", Arrays.asList(vendorId,statusId1,statusId2));
 		criteria.add(Restrictions.and(criterion));
 		@SuppressWarnings("unchecked")
 		List<Rawmaterialorder> rawmaterialorder = criteria.list().size() > 0 ? (List<Rawmaterialorder>) criteria.list() : null;
-		return rawmaterialorder;
+		return rawmaterialorder;*/
+		
+		  CriteriaBuilder criteriaBuilder=session.getCriteriaBuilder();
+		    CriteriaQuery<Rawmaterialorder> criteriaQuery=criteriaBuilder.createQuery(Rawmaterialorder.class);
+		    Metamodel metamodel=session.getMetamodel();
+		    EntityType<Rawmaterialorder> entityType = metamodel.entity(Rawmaterialorder.class);
+		    Root<Rawmaterialorder> root = criteriaQuery.from(entityType);
+		    criteriaQuery.where(root.get("vendor").in(vendorId,statusId1,statusId2),criteriaBuilder.equal(root.get("isactive"), true));
+		    TypedQuery<Rawmaterialorder> typedQuery = session.createQuery(criteriaQuery);
+		    return typedQuery.getResultList();
 	}
 	}
 

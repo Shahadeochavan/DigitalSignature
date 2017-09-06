@@ -2,10 +2,13 @@ package com.nextech.erp.factory;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.nextech.erp.dto.BomDTO;
 import com.nextech.erp.dto.BomModelPart;
 import com.nextech.erp.model.Bom;
 import com.nextech.erp.model.Bomrmvendorassociation;
 import com.nextech.erp.newDTO.BomRMVendorAssociationsDTO;
+import com.nextech.erp.newDTO.RawMaterialDTO;
+import com.nextech.erp.newDTO.VendorDTO;
 
 public class BomRMVendorRequestResponseFactory {
 	
@@ -29,13 +32,21 @@ public class BomRMVendorRequestResponseFactory {
 	public static BomRMVendorAssociationsDTO setBOMRMVendorAssoDTO(Bomrmvendorassociation bomrmvendorassociation){
 		BomRMVendorAssociationsDTO bomRMVendorAssociationsDTO = new BomRMVendorAssociationsDTO();
 		bomRMVendorAssociationsDTO.setActive(true);
-		bomRMVendorAssociationsDTO.setBomId(bomrmvendorassociation.getBom());
+		BomDTO bomDTO =  new BomDTO();
+		bomDTO.setBomId(bomrmvendorassociation.getBom().getBomId());
+		bomRMVendorAssociationsDTO.setBomId(bomDTO);
 		bomRMVendorAssociationsDTO.setId(bomrmvendorassociation.getId());
 		bomRMVendorAssociationsDTO.setPricePerUnit(bomrmvendorassociation.getPricePerUnit());
 		bomRMVendorAssociationsDTO.setQuantity(bomrmvendorassociation.getQuantity());
 		bomRMVendorAssociationsDTO.setCost(bomrmvendorassociation.getCost());
-		bomRMVendorAssociationsDTO.setRawmaterialId(bomrmvendorassociation.getRawmaterial());
-		bomRMVendorAssociationsDTO.setVendorId(bomrmvendorassociation.getVendor());
+		RawMaterialDTO  rawMaterialDTO = new RawMaterialDTO();
+		rawMaterialDTO.setId(bomrmvendorassociation.getRawmaterial().getId());
+		rawMaterialDTO.setPartNumber(bomrmvendorassociation.getRawmaterial().getPartNumber());
+		bomRMVendorAssociationsDTO.setRawmaterialId(rawMaterialDTO);
+		VendorDTO vendorDTO = new VendorDTO();
+		vendorDTO.setId(bomrmvendorassociation.getId());
+		vendorDTO.setCompanyName(bomrmvendorassociation.getVendor().getCompanyName());
+		bomRMVendorAssociationsDTO.setVendorId(vendorDTO);
 		return bomRMVendorAssociationsDTO;
 	}
 

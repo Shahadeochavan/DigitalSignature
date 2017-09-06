@@ -3,18 +3,23 @@ package com.nextech.erp.newDTO;
 
 
 import com.nextech.erp.dto.AbstractDTO;
-import com.nextech.erp.model.Bom;
-import com.nextech.erp.model.Rawmaterial;
-import com.nextech.erp.model.Vendor;
+import com.nextech.erp.dto.BomDTO;
 
 public class BomRMVendorAssociationsDTO extends AbstractDTO{
 
 	private float cost;
 	private float pricePerUnit;
 	private long quantity;
-	private Rawmaterial rawmaterialId;
-	private Bom bomId;
-	private Vendor vendorId;
+	private RawMaterialDTO rawmaterialId;
+	private BomDTO bomId;
+	private VendorDTO vendorId;
+	
+	public BomRMVendorAssociationsDTO(){
+		
+	}
+	public BomRMVendorAssociationsDTO(int id){
+		this.setId(id);
+	}
 	public float getCost() {
 		return cost;
 	}
@@ -33,22 +38,22 @@ public class BomRMVendorAssociationsDTO extends AbstractDTO{
 	public void setQuantity(long quantity) {
 		this.quantity = quantity;
 	}
-	public Rawmaterial getRawmaterialId() {
+	public RawMaterialDTO getRawmaterialId() {
 		return rawmaterialId;
 	}
-	public void setRawmaterialId(Rawmaterial rawmaterialId) {
+	public void setRawmaterialId(RawMaterialDTO rawmaterialId) {
 		this.rawmaterialId = rawmaterialId;
 	}
-	public Bom getBomId() {
+	public BomDTO getBomId() {
 		return bomId;
 	}
-	public void setBomId(Bom bomId) {
+	public void setBomId(BomDTO bomId) {
 		this.bomId = bomId;
 	}
-	public Vendor getVendorId() {
+	public VendorDTO getVendorId() {
 		return vendorId;
 	}
-	public void setVendorId(Vendor vendorId) {
+	public void setVendorId(VendorDTO vendorId) {
 		this.vendorId = vendorId;
 	}
 	

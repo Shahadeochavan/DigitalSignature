@@ -20,9 +20,14 @@ public class ProductionPlanningDTO extends AbstractDTO{
 	private long repairedQuantity;
 	private String remark;
 	private long targetQuantity;
-	private Product productId;
-	private Status statusId;
+	private ProductDTO productId;
+	private StatusDTO statusId;
 	
+	public ProductionPlanningDTO(){
+	}
+	public ProductionPlanningDTO(int id){
+	this.setId(id);
+	}
 	public long getCompletedQuantity() {
 		return completedQuantity;
 	}
@@ -95,20 +100,17 @@ public class ProductionPlanningDTO extends AbstractDTO{
 	public void setTargetQuantity(long targetQuantity) {
 		this.targetQuantity = targetQuantity;
 	}
-	public Product getProductId() {
+	public ProductDTO getProductId() {
 		return productId;
 	}
-	public void setProductId(Product productId) {
+	public void setProductId(ProductDTO productId) {
 		this.productId = productId;
 	}
-	public Status getStatusId() {
+	public StatusDTO getStatusId() {
 		return statusId;
 	}
-	public void setStatusId(Status statusId) {
+	public void setStatusId(StatusDTO statusId) {
 		this.statusId = statusId;
 	}
 	
-	
-
-
 }

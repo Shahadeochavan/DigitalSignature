@@ -13,7 +13,13 @@ public class ProductDTO  extends AbstractDTO{
 	private String name;
 	private String partNumber;
 	private long ratePerUnit;
-	private byte[] imageInByte;
+	
+	public ProductDTO(){
+		
+	}
+	public ProductDTO(int id){
+		this.setId(id);
+	}
 	public String getClientPartNumber() {
 		return clientPartNumber;
 	}
@@ -44,12 +50,4 @@ public class ProductDTO  extends AbstractDTO{
 	public void setRatePerUnit(long ratePerUnit) {
 		this.ratePerUnit = ratePerUnit;
 	}
-	public byte[] getImageInByte() {
-		return imageInByte;
-	}
-	public void setImageInByte(byte[] imageInByte) {
-		this.imageInByte = imageInByte;
-	}
-	
-
 }

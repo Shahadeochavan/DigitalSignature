@@ -2,21 +2,24 @@ package com.nextech.erp.dto;
 
 import java.util.List;
 
-import com.nextech.erp.model.Product;
+import com.nextech.erp.newDTO.ProductDTO;
 
 public class BomDTO extends AbstractDTO{
-	private long id;
-	private Product product;
+	private ProductDTO product;
 	private String bomId;
 	private List<BomModelPart> bomModelParts;
 
-
-
-	public Product getProduct() {
+    public BomDTO(){
+    	
+    }
+	public BomDTO(int id){
+		this.setId(id);
+	}
+	public ProductDTO getProduct() {
 		return product;
 	}
 
-	public void setProduct(Product product) {
+	public void setProduct(ProductDTO product) {
 		this.product = product;
 	}
 
@@ -34,14 +37,6 @@ public class BomDTO extends AbstractDTO{
 
 	public void setBomModelParts(List<BomModelPart> bomModelParts) {
 		this.bomModelParts = bomModelParts;
-	}
-
-	public long getId() {
-		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
 	}
 
 }

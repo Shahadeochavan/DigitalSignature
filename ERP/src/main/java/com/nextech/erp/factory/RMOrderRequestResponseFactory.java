@@ -2,6 +2,7 @@ package com.nextech.erp.factory;
 
 
 import com.nextech.erp.dto.RawmaterialOrderDTO;
+import com.nextech.erp.model.Rawmaterial;
 import com.nextech.erp.model.Rawmaterialorder;
 import com.nextech.erp.model.Rawmaterialorderassociation;
 import com.nextech.erp.newDTO.RMOrderAssociationDTO;
@@ -31,7 +32,9 @@ public class RMOrderRequestResponseFactory {
 		Rawmaterialorder rawmaterialorder = new Rawmaterialorder();
 		rawmaterialorder.setId(rawmaterialOrderDTO.getId());
 		rawmaterialorderassociation.setQuantity(rawAssociationDTO.getQuantity());
-		rawmaterialorderassociation.setRawmaterial(rawAssociationDTO.getRawmaterialId());
+		Rawmaterial rawmaterial =  new Rawmaterial();
+		rawmaterial.setId(rawAssociationDTO.getRawmaterialId().getId());
+		rawmaterialorderassociation.setRawmaterial(rawmaterial);
 		rawmaterialorderassociation.setRawmaterialorder(rawmaterialorder);
 		rawmaterialorderassociation.setRemainingQuantity(rawAssociationDTO.getQuantity());
 		rawmaterialorderassociation.setIsactive(true);

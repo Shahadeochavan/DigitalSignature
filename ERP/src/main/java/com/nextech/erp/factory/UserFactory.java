@@ -61,6 +61,7 @@ public class UserFactory {
 		userDTO.setEmailId(user.getEmail());
 		UserTypeDTO  userTypeDTO = new UserTypeDTO();
 		userTypeDTO.setUsertypeName(user.getUsertype().getUsertypeName());
+		userTypeDTO.setId(user.getUsertype().getId());
 		userDTO.setUserTypeDTO(userTypeDTO);
 		userDTO.setActive(true);
 		userDTO.setCreatedBy(user.getCreatedBy());

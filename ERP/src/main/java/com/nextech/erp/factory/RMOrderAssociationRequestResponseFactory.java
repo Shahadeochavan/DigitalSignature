@@ -2,8 +2,12 @@ package com.nextech.erp.factory;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.nextech.erp.dto.RawmaterialOrderDTO;
+import com.nextech.erp.model.Rawmaterial;
+import com.nextech.erp.model.Rawmaterialorder;
 import com.nextech.erp.model.Rawmaterialorderassociation;
 import com.nextech.erp.newDTO.RMOrderAssociationDTO;
+import com.nextech.erp.newDTO.RawMaterialDTO;
 
 public class RMOrderAssociationRequestResponseFactory {
 
@@ -13,8 +17,12 @@ public class RMOrderAssociationRequestResponseFactory {
 		rawmaterialorderassociation.setId(rmOrderAssociationDTO.getId());
 		rawmaterialorderassociation.setIsactive(true);
 		rawmaterialorderassociation.setQuantity(rmOrderAssociationDTO.getQuantity());
-		rawmaterialorderassociation.setRawmaterial(rmOrderAssociationDTO.getRawmaterialId());
-		rawmaterialorderassociation.setRawmaterialorder(rmOrderAssociationDTO.getRawmaterialOrderId());
+		Rawmaterial rawmaterial =  new Rawmaterial();
+		rawmaterial.setId(rmOrderAssociationDTO.getRawmaterialId().getId());
+		rawmaterialorderassociation.setRawmaterial(rawmaterial);
+		Rawmaterialorder  rawmaterialorder =  new Rawmaterialorder();
+		rawmaterialorder.setId(rmOrderAssociationDTO.getRawmaterialOrderId().getId());
+		rawmaterialorderassociation.setRawmaterialorder(rawmaterialorder);
 		rawmaterialorderassociation.setRemainingQuantity(rmOrderAssociationDTO.getQuantity());
 		rawmaterialorderassociation.setUpdatedDate(rmOrderAssociationDTO.getUpdatedDate());
 		rawmaterialorderassociation.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
@@ -26,8 +34,12 @@ public class RMOrderAssociationRequestResponseFactory {
 		rawmaterialorderassociation.setId(rmOrderAssociationDTO.getId());
 		rawmaterialorderassociation.setIsactive(true);
 		rawmaterialorderassociation.setQuantity(rmOrderAssociationDTO.getQuantity());
-		rawmaterialorderassociation.setRawmaterial(rmOrderAssociationDTO.getRawmaterialId());
-		rawmaterialorderassociation.setRawmaterialorder(rmOrderAssociationDTO.getRawmaterialOrderId());
+		Rawmaterial rawmaterial =  new Rawmaterial();
+		rawmaterial.setId(rmOrderAssociationDTO.getRawmaterialId().getId());
+		rawmaterialorderassociation.setRawmaterial(rawmaterial);
+		Rawmaterialorder  rawmaterialorder =  new Rawmaterialorder();
+		rawmaterialorder.setId(rmOrderAssociationDTO.getRawmaterialOrderId().getId());
+		rawmaterialorderassociation.setRawmaterialorder(rawmaterialorder);
 		rawmaterialorderassociation.setRemainingQuantity(rmOrderAssociationDTO.getQuantity());
 		rawmaterialorderassociation.setUpdatedDate(rmOrderAssociationDTO.getUpdatedDate());
 		rawmaterialorderassociation.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
@@ -41,8 +53,13 @@ public class RMOrderAssociationRequestResponseFactory {
 		rmOrderAssociationDTO.setCreatedDate(rawmaterialorderassociation.getCreatedDate());
 		rmOrderAssociationDTO.setId(rawmaterialorderassociation.getId());
 		rmOrderAssociationDTO.setQuantity(rawmaterialorderassociation.getQuantity());
-		rmOrderAssociationDTO.setRawmaterialId(rawmaterialorderassociation.getRawmaterial());
-		rmOrderAssociationDTO.setRawmaterialOrderId(rawmaterialorderassociation.getRawmaterialorder());
+		RawMaterialDTO  rawMaterialDTO =  new RawMaterialDTO();
+		rawMaterialDTO.setId(rawmaterialorderassociation.getRawmaterial().getId());
+		rmOrderAssociationDTO.setRawmaterialId(rawMaterialDTO);
+		RawmaterialOrderDTO rawmaterialOrderDTO = new RawmaterialOrderDTO();
+		rawmaterialOrderDTO.setId(rawmaterialorderassociation.getRawmaterialorder().getId());
+		rawmaterialOrderDTO.setName(rawmaterialorderassociation.getRawmaterialorder().getName());
+		rmOrderAssociationDTO.setRawmaterialOrderId(rawmaterialOrderDTO);
 		rmOrderAssociationDTO.setRemainingQuantity(rawmaterialorderassociation.getRemainingQuantity());
 		rmOrderAssociationDTO.setUpdatedDate(rawmaterialorderassociation.getUpdatedDate());
 		rmOrderAssociationDTO.setUpdatedBy(rawmaterialorderassociation.getUpdatedBy());

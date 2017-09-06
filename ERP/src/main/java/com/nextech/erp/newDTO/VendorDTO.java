@@ -28,6 +28,13 @@ public class VendorDTO extends AbstractDTO{
 	private List<BomRMVendorAssociationsDTO> bomRMVendorAssociationsDTOs;
 	private List<RMVendorAssociationDTO> rawmaterialvendorassociations;
 	private List<RawmaterialOrderDTO> rawmaterialOrderDTOs;
+	
+	public VendorDTO(){
+		
+	}
+	public VendorDTO(int id){
+		this.setId(id);
+	}
 
 	public String getAddress() {
 		return address;
