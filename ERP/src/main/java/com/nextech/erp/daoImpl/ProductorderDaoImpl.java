@@ -1,13 +1,10 @@
 package com.nextech.erp.daoImpl;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.metamodel.EntityType;
 import javax.persistence.metamodel.Metamodel;
@@ -18,9 +15,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.nextech.erp.dao.ProductorderDao;
-import com.nextech.erp.model.Client;
 import com.nextech.erp.model.Productorder;
-import com.nextech.erp.model.User;
 
 @Repository
 
