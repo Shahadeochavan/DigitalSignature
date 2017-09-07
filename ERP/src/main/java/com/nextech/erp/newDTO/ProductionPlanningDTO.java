@@ -3,8 +3,6 @@ package com.nextech.erp.newDTO;
 import java.util.Date;
 
 import com.nextech.erp.dto.AbstractDTO;
-import com.nextech.erp.model.Product;
-import com.nextech.erp.model.Status;
 
 public class ProductionPlanningDTO extends AbstractDTO{
 
