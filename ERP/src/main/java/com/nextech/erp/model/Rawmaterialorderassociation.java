@@ -39,11 +39,9 @@ public class Rawmaterialorderassociation implements Serializable {
 	@Column(name="updated_date")
 	private Timestamp updatedDate;
 
-	//bi-directional many-to-one association to Rawmaterial
 	@ManyToOne
 	private Rawmaterial rawmaterial;
 
-	//bi-directional many-to-one association to Rawmaterialorder
 	@ManyToOne
 	@JoinColumn(name="order_id")
 	 @JsonBackReference

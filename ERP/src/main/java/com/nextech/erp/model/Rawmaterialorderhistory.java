@@ -43,16 +43,13 @@ public class Rawmaterialorderhistory implements Serializable {
 	@Column(name="updated_date")
 	private Timestamp updatedDate;
 
-	//bi-directional many-to-one association to Rawmaterialorder
 	@ManyToOne
 	private Rawmaterialorder rawmaterialorder;
 
-	//bi-directional many-to-one association to Status
 	@ManyToOne
 	@JoinColumn(name="status_id_from")
 	private Status status1;
 
-	//bi-directional many-to-one association to Status
 	@ManyToOne
 	@JoinColumn(name="status_id_to")
 	private Status status2;
