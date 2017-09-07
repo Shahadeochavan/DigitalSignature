@@ -41,5 +41,4 @@ public class StatusTransitionDTO extends AbstractDTO{
 	public void setToStatus(String toStatus) {
 		this.toStatus = toStatus;
 	}
-
 }

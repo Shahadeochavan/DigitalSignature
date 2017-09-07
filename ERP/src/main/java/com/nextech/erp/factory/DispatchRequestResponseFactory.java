@@ -4,6 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.nextech.erp.dto.DispatchDTO;
 import com.nextech.erp.model.Dispatch;
+import com.nextech.erp.model.Product;
 
 public class DispatchRequestResponseFactory {
 	
@@ -13,7 +14,9 @@ public class DispatchRequestResponseFactory {
 		dispatch.setId(dispatchDTO.getId());
 		dispatch.setInvoiceNo(dispatchDTO.getInvoiceNo());
 		dispatch.setIsactive(true);
-		dispatch.setProduct(dispatchDTO.getProductId());
+		Product product =  new Product();
+		product.setId(dispatchDTO.getProductId().getId());
+		dispatch.setProduct(product);
 		return dispatch;
 	}
 	

@@ -27,5 +27,4 @@ public class StatusDTO extends AbstractDTO{
 	public void setStatusType(String statusType) {
 		this.statusType = statusType;
 	}
-	
 }

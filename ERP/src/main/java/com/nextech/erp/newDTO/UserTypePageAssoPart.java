@@ -1,15 +1,22 @@
 package com.nextech.erp.newDTO;
 
-import com.nextech.erp.model.Page;
+import com.nextech.erp.dto.AbstractDTO;
 
-public class UserTypePageAssoPart {
-	private Page pageId;
+public class UserTypePageAssoPart extends AbstractDTO{
+	private PageDTO pageId;
+	
+	public UserTypePageAssoPart(){
+		
+	}
+	public UserTypePageAssoPart(int id){
+		this.setId(id);
+	}
 
-	public Page getPageId() {
+	public PageDTO getPageId() {
 		return pageId;
 	}
 
-	public void setPageId(Page pageId) {
+	public void setPageId(PageDTO pageId) {
 		this.pageId = pageId;
 	}
 

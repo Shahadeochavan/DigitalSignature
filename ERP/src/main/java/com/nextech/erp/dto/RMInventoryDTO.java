@@ -2,7 +2,7 @@ package com.nextech.erp.dto;
 
 
 
-import com.nextech.erp.model.Rawmaterial;
+import com.nextech.erp.newDTO.RawMaterialDTO;
 
 public class RMInventoryDTO extends AbstractDTO{
 	
@@ -10,7 +10,14 @@ public class RMInventoryDTO extends AbstractDTO{
 	private long quantityAvailable;
 	private long minimumQuantity;
 	private long maximumQuantity;
-	private Rawmaterial rawmaterialId;
+	private RawMaterialDTO rawmaterialId;
+	
+	public RMInventoryDTO(){
+		
+	}
+	public RMInventoryDTO(int id){
+		this.setId(id);
+	}
 	
 	public String getRmPartNumber() {
 		return rmPartNumber;
@@ -36,10 +43,10 @@ public class RMInventoryDTO extends AbstractDTO{
 	public void setMaximumQuantity(long maximumQuantity) {
 		this.maximumQuantity = maximumQuantity;
 	}
-	public Rawmaterial getRawmaterialId() {
+	public RawMaterialDTO getRawmaterialId() {
 		return rawmaterialId;
 	}
-	public void setRawmaterialId(Rawmaterial rawmaterialId) {
+	public void setRawmaterialId(RawMaterialDTO rawmaterialId) {
 		this.rawmaterialId = rawmaterialId;
 	}
 

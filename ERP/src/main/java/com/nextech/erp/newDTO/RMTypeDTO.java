@@ -20,6 +20,4 @@ public class RMTypeDTO extends AbstractDTO{
 	public void setRmTypeName(String rmTypeName) {
 		this.rmTypeName = rmTypeName;
 	}
-	
-
 }

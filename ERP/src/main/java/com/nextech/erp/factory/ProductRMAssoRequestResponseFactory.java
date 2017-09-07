@@ -5,6 +5,8 @@ import javax.servlet.http.HttpServletRequest;
 import com.nextech.erp.dto.ProductRMAssociationDTO;
 import com.nextech.erp.model.Product;
 import com.nextech.erp.model.Productrawmaterialassociation;
+import com.nextech.erp.model.Rawmaterial;
+import com.nextech.erp.newDTO.RawMaterialDTO;
 
 public class ProductRMAssoRequestResponseFactory {
 
@@ -15,7 +17,9 @@ public class ProductRMAssoRequestResponseFactory {
 		product.setId(productRMAssociationDTO.getProduct());
 		productrawmaterialassociation.setProduct(product);
 		productrawmaterialassociation.setQuantity(productRMAssociationDTO.getQuantity());
-		productrawmaterialassociation.setRawmaterial(productRMAssociationDTO.getRawmaterialId());
+		Rawmaterial rawmaterial = new Rawmaterial();
+		rawmaterial.setId(productRMAssociationDTO.getRawmaterialId().getId());
+		productrawmaterialassociation.setRawmaterial(rawmaterial);
 		productrawmaterialassociation.setIsactive(true);
 		productrawmaterialassociation.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 		return productrawmaterialassociation;
@@ -28,7 +32,8 @@ public class ProductRMAssoRequestResponseFactory {
 		product.setId(productRMAssociationDTO.getProduct());
 		productrawmaterialassociation.setProduct(product);
 		productrawmaterialassociation.setQuantity(productRMAssociationDTO.getQuantity());
-		productrawmaterialassociation.setRawmaterial(productRMAssociationDTO.getRawmaterialId());
+		Rawmaterial rawmaterial = new Rawmaterial();
+		rawmaterial.setId(productRMAssociationDTO.getRawmaterialId().getId());
 		productrawmaterialassociation.setIsactive(true);
 		productrawmaterialassociation.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 		return productrawmaterialassociation;
@@ -37,7 +42,10 @@ public class ProductRMAssoRequestResponseFactory {
 	public static ProductRMAssociationDTO  setProductRMAssoList(Productrawmaterialassociation productrawmaterialassociation){
 		ProductRMAssociationDTO productRMAssociationDTO = new ProductRMAssociationDTO();
 		productRMAssociationDTO.setQuantity(productrawmaterialassociation.getQuantity());
-		productRMAssociationDTO.setRawmaterialId(productrawmaterialassociation.getRawmaterial());
+		RawMaterialDTO rawMaterialDTO = new RawMaterialDTO();
+		rawMaterialDTO.setId(productrawmaterialassociation.getRawmaterial().getId());
+		rawMaterialDTO.setPartNumber(productrawmaterialassociation.getRawmaterial().getPartNumber());
+		productRMAssociationDTO.setRawmaterialId(rawMaterialDTO);
 		productRMAssociationDTO.setProduct(productrawmaterialassociation.getProduct().getId());
 		productRMAssociationDTO.setId(productrawmaterialassociation.getId());
 		productRMAssociationDTO.setCreatedBy(productrawmaterialassociation.getCreatedBy());

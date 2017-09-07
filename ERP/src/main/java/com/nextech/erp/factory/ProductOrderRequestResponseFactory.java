@@ -3,6 +3,7 @@ package com.nextech.erp.factory;
 import javax.servlet.http.HttpServletRequest;
 
 import com.nextech.erp.dto.ProductOrderDTO;
+import com.nextech.erp.model.Product;
 import com.nextech.erp.model.Productorder;
 import com.nextech.erp.model.Productorderassociation;
 import com.nextech.erp.newDTO.ProductOrderAssociationDTO;
@@ -27,14 +28,14 @@ public class ProductOrderRequestResponseFactory {
 		productorder.setId(productOrderDTO.getId());
 		productorderassociation.setQuantity(productOrderAssociationDTO.getQuantity());
 		productorderassociation.setRemainingQuantity(productOrderAssociationDTO.getQuantity());
-		productorderassociation.setProduct(productOrderAssociationDTO.getProductId());
+		Product product =  new Product();
+		product.setId(productOrderAssociationDTO.getProductId().getId());
+		productorderassociation.setProduct(product);
 		productorderassociation.setProductorder(productorder);
 		productorderassociation.setIsactive(true);
 		productorderassociation.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 		return productorderassociation;
 	}
-	
-
 	public static ProductOrderDTO setProductOrderDTO(Productorder productorder){
 		ProductOrderDTO productOrderDTO =  new ProductOrderDTO();
 		productOrderDTO.setActive(true);

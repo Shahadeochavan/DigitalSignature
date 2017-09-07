@@ -3,7 +3,9 @@ package com.nextech.erp.factory;
 import javax.servlet.http.HttpServletRequest;
 
 import com.nextech.erp.dto.RMInventoryDTO;
+import com.nextech.erp.model.Rawmaterial;
 import com.nextech.erp.model.Rawmaterialinventory;
+import com.nextech.erp.newDTO.RawMaterialDTO;
 
 public class RMInventoryRequestResponseFactory {
 	
@@ -12,7 +14,9 @@ public class RMInventoryRequestResponseFactory {
 		rawmaterialinventory.setMaximum_quantity(rmInventoryDTO.getMaximumQuantity());
 		rawmaterialinventory.setMinimum_quantity(rmInventoryDTO.getMinimumQuantity());
 		rawmaterialinventory.setQuantityAvailable(rmInventoryDTO.getQuantityAvailable());
-		rawmaterialinventory.setRawmaterial(rmInventoryDTO.getRawmaterialId());
+		Rawmaterial  rawmaterial =  new Rawmaterial();
+		rawmaterial.setId(rmInventoryDTO.getRawmaterialId().getId());
+		rawmaterialinventory.setRawmaterial(rawmaterial);
 		rawmaterialinventory.setId(rmInventoryDTO.getId());
 		rawmaterialinventory.setIsactive(true);
 		rawmaterialinventory.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
@@ -24,7 +28,8 @@ public class RMInventoryRequestResponseFactory {
 		rawmaterialinventory.setMaximum_quantity(rmInventoryDTO.getMaximumQuantity());
 		rawmaterialinventory.setMinimum_quantity(rmInventoryDTO.getMinimumQuantity());
 		rawmaterialinventory.setQuantityAvailable(rmInventoryDTO.getQuantityAvailable());
-		rawmaterialinventory.setRawmaterial(rmInventoryDTO.getRawmaterialId());
+		Rawmaterial  rawmaterial =  new Rawmaterial();
+		rawmaterial.setId(rmInventoryDTO.getRawmaterialId().getId());
 		rawmaterialinventory.setId(rmInventoryDTO.getId());
 		rawmaterialinventory.setIsactive(true);
 		rawmaterialinventory.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
@@ -41,7 +46,10 @@ public class RMInventoryRequestResponseFactory {
 		rmInventoryDTO.setMaximumQuantity(rawmaterialinventory.getMaximum_quantity());
 		rmInventoryDTO.setMinimumQuantity(rawmaterialinventory.getMinimum_quantity());
 		rmInventoryDTO.setQuantityAvailable(rawmaterialinventory.getQuantityAvailable());
-		rmInventoryDTO.setRawmaterialId(rawmaterialinventory.getRawmaterial());
+		RawMaterialDTO  rawMaterialDTO =  new RawMaterialDTO();
+		rawMaterialDTO.setId(rawmaterialinventory.getRawmaterial().getId());
+		rawMaterialDTO.setPartNumber(rawmaterialinventory.getRawmaterial().getPartNumber());
+		rmInventoryDTO.setRawmaterialId(rawMaterialDTO);
 		rmInventoryDTO.setUpdatedBy(rawmaterialinventory.getUpdatedBy());
 		rmInventoryDTO.setUpdatedDate(rawmaterialinventory.getUpdatedDate());
 		return rmInventoryDTO;

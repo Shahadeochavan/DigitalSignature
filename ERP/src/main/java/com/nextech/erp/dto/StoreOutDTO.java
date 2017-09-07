@@ -1,9 +1,7 @@
 package com.nextech.erp.dto;
 
 import java.util.List;
-
 import com.nextech.erp.model.Product;
-import com.nextech.erp.model.Productionplanning;
 
 public class StoreOutDTO  extends AbstractDTO{
 	private long productionPlanId;

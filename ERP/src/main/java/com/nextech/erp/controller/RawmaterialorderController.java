@@ -381,6 +381,7 @@ public class RawmaterialorderController {
 			Long productInventoryQty = productinventory == null ? 0 : productinventory.getQuantityavailable();
 			Long actualRequiredQuantity = entry.getValue() - productInventoryQty;
 			List<ProductRMAssociationDTO> productRMList = productRMAssoService.getProductRMAssoList(productId);
+			if(productRMList !=null){
 			for (Iterator<ProductRMAssociationDTO> iterator2 = productRMList.iterator(); iterator2
 					.hasNext();) {
 				ProductRMAssociationDTO productRMAssociationDTO = (ProductRMAssociationDTO) iterator2
@@ -392,9 +393,14 @@ public class RawmaterialorderController {
 					rmQuantityMap.put(rmId, (productRMAssociationDTO.getQuantity()* actualRequiredQuantity));
 				}
 			}
+			}else{
+				return  new Response(1,"There is no any product RM List");
+			}
 		}
-		Set<Entry<Long, Long>> rmQuantityEntries = rmQuantityMap.entrySet();
 		List<RMReqirementDTO> rmReqirementDTOs = new ArrayList<RMReqirementDTO>();
+		Set<Entry<Long, Long>> rmQuantityEntries = rmQuantityMap.entrySet();
+		if(rmQuantityEntries !=null){
+	
 		for (Iterator<Entry<Long, Long>> iterator = rmQuantityEntries.iterator(); iterator
 				.hasNext();) {
 			Entry<Long, Long> rmQtyentry = (Entry<Long, Long>) iterator.next();
@@ -410,6 +416,9 @@ public class RawmaterialorderController {
 			if(rmQtyentry.getValue() > rmInventoryDTO.getQuantityAvailable()){
 				rmReqirementDTOs.add(rmReqirementDTO);
 			}
+		}
+		}else{
+			return new Response(1,"There is no any requirmemt");
 		}
 		return new Response(0, "Success", rmReqirementDTOs);
 		}catch(Exception ex){

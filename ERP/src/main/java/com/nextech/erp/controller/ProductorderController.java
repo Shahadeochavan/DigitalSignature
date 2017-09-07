@@ -328,8 +328,11 @@ public class ProductorderController {
 	}
 
 	private void mailSending(NotificationDTO notification,List<ProductOrderData> productOrderDatas,ClientDTO client,String fileName,ProductOrderDTO productOrderDTO) throws Exception{
-	Mail mail =  userService.emailNotification(notification);    
+	Mail mail =  userService.emailNotification(notification); 
+	    mail.setAttachment(fileName);
+		mail.setMailSubject(notification.getSubject());
         Map < String, Object > model = new HashMap < String, Object >();
+        mail.setAttachment(fileName);
         model.put("companyName", client.getCompanyName());
         model.put("mailfrom", notification.getName());
         model.put("location", "Pune");
@@ -341,7 +344,7 @@ public class ProductorderController {
         mail.setModel(model);
         mailService.sendEmail(mail,notification);
         
-        mailSendingToRMUser(productOrderDTO);
+       // mailSendingToRMUser(productOrderDTO);
 	}
 	
 	public void mailSendingToRMUser(ProductOrderDTO productOrderDTO)throws Exception{

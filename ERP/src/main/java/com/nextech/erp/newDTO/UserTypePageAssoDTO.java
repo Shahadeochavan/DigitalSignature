@@ -5,22 +5,19 @@ package com.nextech.erp.newDTO;
 import java.util.List;
 
 import com.nextech.erp.dto.AbstractDTO;
-import com.nextech.erp.model.Page;
-import com.nextech.erp.model.Usertype;
 
 public class UserTypePageAssoDTO extends AbstractDTO{
 
-	private Page page;
-	private Usertype usertypeId;
+	private PageDTO page;
+	private UserTypeDTO usertypeId;
 	
 	private List<UserTypePageAssoPart> userTypePageAssoParts;
-
-	public Usertype getUsertypeId() {
-		return usertypeId;
+	
+	public UserTypePageAssoDTO(){
+		
 	}
-
-	public void setUsertypeId(Usertype usertypeId) {
-		this.usertypeId = usertypeId;
+	public UserTypePageAssoDTO(int id){
+		this.setId(id);
 	}
 
 	public List<UserTypePageAssoPart> getUserTypePageAssoParts() {
@@ -32,13 +29,20 @@ public class UserTypePageAssoDTO extends AbstractDTO{
 		this.userTypePageAssoParts = userTypePageAssoParts;
 	}
 
-	public Page getPage() {
+	public PageDTO getPage() {
 		return page;
 	}
 
-	public void setPage(Page page) {
+	public void setPage(PageDTO page) {
 		this.page = page;
 	}
-	
+
+	public UserTypeDTO getUsertypeId() {
+		return usertypeId;
+	}
+
+	public void setUsertypeId(UserTypeDTO usertypeId) {
+		this.usertypeId = usertypeId;
+	}
 	
 }

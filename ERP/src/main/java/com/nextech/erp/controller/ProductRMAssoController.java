@@ -29,8 +29,10 @@ import com.nextech.erp.dto.ProductRMAssociationDTO;
 import com.nextech.erp.dto.ProductRMAssociationModelParts;
 import com.nextech.erp.dto.RMVendorData;
 import com.nextech.erp.factory.ProductRMAssoRequestResponseFactory;
+import com.nextech.erp.model.Rawmaterial;
 import com.nextech.erp.newDTO.ProductDTO;
 import com.nextech.erp.newDTO.RMVendorAssociationDTO;
+import com.nextech.erp.newDTO.RawMaterialDTO;
 import com.nextech.erp.newDTO.VendorDTO;
 import com.nextech.erp.service.ProductRMAssoService;
 import com.nextech.erp.service.ProductService;
@@ -211,7 +213,9 @@ public class ProductRMAssoController {
 				}
 				ProductRMAssociationModelParts productRMAssociationModelPart = new ProductRMAssociationModelParts();
 				productRMAssociationModelPart.setQuantity(productrawmaterialassociation.getQuantity());
-				productRMAssociationModelPart.setRawmaterial(productrawmaterialassociation.getRawmaterialId());
+				RawMaterialDTO rawMaterialDTO =  new RawMaterialDTO();
+				rawMaterialDTO.setPartNumber(productrawmaterialassociation.getRawmaterialId().getPartNumber());
+				productRMAssociationModelPart.setRawmaterial(rawMaterialDTO);
 				productRMAssociationModelParts.add(productRMAssociationModelPart);
 				multplePRMAsso.put(productrawmaterialassociation.getProduct(), productRMAssociationModelParts);
 			}

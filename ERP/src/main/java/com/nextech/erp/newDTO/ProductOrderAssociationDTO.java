@@ -2,15 +2,13 @@ package com.nextech.erp.newDTO;
 
 
 import com.nextech.erp.dto.AbstractDTO;
-import com.nextech.erp.model.Product;
-import com.nextech.erp.model.Productorder;
-
+import com.nextech.erp.dto.ProductOrderDTO;
 public class ProductOrderAssociationDTO extends AbstractDTO {
 
 	private long quantity;
 	private long remainingQuantity;
-	private Product productId;
-	private Productorder productOrderId;
+	private ProductDTO productId;
+	private ProductOrderDTO productOrderId;
 	
 	public ProductOrderAssociationDTO(){
 		
@@ -31,18 +29,17 @@ public class ProductOrderAssociationDTO extends AbstractDTO {
 	public void setRemainingQuantity(long remainingQuantity) {
 		this.remainingQuantity = remainingQuantity;
 	}
-	public Product getProductId() {
+	public ProductDTO getProductId() {
 		return productId;
 	}
-	public void setProductId(Product productId) {
+	public void setProductId(ProductDTO productId) {
 		this.productId = productId;
 	}
-	public Productorder getProductOrderId() {
+	public ProductOrderDTO getProductOrderId() {
 		return productOrderId;
 	}
-	public void setProductOrderId(Productorder productOrderId) {
+	public void setProductOrderId(ProductOrderDTO productOrderId) {
 		this.productOrderId = productOrderId;
 	}
-	
-	
+
 }

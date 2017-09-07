@@ -228,7 +228,8 @@ public class QualitycheckrawmaterialServiceImpl extends CRUDServiceImpl<Qualityc
 			rawmaterialinventory.setId(rmInventoryDTO.getId());
 			rawmaterialinventory.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			rawmaterialinventory.setIsactive(true);
-			rawmaterialinventory.setRawmaterial(rmInventoryDTO.getRawmaterialId());
+			rawmaterial.setId(rmInventoryDTO.getRawmaterialId().getId());
+			rawmaterialinventory.setRawmaterial(rawmaterial);
 			rawmaterialinventory.setQuantityAvailable(rmInventoryDTO.getQuantityAvailable()+qualitycheckrawmaterial.getGoodQuantity());
 			rawmaterialinventory.setUpdatedDate(new Timestamp(new Date().getTime()));
 			 rawmaterialinventoryService.updateEntity(rawmaterialinventory);

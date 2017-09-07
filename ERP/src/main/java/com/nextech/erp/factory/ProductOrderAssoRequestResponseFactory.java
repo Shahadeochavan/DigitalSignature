@@ -5,7 +5,10 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.nextech.erp.model.Product;
+import com.nextech.erp.model.Productorder;
 import com.nextech.erp.model.Productorderassociation;
+import com.nextech.erp.newDTO.ProductDTO;
 import com.nextech.erp.newDTO.ProductOrderAssociationDTO;
 
 public class ProductOrderAssoRequestResponseFactory {
@@ -14,8 +17,12 @@ public class ProductOrderAssoRequestResponseFactory {
 		Productorderassociation productorderassociation  =  new Productorderassociation();
 		productorderassociation.setId(productOrderAssociationDTO.getId());
 		productorderassociation.setIsactive(true);
-		productorderassociation.setProduct(productOrderAssociationDTO.getProductId());
-		productorderassociation.setProductorder(productOrderAssociationDTO.getProductOrderId());
+		Product product =  new Product();
+		product.setId(productOrderAssociationDTO.getProductId().getId());
+		productorderassociation.setProduct(product);
+		Productorder productorder = new Productorder();
+		productorder.setId(productOrderAssociationDTO.getProductOrderId().getId());
+		productorderassociation.setProductorder(productorder);
 		productorderassociation.setQuantity(productOrderAssociationDTO.getQuantity());
 		productorderassociation.setRemainingQuantity(productOrderAssociationDTO.getQuantity());
 		productorderassociation.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
@@ -26,8 +33,12 @@ public class ProductOrderAssoRequestResponseFactory {
 		Productorderassociation productorderassociation  =  new Productorderassociation();
 		productorderassociation.setId(productOrderAssociationDTO.getId());
 		productorderassociation.setIsactive(true);
-		productorderassociation.setProduct(productOrderAssociationDTO.getProductId());
-		productorderassociation.setProductorder(productOrderAssociationDTO.getProductOrderId());
+		Product product =  new Product();
+		product.setId(productOrderAssociationDTO.getProductId().getId());
+		productorderassociation.setProduct(product);
+		Productorder productorder = new Productorder();
+		productorder.setId(productOrderAssociationDTO.getProductOrderId().getId());
+		productorderassociation.setProductorder(productorder);
 		productorderassociation.setQuantity(productOrderAssociationDTO.getQuantity());
 		productorderassociation.setRemainingQuantity(productOrderAssociationDTO.getQuantity());
 		productorderassociation.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
@@ -40,7 +51,10 @@ public class ProductOrderAssoRequestResponseFactory {
 		productOrderAssociationDTO.setCreatedBy(productorderassociation.getCreatedBy());
 		productOrderAssociationDTO.setCreatedDate(productOrderAssociationDTO.getUpdatedDate());
 		productOrderAssociationDTO.setId(productorderassociation.getId());
-		productOrderAssociationDTO.setProductId(productorderassociation.getProduct());
+		ProductDTO productDTO = new ProductDTO();
+		productDTO.setId(productorderassociation.getProduct().getId());
+		productDTO.setPartNumber(productorderassociation.getProduct().getPartNumber());
+		productOrderAssociationDTO.setProductId(productDTO);
 		productOrderAssociationDTO.setQuantity(productorderassociation.getQuantity());
 		productOrderAssociationDTO.setRemainingQuantity(productorderassociation.getRemainingQuantity());
 		productOrderAssociationDTO.setUpdatedBy(productorderassociation.getUpdatedBy());

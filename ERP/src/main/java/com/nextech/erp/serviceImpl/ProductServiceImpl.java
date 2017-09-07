@@ -91,6 +91,8 @@ public class ProductServiceImpl extends CRUDServiceImpl<Product> implements Prod
 		if(product ==null){
 			return null;
 		}
+		product.setIsactive(false);
+		productDao.update(product);
 		ProductDTO productDTO = ProductRequestResponseFactory.setProductDto(product);
 		return productDTO;
 		

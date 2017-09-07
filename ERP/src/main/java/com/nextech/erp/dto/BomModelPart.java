@@ -1,38 +1,44 @@
 package com.nextech.erp.dto;
 
-import com.nextech.erp.model.Rawmaterial;
-import com.nextech.erp.model.Vendor;
+import com.nextech.erp.newDTO.RawMaterialDTO;
+import com.nextech.erp.newDTO.VendorDTO;
 
 public class BomModelPart extends AbstractDTO{
 
-	private Rawmaterial rawmaterial;
-	private Vendor vendor;
+	private RawMaterialDTO rawmaterial;
+	private VendorDTO vendor;
 	private long quantity;
 	private long cost;
 	private long pricePerUnit;
 
-	public Rawmaterial getRawmaterial() {
-		return rawmaterial;
+	public BomModelPart(){
+		
 	}
-
-	public void setRawmaterial(Rawmaterial rawmaterial) {
-		this.rawmaterial = rawmaterial;
+    public BomModelPart(int id){
+		this.setId(id);
 	}
-
-	public Vendor getVendor() {
-		return vendor;
-	}
-
-	public void setVendor(Vendor vendor) {
-		this.vendor = vendor;
-	}
-
 	public long getQuantity() {
 		return quantity;
 	}
 
 	public void setQuantity(long quantity) {
 		this.quantity = quantity;
+	}
+
+	public RawMaterialDTO getRawmaterial() {
+		return rawmaterial;
+	}
+
+	public void setRawmaterial(RawMaterialDTO rawmaterial) {
+		this.rawmaterial = rawmaterial;
+	}
+
+	public VendorDTO getVendor() {
+		return vendor;
+	}
+
+	public void setVendor(VendorDTO vendor) {
+		this.vendor = vendor;
 	}
 
 	public long getCost() {

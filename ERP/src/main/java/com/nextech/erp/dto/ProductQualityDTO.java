@@ -2,7 +2,7 @@ package com.nextech.erp.dto;
 
 import java.util.List;
 
-import com.nextech.erp.model.Product;
+import com.nextech.erp.newDTO.ProductDTO;
 
 
 public class ProductQualityDTO extends AbstractDTO{
@@ -10,7 +10,7 @@ public class ProductQualityDTO extends AbstractDTO{
 	private long checkQuantity;
 	private long goodQuantity;
 	private long rejectedQuantity;
-	private Product productId;
+	private ProductDTO productId;
 	private String remark;
 
 	private List<ProductQualityPart> productQualityParts;
@@ -44,10 +44,11 @@ public class ProductQualityDTO extends AbstractDTO{
 	public void setRejectedQuantity(long rejectedQuantity) {
 		this.rejectedQuantity = rejectedQuantity;
 	}
-	public Product getProductId() {
+
+	public ProductDTO getProductId() {
 		return productId;
 	}
-	public void setProductId(Product productId) {
+	public void setProductId(ProductDTO productId) {
 		this.productId = productId;
 	}
 	public String getRemark() {

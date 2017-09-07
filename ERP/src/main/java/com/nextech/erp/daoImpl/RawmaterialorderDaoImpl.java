@@ -29,14 +29,6 @@ public class RawmaterialorderDaoImpl extends SuperDaoImpl<Rawmaterialorder>
 	@Override
 	public List<Rawmaterialorder> getRawmaterialorderByStatusId(long statusId,long statusId1,long statusId2)
 			throws Exception {
-/*		session = sessionFactory.openSession();
-		Criteria criteria = session.createCriteria(Rawmaterialorder.class);
-		criteria.add(Restrictions.eq("isactive", true));
-		Criterion criterion = Restrictions.in("status.id", Arrays.asList(statusId,statusId1,statusId2));
-		criteria.add(Restrictions.and(criterion));
-		List<Rawmaterialorder> rawmaterialorder = criteria.list().size() > 0 ? (List<Rawmaterialorder>) criteria.list() : null;
-		return rawmaterialorder;*/
-		
 		  CriteriaBuilder criteriaBuilder=session.getCriteriaBuilder();
 		    CriteriaQuery<Rawmaterialorder> criteriaQuery=criteriaBuilder.createQuery(Rawmaterialorder.class);
 		    Metamodel metamodel=session.getMetamodel();
@@ -61,7 +53,7 @@ public class RawmaterialorderDaoImpl extends SuperDaoImpl<Rawmaterialorder>
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Rawmaterialorder> getRawmaterialorderByVendor(long vendorId)throws Exception {
-		
+		session = sessionFactory.openSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Rawmaterialorder.class);
 		criteria.add(Restrictions.eq("isactive", true));
@@ -75,17 +67,6 @@ public class RawmaterialorderDaoImpl extends SuperDaoImpl<Rawmaterialorder>
 	@Override
 	public List<Rawmaterialorder> getRawmaterialorderByVendorId(long vendorId,
 			long statusId1, long statusId2) throws Exception {
-		
-		
-	/*	@SuppressWarnings("deprecation")
-		Criteria criteria = session.createCriteria(Rawmaterialorder.class);
-		criteria.add(Restrictions.eq("isactive", true));
-		Criterion criterion = Restrictions.in("vendor.id", Arrays.asList(vendorId,statusId1,statusId2));
-		criteria.add(Restrictions.and(criterion));
-		@SuppressWarnings("unchecked")
-		List<Rawmaterialorder> rawmaterialorder = criteria.list().size() > 0 ? (List<Rawmaterialorder>) criteria.list() : null;
-		return rawmaterialorder;*/
-		
 		  CriteriaBuilder criteriaBuilder=session.getCriteriaBuilder();
 		    CriteriaQuery<Rawmaterialorder> criteriaQuery=criteriaBuilder.createQuery(Rawmaterialorder.class);
 		    Metamodel metamodel=session.getMetamodel();

@@ -1,15 +1,16 @@
 package com.nextech.erp.dto;
 
-import com.nextech.erp.model.Rawmaterial;
+import com.nextech.erp.newDTO.RawMaterialDTO;
 
 public class ProductRMAssociationModelParts {
-	private Rawmaterial rawmaterial;
+	private RawMaterialDTO rawmaterial;
 	private long quantity;
 
-	public Rawmaterial getRawmaterial() {
+	
+	public RawMaterialDTO getRawmaterial() {
 		return rawmaterial;
 	}
-	public void setRawmaterial(Rawmaterial rawmaterial) {
+	public void setRawmaterial(RawMaterialDTO rawmaterial) {
 		this.rawmaterial = rawmaterial;
 	}
 	public long getQuantity() {

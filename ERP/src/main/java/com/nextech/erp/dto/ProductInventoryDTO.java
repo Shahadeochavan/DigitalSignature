@@ -1,6 +1,6 @@
 package com.nextech.erp.dto;
 
-import com.nextech.erp.model.Product;
+import com.nextech.erp.newDTO.ProductDTO;
 
 public class ProductInventoryDTO extends AbstractDTO{
 	private String productPartNumber;
@@ -10,7 +10,7 @@ public class ProductInventoryDTO extends AbstractDTO{
 	private String name;
 	private long quantityAvailable;
 	private long rackNumber;
-	private Product productId;
+	private ProductDTO productId;
 	
 	public String getProductPartNumber() {
 		return productPartNumber;
@@ -54,12 +54,11 @@ public class ProductInventoryDTO extends AbstractDTO{
 	public void setRackNumber(long rackNumber) {
 		this.rackNumber = rackNumber;
 	}
-	public Product getProductId() {
+	public ProductDTO getProductId() {
 		return productId;
 	}
-	public void setProductId(Product productId) {
+	public void setProductId(ProductDTO productId) {
 		this.productId = productId;
 	}
-
-
+	
 }

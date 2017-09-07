@@ -1,62 +1,19 @@
 package com.nextech.erp.newDTO;
 
 
-
-
 import java.sql.Time;
-import java.util.Date;
+import com.nextech.erp.dto.AbstractDTO;
 
-public class RMOrderInvoiceDTO {
-
-	
-	private long id;
-	
-	private Date createDate;
-
-	private String description;
-
+public class RMOrderInvoiceDTO extends AbstractDTO {
 	private String firstName;
-
 	private String lastName;
-
 	private Time intime;
-
 	private String invoice_No;
-	
 	private String licence_no;
-
 	private Time outtime;
-
 	private int po_No;
-
 	private String vehicleNo;
-
 	private String vendorname;
-
-	public long getId() {
-		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
-	}
-
-	public Date getCreateDate() {
-		return createDate;
-	}
-
-	public void setCreateDate(Date createDate) {
-		this.createDate = createDate;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
 	public String getFirstName() {
 		return firstName;
 	}
@@ -128,6 +85,4 @@ public class RMOrderInvoiceDTO {
 	public void setVendorname(String vendorname) {
 		this.vendorname = vendorname;
 	}
-	
-	
 }

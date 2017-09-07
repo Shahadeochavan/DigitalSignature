@@ -10,7 +10,6 @@ public class UserTypeDTO extends AbstractDTO{
 	}
 
 	public UserTypeDTO() {
-		// TODO Auto-generated constructor stub
 	}
 
 	public String getUsertypeName() {

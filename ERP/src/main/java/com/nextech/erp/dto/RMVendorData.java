@@ -1,7 +1,6 @@
 package com.nextech.erp.dto;
 
 import com.nextech.erp.model.Rawmaterial;
-import com.nextech.erp.model.Vendor;
 
 public class RMVendorData {
 

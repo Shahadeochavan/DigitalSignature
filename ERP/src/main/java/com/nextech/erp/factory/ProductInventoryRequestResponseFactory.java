@@ -16,7 +16,9 @@ public class ProductInventoryRequestResponseFactory {
 		productinventory.setMaximum_quantity(productInventoryDTO.getMaximumQuantity());
 		productinventory.setMinimum_quantity(productInventoryDTO.getMinimumQuantity());
 		productinventory.setName(productInventoryDTO.getName());
-		productinventory.setProduct(productInventoryDTO.getProductId());
+		Product product = new Product();
+		product.setId(productInventoryDTO.getProductId().getId());
+		productinventory.setProduct(product);
 		productinventory.setQuantityavailable(productInventoryDTO.getQuantityAvailable());
 		productinventory.setRacknumber(productInventoryDTO.getRackNumber());
 		productinventory.setIsactive(true);
@@ -31,7 +33,9 @@ public class ProductInventoryRequestResponseFactory {
 		productinventory.setMaximum_quantity(productInventoryDTO.getMaximumQuantity());
 		productinventory.setMinimum_quantity(productInventoryDTO.getMinimumQuantity());
 		productinventory.setName(productInventoryDTO.getName());
-		productinventory.setProduct(productInventoryDTO.getProductId());
+		Product product = new Product();
+		product.setId(productInventoryDTO.getProductId().getId());
+		productinventory.setProduct(product);
 		productinventory.setQuantityavailable(productInventoryDTO.getQuantityAvailable());
 		productinventory.setRacknumber(productInventoryDTO.getRackNumber());
 		productinventory.setIsactive(true);
@@ -56,7 +60,10 @@ public class ProductInventoryRequestResponseFactory {
 		productInventoryDTO.setMaximumQuantity(productinventory.getMaximum_quantity());
 		productInventoryDTO.setMinimumQuantity(productinventory.getMinimum_quantity());
 		productInventoryDTO.setName(productinventory.getName());
-		productInventoryDTO.setProductId(productinventory.getProduct());
+		ProductDTO productDTO =  new ProductDTO();
+		productDTO.setId(productinventory.getProduct().getId());
+		productDTO.setPartNumber(productinventory.getProduct().getPartNumber());
+		productInventoryDTO.setProductId(productDTO);
 		productInventoryDTO.setQuantityAvailable(productinventory.getQuantityavailable());
 		productInventoryDTO.setRackNumber(productinventory.getRacknumber());
 		productInventoryDTO.setActive(true);

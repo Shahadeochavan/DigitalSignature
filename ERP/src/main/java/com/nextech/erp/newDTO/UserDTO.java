@@ -18,7 +18,6 @@ public class UserDTO extends AbstractDTO {
 		this.setId(id);
 	}
 	public UserDTO() {
-		// TODO Auto-generated constructor stub
 	}
 	public String getUserId() {
 		return userId;

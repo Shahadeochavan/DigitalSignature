@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
@@ -34,6 +35,7 @@ import com.nextech.erp.model.Reportusertypeassociation;
 import com.nextech.erp.model.User;
 import com.nextech.erp.model.Usertype;
 import com.nextech.erp.newDTO.NotificationDTO;
+import com.nextech.erp.newDTO.PageDTO;
 import com.nextech.erp.newDTO.UserDTO;
 import com.nextech.erp.newDTO.UserTypePageAssoDTO;
 import com.nextech.erp.service.MailService;
@@ -163,7 +165,13 @@ public class UserController {
 				}
 				if(!usertypepageassociations.isEmpty()){
 				for (UserTypePageAssoDTO usertypepageassociation : usertypepageassociations) {
-					pages.add(usertypepageassociation.getPage());
+					Page pageDTO =  new Page();
+					pageDTO.setId(usertypepageassociation.getPage().getId());
+					pageDTO.setMenu(usertypepageassociation.getPage().getMenu());
+					pageDTO.setPageName(usertypepageassociation.getPage().getPageName());
+					pageDTO.setSubmenu(usertypepageassociation.getPage().getSubmenu());
+					pageDTO.setUrl(usertypepageassociation.getPage().getUrl());
+					pages.add(pageDTO);
 				}
 				result.put("pages", pages);
 				}

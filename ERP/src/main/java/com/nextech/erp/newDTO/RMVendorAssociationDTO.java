@@ -8,7 +8,6 @@ public class RMVendorAssociationDTO extends AbstractDTO {
 	private float pricePerUnit;
 	private RawMaterialDTO rawmaterialId;
 	private VendorDTO vendorId;
-	
 	public RMVendorAssociationDTO(){
 		
 	}
@@ -33,5 +32,4 @@ public class RMVendorAssociationDTO extends AbstractDTO {
 	public void setVendorId(VendorDTO vendorId) {
 		this.vendorId = vendorId;
 	}
-	
 }
