@@ -4,6 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.nextech.erp.model.Rawmaterial;
 import com.nextech.erp.model.Rawmaterialvendorassociation;
+import com.nextech.erp.model.Taxstructure;
 import com.nextech.erp.model.Vendor;
 import com.nextech.erp.newDTO.RMVendorAssociationDTO;
 import com.nextech.erp.newDTO.RawMaterialDTO;
@@ -22,6 +23,9 @@ public class RMVendorAssoRequestResponseFactory {
 		rawmaterialvendorassociation.setVendor(vendor);
 		rawmaterialvendorassociation.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 		rawmaterialvendorassociation.setId(rmVendorAssociationDTO.getId());
+		Taxstructure taxstructure =  new Taxstructure();
+		taxstructure.setId(rmVendorAssociationDTO.getTaxStructureDTO().getId());
+		rawmaterialvendorassociation.setTaxstructure(taxstructure);
 		rawmaterialvendorassociation.setIsactive(true);
 		return rawmaterialvendorassociation;
 	}
@@ -51,6 +55,8 @@ public class RMVendorAssoRequestResponseFactory {
 		RawMaterialDTO  rawMaterialDTO = new RawMaterialDTO();
 		rawMaterialDTO.setId(rawmaterialvendorassociation.getRawmaterial().getId());
 		rawMaterialDTO.setPartNumber(rawmaterialvendorassociation.getRawmaterial().getPartNumber());
+		rawMaterialDTO.setPricePerUnit(rawmaterialvendorassociation.getRawmaterial().getPricePerUnit());
+		rawMaterialDTO.setDescription(rawmaterialvendorassociation.getRawmaterial().getDescription());
 		rawAssociationDTO.setRawmaterialId(rawMaterialDTO);
 		rawAssociationDTO.setUpdatedBy(rawmaterialvendorassociation.getUpdatedBy());
 		rawAssociationDTO.setUpdatedDate(rawmaterialvendorassociation.getUpdatedDate());

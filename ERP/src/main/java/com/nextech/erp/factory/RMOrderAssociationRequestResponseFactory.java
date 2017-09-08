@@ -55,6 +55,8 @@ public class RMOrderAssociationRequestResponseFactory {
 		rmOrderAssociationDTO.setQuantity(rawmaterialorderassociation.getQuantity());
 		RawMaterialDTO  rawMaterialDTO =  new RawMaterialDTO();
 		rawMaterialDTO.setId(rawmaterialorderassociation.getRawmaterial().getId());
+		rawMaterialDTO.setPartNumber(rawmaterialorderassociation.getRawmaterial().getPartNumber());
+		rawMaterialDTO.setDescription(rawmaterialorderassociation.getRawmaterial().getDescription());
 		rmOrderAssociationDTO.setRawmaterialId(rawMaterialDTO);
 		RawmaterialOrderDTO rawmaterialOrderDTO = new RawmaterialOrderDTO();
 		rawmaterialOrderDTO.setId(rawmaterialorderassociation.getRawmaterialorder().getId());

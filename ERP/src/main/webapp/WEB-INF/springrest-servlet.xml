@@ -45,6 +45,7 @@
 				<value>com.nextech.erp.model.Statustransition</value>
 				<value>com.nextech.erp.model.Status</value>
 				<value>com.nextech.erp.model.Product</value>
+				<value>com.nextech.erp.model.Taxstructure</value>
 				<value>com.nextech.erp.model.Unit</value>
 				<value>com.nextech.erp.model.Rawmaterial</value>
 				<value>com.nextech.erp.model.Productrawmaterialassociation</value>

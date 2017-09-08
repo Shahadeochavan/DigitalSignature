@@ -16,6 +16,7 @@ import org.springframework.stereotype.Repository;
 
 import com.nextech.erp.dao.ProductorderDao;
 import com.nextech.erp.model.Productorder;
+import com.nextech.erp.model.Rawmaterialorder;
 
 @Repository
 
@@ -51,7 +52,6 @@ public class ProductorderDaoImpl extends SuperDaoImpl<Productorder> implements
 		    TypedQuery<Productorder> typedQuery = session.createQuery(criteriaQuery);
 		    return typedQuery.getResultList();
 	}
-	@SuppressWarnings("unchecked")
 	@Override
 	public List<Productorder> getInCompleteProductOrder(long clientId,long statusId,long statusId1) {
 		
@@ -74,17 +74,15 @@ public class ProductorderDaoImpl extends SuperDaoImpl<Productorder> implements
 	    return typedQuery.getResultList();
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	public List<Productorder> getInCompleteProductOrders(long statusId) {
-		
-	session = sessionFactory.openSession();
-		@SuppressWarnings("deprecation")
-		Criteria criteria = session.createCriteria(Productorder.class);
-		Criterion criterion = Restrictions.not(Restrictions.eq("status.id", statusId));
-		criteria.add(Restrictions.and(criterion));
-		criteria.add(Restrictions.eq("isactive", true));
-		return (List<Productorder>) (criteria.list().size() > 0 ? criteria.list() : null);
+		session = sessionFactory.openSession();
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<Productorder> criteria = builder.createQuery(Productorder.class);
+		Root<Productorder> userRoot  = (Root<Productorder>) criteria.from(Productorder.class);
+		criteria.select(userRoot).where(builder.equal(userRoot.get("isactive"), true),builder.not(builder.equal(userRoot.get("status"), statusId)));
+		TypedQuery<Productorder> query = session.createQuery(criteria);
+		return query.getResultList();
 	}
 
 }

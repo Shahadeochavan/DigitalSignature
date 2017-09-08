@@ -34,6 +34,8 @@ public class RMOrderRequestResponseFactory {
 		rawmaterialorderassociation.setQuantity(rawAssociationDTO.getQuantity());
 		Rawmaterial rawmaterial =  new Rawmaterial();
 		rawmaterial.setId(rawAssociationDTO.getRawmaterialId().getId());
+		rawmaterial.setPartNumber(rawAssociationDTO.getRawmaterialId().getPartNumber());
+		rawmaterial.setDescription(rawAssociationDTO.getRawmaterialId().getDescription());
 		rawmaterialorderassociation.setRawmaterial(rawmaterial);
 		rawmaterialorderassociation.setRawmaterialorder(rawmaterialorder);
 		rawmaterialorderassociation.setRemainingQuantity(rawAssociationDTO.getQuantity());

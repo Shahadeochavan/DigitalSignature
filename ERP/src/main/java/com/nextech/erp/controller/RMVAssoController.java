@@ -22,8 +22,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.factory.RMVendorAssoRequestResponseFactory;
+import com.nextech.erp.factory.TaxStructureRequestResponseFactory;
+import com.nextech.erp.model.Taxstructure;
 import com.nextech.erp.newDTO.RMVendorAssociationDTO;
+import com.nextech.erp.newDTO.TaxStructureDTO;
 import com.nextech.erp.service.RMVAssoService;
+import com.nextech.erp.service.TaxstructureService;
 import com.nextech.erp.status.Response;
 import com.nextech.erp.status.UserStatus;
 
@@ -32,6 +36,9 @@ import com.nextech.erp.status.UserStatus;
 public class RMVAssoController {
 	@Autowired
 	RMVAssoService rmvAssoService;
+	
+	@Autowired
+	TaxstructureService taxstructureService;
 	@Autowired
 	private MessageSource messageSource;
 
@@ -47,6 +54,11 @@ public class RMVAssoController {
 			if (rmvAssoService.getRMVAssoByVendorIdRMId(
 					rmVendorAssociationDTO.getVendorId().getId(),
 					rmVendorAssociationDTO.getRawmaterialId().getId()) == null){
+				long id=	taxstructureService.addEntity(TaxStructureRequestResponseFactory.setTaxStructure(rmVendorAssociationDTO.getTaxStructureDTO(), request));
+				TaxStructureDTO  taxStructureDTO =  new TaxStructureDTO();
+				taxStructureDTO.setId(id);
+				rmVendorAssociationDTO.setTaxStructureDTO(taxStructureDTO);
+			
 				rmvAssoService.addEntity(RMVendorAssoRequestResponseFactory.setRMVendorAsso(rmVendorAssociationDTO, request));
 			}	
 			else

@@ -13,6 +13,7 @@ public class ProductDTO  extends AbstractDTO{
 	private String name;
 	private String partNumber;
 	private long ratePerUnit;
+	private TaxStructureDTO taxStructureDTO;
 	
 	public ProductDTO(){
 		
@@ -50,4 +51,11 @@ public class ProductDTO  extends AbstractDTO{
 	public void setRatePerUnit(long ratePerUnit) {
 		this.ratePerUnit = ratePerUnit;
 	}
+	public TaxStructureDTO getTaxStructureDTO() {
+		return taxStructureDTO;
+	}
+	public void setTaxStructureDTO(TaxStructureDTO taxStructureDTO) {
+		this.taxStructureDTO = taxStructureDTO;
+	}
+	
 }

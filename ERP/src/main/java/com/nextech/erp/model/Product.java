@@ -92,6 +92,9 @@ public class Product implements Serializable {
 	@JsonIgnore
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "product", cascade = CascadeType.ALL)
 	private List<Productrawmaterialassociation> productrawmaterialassociations;
+	
+	@ManyToOne
+	private Taxstructure taxstructure;
 
 
 	public Product() {
@@ -370,5 +373,11 @@ public class Product implements Serializable {
 	public void setRatePerUnit(long ratePerUnit) {
 		this.ratePerUnit = ratePerUnit;
 	}
-	
+	public Taxstructure getTaxstructure() {
+		return this.taxstructure;
+	}
+
+	public void setTaxstructure(Taxstructure taxstructure) {
+		this.taxstructure = taxstructure;
+	}
 }

@@ -5,9 +5,11 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.persistence.PersistenceException;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.io.IOUtils;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,19 +26,23 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+
 import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.dto.ProductNewAssoicatedList;
 import com.nextech.erp.factory.ProductInventoryRequestResponseFactory;
 import com.nextech.erp.factory.ProductRequestResponseFactory;
+import com.nextech.erp.factory.TaxStructureRequestResponseFactory;
 import com.nextech.erp.model.Product;
 import com.nextech.erp.model.Productrawmaterialassociation;
 import com.nextech.erp.newDTO.ProductDTO;
+import com.nextech.erp.newDTO.TaxStructureDTO;
 import com.nextech.erp.service.MailService;
 import com.nextech.erp.service.NotificationService;
 import com.nextech.erp.service.NotificationUserAssociationService;
 import com.nextech.erp.service.ProductRMAssoService;
 import com.nextech.erp.service.ProductService;
 import com.nextech.erp.service.ProductinventoryService;
+import com.nextech.erp.service.TaxstructureService;
 import com.nextech.erp.service.UserService;
 import com.nextech.erp.service.VendorService;
 import com.nextech.erp.status.Response;
@@ -75,6 +81,9 @@ public class ProductController {
 	@Autowired
 	ServletContext context;
 	
+	@Autowired
+	TaxstructureService taxstructureService;
+	
 	@Autowired 
 	NotificationUserAssociationService notificationUserAssociationService;
 	
@@ -84,7 +93,8 @@ public class ProductController {
 			@RequestParam(value = "file", required = false) MultipartFile inputFile,
 			@RequestParam("clientPartNumber") String clientPartNumber,
 			@RequestParam("name") String name,@RequestParam("description")String description,
-			@RequestParam("partNumber") String partNumber) {
+			@RequestParam("partNumber") String partNumber,@RequestParam("cgst") double cgst,@RequestParam("igst") double igst,
+			@RequestParam("other1") double other1,@RequestParam("other2") double other2,@RequestParam("sgst") double sgst) {
 		try {
 			if (productService.getProductByName(name) == null) {
 
@@ -97,6 +107,11 @@ public class ProductController {
 			}
 			if(inputFile==null){
 			    ProductDTO productDTO =	setProductDTO(clientPartNumber, name, description, partNumber);
+			  //TODO Save call Tax Structure
+			    TaxStructureDTO taxStructureDTO = setTaxStructureDTO(cgst, igst, other1, other2, sgst);
+			 long taxid =   taxstructureService.addEntity(TaxStructureRequestResponseFactory.setTaxStructure(taxStructureDTO, request));
+			    taxStructureDTO.setId(taxid);
+			    productDTO.setTaxStructureDTO(taxStructureDTO);
 			    long id =	productService.addEntity(ProductRequestResponseFactory.setProduct(productDTO, request));
 		       	productDTO.setId(id); 
 				addProductInventory(productDTO,Long.parseLong(request.getAttribute("current_user").toString()));
@@ -104,6 +119,11 @@ public class ProductController {
 				String destinationFilePath = ImageUploadUtil.imgaeUpload(inputFile);
 				ProductDTO productDTO =	setProductDTO(clientPartNumber, name, description, partNumber);
 				productDTO.setDesign(destinationFilePath);
+				//TODO Save call Tax Structure
+			    TaxStructureDTO taxStructureDTO = setTaxStructureDTO(cgst, igst, other1, other2, sgst);
+			      long taxid =   taxstructureService.addEntity(TaxStructureRequestResponseFactory.setTaxStructure(taxStructureDTO, request));
+				taxStructureDTO.setId(taxid);
+			     productDTO.setTaxStructureDTO(taxStructureDTO);
 			    long id =	productService.addEntity(ProductRequestResponseFactory.setProduct(productDTO, request));
 			   	productDTO.setId(id); 
 				addProductInventory(productDTO,Long.parseLong(request.getAttribute("current_user").toString()));
@@ -269,6 +289,16 @@ public class ProductController {
 		   productDTO.setPartNumber(partNumber);
 		   productDTO.setDescription(description);
 		return productDTO;
+	}
+	
+	public TaxStructureDTO setTaxStructureDTO(double cgst,double igst,double other1,double other2,double sgst){
+		TaxStructureDTO taxStructureDTO =  new TaxStructureDTO();
+		taxStructureDTO.setCgst(cgst);
+		taxStructureDTO.setIgst(igst);
+		taxStructureDTO.setOther1(other1);
+		taxStructureDTO.setOther2(other2);
+		taxStructureDTO.setSgst(sgst);
+		return taxStructureDTO;
 	}
 	
 }

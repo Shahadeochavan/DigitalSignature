@@ -47,6 +47,9 @@ public class Rawmaterialvendorassociation implements Serializable {
 	//bi-directional many-to-one association to Vendor
 	@ManyToOne
 	private Vendor vendor;
+	
+	@ManyToOne
+	private Taxstructure taxstructure;
 
 	public Rawmaterialvendorassociation() {
 	}
@@ -124,6 +127,12 @@ public class Rawmaterialvendorassociation implements Serializable {
 
 	public void setVendor(Vendor vendor) {
 		this.vendor = vendor;
+	}
+	public Taxstructure getTaxstructure() {
+		return taxstructure;
+	}
+	public void setTaxstructure(Taxstructure taxstructure) {
+		this.taxstructure = taxstructure;
 	}
 
 }

@@ -336,6 +336,8 @@ public class RawmaterialorderController {
 
 	private void mailSending(NotificationDTO notification,RawmaterialOrderDTO rawmaterialOrderDTO,VendorDTO vendor,String fileName,List<RMOrderModelData> rmOrderModelDatas) throws Exception{
 	Mail mail =  userService.emailNotification(notification);
+	 String userEmailCC = mail.getMailCc()+","+vendor.getEmail();
+	    mail.setMailCc(userEmailCC);
 		mail.setMailSubject(notification.getSubject());
 		mail.setAttachment(fileName);
 		Map<String, Object> model = new HashMap<String, Object>();

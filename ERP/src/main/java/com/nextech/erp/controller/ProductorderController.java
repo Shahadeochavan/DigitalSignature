@@ -329,6 +329,8 @@ public class ProductorderController {
 
 	private void mailSending(NotificationDTO notification,List<ProductOrderData> productOrderDatas,ClientDTO client,String fileName,ProductOrderDTO productOrderDTO) throws Exception{
 	Mail mail =  userService.emailNotification(notification); 
+	 String userEmailCC = mail.getMailCc()+","+client.getEmailId();
+	    mail.setMailCc(userEmailCC);
 	    mail.setAttachment(fileName);
 		mail.setMailSubject(notification.getSubject());
         Map < String, Object > model = new HashMap < String, Object >();

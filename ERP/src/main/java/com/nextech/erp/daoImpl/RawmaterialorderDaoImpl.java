@@ -9,8 +9,6 @@ import javax.persistence.criteria.Root;
 import javax.persistence.metamodel.EntityType;
 import javax.persistence.metamodel.Metamodel;
 
-import org.hibernate.Criteria;
-import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.nextech.erp.dao.RawmaterialorderDao;
@@ -50,16 +48,23 @@ public class RawmaterialorderDaoImpl extends SuperDaoImpl<Rawmaterialorder>
 		return query.getResultList();
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public List<Rawmaterialorder> getRawmaterialorderByVendor(long vendorId)throws Exception {
-		session = sessionFactory.openSession();
+	/*	session = sessionFactory.openSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Rawmaterialorder.class);
 		criteria.add(Restrictions.eq("isactive", true));
 		criteria.add(Restrictions.eq("vendor.id", vendorId));
 		criteria.add(Restrictions.and(Restrictions.not(Restrictions.eq("status.id", STATUS_RAW_MATERIAL_ORDER_COMPLETE))));
-		return criteria.list();
+		return criteria.list();*/
+		
+		session = sessionFactory.openSession();
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<Rawmaterialorder> criteria = builder.createQuery(Rawmaterialorder.class);
+		Root<Rawmaterialorder> userRoot  = (Root<Rawmaterialorder>) criteria.from(Rawmaterialorder.class);
+		criteria.select(userRoot).where(builder.equal(userRoot.get("vendor"), vendorId),builder.equal(userRoot.get("isactive"), true),builder.and(builder.not(builder.equal(userRoot.get("status"), STATUS_RAW_MATERIAL_ORDER_COMPLETE))));
+		TypedQuery<Rawmaterialorder> query = session.createQuery(criteria);
+		return query.getResultList();
 	}
 
 

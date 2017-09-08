@@ -3,6 +3,7 @@ package com.nextech.erp.factory;
 import javax.servlet.http.HttpServletRequest;
 
 import com.nextech.erp.model.Product;
+import com.nextech.erp.model.Taxstructure;
 import com.nextech.erp.newDTO.ProductDTO;
 
 public class ProductRequestResponseFactory {
@@ -16,6 +17,9 @@ public class ProductRequestResponseFactory {
 		product.setPartNumber(productDTO.getPartNumber());
 		product.setName(productDTO.getName());
 		product.setIsactive(true);
+		Taxstructure taxstructure =  new Taxstructure();
+		taxstructure.setId(productDTO.getTaxStructureDTO().getId());
+		product.setTaxstructure(taxstructure);
 		product.setRatePerUnit(productDTO.getRatePerUnit());
 		product.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 		return product;
