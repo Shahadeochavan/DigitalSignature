@@ -144,7 +144,5 @@ public class ProductorderassociationDaoImpl extends
 		TypedQuery<Productorderassociation> query = session.createQuery(criteria);
 		List<Productorderassociation> list = query.getResultList();
 		return list.isEmpty() ? null : list;
-		
 	}
-
 }

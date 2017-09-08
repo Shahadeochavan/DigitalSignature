@@ -8,15 +8,9 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import javax.persistence.metamodel.EntityType;
 import javax.persistence.metamodel.Metamodel;
-
-import org.hibernate.Criteria;
-import org.hibernate.criterion.Criterion;
-import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
-
 import com.nextech.erp.dao.ProductorderDao;
 import com.nextech.erp.model.Productorder;
-import com.nextech.erp.model.Rawmaterialorder;
 
 @Repository
 
@@ -25,7 +19,6 @@ public class ProductorderDaoImpl extends SuperDaoImpl<Productorder> implements
 
 	@Override
 	public Productorder getProductorderByProductOrderId(long pOrderId)throws Exception {
-		
 		session = sessionFactory.openSession();
 		CriteriaBuilder builder = session.getCriteriaBuilder();
 		CriteriaQuery<Productorder> criteria = builder.createQuery(Productorder.class);

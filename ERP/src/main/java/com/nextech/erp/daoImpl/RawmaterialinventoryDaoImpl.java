@@ -18,7 +18,6 @@ public class RawmaterialinventoryDaoImpl extends SuperDaoImpl<Rawmaterialinvento
 	
 	@Override
 	public Rawmaterialinventory getByRMId(long id) throws Exception {
-		
 		session = sessionFactory.openSession();
 		CriteriaBuilder builder = session.getCriteriaBuilder();
 		CriteriaQuery<Rawmaterialinventory> criteria = builder.createQuery(Rawmaterialinventory.class);
@@ -31,6 +30,4 @@ public class RawmaterialinventoryDaoImpl extends SuperDaoImpl<Rawmaterialinvento
 		    }
 		    return results.get(0);
 	}
-
-	
 }

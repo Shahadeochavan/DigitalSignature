@@ -18,7 +18,6 @@ public class ProductinventoryDaoImpl extends SuperDaoImpl<Productinventory>
 	@Override
 	public Productinventory getProductinventoryByProductId(long productId)
 			throws Exception {
-		
 		session = sessionFactory.openSession();
 		CriteriaBuilder builder = session.getCriteriaBuilder();
 		CriteriaQuery<Productinventory> criteria = builder.createQuery(Productinventory.class);

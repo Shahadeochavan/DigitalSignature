@@ -16,7 +16,6 @@ public class QualityCheckGuidelineDaoImpl extends SuperDaoImpl<Qualitycheckguide
 	@Override
 	public Qualitycheckguideline getQCGuidlineByRMId(long rmId)
 			throws Exception {
-		
 		session = sessionFactory.openSession();
 		CriteriaBuilder builder = session.getCriteriaBuilder();
 		CriteriaQuery<Qualitycheckguideline> criteria = builder.createQuery(Qualitycheckguideline.class);
@@ -33,7 +32,6 @@ public class QualityCheckGuidelineDaoImpl extends SuperDaoImpl<Qualitycheckguide
 	@Override
 	public Qualitycheckguideline getQCGuidelineByProductId(long productId)
 			throws Exception {
-		
 		session = sessionFactory.openSession();
 		CriteriaBuilder builder = session.getCriteriaBuilder();
 		CriteriaQuery<Qualitycheckguideline> criteria = builder.createQuery(Qualitycheckguideline.class);
@@ -46,5 +44,4 @@ public class QualityCheckGuidelineDaoImpl extends SuperDaoImpl<Qualitycheckguide
 		    }
 		    return list.get(0);
 	}
-
 }

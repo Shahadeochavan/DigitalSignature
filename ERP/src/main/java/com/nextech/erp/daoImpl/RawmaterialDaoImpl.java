@@ -29,7 +29,6 @@ public class RawmaterialDaoImpl extends SuperDaoImpl<Rawmaterial> implements Raw
 	@Override
 	public List<Rawmaterialvendorassociation> getRawmaterialByVenodrId(long id)
 			throws Exception {
-		
 		session = sessionFactory.openSession();
 		CriteriaBuilder builder = session.getCriteriaBuilder();
 		CriteriaQuery<Rawmaterialvendorassociation> criteria = builder.createQuery(Rawmaterialvendorassociation.class);
@@ -41,7 +40,6 @@ public class RawmaterialDaoImpl extends SuperDaoImpl<Rawmaterial> implements Raw
 
 	@Override
 	public Rawmaterial getRMByRMId(long id) throws Exception {
-		
 		session = sessionFactory.openSession();
 		CriteriaBuilder builder = session.getCriteriaBuilder();
 		CriteriaQuery<Rawmaterial> criteria = builder.createQuery(Rawmaterial.class);
@@ -57,7 +55,6 @@ public class RawmaterialDaoImpl extends SuperDaoImpl<Rawmaterial> implements Raw
 
 	@Override
 	public List<Rawmaterial> getRMByRMTypeId(long id) throws Exception {
-		
 		session = sessionFactory.openSession();
 		CriteriaBuilder builder = session.getCriteriaBuilder();
 		CriteriaQuery<Rawmaterial> criteria = builder.createQuery(Rawmaterial.class);
@@ -66,6 +63,5 @@ public class RawmaterialDaoImpl extends SuperDaoImpl<Rawmaterial> implements Raw
 		TypedQuery<Rawmaterial> query = session.createQuery(criteria);
 		return query.getResultList();
 	}
-	
 }
 

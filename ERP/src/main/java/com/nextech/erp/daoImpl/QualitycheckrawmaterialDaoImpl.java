@@ -35,7 +35,6 @@ public class QualitycheckrawmaterialDaoImpl extends
 	@Override
 	public List<Qualitycheckrawmaterial> getQualitycheckrawmaterialByInvoiceId(
 			long invoiceId) throws Exception {
-		
 		session = sessionFactory.openSession();
 		CriteriaBuilder builder = session.getCriteriaBuilder();
 		CriteriaQuery<Qualitycheckrawmaterial> criteria = builder.createQuery(Qualitycheckrawmaterial.class);

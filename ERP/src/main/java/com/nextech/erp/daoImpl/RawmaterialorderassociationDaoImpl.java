@@ -50,5 +50,4 @@ public class RawmaterialorderassociationDaoImpl extends SuperDaoImpl<Rawmaterial
 		    }
 		    return results.get(0);
 	}
-
 }
