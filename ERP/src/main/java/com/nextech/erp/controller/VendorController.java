@@ -57,10 +57,6 @@ public class VendorController {
 	@Autowired
 	MailService mailService;
 	
-	
-	
-	String multipleTO="";
-
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addVendor(Model model,
 			@Valid @RequestBody VendorDTO  vendorDTO, BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
@@ -141,18 +137,15 @@ public class VendorController {
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody Response getVendor() {
-
 		List<VendorDTO> vendorDTOs = null;
 		try {
 			vendorDTOs = vendorService.getVendorList(vendorDTOs);
 			if(vendorDTOs==null){
 				return new Response(1,"There is no vendor list");
 			}
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		return new Response(1,vendorDTOs);
 	}
 
@@ -170,6 +163,7 @@ public class VendorController {
 		}
 
 	}
+	
 	private void mailSending(VendorDTO vendorDTO,HttpServletRequest request,HttpServletResponse response,NotificationDTO  notificationDTO) throws Exception{
 		 Mail mail = userService.emailNotification(notificationDTO);
 		 String vendorEmail = mail.getMailTo()+","+vendorDTO.getEmail();
@@ -183,9 +177,6 @@ public class VendorController {
 	        model.put("location", "Pune");
 	        model.put("signature", "www.NextechServices.in");
 	        mail.setModel(model);
-
 		mailService.sendEmailWithoutPdF(mail, notificationDTO);
 	}
-
-
 }

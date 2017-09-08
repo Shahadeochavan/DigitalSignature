@@ -23,13 +23,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.dto.ProductRMAssociationDTO;
 import com.nextech.erp.dto.ProductRMAssociationModelParts;
 import com.nextech.erp.dto.RMVendorData;
 import com.nextech.erp.factory.ProductRMAssoRequestResponseFactory;
-import com.nextech.erp.model.Rawmaterial;
 import com.nextech.erp.newDTO.ProductDTO;
 import com.nextech.erp.newDTO.RMVendorAssociationDTO;
 import com.nextech.erp.newDTO.RawMaterialDTO;

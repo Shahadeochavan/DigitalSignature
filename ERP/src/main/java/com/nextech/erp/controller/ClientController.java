@@ -117,7 +117,6 @@ public class ClientController {
 	public @ResponseBody UserStatus updateClient(@RequestBody ClientDTO clientDTO,
 			HttpServletRequest request, HttpServletResponse response) {
 		try {
-			
 			ClientDTO oldClientInfo = clientService.getClientDTOById(clientDTO.getId());
 			System.out.println(oldClientInfo);
 			if(clientDTO.getCompanyName().equals(oldClientInfo.getCompanyName())){  	
@@ -147,18 +146,15 @@ public class ClientController {
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody Response getClientList() {
-
 		List<ClientDTO> clientList = null;
 		try {
 			clientList = clientService.getClientList(clientList);
 			if(clientList==null){
 				return new Response(1,"There is no client list");
 			}
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		return new Response(1,clientList);
 	}
 
@@ -189,8 +185,6 @@ public class ClientController {
 	        model.put("location", "Pune");
 	        model.put("signature", "www.NextechServices.in");
 	        mail.setModel(model);
-
 		mailService.sendEmailWithoutPdF(mail, notificationDTO);
 	}
-	
 }

@@ -4,10 +4,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.List;
-
 import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
-
 import org.apache.commons.io.IOUtils;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,12 +22,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-
 import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.factory.RMRequestResponseFactory;
 import com.nextech.erp.model.Rawmaterial;
-import com.nextech.erp.model.Rmtype;
-import com.nextech.erp.model.Unit;
 import com.nextech.erp.newDTO.RMTypeDTO;
 import com.nextech.erp.newDTO.RMVendorAssociationDTO;
 import com.nextech.erp.newDTO.RawMaterialDTO;

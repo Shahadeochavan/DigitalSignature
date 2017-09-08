@@ -30,8 +30,6 @@ public class UserTypeController {
 	@Autowired
 	UserTypeService userTypeService;
 	
-	
-
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addUserType(@Valid @RequestBody UserTypeDTO userTypeDTO,
 			BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
