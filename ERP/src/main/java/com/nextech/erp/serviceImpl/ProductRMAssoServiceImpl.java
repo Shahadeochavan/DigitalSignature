@@ -3,11 +3,9 @@ package com.nextech.erp.serviceImpl;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.nextech.erp.dao.ProductDao;
 import com.nextech.erp.dao.ProductRMAssoDao;
 import com.nextech.erp.dao.RawmaterialDao;
@@ -17,7 +15,6 @@ import com.nextech.erp.factory.ProductRMAssoRequestResponseFactory;
 import com.nextech.erp.model.Product;
 import com.nextech.erp.model.Productrawmaterialassociation;
 import com.nextech.erp.model.Rawmaterial;
-import com.nextech.erp.newDTO.RawMaterialDTO;
 import com.nextech.erp.service.ProductRMAssoService;
 @Service
 public class ProductRMAssoServiceImpl extends CRUDServiceImpl<Productrawmaterialassociation> implements ProductRMAssoService {

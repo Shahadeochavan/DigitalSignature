@@ -21,7 +21,6 @@ import com.nextech.erp.constants.ERPEmailConstants;
 @ComponentScan(basePackages = "com.nextech.erp.util")
 public class MailConfig {
 	
-	
 	@Autowired
 	private MessageSource messageSource;
 
@@ -33,13 +32,11 @@ public class MailConfig {
         mailSender.setPort(587);
         mailSender.setUsername(messageSource.getMessage(ERPEmailConstants.EMAIL_ID_SENDING_FROM, null, null));
         mailSender.setPassword(messageSource.getMessage(ERPEmailConstants.EMAIL_PASSWORD, null, null));
-
         Properties javaMailProperties = new Properties();
         javaMailProperties.put("mail.smtp.starttls.enable", "true");
         javaMailProperties.put("mail.smtp.auth", "true");
         javaMailProperties.put("mail.transport.protocol", "smtp");
         javaMailProperties.put("mail.debug", "true");
-
         mailSender.setJavaMailProperties(javaMailProperties);
         return mailSender;
     }

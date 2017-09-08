@@ -66,7 +66,6 @@ public class ProductinventoryServiceImpl extends CRUDServiceImpl<Productinventor
 		productinventoryDao.update(productinventory);
 		ProductInventoryDTO productInventoryDTO = ProductInventoryRequestResponseFactory.setProductDTO(productinventory);
 		return productInventoryDTO;
-		
 	}
 
 }

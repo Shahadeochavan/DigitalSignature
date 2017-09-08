@@ -32,7 +32,6 @@ public class EncryptDecrypt {
 
 	public void init(char[] pass, byte[] salt, int iterations)throws SecurityException{
 		try{
-
 			PBEParameterSpec ps = new javax.crypto.spec.PBEParameterSpec(salt,20);
 			SecretKeyFactory kf = SecretKeyFactory.getInstance("PBEWithMD5AndDES");
 			SecretKey k = kf.generateSecret(new javax.crypto.spec.PBEKeySpec(pass));

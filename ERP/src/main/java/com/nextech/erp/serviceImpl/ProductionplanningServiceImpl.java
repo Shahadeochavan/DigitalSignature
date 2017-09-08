@@ -217,7 +217,6 @@ public class ProductionplanningServiceImpl extends
 					System.out.println("There are no orders for Product so there is no need to create a production plan : " + product.getId());
 				}
 		}
-
 		return productionPlanList;
 	}
 
@@ -250,8 +249,6 @@ public class ProductionplanningServiceImpl extends
 				productionplanning.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 				productionplanningDao.update(productionplanning);
 			}
-
-
 		}
 	}
 	@Override
@@ -272,7 +269,6 @@ public class ProductionplanningServiceImpl extends
 	@Override
 	public List<ProductionPlanningDTO> getProductionplanByProdutId(Date date,long productID)
 			throws Exception {
-		
 		List<ProductionPlanningDTO> productionPlanningDTOs =  new ArrayList<ProductionPlanningDTO>();
 		List<Productionplanning> productionplannings = productionplanningDao.getProductionplanByProdutId(date,productID);
 		if(productionplannings.isEmpty()){
@@ -303,7 +299,6 @@ public class ProductionplanningServiceImpl extends
 	@Override
 	public ProductionPlanningDTO getProductionPlanById(long id)
 			throws Exception {
-		
 		Productionplanning productionplanning = productionplanningDao.getById(Productionplanning.class, id);
 		if(productionplanning==null){
 			return null;
@@ -314,7 +309,6 @@ public class ProductionplanningServiceImpl extends
 
 	@Override
 	public ProductionPlanningDTO deleteProduction(long id) throws Exception {
-		
 		Productionplanning productionplanning = productionplanningDao.getById(Productionplanning.class, id);
 		if(productionplanning==null){
 			return null;
@@ -323,6 +317,5 @@ public class ProductionplanningServiceImpl extends
 		productionplanningDao.update(productionplanning);
 		ProductionPlanningDTO productionPlanningDTO = ProductionPlanningRequestResponseFactory.setProductionPlanningDTO(productionplanning);
 		return productionPlanningDTO;
-		
 	}
 }

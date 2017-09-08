@@ -136,9 +136,5 @@ ProductorderassociationDao productorderassociationDao;
 		productorderassociationDao.update(productorderassociation);
 		ProductOrderAssociationDTO productOrderAssociationDTO = ProductOrderAssoRequestResponseFactory.setProductOrderAssoDto(productorderassociation);
 		return productOrderAssociationDTO;
-		
-		
 	}
-
-
 }
