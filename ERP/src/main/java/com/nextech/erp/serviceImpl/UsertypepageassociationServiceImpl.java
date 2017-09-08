@@ -59,7 +59,6 @@ public class UsertypepageassociationServiceImpl extends CRUDServiceImpl<Usertype
 
 	@Override
 	public UserTypePageAssoDTO getUserTypeDto(long id) throws Exception {
-		
 		Usertypepageassociation usertypepageassociation =  usertypepageassociationDao.getById(Usertypepageassociation.class, id);
 		UserTypePageAssoDTO userTypePageAssoDTO = UserTypePageAssoFactory.setUserTypePageDTO(usertypepageassociation);
 		return userTypePageAssoDTO;
@@ -67,7 +66,6 @@ public class UsertypepageassociationServiceImpl extends CRUDServiceImpl<Usertype
 
 	@Override
 	public UserTypePageAssoDTO deleteUserTypePage(long id) throws Exception {
-		
 		Usertypepageassociation usertypepageassociation = usertypepageassociationDao.getById(Usertypepageassociation.class, id);
 		if(usertypepageassociation==null){
 			return null;
@@ -82,7 +80,6 @@ public class UsertypepageassociationServiceImpl extends CRUDServiceImpl<Usertype
 	@Override
 	public UserTypePageAssoDTO addMultipleUserTypePageAsso(UserTypePageAssoDTO userTypePageAssoDTO, String currentUser)
 			throws Exception {
-		
 		for(UserTypePageAssoPart userTypePageAssoPart : userTypePageAssoDTO.getUserTypePageAssoParts()){
 			Usertypepageassociation usertypepageassociation =	 UserTypePageAssoFactory.setUserTypePageAss(userTypePageAssoDTO);
 			 usertypepageassociation =  setMultiplePage(userTypePageAssoPart);
@@ -103,7 +100,6 @@ public class UsertypepageassociationServiceImpl extends CRUDServiceImpl<Usertype
 	@Override
 	public Usertypepageassociation getUserTypePageAssoByPageIduserTypeId(
 			long pageId, long userTypeId) throws Exception {
-		
 		return usertypepageassociationDao.getUserTypePageAssoByPageIduserTypeId(pageId, userTypeId);
 	}
 

@@ -54,7 +54,6 @@ public class StatusServiceImpl extends CRUDServiceImpl<Status> implements Status
 	}
 	@Override
 	public List<StatusDTO> getStatusByType(String type) throws Exception {
-		
 		List<StatusDTO> statusDTOs = new ArrayList<StatusDTO>();
 		List<Status> statusList= statusDao.getStatusByType(type);
 		if(statusList.isEmpty()){

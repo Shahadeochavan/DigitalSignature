@@ -25,7 +25,6 @@ public class StatustransitionServiceImpl extends CRUDServiceImpl<Statustransitio
 
 	@Override
 	public List<StatusTransitionDTO> getStatusTranstionList() throws Exception {
-		
 		List<StatusTransitionDTO> statusTransitionDTOs =  new ArrayList<StatusTransitionDTO>();
 		List<Statustransition> statustransitions = statustransitionDao.getList(Statustransition.class);
 		if(statustransitions.isEmpty()){

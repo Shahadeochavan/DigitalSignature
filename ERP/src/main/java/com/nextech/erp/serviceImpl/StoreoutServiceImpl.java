@@ -59,14 +59,11 @@ public class StoreoutServiceImpl extends CRUDServiceImpl<Storeout> implements St
 	@Override
 	public UserStatus addStoreOutRM(StoreOutDTO storeOutDTO, HttpServletRequest request)
 			throws Exception {
-		
-		
 		Productionplanning productionplanning = productionplanningDao.getById(Productionplanning.class,
 				storeOutDTO.getProductionPlanId());
 		Storeout storeout = StoreoutRequestResponseFactory.setStoreOut(storeOutDTO, request);
 		storeout.setStatus(statusDao.getById(Status.class,Long.parseLong(messageSource.getMessage(ERPConstants.ADDED_STORE_OUT, null, null))));
 		storeoutDao.add(storeout);
-
 		for (StoreOutPart storeOutPart : storeOutDTO.getStoreOutParts()) {
 			Storeoutrm storeoutrm = setStoreParts(storeOutPart);
 			Rawmaterialinventory rawmaterialinventory = rawmaterialinventoryDao.getByRMId(storeoutrm.getRawmaterial().getId());
@@ -82,7 +79,6 @@ public class StoreoutServiceImpl extends CRUDServiceImpl<Storeout> implements St
 				} else {
 					return new UserStatus(0,messageSource.getMessage(ERPConstants.TO_CHECK_QUANTITY_IN_RMINVENTORY, null, null));
 				}
-
 				Storeoutrmassociation storeoutrmassociation = new Storeoutrmassociation();
 				storeoutrmassociation.setStoreout(storeout);
 				storeoutrmassociation.setStoreoutrm(storeoutrm);
@@ -96,6 +92,7 @@ public class StoreoutServiceImpl extends CRUDServiceImpl<Storeout> implements St
 				// Please add RM to Inventory
 			}
 		}
+		
 		productionplanning.setStatus(statusDao.getById(Status.class,
 				Long.parseLong(messageSource.getMessage(ERPConstants.PRODUCTION_PLAN_READY_TO_START, null, null))));
 		if(!storeOutDTO.isSelectedStoreOut()){
@@ -103,8 +100,8 @@ public class StoreoutServiceImpl extends CRUDServiceImpl<Storeout> implements St
 		}
 		productionplanningDao.update(productionplanning);
 		return new UserStatus(1, "Storeout added Successfully !");
-		
 	}
+	
 	private Storeoutrm setStoreParts(StoreOutPart storeOutPart) throws Exception {
 		Storeoutrm storeoutrm = new Storeoutrm();
 		storeoutrm.setRawmaterial(rawmaterialDao.getById(Rawmaterial.class, storeOutPart.getRawmaterial()));
@@ -115,7 +112,6 @@ public class StoreoutServiceImpl extends CRUDServiceImpl<Storeout> implements St
 	}
 	@Override
 	public List<StoreOutDTO> getStoreOutlist() throws Exception {
-		
 		List<StoreOutDTO> storeOutDTOs =  new ArrayList<StoreOutDTO>();
 		List<Storeout> storeouts =  storeoutDao.getList(Storeout.class);
 		if(storeouts.isEmpty()){
@@ -125,12 +121,10 @@ public class StoreoutServiceImpl extends CRUDServiceImpl<Storeout> implements St
 		StoreOutDTO storeOutDTO = StoreoutRequestResponseFactory.setStoreOutDTO(storeout);
 		storeOutDTOs.add(storeOutDTO);
 		}
-		
 		return storeOutDTOs;
 	}
 	@Override
 	public StoreOutDTO getStoreOutById(long id) throws Exception {
-		
 		Storeout storeout  =  storeoutDao.getById(Storeout.class, id);
 		if(storeout==null){
 			return  null;
@@ -140,7 +134,6 @@ public class StoreoutServiceImpl extends CRUDServiceImpl<Storeout> implements St
 	}
 	@Override
 	public StoreOutDTO deleteStoreOutById(long id) throws Exception {
-		
 		Storeout storeout = storeoutDao.getById(Storeout.class, id);
 		if(storeout==null){
 			return  null;
@@ -149,6 +142,5 @@ public class StoreoutServiceImpl extends CRUDServiceImpl<Storeout> implements St
 		storeoutDao.update(storeout);
 		StoreOutDTO storeOutDTO = StoreoutRequestResponseFactory.setStoreOutDTO(storeout);
 		return storeOutDTO;
-		
 	}
 }

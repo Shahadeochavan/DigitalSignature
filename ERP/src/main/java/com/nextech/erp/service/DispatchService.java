@@ -5,10 +5,8 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import com.nextech.erp.dto.DispatchDTO;
-import com.nextech.erp.dto.DispatchProductDTO;
 import com.nextech.erp.model.Dispatch;
 import com.nextech.erp.status.Response;
-import com.nextech.erp.status.UserStatus;
 
 
 public interface DispatchService  extends CRUDService<Dispatch>{

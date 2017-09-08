@@ -43,7 +43,6 @@ public class SecuritycheckoutServiceImpl extends CRUDServiceImpl<Securitycheckou
 	@Override
 	public SecurityCheckOutDTO addSecurityCheckOut(SecurityCheckOutDTO securityCheckOutDTO, HttpServletRequest request)throws Exception {
 		
-		
 		Securitycheckout securitycheckout = SecurityCheckOutRequestResponseFactory.setSecurityCheckOut(securityCheckOutDTO, request);
 		securitycheckout.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 		securitycheckout.setStatus(statusDao.getById(Status.class, Long.parseLong(messageSource.getMessage(ERPConstants.SECURITY_CHECK_COMPLETE, null, null))));
