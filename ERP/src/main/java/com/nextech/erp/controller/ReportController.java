@@ -212,6 +212,30 @@ public class ReportController {
 		return null;
 	}
 	
+	
+	@Transactional @RequestMapping(value = "/rm/{id}/{rmtypeId}", method = RequestMethod.GET, produces = APPLICATION_SCV, headers = "Accept=application/json")
+	public UserStatus getRMList(@PathVariable("id") long id,@PathVariable("rmtypeId") long rmtypeId, final HttpServletRequest request,
+			final HttpServletResponse response) throws Exception {
+		Connection connection = null;
+		try {
+			connection = sessionFactory.getSessionFactoryOptions().getServiceRegistry()
+					.getService(ConnectionProvider.class).getConnection();
+			JasperReportBuilder report = DynamicReports.report();
+			report.addColumn(ReportColumn.RM_ID);
+			report.addColumn(ReportColumn.RM_DESCRIPTION);
+			report.addColumn(ReportColumn.PART_NUMBER);
+			report.title(Components.text(ReportColumn.RM_REPORT).setHorizontalAlignment(HorizontalAlignment.CENTER));
+			ReportColumn.RM_REPORT_QUERY = ReportColumn.RM_REPORT_QUERY+rmtypeId;
+			report.setDataSource(ReportColumn.RM_REPORT_QUERY, connection);
+			String fileName = ReportColumn.RM_REPORT_PATH;
+
+			downloadReport(report, id, fileName, response);
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
+		return null;
+	}
+	
 	//@Scheduled(initialDelay=10000, fixedRate=60000)
 	private void executeSchedular(){
 		System.out.println("Executed Scheduled method.");

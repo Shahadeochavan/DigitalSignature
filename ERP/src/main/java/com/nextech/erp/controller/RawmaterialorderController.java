@@ -366,12 +366,16 @@ public class RawmaterialorderController {
 				.hasNext();) {
 			ProductOrderDTO productOrderDTO = (ProductOrderDTO) iterator.next();
 			Productorderassociation productorderassociation = productorderassociationService.getProductAssoByOrder(productOrderDTO.getId());
+			if(productorderassociation !=null){
 			Long productId = productorderassociation.getProduct().getId();
 			if(productQuantityMap.containsKey(productId)){
 				productQuantityMap.put(productId, (productQuantityMap.get(productId) + productorderassociation.getRemainingQuantity()));
 			}else {
 				productQuantityMap.put(productId, productorderassociation.getRemainingQuantity());
 			}
+		}else{
+			return  new Response(1,"There is no product order assocition");
+		}
 		}
 		
 		Set<Entry<Long, Long>> entries = productQuantityMap.entrySet();

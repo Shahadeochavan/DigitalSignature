@@ -24,4 +24,13 @@ public class ReportColumn {
 	public static ColumnBuilder<?, ?> EMAIL_ID = Columns.column("Email Id", "emailid", DataTypes.stringType());
 	public static ColumnBuilder<?, ?> ADDRESS = Columns.column("Address", "address", DataTypes.stringType());
 	public static ColumnBuilder<?, ?> CONTACT_NUMBER = Columns.column("Contact Number", "contactnumber", DataTypes.stringType());
+	
+	public static String RM_REPORT = "RM";
+	public static String RM_REPORT_PATH = "D:/report/rm.pdf";
+	public static String RM_REPORT_QUERY = "SELECT ID,description,part_number from ekerp.rawmaterial where rmTypeId = ";
+	
+	/*********************************COLUMNS**************************************/
+	public static ColumnBuilder<?, ?> RM_ID = Columns.column("RM Id", "id", DataTypes.integerType());
+	public static ColumnBuilder<?, ?> RM_DESCRIPTION = Columns.column("Description", "description", DataTypes.stringType());
+	public static ColumnBuilder<?, ?> PART_NUMBER = Columns.column("RM Part Number", "part_number", DataTypes.stringType());
 }

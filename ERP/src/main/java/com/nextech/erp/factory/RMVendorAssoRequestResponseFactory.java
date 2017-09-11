@@ -8,6 +8,7 @@ import com.nextech.erp.model.Taxstructure;
 import com.nextech.erp.model.Vendor;
 import com.nextech.erp.newDTO.RMVendorAssociationDTO;
 import com.nextech.erp.newDTO.RawMaterialDTO;
+import com.nextech.erp.newDTO.TaxStructureDTO;
 import com.nextech.erp.newDTO.VendorDTO;
 
 public class RMVendorAssoRequestResponseFactory {
@@ -65,6 +66,14 @@ public class RMVendorAssoRequestResponseFactory {
 		vendorDTO.setId(rawmaterialvendorassociation.getVendor().getId());
 		vendorDTO.setCompanyName(rawmaterialvendorassociation.getVendor().getCompanyName());
 		rawAssociationDTO.setVendorId(vendorDTO);
+		TaxStructureDTO taxStructureDTO =  new TaxStructureDTO();
+		taxStructureDTO.setId(rawmaterialvendorassociation.getTaxstructure().getId());
+		taxStructureDTO.setCgst(rawmaterialvendorassociation.getTaxstructure().getCgst());
+		taxStructureDTO.setIgst(rawmaterialvendorassociation.getTaxstructure().getIgst());
+		taxStructureDTO.setOther1(rawmaterialvendorassociation.getTaxstructure().getOther1());
+		taxStructureDTO.setOther2(rawmaterialvendorassociation.getTaxstructure().getOther2());
+		taxStructureDTO.setSgst(rawmaterialvendorassociation.getTaxstructure().getSgst());
+		rawAssociationDTO.setTaxStructureDTO(taxStructureDTO);
 		rawAssociationDTO.setCreatedBy(rawmaterialvendorassociation.getCreatedBy());
 		return rawAssociationDTO;
 	}

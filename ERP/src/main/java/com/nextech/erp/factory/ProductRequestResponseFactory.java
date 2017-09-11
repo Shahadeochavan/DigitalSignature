@@ -5,6 +5,7 @@ import javax.servlet.http.HttpServletRequest;
 import com.nextech.erp.model.Product;
 import com.nextech.erp.model.Taxstructure;
 import com.nextech.erp.newDTO.ProductDTO;
+import com.nextech.erp.newDTO.TaxStructureDTO;
 
 public class ProductRequestResponseFactory {
 	
@@ -48,6 +49,14 @@ public class ProductRequestResponseFactory {
 		productDTO.setDesign(product.getDesign());
 		productDTO.setPartNumber(product.getPartNumber());
 		productDTO.setName(product.getName());
+		TaxStructureDTO taxStructureDTO =  new TaxStructureDTO();
+		taxStructureDTO.setId(product.getTaxstructure().getId());
+		taxStructureDTO.setCgst(product.getTaxstructure().getCgst());
+		taxStructureDTO.setIgst(product.getTaxstructure().getIgst());
+		taxStructureDTO.setOther1(product.getTaxstructure().getOther1());
+		taxStructureDTO.setOther2(product.getTaxstructure().getOther2());
+		taxStructureDTO.setSgst(product.getTaxstructure().getSgst());
+		productDTO.setTaxStructureDTO(taxStructureDTO);
 		productDTO.setActive(true);
 		productDTO.setCreatedBy(product.getCreatedBy());
 		productDTO.setCreatedDate(product.getCreatedDate());
