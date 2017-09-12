@@ -190,6 +190,9 @@ public class ProductorderServiceImpl extends CRUDServiceImpl<Productorder> imple
 					productOrderData.setQuantity(productOrderAssociationDTO.getQuantity());
 					productOrderData.setRate((long)(totalRate));
 					productOrderData.setAmount((long)totalRate*productOrderAssociationDTO.getQuantity());
+					productOrderData.setCgst(product.getTaxStructureDTO().getCgst());
+					productOrderData.setSgst(product.getTaxStructureDTO().getSgst());
+					productOrderData.setIgst(product.getTaxStructureDTO().getIgst());
 				}
 				productOrderDatas.add(productOrderData);
 			} else {

@@ -7,6 +7,9 @@ public class ProductOrderData {
 	private long amount;
 	private String partNumber;
 	private long rmQuantity;
+	private double cgst;
+	private double igst;
+	private double sgst;
 
 
 	public String getProductName() {
@@ -57,6 +60,28 @@ public class ProductOrderData {
 	public void setPartNumber(String partNumber) {
 		this.partNumber = partNumber;
 	}
-	
 
+	public double getCgst() {
+		return cgst;
+	}
+
+	public void setCgst(double cgst) {
+		this.cgst = cgst;
+	}
+
+	public double getIgst() {
+		return igst;
+	}
+
+	public void setIgst(double igst) {
+		this.igst = igst;
+	}
+
+	public double getSgst() {
+		return sgst;
+	}
+
+	public void setSgst(double sgst) {
+		this.sgst = sgst;
+	}
 }
