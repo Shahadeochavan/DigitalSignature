@@ -130,7 +130,6 @@ public class CreatePdfForDispatchProduct {
 		   // set table width a percentage of the page width
 		   table.setWidthPercentage(100f);
 
-		   //insert column headings
 		   insertCell(table, "PRODUCT PART NUMBER", Element.ALIGN_LEFT, 1, bfBold12);
 		   insertCell(table, "CLIENT PART NUMBER", Element.ALIGN_LEFT, 1, bfBold12);
 		   insertCell(table, "QUANTITY DISPATCHED", Element.ALIGN_LEFT, 1, bfBold12);

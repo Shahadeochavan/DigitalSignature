@@ -162,7 +162,6 @@ public class CreatePDFProductOrder {
 		   // set table width a percentage of the page width
 		   table.setWidthPercentage(100f);
 
-		   //insert column headings
 		   insertCell(table, "Item Description", Element.ALIGN_RIGHT, 1, bfBold12);
 		   insertCell(table, "Quantity", Element.ALIGN_LEFT, 1, bfBold12);
 		   insertCell(table, "Rate", Element.ALIGN_LEFT, 1, bfBold12);

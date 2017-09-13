@@ -176,11 +176,9 @@ public class CreatePdfForBomProduct {
 	  cell.setHorizontalAlignment(align);
 	  //set the cell column span in case you want to merge two or more cells
 	  cell.setColspan(colspan);
-	  //in case there is no text and you wan to create an empty row
 	  if(text.trim().equalsIgnoreCase("")){
 	   cell.setMinimumHeight(15f);
 	  }
-	  //add the call to the table
 	  table.addCell(cell);
 	  
 	 }
