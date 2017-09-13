@@ -136,10 +136,6 @@ public class CreatePdfForDispatchProduct {
 		   insertCell(table, "QUANTITY DISPATCHED", Element.ALIGN_LEFT, 1, bfBold12);
 		   insertCell(table, "AMOUNT", Element.ALIGN_LEFT, 1, bfBold12);
 		   table.setHeaderRows(1);
-	
-		 //  insertCell(table, "", Element.ALIGN_LEFT, 6, bfBold12);
-		   //create section heading by cell merging
-		 //  insertCell(table, "BOM DETAILS ...", Element.ALIGN_LEFT, 6, bfBold12);
 
      for (DispatchProductDTO dispatchProductDTO : dispatchProductDTOs) {
 	    insertCell(table, dispatchProductDTO.getProductName(), Element.ALIGN_CENTER, 1, bf12);

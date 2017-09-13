@@ -131,7 +131,7 @@
 												#set ( $row = $row + 1 ) 
 												#set ( $igstTotal = $igstTotal + $igst ) 
 												#set ( $row = $row + 1 )
-												#set ( $productSubtotal = $productSubtotal + $productOrderDataTotal+$sgstTotal+$cgstTotal+$igstTotal ) 
+												#set ( $productSubtotal = $productSubtotal + $productOrderDataTotal ) 
 												#set ( $row = $row + 1 )  
 											#end
 											<tr bgcolor="#E3EEFF">
@@ -148,6 +148,7 @@
 											</tr>
 											<tr bgcolor="#E3EEFF">
 												<td colspan="7" align="center"><strong> Total </strong> </td>
+													#set ( $productSubtotal = $productSubtotal +$sgstTotal+$cgstTotal+$igstTotal )
 												<td align="center">$productSubtotal</td> 
 											</tr>
 										</table>

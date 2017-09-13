@@ -10,6 +10,9 @@ public class RMOrderModelData {
 	private String description;
 	private float tax;
 	private long rate;
+	private double cgst;
+	private double igst;
+	private double sgst;
 
 	public String getVendorName() {
 		return vendorName;
@@ -73,6 +76,30 @@ public class RMOrderModelData {
 
 	public void setRate(long rate) {
 		this.rate = rate;
+	}
+
+	public double getCgst() {
+		return cgst;
+	}
+
+	public void setCgst(double cgst) {
+		this.cgst = cgst;
+	}
+
+	public double getIgst() {
+		return igst;
+	}
+
+	public void setIgst(double igst) {
+		this.igst = igst;
+	}
+
+	public double getSgst() {
+		return sgst;
+	}
+
+	public void setSgst(double sgst) {
+		this.sgst = sgst;
 	}
 
 }

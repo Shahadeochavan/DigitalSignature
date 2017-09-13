@@ -28,6 +28,10 @@ public class Response {
 		this.code = code;
 		this.data = data;
 	}
+	public Response(int code, String message) {
+		this.code = code;
+		this.message = message;
+	}
 	public Response(Object data){
 		this.data=data;
 	}

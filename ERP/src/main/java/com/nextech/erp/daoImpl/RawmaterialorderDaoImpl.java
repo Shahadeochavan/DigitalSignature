@@ -27,6 +27,7 @@ public class RawmaterialorderDaoImpl extends SuperDaoImpl<Rawmaterialorder>
 	@Override
 	public List<Rawmaterialorder> getRawmaterialorderByStatusId(long statusId,long statusId1,long statusId2)
 			throws Exception {
+		session = sessionFactory.openSession();
 		  CriteriaBuilder criteriaBuilder=session.getCriteriaBuilder();
 		    CriteriaQuery<Rawmaterialorder> criteriaQuery=criteriaBuilder.createQuery(Rawmaterialorder.class);
 		    Metamodel metamodel=session.getMetamodel();

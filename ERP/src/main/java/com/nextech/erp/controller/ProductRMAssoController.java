@@ -105,7 +105,9 @@ public class ProductRMAssoController {
 			if (bindingResult.hasErrors()) {
 				return new UserStatus(0, bindingResult.getFieldError().getDefaultMessage());
 			}
-			
+			if(productRMAssociationDTO.getProductRMAssociationModelParts().isEmpty()){
+				return new UserStatus(0,"In Product RM Assocition data is Empty !Please dont send Empty data");
+			}
 			productRMAssoService.addMultipleRawmaterialorder(productRMAssociationDTO, request.getAttribute("current_user").toString());
 			return new UserStatus(1, "Multiple Rawmaterialorder added Successfully !");
 		} catch (ConstraintViolationException cve) {

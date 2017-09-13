@@ -55,11 +55,17 @@
                                                       <th align="left">DESCRIPTION</th>
                                                        <th align="left">Quantity</th>
                                                       <th align="left">PPU</th>
-                                                      <th align="left">Amount</th>
+                                                       <th align="left">SGST</th>
+												       <th align="left">CGST</th>
+												        <th align="left">IGST</th>
+											          	<th align="left">Amount</th>
                                               </tr>
 											#set ( $row = 1 ) 
 											#set ( $rmtotal = 0) 
 											#set($total=0)
+											#set ( $sgstTotal = 0) 
+											#set ( $cgstTotal = 0) 
+											#set ( $igstTotal = 0) 
 											#foreach ($rmOrderModelData in $rmOrderModelDatas ) 
 												#if ( $row % 2 == 0 ) 
 													#set ($color="#CBDCFF") 
@@ -73,27 +79,79 @@
                                            <td align="left">$rmOrderModelData.description</td>
                                            <td align="center">$rmOrderModelData.quantity</td>
                                            <td align="center">$rmOrderModelData.pricePerUnit</td>
-                                           <td align="center"> #set ( $rmOrderDataTotal = $rmOrderModelData.pricePerUnit * $rmOrderModelData.quantity )
-                                            $rmOrderDataTotal
-                                          </td>
-                                       </tr>
-												#set ( $rmtotal = $rmtotal + $rmOrderDataTotal ) 
-												  
+                                      	<td align="center">
+												  <table style=" border: 1px solid black;border-collapse: collapse;">
+												      <tr>
+												        <th style=" border: 1px solid black;border-collapse: collapse;">Percentage</th>
+												        <th>Amount</th>
+												      </tr>
+												      <tr>
+												        <td style=" border: 1px solid black;border-collapse: collapse;">$rmOrderModelData.sgst</td>
+												        	<td align="center" style=" border: 1px solid black;border-collapse: collapse;">#set ( $sgst =
+												       	$rmOrderModelData.pricePerUnit *$rmOrderModelData.sgst/100)$sgst</td>	
+												      </tr>
+												      
+												  </table>
+												</td>	
+												<td align="center">
+												  <table style=" border: 1px solid black;border-collapse: collapse;">
+												      <tr>
+												        <th style=" border: 1px solid black;border-collapse: collapse;">Percentage</th>
+												        <th>Amount</th>
+												      </tr>
+												      <tr>
+												        <td style=" border: 1px solid black;border-collapse: collapse;">$rmOrderModelData.cgst</td>
+												            	<td align="center" style=" border: 1px solid black;border-collapse: collapse;">#set ( $cgst =
+													$rmOrderModelData.pricePerUnit *$rmOrderModelData.cgst/100)$cgst</td>
+												      </tr>
+												      
+												  </table>
+												</td>	
+												<td align="center">
+												  <table style=" border: 1px solid black;border-collapse: collapse;">
+												      <tr>
+												        <th style=" border: 1px solid black;border-collapse: collapse;">Percentage</th>
+												        <th>Amount</th>
+												      </tr>
+												      <tr>
+												        <td style=" border: 1px solid black;border-collapse: collapse;">$rmOrderModelData.igst</td>
+												     	<td align="center" style=" border: 1px solid black;border-collapse: collapse;">#set ( $igst =
+												       	$rmOrderModelData.pricePerUnit *$rmOrderModelData.igst/100)$igst</td>
+												      </tr>
+												      
+												  </table>
+												</td>
+												<td align="center">#set ( $rmOrderTotal =
+													$rmOrderModelData.pricePerUnit * $rmOrderModelData.quantity )
+													$rmOrderTotal</td>	
+											</tr>
+												
+												#set ( $sgstTotal = $sgstTotal + $sgst ) 
 												#set ( $row = $row + 1 ) 
+												#set ( $cgstTotal = $cgstTotal + $cgst ) 
+												#set ( $row = $row + 1 ) 
+												#set ( $igstTotal = $igstTotal + $igst ) 
+												#set ( $row = $row + 1 )
+												#set ( $total = $total + $rmOrderTotal ) 
+												#set ( $row = $row + 1 )  
 											#end
 											<tr bgcolor="#E3EEFF">
-												<td colspan="5" align="left"><strong>Sub Total </strong> </td>
-												<td align="center">$rmtotal</td> 
+												<td colspan="8" align="center"><strong>SGST Total </strong> </td>
+												<td align="center">$sgstTotal</td> 
 											</tr>
-											  <tr bgcolor="#E3EEFF">
-                                                <td colspan="5" align="left"><strong> Tax  </strong></td>
-                                               <td align="center">${tax}</td>
-                                             </tr>
-											  <tr bgcolor="#E3EEFF">
-											   #set ( $total = $rmtotal + $tax)
-                                                <td colspan="5" align="left"><strong> Total </strong></td>
-                                                <td align="center">$total</td>
-                                            </tr>
+											<tr bgcolor="#E3EEFF">
+												<td colspan="8" align="center"><strong>CGST Total </strong> </td>
+												<td align="center">$cgstTotal</td> 
+											</tr>
+											<tr bgcolor="#E3EEFF">
+												<td colspan="8" align="center"><strong>IGST Total </strong> </td>
+												<td align="center">$igstTotal</td> 
+											</tr>
+											<tr bgcolor="#E3EEFF">
+												<td colspan="8" align="center"><strong> Total </strong> </td>
+													#set ( $total = $total +$sgstTotal+$cgstTotal+$igstTotal )
+												<td align="center">$total</td> 
+											</tr>
 										</table>
 										<div style align="left">
 											<div>In case of any further assistance or clarification

@@ -7,9 +7,6 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
@@ -21,10 +18,7 @@ import com.itextpdf.text.Phrase;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
-import com.nextech.erp.model.Client;
-import com.nextech.erp.model.Productorder;
 import com.nextech.erp.newDTO.ClientDTO;
-import com.nextech.erp.service.RawmaterialorderService;
 
 public class CreatePDF {
 
@@ -90,15 +84,7 @@ public class CreatePDF {
 		   creteEmptyLine(preface, 2);
 		   document.add(preface);
 		   SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
-		   PdfPTable pdfPTable = new PdfPTable(1);
-		   pdfPTable.setWidthPercentage(100);
-		   pdfPTable.addCell(getCell("TAX INVOICE", PdfPCell.ALIGN_CENTER,bf12));
-		   document.add(pdfPTable);
-		   
-		   
-		    
 		    float[] columnWidths1 = {40f, 30f,30f};
-			   //create PDF table with the given widths
 		     PdfPTable table00 = new PdfPTable(columnWidths1);
 		     table00.setWidthPercentage(100f);
 		   
@@ -207,7 +193,7 @@ public class CreatePDF {
 			   
 			   Font bf1 = new Font(FontFamily.TIMES_ROMAN, 10,Font.BOLD); 
 			  //specify column widths
-			   float[] columnWidths = {1.5f, 1.3f, 1.3f, 1.8f,1.8f,1.8f,1.3f};
+			   float[] columnWidths = {1.5f, 1.2f, 1.2f, 1.9f,1.9f,1.9f,1.3f};
 			   //create PDF table with the given widths
 			   PdfPTable table = new PdfPTable(columnWidths);
 			   // set table width a percentage of the page width
@@ -217,14 +203,13 @@ public class CreatePDF {
 			   insertCell(table, "Description of goods", Element.ALIGN_RIGHT, 1, bfBold12);
 			   insertCell(table, "Quantity", Element.ALIGN_LEFT, 1, bfBold12);
 			   insertCell(table, "Rate", Element.ALIGN_LEFT, 1, bfBold12);
-			//   insertCell(table, "CGST", Element.ALIGN_LEFT, 1, bfBold12);
 			   PdfPTable pdfPTable =  new PdfPTable(2);
 			   PdfPCell cell = new PdfPCell(new Phrase("CGST", bfBold12));
 			   cell.setColspan(2);
 			   cell.setRowspan(2);
 			   pdfPTable.addCell(cell);
-			   pdfPTable.addCell("Percentage");
-			   pdfPTable.addCell("Amount");
+			   pdfPTable.addCell(new Phrase("Percentage",bfBold));
+			   pdfPTable.addCell(new Phrase("Amount",bfBold));
 			   table.addCell(pdfPTable);
 			   
 			   PdfPTable pdfPTable1 =  new PdfPTable(2);
@@ -232,20 +217,18 @@ public class CreatePDF {
 			   cell1.setColspan(2);
 			   cell1.setRowspan(2);
 			   pdfPTable1.addCell(cell1);
-			   pdfPTable1.addCell("Percentage");
-			   pdfPTable1.addCell("Amount");
+			   pdfPTable1.addCell(new Phrase("Percentage",bfBold));
+			   pdfPTable1.addCell(new Phrase("Amount",bfBold));
 			   table.addCell(pdfPTable1);
-			 //  insertCell(table, "SGST", Element.ALIGN_LEFT, 1, bfBold12);
 			   
 			   PdfPTable pdfPTable2 =  new PdfPTable(2);
 			   PdfPCell cell2 = new PdfPCell(new Phrase("IGST", bfBold12));
 			   cell2.setColspan(2);
 			   cell2.setRowspan(2);
 			   pdfPTable2.addCell(cell2);
-			   pdfPTable2.addCell("Percentage");
-			   pdfPTable2.addCell("Amount");
+			   pdfPTable2.addCell(new Phrase("Percentage",bfBold));
+			   pdfPTable2.addCell(new Phrase("Amount",bfBold));
 			   table.addCell(pdfPTable2);
-			  // insertCell(table, "IGST", Element.ALIGN_LEFT, 1, bfBold12);
 			   insertCell(table, "Amount", Element.ALIGN_LEFT, 1, bfBold12);
 			   table.setHeaderRows(1);
 
@@ -257,22 +240,47 @@ public class CreatePDF {
 		     cgstTax = cgstTax*productOrderData.getRate();
 		     cgstTax = cgstTax/100;
 		     cgstTotal  =  cgstTotal+cgstTax;
-		     String cgst = productOrderData.getCgst()+" | "+cgstTax;
-		    insertCell(table, (cgst), Element.ALIGN_RIGHT, 1, bf12);
+		     PdfPTable table13 = new PdfPTable(2);
+		     table13.setWidthPercentage(100);
+		     PdfPTable pdtable = new PdfPTable(1);
+		     pdtable.addCell(getCell(""+productOrderData.getCgst(), PdfPCell.ALIGN_LEFT,bf12));
+		     
+		     PdfPTable pdtable1 = new PdfPTable(1);
+		     pdtable1.addCell(getCell(""+cgstTax, PdfPCell.ALIGN_LEFT,bf12));
+		     table13.addCell(pdtable);
+		     table13.addCell(pdtable1);
+		     table.addCell(table13);
+		  //  insertCell(table, (cgst), Element.ALIGN_RIGHT, 1, bf12);
 		    
 		    double sgstTax = productOrderData.getSgst();
 		    sgstTax = sgstTax*productOrderData.getRate();
 		    sgstTax = sgstTax/100;
 		    sgstTotal = sgstTotal+sgstTax;
-            String sgst = productOrderData.getSgst()+" | "+sgstTax;
-		    insertCell(table, (sgst), Element.ALIGN_RIGHT, 1, bf12);
+		    PdfPTable table131 = new PdfPTable(2);
+		    table131.setWidthPercentage(100);
+		     PdfPTable pdtable132 = new PdfPTable(1);
+		     pdtable132.addCell(getCell(""+productOrderData.getSgst(), PdfPCell.ALIGN_LEFT,bf12));
+		     
+		     PdfPTable pdtable133 = new PdfPTable(1);
+		     pdtable133.addCell(getCell(""+sgstTax, PdfPCell.ALIGN_LEFT,bf12));
+		     table131.addCell(pdtable132);
+		     table131.addCell(pdtable133);
+		     table.addCell(table131);
 		    
 		    double igstTax = productOrderData.getIgst();
 		    igstTax = igstTax*productOrderData.getRate();
 		    igstTax = igstTax/100;
 		    igstTotal = igstTotal+igstTax;
-            String igst = productOrderData.getSgst()+" | "+igstTax;
-		    insertCell(table, (igst), Element.ALIGN_RIGHT, 1, bf12);	
+		    PdfPTable table141 = new PdfPTable(2);
+		      table141.setWidthPercentage(100);
+		     PdfPTable pdtable142 = new PdfPTable(1);
+		     pdtable142.addCell(getCell(""+productOrderData.getIgst(), PdfPCell.ALIGN_LEFT,bf12));
+		     
+		     PdfPTable pdtable143 = new PdfPTable(1);
+		     pdtable143.addCell(getCell(""+igstTax, PdfPCell.ALIGN_LEFT,bf12));
+		     table141.addCell(pdtable142);
+		     table141.addCell(pdtable143);
+		     table.addCell(table141);	
 		    
 		    insertCell(table, (Float.toString(productOrderData.getAmount())), Element.ALIGN_RIGHT, 1, bf12);
 		    SUB_TOTAL = SUB_TOTAL+productOrderData.getAmount();
@@ -291,30 +299,24 @@ public class CreatePDF {
 	     insertCell(table, (Float.toString(total)), Element.ALIGN_RIGHT, 1, bfBold12);
 	     document.add(table);
 	     
-
+            int totalTax = (int) (sgstTotal+cgstTotal+igstTotal);
 			if(total <= 0)   {                
 				System.out.println("Enter numbers greater than 0");
 			} else {
-				CreatePDF a = new CreatePDF();
-				a.pw((total/1000000000)," Hundred");
-				a.pw((total/10000000)%100," Crore");
-				a.pw(((total/100000)%100)," Lakh");
-				a.pw(((total/1000)%100)," Thousand");
-				a.pw(((total/100)%10)," Hundred");
-				a.pw((total%100)," ");
-				answer = answer.trim();
-				System.out.println("Final Answer : " +answer);
+				
+			String totalAns =	calculationInWord(total);
+			String totalTaxInWord =calculationInWord(totalTax);
 			
-           PdfPTable lasttable = new PdfPTable(2);
+             PdfPTable lasttable = new PdfPTable(2);
 	       lasttable.setWidthPercentage(100);
 	     
 	     PdfPTable subtable = new PdfPTable(1);
 	     subtable.addCell(getCell1("Total centeral excise dutey payable (In fig)", PdfPCell.ALIGN_LEFT,bf1));
-	     subtable.addCell(getCell1(answer, PdfPCell.ALIGN_LEFT,bf12));
+	     subtable.addCell(getCell1(totalTaxInWord, PdfPCell.ALIGN_LEFT,bf12));
 	 
 	     PdfPTable subtable1 = new PdfPTable(1);
 	     subtable1.addCell(getCell1("Grand Total", PdfPCell.ALIGN_LEFT,bf1));
-	     subtable1.addCell(getCell1(answer, PdfPCell.ALIGN_LEFT,bf1));
+	     subtable1.addCell(getCell1(totalAns, PdfPCell.ALIGN_LEFT,bf1));
 	    
 	     lasttable.addCell(subtable);
 	     lasttable.addCell(subtable1);
@@ -425,5 +427,22 @@ public class CreatePDF {
 			if(n > 0) {
 				answer += ch;
 			}
+		}
+		public String calculationInWord(int total){
+			answer = new String();
+			if(total <= 0)   {                
+				System.out.println("Enter numbers greater than 0");
+			} else {
+				CreatePDF a = new CreatePDF();
+				a.pw((total/1000000000)," Hundred");
+				a.pw((total/10000000)%100," Crore");
+				a.pw(((total/100000)%100)," Lakh");
+				a.pw(((total/1000)%100)," Thousand");
+				a.pw(((total/100)%10)," Hundred");
+				a.pw((total%100)," ");
+				answer = answer.trim();
+				System.out.println("Final Answer : " +answer);
+		}
+			return answer;
 		}
 }

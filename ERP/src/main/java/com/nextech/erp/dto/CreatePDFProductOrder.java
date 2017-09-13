@@ -29,8 +29,11 @@ import com.nextech.erp.service.ProductorderassociationService;
 public class CreatePDFProductOrder {
 	private static Font TIME_ROMAN = new Font(Font.FontFamily.TIMES_ROMAN, 18,Font.BOLD);
 	private static Font TIME_ROMAN_SMALL = new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.BOLD);
-	private static float total = 0;
+	public  float grandtotal = 0;
 	private static float tax= 0;
+	public double igstTotal =0;
+	public double cgstTotal = 0;
+	public double sgstTotal =0;
 
 	/**
 	 * @param args
@@ -149,9 +152,11 @@ public class CreatePDFProductOrder {
 		  Font bf123 = new Font(FontFamily.TIMES_ROMAN, 14,Font.BOLD); 
 		  Font bf112 = new Font(FontFamily.TIMES_ROMAN, 10,Font.BOLD); 
 		  Font bfBold12 = new Font(FontFamily.TIMES_ROMAN, 12, Font.BOLD, new BaseColor(0, 0, 0)); 
+		  Font bfBold = new Font(FontFamily.TIMES_ROMAN, 8, Font.BOLD, new BaseColor(0, 0, 0));
 		   Font bf12 = new Font(FontFamily.TIMES_ROMAN, 12); 
+		   Font bf1 = new Font(FontFamily.TIMES_ROMAN, 10); 
 		  //specify column widths
-		   float[] columnWidths = {1.5f, 1.5f, 1.5f, 1.5f};
+		   float[] columnWidths = {1.8f, 1.1f, 1.0f, 1.9f,1.9f,1.9f,1.0f};
 		   //create PDF table with the given widths
 		   PdfPTable table = new PdfPTable(columnWidths);
 		   // set table width a percentage of the page width
@@ -161,28 +166,101 @@ public class CreatePDFProductOrder {
 		   insertCell(table, "Item Description", Element.ALIGN_RIGHT, 1, bfBold12);
 		   insertCell(table, "Quantity", Element.ALIGN_LEFT, 1, bfBold12);
 		   insertCell(table, "Rate", Element.ALIGN_LEFT, 1, bfBold12);
+		   
+		   PdfPTable pdfPTable =  new PdfPTable(2);
+		   PdfPCell cell = new PdfPCell(new Phrase("CGST", bfBold12));
+		   cell.setColspan(2);
+		   cell.setRowspan(2);
+		   pdfPTable.addCell(cell);
+		   pdfPTable.addCell(new Phrase("Percentage",bfBold));
+		   pdfPTable.addCell(new Phrase("Amount",bfBold));
+		   table.addCell(pdfPTable);
+		   
+		   PdfPTable pdfPTable1 =  new PdfPTable(2);
+		   PdfPCell cell1 = new PdfPCell(new Phrase("SGST", bfBold12));
+		   cell1.setColspan(2);
+		   cell1.setRowspan(2);
+		   pdfPTable1.addCell(cell1);
+		   pdfPTable1.addCell(new Phrase("Percentage",bfBold));
+		   pdfPTable1.addCell(new Phrase("Amount",bfBold));
+		   table.addCell(pdfPTable1);
+		   
+		   PdfPTable pdfPTable2 =  new PdfPTable(2);
+		   PdfPCell cell2 = new PdfPCell(new Phrase("IGST", bfBold12));
+		   cell2.setColspan(2);
+		   cell2.setRowspan(2);
+		   pdfPTable2.addCell(cell2);
+		   pdfPTable2.addCell(new Phrase("Percentage",bfBold));
+		   pdfPTable2.addCell(new Phrase("Amount",bfBold));
+		   table.addCell(pdfPTable2);
 		   insertCell(table, "Amount", Element.ALIGN_LEFT, 1, bfBold12);
 		   table.setHeaderRows(1);
 
      for (RMOrderModelData rmOrderModelData : rmOrderModelDatas) {
-	  insertCell(table,rmOrderModelData.getRmName() , Element.ALIGN_RIGHT, 1, bf12);
-	    insertCell(table,(Long.toString(rmOrderModelData.getQuantity())), Element.ALIGN_RIGHT, 1, bf12);
-	    insertCell(table, (Float.toString(rmOrderModelData.getPricePerUnit())), Element.ALIGN_RIGHT, 1, bf12);
-	    insertCell(table, (Float.toString(rmOrderModelData.getAmount())), Element.ALIGN_RIGHT, 1, bf12);
-	    total = total+rmOrderModelData.getAmount();
+	  insertCell(table,rmOrderModelData.getRmName() , Element.ALIGN_RIGHT, 1, bf1);
+	    insertCell(table,(Long.toString(rmOrderModelData.getQuantity())), Element.ALIGN_RIGHT, 1, bf1);
+	    insertCell(table, (Float.toString(rmOrderModelData.getPricePerUnit())), Element.ALIGN_RIGHT, 1, bf1);
+	    
+	    double cgstTax = rmOrderModelData.getCgst();
+	     cgstTax = cgstTax*rmOrderModelData.getPricePerUnit();
+	     cgstTax = cgstTax/100;
+	     cgstTotal  =  cgstTotal+cgstTax;
+	     PdfPTable table13 = new PdfPTable(2);
+	     table13.setWidthPercentage(100);
+	     PdfPTable pdtable = new PdfPTable(1);
+	     pdtable.addCell(getCell1(""+rmOrderModelData.getCgst(), PdfPCell.ALIGN_LEFT,bf1));
+	     
+	     PdfPTable pdtable1 = new PdfPTable(1);
+	     pdtable1.addCell(getCell1(""+cgstTax, PdfPCell.ALIGN_LEFT,bf1));
+	     table13.addCell(pdtable);
+	     table13.addCell(pdtable1);
+	     table.addCell(table13);
+	    
+	    double sgstTax = rmOrderModelData.getSgst();
+	    sgstTax = sgstTax*rmOrderModelData.getPricePerUnit();
+	    sgstTax = sgstTax/100;
+	    sgstTotal = sgstTotal+sgstTax;
+	    PdfPTable table131 = new PdfPTable(2);
+	    table131.setWidthPercentage(100);
+	     PdfPTable pdtable132 = new PdfPTable(1);
+	     pdtable132.addCell(getCell1(""+rmOrderModelData.getSgst(), PdfPCell.ALIGN_LEFT,bf1));
+	     
+	     PdfPTable pdtable133 = new PdfPTable(1);
+	     pdtable133.addCell(getCell1(""+sgstTax, PdfPCell.ALIGN_LEFT,bf1));
+	     table131.addCell(pdtable132);
+	     table131.addCell(pdtable133);
+	     table.addCell(table131);
+	    
+	    double igstTax = rmOrderModelData.getIgst();
+	    igstTax = igstTax*rmOrderModelData.getPricePerUnit();
+	    igstTax = igstTax/100;
+	    igstTotal = igstTotal+igstTax;
+	    PdfPTable table141 = new PdfPTable(2);
+	      table141.setWidthPercentage(100);
+	     PdfPTable pdtable142 = new PdfPTable(1);
+	     pdtable142.addCell(getCell1(""+rmOrderModelData.getIgst(), PdfPCell.ALIGN_LEFT,bf1));
+	     
+	     PdfPTable pdtable143 = new PdfPTable(1);
+	     pdtable143.addCell(getCell1(""+igstTax, PdfPCell.ALIGN_LEFT,bf1));
+	     table141.addCell(pdtable142);
+	     table141.addCell(pdtable143);
+	     table.addCell(table141);	
+	    
+	    insertCell(table, (Float.toString(rmOrderModelData.getAmount())), Element.ALIGN_RIGHT, 1, bf1);
+	    grandtotal = grandtotal+rmOrderModelData.getAmount();
 	    tax = rmOrderModelData.getTax();
     }
-     insertCell(table, "Sub Total", Element.ALIGN_RIGHT, 3, bfBold12);
-     insertCell(table, df.format(total), Element.ALIGN_RIGHT, 1, bfBold12);
-     
-     insertCell(table, "Tax", Element.ALIGN_RIGHT, 3, bfBold12);
-     insertCell(table, Float.toString(tax), Element.ALIGN_RIGHT, 1, bfBold12);
-     
-     total = total+tax;
-     insertCell(table, "Total", Element.ALIGN_RIGHT, 3, bfBold12);
-     insertCell(table, df.format(total), Element.ALIGN_RIGHT, 1, bfBold12);
+     insertCell(table, "CGST TOTAL", Element.ALIGN_RIGHT, 6, bfBold12);
+     insertCell(table, Double.toString(cgstTotal), Element.ALIGN_RIGHT, 1, bfBold12);
+     insertCell(table, "SGST Total", Element.ALIGN_RIGHT, 6, bfBold12);
+     insertCell(table, Double.toString(sgstTotal), Element.ALIGN_RIGHT, 1, bfBold12);
+     insertCell(table, "IGST Total", Element.ALIGN_RIGHT, 6, bfBold12);
+     insertCell(table, Double.toString(igstTotal), Element.ALIGN_RIGHT, 1, bfBold12);
+     insertCell(table, "Total", Element.ALIGN_RIGHT, 6, bfBold12);
+     int totalTax= (int) (cgstTotal+igstTotal+sgstTotal);
+     grandtotal = (int) (totalTax+grandtotal);
+     insertCell(table, (Float.toString(grandtotal)), Element.ALIGN_RIGHT, 1, bfBold12);
      document.add(table);
-     
      PdfPTable table00 = new PdfPTable(2);
      table00.setWidthPercentage(100);
      

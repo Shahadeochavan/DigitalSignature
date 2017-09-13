@@ -275,7 +275,9 @@ public class RawmaterialorderController {
 			rmOrderModelData.setQuantity(rmOrderAssociationDTO.getQuantity());
 			rmOrderModelData.setPricePerUnit(rawmaterialvendorassociation.getPricePerUnit());
 			rmOrderModelData.setAmount(rawmaterialvendorassociation.getPricePerUnit()*rmOrderAssociationDTO.getQuantity());
-			rmOrderModelData.setTax(rawmaterialOrderDTO.getTax());
+			rmOrderModelData.setCgst(rawmaterialvendorassociation.getTaxStructureDTO().getCgst());
+			rmOrderModelData.setSgst(rawmaterialvendorassociation.getTaxStructureDTO().getSgst());
+			rmOrderModelData.setIgst(rawmaterialvendorassociation.getTaxStructureDTO().getIgst());
 			rmOrderModelData.setDescription(rawmaterial.getDescription());
 			rmOrderModelDatas.add(rmOrderModelData);
 		}
