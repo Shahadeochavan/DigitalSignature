@@ -50,7 +50,7 @@ public class BomRMVendorRequestResponseFactory {
 		rawMaterialDTO.setPartNumber(bomrmvendorassociation.getRawmaterial().getPartNumber());
 		bomRMVendorAssociationsDTO.setRawmaterialId(rawMaterialDTO);
 		VendorDTO vendorDTO = new VendorDTO();
-		vendorDTO.setId(bomrmvendorassociation.getId());
+		vendorDTO.setId(bomrmvendorassociation.getVendor().getId());
 		vendorDTO.setCompanyName(bomrmvendorassociation.getVendor().getCompanyName());
 		bomRMVendorAssociationsDTO.setVendorId(vendorDTO);
 		return bomRMVendorAssociationsDTO;
