@@ -118,6 +118,8 @@ public class ProductorderController {
 		        productOrderDTO.setInvoiceNo(productOrderDTO2.getInvoiceNo());
 		        productOrderDTO.setCreatedDate(productOrderDTO2.getCreatedDate());
 		        productOrderDTO.setStatusId(productOrderDTO2.getStatusId());
+		        productOrderDTO.setPoNO(productOrderDTO2.getPoNO());
+		        productOrderDTO.setCreateDate(productOrderDTO2.getCreateDate());
 				addProductOrderAsso(productOrderDTO,request, response);
 				
 				//TODO Check Inventory for Products

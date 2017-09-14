@@ -16,7 +16,8 @@ public class ProductOrderRequestResponseFactory {
 		productorder.setCreateDate(productOrderDTO.getCreateDate());
 		productorder.setDescription(productOrderDTO.getDescription());
 		productorder.setExpecteddeliveryDate(productOrderDTO.getExpectedDeliveryDate());
-		productorder.setInvoiceNo(productOrderDTO.getInvoiceNo());
+		productorder.setPoNO(productOrderDTO.getPoNO());
+		//productorder.setInvoiceNo(productOrderDTO.getInvoiceNo());
 		productorder.setId(productOrderDTO.getId());
 		productorder.setQuantity(productOrderDTO.getProductOrderAssociationDTOs().size());
 		productorder.setIsactive(true);
@@ -45,6 +46,7 @@ public class ProductOrderRequestResponseFactory {
 		productOrderDTO.setDescription(productorder.getDescription());
 		productOrderDTO.setExpectedDeliveryDate(productorder.getExpecteddeliveryDate());
 		productOrderDTO.setInvoiceNo(productorder.getInvoiceNo());
+		productOrderDTO.setPoNO(productorder.getPoNO());
 		productOrderDTO.setQuantity(productorder.getQuantity());
 		productOrderDTO.setStatusId(productorder.getStatus());
 		productOrderDTO.setUpdatedBy(productorder.getUpdatedBy());

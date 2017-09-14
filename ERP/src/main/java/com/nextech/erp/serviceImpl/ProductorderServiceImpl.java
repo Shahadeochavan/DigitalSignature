@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
+
 import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.dao.BOMRMVendorAssociationDao;
 import com.nextech.erp.dao.ClientDao;
@@ -117,14 +118,19 @@ public class ProductorderServiceImpl extends CRUDServiceImpl<Productorder> imple
 		productorder.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 		productorder.setClient(clientDao.getById(Client.class,productOrderDTO.getClientId().getId()));
 		productorder.setStatus(statusDao.getById(Status.class,Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_NEW_PRODUCT_ORDER, null, null))));
-		productorderDao.add(productorder);
+	long id =	productorderDao.add(productorder);
 		System.out.println(productorder);
+		String innoiceNo = generateProductOrderInvoiceNumber() + productorder.getId();
+		productorder.setInvoiceNo(innoiceNo);
+		productorderDao.update(productorder);
 	Productorder  productorder2 = productorderDao.getById(Productorder.class, productorder.getId());
 		ProductOrderDTO productOrderDTO2 =  new ProductOrderDTO();
 		productOrderDTO2.setId(productorder2.getId());
 		productOrderDTO2.setCreatedDate(productorder2.getCreatedDate());
 		productOrderDTO2.setInvoiceNo(productorder2.getInvoiceNo());
 		productOrderDTO2.setStatusId(productorder2.getStatus());
+		productOrderDTO2.setPoNO(productorder2.getPoNO());
+		productOrderDTO2.setCreateDate(productorder2.getCreateDate());
 		return productOrderDTO2;
 	}
 	@Override
@@ -214,5 +220,10 @@ public class ProductorderServiceImpl extends CRUDServiceImpl<Productorder> imple
 		productorder.setStatus(statusDao.getById(Status.class,Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_NEW_PRODUCT_ORDER, null, null))));
 		productorderDao.update(productorder);
 		return productOrderDTO;
+	}
+	private String generateProductOrderInvoiceNumber() {
+		String invoiceNo = "";
+		invoiceNo = "000";
+		return invoiceNo;
 	}
 }

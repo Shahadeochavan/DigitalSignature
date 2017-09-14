@@ -15,9 +15,8 @@ public class ProductOrderDTO extends AbstractDTO{
 	private Date createDate;
 	private String invoiceNo;
 	private long quantity; 
+	private String poNO;
 	private List<ProductOrderAssociationDTO> productOrderAssociationDTOs;
-
-
 	
 	public Client getClientId() {
 		return clientId;
@@ -62,6 +61,12 @@ public class ProductOrderDTO extends AbstractDTO{
 	}
 	public void setQuantity(long quantity) {
 		this.quantity = quantity;
+	}
+	public String getPoNO() {
+		return poNO;
+	}
+	public void setPoNO(String poNO) {
+		this.poNO = poNO;
 	}	
 	
 }
