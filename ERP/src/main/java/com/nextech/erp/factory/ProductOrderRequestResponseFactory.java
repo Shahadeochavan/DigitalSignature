@@ -51,6 +51,7 @@ public class ProductOrderRequestResponseFactory {
 		productOrderDTO.setStatusId(productorder.getStatus());
 		productOrderDTO.setUpdatedBy(productorder.getUpdatedBy());
 		productOrderDTO.setUpdatedDate(productorder.getUpdatedDate());
+		productOrderDTO.setCreateDate(productorder.getCreateDate());
 		return productOrderDTO;
 	}
 }

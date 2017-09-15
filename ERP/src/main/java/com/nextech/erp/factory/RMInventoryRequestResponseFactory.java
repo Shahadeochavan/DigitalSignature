@@ -31,6 +31,7 @@ public class RMInventoryRequestResponseFactory {
 		Rawmaterial  rawmaterial =  new Rawmaterial();
 		rawmaterial.setId(rmInventoryDTO.getRawmaterialId().getId());
 		rawmaterialinventory.setId(rmInventoryDTO.getId());
+		rawmaterialinventory.setRawmaterial(rawmaterial);
 		rawmaterialinventory.setIsactive(true);
 		rawmaterialinventory.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 		return rawmaterialinventory;

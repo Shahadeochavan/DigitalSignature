@@ -37,6 +37,7 @@ public class NotificationRequestResponseFactory {
 		statusDTO.setId(notification.getStatus1().getId());
 		statusDTO.setStatusName(notification.getStatus1().getName());
 		notificationDTO.setStatus1(statusDTO);
+		notificationDTO.setStatus2(statusDTO);
 		notificationDTO.setSubject(notification.getSubject());
 		notificationDTO.setTemplate(notification.getTemplate());
 		notificationDTO.setType(notification.getType());

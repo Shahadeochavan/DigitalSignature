@@ -190,16 +190,15 @@ public class UserController {
 	private boolean authenticate(User formUser, User dbUser) {
 		EncryptDecrypt encDec = new EncryptDecrypt();
 		//TODO NIKHIL- Do not trim of make checking case insensitive. 
-	/*	String pass = encDec.decrypt(dbUser.getPassword());
+		String pass = encDec.decrypt(dbUser.getPassword());
 		System.out.println(pass);
-		boolean password =formUser.getPassword().equals(encDec.decrypt(dbUser.getPassword()));
+		boolean password =formUser.getPassword().equals(pass);
 		if(password==true){
 			return true;
 		} 	
 		else {
 			return false;
-		}*/
-		return true;
+		}
 	}
 	
 

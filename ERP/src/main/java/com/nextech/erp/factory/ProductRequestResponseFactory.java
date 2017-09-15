@@ -35,6 +35,9 @@ public class ProductRequestResponseFactory {
 		product.setPartNumber(productDTO.getPartNumber());
 		product.setName(productDTO.getName());
 		product.setDesign(productDTO.getDesign());
+		Taxstructure taxstructure =  new Taxstructure();
+		taxstructure.setId(productDTO.getTaxStructureDTO().getId());
+		product.setTaxstructure(taxstructure);
 		product.setIsactive(true);
 		product.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 		return product;

@@ -34,6 +34,7 @@ import com.nextech.erp.factory.ProductRequestResponseFactory;
 import com.nextech.erp.factory.TaxStructureRequestResponseFactory;
 import com.nextech.erp.model.Product;
 import com.nextech.erp.model.Productrawmaterialassociation;
+import com.nextech.erp.model.Taxstructure;
 import com.nextech.erp.newDTO.ProductDTO;
 import com.nextech.erp.newDTO.TaxStructureDTO;
 import com.nextech.erp.service.MailService;
@@ -162,7 +163,8 @@ public class ProductController {
 			@RequestParam(value = "file", required = false) MultipartFile inputFile,
 			@RequestParam("clientPartNumber") String clientPartNumber,	@RequestParam("id") long id,
 			@RequestParam("name") String name,@RequestParam("description")String description,
-			@RequestParam("partNumber") String partNumber) {
+			@RequestParam("partNumber") String partNumber,@RequestParam("cgst") double cgst,@RequestParam("igst") double igst,
+			@RequestParam("other1") double other1,@RequestParam("other2") double other2,@RequestParam("sgst") double sgst) {
 		try {
 			ProductDTO oldProductInfo = productService.getProductDTO(id);
 			if(name.equals(oldProductInfo.getName())){ 	
@@ -180,11 +182,20 @@ public class ProductController {
 				 }
 	    		if(inputFile==null){
 				    ProductDTO productDTO =	setProductDTO(clientPartNumber, name, description, partNumber);
+				    TaxStructureDTO taxStructureDTO = setTaxStructureDTO(cgst, igst, other1, other2, sgst);
+					 Taxstructure taxid =   taxstructureService.updateEntity(TaxStructureRequestResponseFactory.setTaxStructure(taxStructureDTO, request));
+					 taxStructureDTO.setId(taxid.getId());
+					 productDTO.setTaxStructureDTO(taxStructureDTO);
 				    productDTO.setId(id);
 				    productService.updateEntity(ProductRequestResponseFactory.setProductUpdate(productDTO, request));
 				}else{
 					String destinationFilePath = ImageUploadUtil.imgaeUpload(inputFile);
 					ProductDTO productDTO =	setProductDTO(clientPartNumber, name, description, partNumber);
+				     TaxStructureDTO taxStructureDTO = setTaxStructureDTO(cgst, igst, other1, other2, sgst);
+					Taxstructure taxid =   taxstructureService.updateEntity(TaxStructureRequestResponseFactory.setTaxStructure(taxStructureDTO, request));
+					taxStructureDTO.setId(taxid.getId());
+					 productDTO.setTaxStructureDTO(taxStructureDTO);
+					 productDTO.setId(id);
 					productDTO.setId(id);
 					productDTO.setDesign(destinationFilePath);
 					productService.updateEntity(ProductRequestResponseFactory.setProductUpdate(productDTO, request));

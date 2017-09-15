@@ -2,6 +2,8 @@ package com.nextech.erp.dto;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -14,9 +16,9 @@ import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.Font.FontFamily;
+import com.itextpdf.text.Image;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
-import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
@@ -71,7 +73,7 @@ public class CreatePDF {
 	}
 
 	private  void addTitlePage(Document document,ClientDTO client,ProductOrderDTO productOrderDTO)
-			throws DocumentException {
+			throws DocumentException, MalformedURLException, IOException {
 
 		Paragraph preface = new Paragraph();
 		   Font bf12 = new Font(FontFamily.TIMES_ROMAN, 10,Font.BOLD); 
@@ -86,6 +88,10 @@ public class CreatePDF {
 		   
 		     PdfPTable table1 = new PdfPTable(1);
 		     table1.setWidthPercentage(100);
+		     Image img = Image.getInstance("C:/Users/welcome/git/erp-be/ERP/src/main/webapp/img/ekimage.png");
+		     table1.addCell(img);
+		     //   document.add(img);
+		     
 		     PdfPTable table12 = new PdfPTable(1);
 		     table12.addCell(getCell("Invoice No -"+productOrderDTO.getInvoiceNo(), PdfPCell.ALIGN_LEFT,bf12));
 		     
@@ -150,7 +156,7 @@ public class CreatePDF {
 		     PdfPTable table31 = new PdfPTable(1);
 		     table31.addCell(getCell("Details of Recevier(Billed to)", PdfPCell.ALIGN_LEFT,bf12));
 		     table31.addCell(getCell("Name :"+client.getCompanyName(), PdfPCell.ALIGN_LEFT,bf12));
-		     table31.addCell(getCell("Address"+client.getAddress(), PdfPCell.ALIGN_LEFT,font3));
+		     table31.addCell(getCell("Address  :"+client.getAddress(), PdfPCell.ALIGN_LEFT,font3));
 		     table31.addCell(getCell("GSTIN/Unique ID:-"+"AAAAGBV1234", PdfPCell.ALIGN_LEFT,bf12));
 		     
 		     PdfPTable table32 = new PdfPTable(1);
@@ -179,7 +185,7 @@ public class CreatePDF {
 			   Font bf12 = new Font(FontFamily.TIMES_ROMAN, 10); 
 			   
 			   Font bf1 = new Font(FontFamily.TIMES_ROMAN, 10,Font.BOLD); 
-			   float[] columnWidths = {1.5f, 1.2f, 1.2f, 1.9f,1.9f,1.9f,1.3f};
+			   float[] columnWidths = {1.3f, 1.1f, 1.2f, 2.0f,2.0f,2.0f,1.3f};
 			   PdfPTable table = new PdfPTable(columnWidths);
 			   table.setWidthPercentage(100f);
 
@@ -229,10 +235,10 @@ public class CreatePDF {
 		     PdfPTable table13 = new PdfPTable(2);
 		     table13.setWidthPercentage(100);
 		     PdfPTable pdtable = new PdfPTable(1);
-		     pdtable.addCell(getCell(""+productOrderData.getCgst(), PdfPCell.ALIGN_LEFT,bf12));
+		     pdtable.addCell(getCel1(""+productOrderData.getCgst(), PdfPCell.ALIGN_LEFT,bf12));
 		     
 		     PdfPTable pdtable1 = new PdfPTable(1);
-		     pdtable1.addCell(getCell(""+cgstTax, PdfPCell.ALIGN_LEFT,bf12));
+		     pdtable1.addCell(getCel1(""+cgstTax, PdfPCell.ALIGN_LEFT,bf12));
 		     table13.addCell(pdtable);
 		     table13.addCell(pdtable1);
 		     table.addCell(table13);
@@ -244,10 +250,10 @@ public class CreatePDF {
 		    PdfPTable table131 = new PdfPTable(2);
 		    table131.setWidthPercentage(100);
 		     PdfPTable pdtable132 = new PdfPTable(1);
-		     pdtable132.addCell(getCell(""+productOrderData.getSgst(), PdfPCell.ALIGN_LEFT,bf12));
+		     pdtable132.addCell(getCel1(""+productOrderData.getSgst(), PdfPCell.ALIGN_LEFT,bf12));
 		     
 		     PdfPTable pdtable133 = new PdfPTable(1);
-		     pdtable133.addCell(getCell(""+sgstTax, PdfPCell.ALIGN_LEFT,bf12));
+		     pdtable133.addCell(getCel1(""+sgstTax, PdfPCell.ALIGN_LEFT,bf12));
 		     table131.addCell(pdtable132);
 		     table131.addCell(pdtable133);
 		     table.addCell(table131);
@@ -259,10 +265,10 @@ public class CreatePDF {
 		    PdfPTable table141 = new PdfPTable(2);
 		      table141.setWidthPercentage(100);
 		     PdfPTable pdtable142 = new PdfPTable(1);
-		     pdtable142.addCell(getCell(""+productOrderData.getIgst(), PdfPCell.ALIGN_LEFT,bf12));
+		     pdtable142.addCell(getCel1(""+productOrderData.getIgst(), PdfPCell.ALIGN_LEFT,bf12));
 		     
 		     PdfPTable pdtable143 = new PdfPTable(1);
-		     pdtable143.addCell(getCell(""+igstTax, PdfPCell.ALIGN_LEFT,bf12));
+		     pdtable143.addCell(getCel1(""+igstTax, PdfPCell.ALIGN_LEFT,bf12));
 		     table141.addCell(pdtable142);
 		     table141.addCell(pdtable143);
 		     table.addCell(table141);	
@@ -351,7 +357,6 @@ public class CreatePDF {
 	     subtable120.addCell(getCell(" ", PdfPCell.ALIGN_RIGHT,bf12));
 	     subtable120.addCell(getCell(" ", PdfPCell.ALIGN_RIGHT,bf12));
 	     subtable120.addCell(getCell(" ", PdfPCell.ALIGN_RIGHT,bf12));
-	     subtable120.addCell(getCell(" ", PdfPCell.ALIGN_RIGHT,bf12));
 	     subtable120.addCell(getCell("Authorised Signature", PdfPCell.ALIGN_RIGHT,bf123));
 	    
 	     lasttable10.addCell(subtable110);
@@ -387,6 +392,18 @@ public class CreatePDF {
 		    cell.setExtraParagraphSpace(1);
 		    cell.setVerticalAlignment(alignment);
 		    cell.setBorder(PdfPCell.NO_BORDER);
+		    return cell;
+		}
+	 
+	 public PdfPCell getCel1(String text, int alignment,Font bf12) {
+		    PdfPCell cell = new PdfPCell(new Phrase(text,bf12));
+		    cell.setVerticalAlignment(alignment);
+		    cell.setBorder(PdfPCell.NO_BORDER);
+		    cell.setExtraParagraphSpace(10);
+		    cell.setBorderColorTop(BaseColor.WHITE);
+		    cell.setBorderColorBottom(BaseColor.WHITE);
+		    cell.setBorderColorLeft(BaseColor.WHITE);
+		    cell.setBorderColorRight(BaseColor.WHITE);
 		    return cell;
 		}
 	 
