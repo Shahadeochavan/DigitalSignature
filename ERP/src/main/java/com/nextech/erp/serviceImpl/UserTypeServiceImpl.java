@@ -53,5 +53,11 @@ public class UserTypeServiceImpl extends CRUDServiceImpl<Usertype> implements Us
 		return userTypeDTO;
 		
 	}
+	@Override
+	public Usertype getUserTypeByUserTypeName(String userTypeName)
+			throws Exception {
+		// TODO Auto-generated method stub
+		return userTypeDao.getUserTypeByUserTypeName(userTypeName);
+	}
 
 }

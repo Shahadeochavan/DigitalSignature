@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -55,6 +56,12 @@ public class UnitServiceImpl extends CRUDServiceImpl<Unit> implements UnitServic
 		unitDao.update(unit);
 		UnitDTO unitDTO = UnitFactory.setUnitDTO(unit);
 		return unitDTO;
+	}
+
+	@Override
+	public Unit getUnitByName(String name) throws Exception {
+		// TODO Auto-generated method stub
+		return unitDao.getUnitByName(name);
 	}
 
 }

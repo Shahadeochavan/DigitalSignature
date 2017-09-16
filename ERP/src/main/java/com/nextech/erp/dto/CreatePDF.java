@@ -19,6 +19,7 @@ import com.itextpdf.text.Font.FontFamily;
 import com.itextpdf.text.Image;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
+import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
@@ -82,92 +83,95 @@ public class CreatePDF {
 		   creteEmptyLine(preface, 2);
 		   document.add(preface);
 		   SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
-		    float[] columnWidths1 = {30f, 30f,30f};
-		     PdfPTable table00 = new PdfPTable(columnWidths1);
-		     table00.setWidthPercentage(100f);
+		    float[] columnWidthImageInvoice = {30f, 30f,30f};
+		     PdfPTable imageInvoiceDateTable = new PdfPTable(columnWidthImageInvoice);
+		     imageInvoiceDateTable.setWidthPercentage(100f);
 		   
-		     PdfPTable table1 = new PdfPTable(1);
-		     table1.setWidthPercentage(100);
+		     PdfPTable imageTable = new PdfPTable(1);
+		     imageTable.setWidthPercentage(100);
+		     //TODO change image path
 		     Image img = Image.getInstance("C:/Users/welcome/git/erp-be/ERP/src/main/webapp/img/ekimage.png");
-		     table1.addCell(img);
+		     imageTable.addCell(img);
 		     //   document.add(img);
 		     
-		     PdfPTable table12 = new PdfPTable(1);
-		     table12.addCell(getCell("Invoice No -"+productOrderDTO.getInvoiceNo(), PdfPCell.ALIGN_LEFT,bf12));
+		     PdfPTable invoiceTable = new PdfPTable(1);
+		     invoiceTable.addCell(getCell("Invoice No -"+productOrderDTO.getInvoiceNo(), PdfPCell.ALIGN_LEFT,bf12));
 		     
-			  PdfPTable table13 = new PdfPTable(2);
-			  table13.setWidthPercentage(100);
+			  PdfPTable dateCopyTable = new PdfPTable(2);
+			  dateCopyTable.setWidthPercentage(100);
 			     
-			  PdfPTable pdtable = new PdfPTable(1);
-			  pdtable.addCell(getCell("Date -", PdfPCell.ALIGN_LEFT,bf12));
-			  pdtable.addCell(getCell(simpleDateFormat.format(new Date()), PdfPCell.ALIGN_LEFT,bf12));
+			  PdfPTable dateTable = new PdfPTable(1);
+			  dateTable.addCell(getCell("Date -", PdfPCell.ALIGN_LEFT,bf12));
+			  dateTable.addCell(getCell(simpleDateFormat.format(new Date()), PdfPCell.ALIGN_LEFT,bf12));
 			     
-			   PdfPTable pdtable1 = new PdfPTable(1);
-			   pdtable1.addCell(getCell("ORIGINAL FOR RECIPIENT", PdfPCell.ALIGN_LEFT,bf12));
-			   table13.addCell(pdtable);
-		     table13.addCell(pdtable1);
+			   PdfPTable recipientTable = new PdfPTable(1);
+			   recipientTable.addCell(getCell("ORIGINAL FOR RECIPIENT", PdfPCell.ALIGN_LEFT,bf12));
+			   dateCopyTable.addCell(dateTable);
+			   dateCopyTable.addCell(recipientTable);
 		     
-		     table00.addCell(table1);
-		     table00.addCell(table12);
-		     table00.addCell(table13);
-		     document.add(table00);
+		     imageInvoiceDateTable.addCell(imageTable);
+		     imageInvoiceDateTable.addCell(invoiceTable);
+		     imageInvoiceDateTable.addCell(dateCopyTable);
+		     document.add(imageInvoiceDateTable);
 		     
 		     
-		     float[] columnWidths12 = {50f,50f};
-		     PdfPTable table14 = new PdfPTable(columnWidths12);
-		     table14.setWidthPercentage(100f);
+		     float[] fromConsigneeColumWidth = {50f,50f};
+		     PdfPTable fromConsigneeTable = new PdfPTable(fromConsigneeColumWidth);
+		     fromConsigneeTable.setWidthPercentage(100f);
 		 
-		     PdfPTable table15 = new PdfPTable(1);
-		     table15.addCell(getCell("GSTIN : "+"27AACCE3429L1ZI", PdfPCell.ALIGN_LEFT,bf12));
-		     table15.addCell(getCell("E.K.ELECTRONICS PVT.LTD", PdfPCell.ALIGN_LEFT,bf12));
-		     table15.addCell(getCell("E-64 MIDC Industrial,Ranjangon Tal Shirur Dist pune-412220", PdfPCell.ALIGN_LEFT,font3));
-		     table15.addCell(getCell("Email:account@ekelectronics.co.in", PdfPCell.ALIGN_LEFT,font3));
-		     table15.addCell(getCell("Serial No. of Invoice  :"+productOrderDTO.getInvoiceNo(), PdfPCell.ALIGN_LEFT,font3));
-		     table15.addCell(getCell("Date of Invoice  :"+simpleDateFormat.format(new Date()), PdfPCell.ALIGN_LEFT,font3));
+		     PdfPTable fromTabel = new PdfPTable(1);
+		     fromTabel.addCell(getCell("GSTIN : "+"27AACCE3429L1ZI", PdfPCell.ALIGN_LEFT,bf12));
+		     fromTabel.addCell(getCell("E.K.ELECTRONICS PVT.LTD", PdfPCell.ALIGN_LEFT,bf12));
+		     fromTabel.addCell(getCell("E-64 MIDC Industrial,Ranjangon Tal Shirur Dist pune-412220", PdfPCell.ALIGN_LEFT,font3));
+		     fromTabel.addCell(getCell("Email:account@ekelectronics.co.in", PdfPCell.ALIGN_LEFT,font3));
+		     fromTabel.addCell(getCell("Serial No. of Invoice  :"+productOrderDTO.getInvoiceNo(), PdfPCell.ALIGN_LEFT,font3));
+		     fromTabel.addCell(getCell("Date of Invoice  :"+simpleDateFormat.format(new Date()), PdfPCell.ALIGN_LEFT,font3));
 		     
-		     PdfPTable table17 = new PdfPTable(1);
-		     table17.addCell(getCell("Category of consignee :-", PdfPCell.ALIGN_LEFT,bf12));
-		     table17.addCell(getCell("Wholesale dealer/", PdfPCell.ALIGN_LEFT,bf12));
-		     table17.addCell(getCell("Industrial consumer/", PdfPCell.ALIGN_LEFT,bf12));
-		     table17.addCell(getCell("Government deparment etc", PdfPCell.ALIGN_LEFT,bf12));
+		     PdfPTable consigneeTable = new PdfPTable(1);
+		     consigneeTable.addCell(getCell("Category of consignee :-", PdfPCell.ALIGN_LEFT,bf12));
+		     consigneeTable.addCell(getCell("Wholesale dealer/", PdfPCell.ALIGN_LEFT,bf12));
+		     consigneeTable.addCell(getCell("Industrial consumer/", PdfPCell.ALIGN_LEFT,bf12));
+		     consigneeTable.addCell(getCell("Government deparment etc", PdfPCell.ALIGN_LEFT,bf12));
 		     
-		     PdfPTable table141 = new PdfPTable(1);
-		      table141.setWidthPercentage(100);
-		     PdfPTable pdtable142 = new PdfPTable(1);
-		     pdtable142.addCell(getCell("Your P.O.No : "+productOrderDTO.getPoNO(), PdfPCell.ALIGN_LEFT,bf12));
-		     table141.addCell(pdtable142);
+		     PdfPTable poNoDateTable = new PdfPTable(1);
+		     poNoDateTable.setWidthPercentage(100);
 		     
-		     PdfPTable table142 = new PdfPTable(1);
-		     table142.setWidthPercentage(100);
-		     PdfPTable pdtable143 = new PdfPTable(1);
-		     pdtable143.addCell(getCell("Date of  P.O.No : "+productOrderDTO.getCreateDate(), PdfPCell.ALIGN_LEFT,bf12));
-		     table142.addCell(pdtable143);
+		     PdfPTable poNOTable = new PdfPTable(1);
+		     poNOTable.addCell(getCell("Your P.O.No : "+productOrderDTO.getPoNO(), PdfPCell.ALIGN_LEFT,bf12));
+		     poNoDateTable.addCell(poNOTable);
 		     
-		     table17.addCell(table141);
-		     table17.addCell(table142);
-		     table14.addCell(table15);
-		     table14.addCell(table17);
-		     document.add(table14);
+		     PdfPTable poDateTable = new PdfPTable(1);
+		     poDateTable.setWidthPercentage(100);
 		     
-		     float[] columnWidths13 = {50f,50f};
-		     PdfPTable table133 = new PdfPTable(columnWidths13);
-		     table133.setWidthPercentage(100);
+		     PdfPTable datePoTable = new PdfPTable(1);
+		     datePoTable.addCell(getCell("Date of  P.O.No : "+productOrderDTO.getCreateDate(), PdfPCell.ALIGN_LEFT,bf12));
+		     poDateTable.addCell(datePoTable);
 		     
-		     PdfPTable table31 = new PdfPTable(1);
-		     table31.addCell(getCell("Details of Recevier(Billed to)", PdfPCell.ALIGN_LEFT,bf12));
-		     table31.addCell(getCell("Name :"+client.getCompanyName(), PdfPCell.ALIGN_LEFT,bf12));
-		     table31.addCell(getCell("Address  :"+client.getAddress(), PdfPCell.ALIGN_LEFT,font3));
-		     table31.addCell(getCell("GSTIN/Unique ID:-"+"AAAAGBV1234", PdfPCell.ALIGN_LEFT,bf12));
+		     consigneeTable.addCell(poNoDateTable);
+		     consigneeTable.addCell(poDateTable);
+		     fromConsigneeTable.addCell(fromTabel);
+		     fromConsigneeTable.addCell(consigneeTable);
+		     document.add(fromConsigneeTable);
 		     
-		     PdfPTable table32 = new PdfPTable(1);
-		     table32.addCell(getCell("Details of Recevier(Billed to)", PdfPCell.ALIGN_LEFT,bf12));
-		     table32.addCell(getCell("Name :"+client.getCompanyName(), PdfPCell.ALIGN_LEFT,bf12));
-		     table32.addCell(getCell("Address  :"+client.getAddress(), PdfPCell.ALIGN_LEFT,font3));
-		     table32.addCell(getCell("GSTIN/Unique ID:-"+"AAAAGBV1234", PdfPCell.ALIGN_LEFT,bf12));
+		     float[] recevierColumnWidth = {50f,50f};
+		     PdfPTable toRacevierTable = new PdfPTable(recevierColumnWidth);
+		     toRacevierTable.setWidthPercentage(100);
+		     
+		     PdfPTable reciverTable = new PdfPTable(1);
+		     reciverTable.addCell(getCell("Details of Recevier(Billed to)", PdfPCell.ALIGN_LEFT,bf12));
+		     reciverTable.addCell(getCell("Name :"+client.getCompanyName(), PdfPCell.ALIGN_LEFT,bf12));
+		     reciverTable.addCell(getCell("Address  :"+client.getAddress(), PdfPCell.ALIGN_LEFT,font3));
+		     reciverTable.addCell(getCell("GSTIN/Unique ID:-"+"AAAAGBV1234", PdfPCell.ALIGN_LEFT,bf12));
+		     
+		     PdfPTable reciverTable1 = new PdfPTable(1);
+		     reciverTable1.addCell(getCell("Details of Recevier(Billed to)", PdfPCell.ALIGN_LEFT,bf12));
+		     reciverTable1.addCell(getCell("Name :"+client.getCompanyName(), PdfPCell.ALIGN_LEFT,bf12));
+		     reciverTable1.addCell(getCell("Address  :"+client.getAddress(), PdfPCell.ALIGN_LEFT,font3));
+		     reciverTable1.addCell(getCell("GSTIN/Unique ID:-"+"AAAAGBV1234", PdfPCell.ALIGN_LEFT,bf12));
 		    
-		     table133.addCell(table31);
-		     table133.addCell(table32);
-		     document.add(table133);
+		     toRacevierTable.addCell(reciverTable);
+		     toRacevierTable.addCell(reciverTable1);
+		     document.add(toRacevierTable);
 		     
 		    
 	}
@@ -192,86 +196,93 @@ public class CreatePDF {
 			   insertCell(table, "Description of goods", Element.ALIGN_RIGHT, 1, bf123);
 			   insertCell(table, "Quantity", Element.ALIGN_LEFT, 1, bf123);
 			   insertCell(table, "Rate", Element.ALIGN_LEFT, 1, bf123);
-			   PdfPTable pdfPTable =  new PdfPTable(2);
-			   PdfPCell cell = new PdfPCell(new Phrase("CGST", bf123));
-			   cell.setColspan(2);
-			   cell.setRowspan(2);
-			   cell.setBorder(PdfPCell.NO_BORDER);
-			   pdfPTable.addCell(cell);
-			   pdfPTable.addCell(new Phrase("Percentage",bfBold));
-			   pdfPTable.addCell(new Phrase("Amount",bfBold));
-			   table.addCell(pdfPTable);
 			   
-			   PdfPTable pdfPTable1 =  new PdfPTable(2);
-			   PdfPCell cell1 = new PdfPCell(new Phrase("SGST", bf123));
-			   cell1.setColspan(2);
-			   cell1.setRowspan(2);
-			   cell1.setBorder(PdfPCell.NO_BORDER);
-			   pdfPTable1.addCell(cell1);
-			   pdfPTable1.addCell(new Phrase("Percentage",bfBold));
-			   pdfPTable1.addCell(new Phrase("Amount",bfBold));
-			   table.addCell(pdfPTable1);
+			   PdfPTable cgstTable =  new PdfPTable(2);
+			   PdfPCell cgstCell = new PdfPCell(new Phrase("CGST", bf123));
+			   cgstCell.setColspan(2);
+			   cgstCell.setRowspan(2);
+			   cgstCell.setBorder(PdfPCell.NO_BORDER);
+			   cgstTable.addCell(cgstCell);
+			   cgstTable.addCell(new Phrase("Percentage",bfBold));
+			   cgstTable.addCell(new Phrase("Amount",bfBold));
+			   table.addCell(cgstTable);
 			   
-			   PdfPTable pdfPTable2 =  new PdfPTable(2);
+			   PdfPTable sgstTable =  new PdfPTable(2);
+			   PdfPCell sgstCell = new PdfPCell(new Phrase("SGST", bf123));
+			   sgstCell.setColspan(2);
+			   sgstCell.setRowspan(2);
+			   sgstCell.setBorder(PdfPCell.NO_BORDER);
+			   sgstTable.addCell(sgstCell);
+			   sgstTable.addCell(new Phrase("Percentage",bfBold));
+			   sgstTable.addCell(new Phrase("Amount",bfBold));
+			   table.addCell(sgstTable);
+			   
+			   PdfPTable igstTable =  new PdfPTable(2);
 			   PdfPCell cell2 = new PdfPCell(new Phrase("IGST", bf123));
 			   cell2.setColspan(2);
 			   cell2.setRowspan(2);
 			   cell2.setBorder(PdfPCell.NO_BORDER);
-			   pdfPTable2.addCell(cell2);
-			   pdfPTable2.addCell(new Phrase("Percentage",bfBold));
-			   pdfPTable2.addCell(new Phrase("Amount",bfBold));
-			   table.addCell(pdfPTable2);
+			   igstTable.addCell(cell2);
+			   igstTable.addCell(new Phrase("Percentage",bfBold));
+			   igstTable.addCell(new Phrase("Amount",bfBold));
+			   table.addCell(igstTable);
+			   
 			   insertCell(table, "Amount", Element.ALIGN_LEFT, 1, bf123);
 			   table.setHeaderRows(1);
 
 	     for (ProductOrderData productOrderData : productOrderDatas) {
-		  insertCell(table,productOrderData.getProductName() , Element.ALIGN_RIGHT, 1, bf12);
-		    insertCell(table,(Long.toString(productOrderData.getQuantity())), Element.ALIGN_CENTER, 1, bf12);
-		    insertCell(table, (Float.toString(productOrderData.getRate())), Element.ALIGN_CENTER, 1, bf12);
+		     insertCell(table,productOrderData.getProductName() , Element.ALIGN_RIGHT, 1, bf12);
+		      insertCell(table,(Long.toString(productOrderData.getQuantity())), Element.ALIGN_CENTER, 1, bf12);
+		      insertCell(table, (Float.toString(productOrderData.getRate())), Element.ALIGN_CENTER, 1, bf12);
 		    double cgstTax = productOrderData.getCgst();
 		     cgstTax = cgstTax*productOrderData.getRate();
 		     cgstTax = cgstTax/100;
 		     cgstTotal  =  cgstTotal+cgstTax;
-		     PdfPTable table13 = new PdfPTable(2);
-		     table13.setWidthPercentage(100);
-		     PdfPTable pdtable = new PdfPTable(1);
-		     pdtable.addCell(getCel1(""+productOrderData.getCgst(), PdfPCell.ALIGN_LEFT,bf12));
+		     PdfPTable perAmountCGSTTable = new PdfPTable(2);
+		     perAmountCGSTTable.setWidthPercentage(100);
+		    // perAmountCGSTTable.getDefaultCell().setBorder(0);
 		     
-		     PdfPTable pdtable1 = new PdfPTable(1);
-		     pdtable1.addCell(getCel1(""+cgstTax, PdfPCell.ALIGN_LEFT,bf12));
-		     table13.addCell(pdtable);
-		     table13.addCell(pdtable1);
-		     table.addCell(table13);
+		     PdfPTable perCGSTTable = new PdfPTable(1);
+		     perCGSTTable.addCell(getCel1(""+productOrderData.getCgst(), PdfPCell.ALIGN_LEFT,bf12));
+		    // perCGSTTable.getDefaultCell().setBorderWidthRight(1);
+
+		     
+		     PdfPTable amountCGSTTable = new PdfPTable(1);
+		     amountCGSTTable.addCell(getCel1(""+cgstTax, PdfPCell.ALIGN_LEFT,bf12));
+		     perAmountCGSTTable.addCell(perCGSTTable);
+		     perAmountCGSTTable.addCell(amountCGSTTable);
+		     table.addCell(perAmountCGSTTable);
 		    
 		    double sgstTax = productOrderData.getSgst();
 		    sgstTax = sgstTax*productOrderData.getRate();
 		    sgstTax = sgstTax/100;
 		    sgstTotal = sgstTotal+sgstTax;
-		    PdfPTable table131 = new PdfPTable(2);
-		    table131.setWidthPercentage(100);
-		     PdfPTable pdtable132 = new PdfPTable(1);
-		     pdtable132.addCell(getCel1(""+productOrderData.getSgst(), PdfPCell.ALIGN_LEFT,bf12));
+		    PdfPTable perAmountSGSTTable = new PdfPTable(2);
+		    perAmountSGSTTable.setWidthPercentage(100);
+		     PdfPTable perSGSTTable = new PdfPTable(1);
+		     perSGSTTable.addCell(getCel1(""+productOrderData.getSgst(), PdfPCell.ALIGN_LEFT,bf12));
 		     
-		     PdfPTable pdtable133 = new PdfPTable(1);
-		     pdtable133.addCell(getCel1(""+sgstTax, PdfPCell.ALIGN_LEFT,bf12));
-		     table131.addCell(pdtable132);
-		     table131.addCell(pdtable133);
-		     table.addCell(table131);
+		     PdfPTable amountSGSTTable = new PdfPTable(1);
+		     amountSGSTTable.addCell(getCel1(""+sgstTax, PdfPCell.ALIGN_LEFT,bf12));
+		     perAmountSGSTTable.addCell(perSGSTTable);
+		     perAmountSGSTTable.addCell(amountSGSTTable);
+		     table.addCell(perAmountSGSTTable);
 		    
 		    double igstTax = productOrderData.getIgst();
 		    igstTax = igstTax*productOrderData.getRate();
 		    igstTax = igstTax/100;
 		    igstTotal = igstTotal+igstTax;
-		    PdfPTable table141 = new PdfPTable(2);
-		      table141.setWidthPercentage(100);
-		     PdfPTable pdtable142 = new PdfPTable(1);
-		     pdtable142.addCell(getCel1(""+productOrderData.getIgst(), PdfPCell.ALIGN_LEFT,bf12));
+		    PdfPTable perAmoutIGSTTable = new PdfPTable(2);
+		    perAmoutIGSTTable.setWidthPercentage(100);
+		    
+		     PdfPTable perIGSTTable = new PdfPTable(1);
+		     perIGSTTable.addCell(getCel1(""+productOrderData.getIgst(), PdfPCell.ALIGN_LEFT,bf12));
 		     
-		     PdfPTable pdtable143 = new PdfPTable(1);
-		     pdtable143.addCell(getCel1(""+igstTax, PdfPCell.ALIGN_LEFT,bf12));
-		     table141.addCell(pdtable142);
-		     table141.addCell(pdtable143);
-		     table.addCell(table141);	
+		     PdfPTable amoutIGSTTable = new PdfPTable(1);
+		     amoutIGSTTable.addCell(getCel1(""+igstTax, PdfPCell.ALIGN_LEFT,bf12));
+		     perAmoutIGSTTable.addCell(perIGSTTable);
+		     perAmoutIGSTTable.addCell(amoutIGSTTable);
+		     table.addCell(perAmoutIGSTTable);	
 		    
 		    insertCell(table, (Float.toString(productOrderData.getAmount())), Element.ALIGN_RIGHT, 1, bf12);
 		    SUB_TOTAL = SUB_TOTAL+productOrderData.getAmount();
@@ -296,72 +307,72 @@ public class CreatePDF {
 			} else {
 				
 		 String  totalTaxInWord = calculationInWord(totalFinal);
-		 float[] columnwith1 = {88.20f,11.80f};
-	     PdfPTable table921 = new PdfPTable(columnwith1);
-	     table921.setWidthPercentage(100);
+		 float[] invoiceValueColumnwidth = {88.20f,11.80f};
+	     PdfPTable invoiceValueTable = new PdfPTable(invoiceValueColumnwidth);
+	     invoiceValueTable.setWidthPercentage(100);
 	     
-	     PdfPTable table923 = new PdfPTable(1);
-	     table923.addCell(getCell("Total Invoice Value In Word  :"+totalTaxInWord, PdfPCell.ALIGN_LEFT,bf1));
+	     PdfPTable valueTable = new PdfPTable(1);
+	     valueTable.addCell(getCell("Total Invoice Value In Word  :"+totalTaxInWord, PdfPCell.ALIGN_LEFT,bf1));
 	     
-	     PdfPTable table909= new PdfPTable(1);
+	     PdfPTable valueBlankTable= new PdfPTable(1);
 	     
-	     table921.addCell(table923);
-	     table921.addCell(table909);
-	     document.add(table921);
+	     invoiceValueTable.addCell(valueTable);
+	     invoiceValueTable.addCell(valueBlankTable);
+	     document.add(invoiceValueTable);
 	     
-	     float[] columnwith12 = {68.20f, 20f,11.80f};
-	     PdfPTable table9 = new PdfPTable(columnwith12);
-	     table9.setWidthPercentage(100);
+	     float[] invoiceFigcolumnwidth = {68.20f, 20f,11.80f};
+	     PdfPTable invoiceFigTable = new PdfPTable(invoiceFigcolumnwidth);
+	     invoiceFigTable.setWidthPercentage(100);
 	    
-	     PdfPTable table91= new PdfPTable(1);
+	     PdfPTable figTable= new PdfPTable(1);
 	     
-	     PdfPTable table92 = new PdfPTable(1);
-	     table92.addCell(getCell("Total Invoice in fig", PdfPCell.ALIGN_LEFT,bf1));
+	     PdfPTable invoiceTable1 = new PdfPTable(1);
+	     invoiceTable1.addCell(getCell("Total Invoice in fig", PdfPCell.ALIGN_LEFT,bf1));
 	     
 	     PdfPTable table93 = new PdfPTable(1);
 	     table93.addCell(getCell(""+totalFinal, PdfPCell.ALIGN_LEFT,bf1));
 	     
-	     table9.addCell(table91);
-	     table9.addCell(table92);
-	     table9.addCell(table93);
-	     document.add(table9);
+	     invoiceFigTable.addCell(figTable);
+	     invoiceFigTable.addCell(invoiceTable1);
+	     invoiceFigTable.addCell(table93);
+	     document.add(invoiceFigTable);
 			}
 	     
 	     DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 	     Date date = new Date();
-	     PdfPTable lasttable1 = new PdfPTable(2);
-	     lasttable1.setWidthPercentage(100);
+	     PdfPTable dateTimeTable = new PdfPTable(2);
+	     dateTimeTable.setWidthPercentage(100);
 	     
-	     PdfPTable subtable11 = new PdfPTable(1);
-	     subtable11.addCell(getCell("Date and Time of Removal", PdfPCell.ALIGN_LEFT,bf12));
+	     PdfPTable dateTimeRemovalTable = new PdfPTable(1);
+	     dateTimeRemovalTable.addCell(getCell("Date and Time of Removal", PdfPCell.ALIGN_LEFT,bf12));
 	 
-	     PdfPTable subtable12 = new PdfPTable(1);
-	     subtable12.addCell(getCell(""+dateFormat.format(date), PdfPCell.ALIGN_LEFT,bf12));
+	     PdfPTable dateRemovalTable = new PdfPTable(1);
+	     dateRemovalTable.addCell(getCell(""+dateFormat.format(date), PdfPCell.ALIGN_LEFT,bf12));
 	    
-	     lasttable1.addCell(subtable11);
-	     lasttable1.addCell(subtable12);
-	     document.add(lasttable1);
+	     dateTimeTable.addCell(dateTimeRemovalTable);
+	     dateTimeTable.addCell(dateRemovalTable);
+	     document.add(dateTimeTable);
 	     
-	     float[] columnWidths1 = {65f, 35f};
-	     PdfPTable lasttable10 = new PdfPTable(columnWidths1);
-	     lasttable10.setWidthPercentage(100f);
+	     float[] declrationWidth = {65f, 35f};
+	     PdfPTable declarationekTable = new PdfPTable(declrationWidth);
+	     declarationekTable.setWidthPercentage(100f);
 	     
-	     PdfPTable subtable110 = new PdfPTable(1);
-	     subtable110.addCell(getCell("Declaration :", PdfPCell.ALIGN_LEFT,bf1));
-	     subtable110.addCell(getCell("1) I/We declare that this invoice shows actual price of goods and services described that all particulars are true and correct", PdfPCell.ALIGN_LEFT,bf1));
-	     subtable110.addCell(getCell("2) Error and Omission expected", PdfPCell.ALIGN_LEFT,bf1));
-	     subtable110.addCell(getCell("3) Subject to the jurisdiction of courts in shirur", PdfPCell.ALIGN_LEFT,bf1));
+	     PdfPTable declarationTable = new PdfPTable(1);
+	     declarationTable.addCell(getCell("Declaration :", PdfPCell.ALIGN_LEFT,bf1));
+	     declarationTable.addCell(getCell("1) I/We declare that this invoice shows actual price of goods and services described that all particulars are true and correct", PdfPCell.ALIGN_LEFT,bf1));
+	     declarationTable.addCell(getCell("2) Error and Omission expected", PdfPCell.ALIGN_LEFT,bf1));
+	     declarationTable.addCell(getCell("3) Subject to the jurisdiction of courts in shirur", PdfPCell.ALIGN_LEFT,bf1));
 	 
-	     PdfPTable subtable120 = new PdfPTable(1);
-	     subtable120.addCell(getCell("For EK Electronics Pvt.Ltd", PdfPCell.ALIGN_RIGHT,bf123));
-	     subtable120.addCell(getCell(" ", PdfPCell.ALIGN_RIGHT,bf12));
-	     subtable120.addCell(getCell(" ", PdfPCell.ALIGN_RIGHT,bf12));
-	     subtable120.addCell(getCell(" ", PdfPCell.ALIGN_RIGHT,bf12));
-	     subtable120.addCell(getCell("Authorised Signature", PdfPCell.ALIGN_RIGHT,bf123));
+	     PdfPTable ekTable = new PdfPTable(1);
+	     ekTable.addCell(getCell("For EK Electronics Pvt.Ltd", PdfPCell.ALIGN_RIGHT,bf123));
+	     ekTable.addCell(getCell(" ", PdfPCell.ALIGN_RIGHT,bf12));
+	     ekTable.addCell(getCell(" ", PdfPCell.ALIGN_RIGHT,bf12));
+	     ekTable.addCell(getCell(" ", PdfPCell.ALIGN_RIGHT,bf12));
+	     ekTable.addCell(getCell("Authorised Signature", PdfPCell.ALIGN_RIGHT,bf123));
 	    
-	     lasttable10.addCell(subtable110);
-	     lasttable10.addCell(subtable120);
-	     document.add(lasttable10);
+	     declarationekTable.addCell(declarationTable);
+	     declarationekTable.addCell(ekTable);
+	     document.add(declarationekTable);
 	     Paragraph preface = new Paragraph();
 	     creteEmptyLine(preface, 1);
 	     document.add(preface);
@@ -400,10 +411,6 @@ public class CreatePDF {
 		    cell.setVerticalAlignment(alignment);
 		    cell.setBorder(PdfPCell.NO_BORDER);
 		    cell.setExtraParagraphSpace(10);
-		    cell.setBorderColorTop(BaseColor.WHITE);
-		    cell.setBorderColorBottom(BaseColor.WHITE);
-		    cell.setBorderColorLeft(BaseColor.WHITE);
-		    cell.setBorderColorRight(BaseColor.WHITE);
 		    return cell;
 		}
 	 

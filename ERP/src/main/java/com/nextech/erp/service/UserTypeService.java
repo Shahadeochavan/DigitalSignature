@@ -12,5 +12,7 @@ public interface UserTypeService extends CRUDService<Usertype>{
 	public List<UserTypeDTO> getUserTypeDTO() throws Exception;
 	
 	public UserTypeDTO deleteUserType(long id) throws Exception;
+	
+	public Usertype getUserTypeByUserTypeName(String userTypeName) throws Exception;
 
 }

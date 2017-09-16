@@ -39,7 +39,12 @@ public class UnitController {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
-		 	unitservice.addEntity(UnitFactory.setUnit(unitDTO, request));
+			if(unitservice.getUnitByName(unitDTO.getName())==null){
+				unitservice.addEntity(UnitFactory.setUnit(unitDTO, request));
+			}else{
+				return  new UserStatus(2,"Unit name already exit");
+			}
+		 	
 			return new UserStatus(1, "Unit added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			cve.printStackTrace();

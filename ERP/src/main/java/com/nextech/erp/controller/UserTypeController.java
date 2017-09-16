@@ -18,7 +18,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.factory.UserTypeFactory;
+import com.nextech.erp.model.User;
+import com.nextech.erp.model.Usertype;
 import com.nextech.erp.newDTO.UserTypeDTO;
 import com.nextech.erp.service.UserTypeService;
 import com.nextech.erp.status.Response;
@@ -38,7 +41,12 @@ public class UserTypeController {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
-			userTypeService.addEntity(UserTypeFactory.setUserType(userTypeDTO, request));
+			if(userTypeService.getUserTypeByUserTypeName(userTypeDTO.getUsertypeName())==null){
+				userTypeService.addEntity(UserTypeFactory.setUserType(userTypeDTO, request));
+			}else{
+				return new UserStatus(2,"User Type name already exit");
+			}
+		
 			return new UserStatus(1, "Usertype added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			System.out.println("Inside ConstraintViolationException");
@@ -72,7 +80,14 @@ public class UserTypeController {
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
 	public @ResponseBody UserStatus updateUserType(@RequestBody UserTypeDTO userTypeDTO,HttpServletRequest request,HttpServletResponse response) {
 		try {
-	
+			Usertype oldUserInfo = userTypeService.getEntityById(Usertype.class, userTypeDTO.getId());
+			if(userTypeDTO.getUsertypeName().equals(oldUserInfo.getUsertypeName())){  
+			} else { 
+				if (userTypeService.getUserTypeByUserTypeName(userTypeDTO.getUsertypeName()) == null) {
+			    }else{  
+				return new UserStatus(2, "User Type name already exit");
+				}
+			 }
 		userTypeService.updateEntity(UserTypeFactory.setUserTypeUpdate(userTypeDTO, request));
 			return new UserStatus(1, "UserType update Successfully !");
 		} catch (Exception e) {

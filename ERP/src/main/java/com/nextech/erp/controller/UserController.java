@@ -109,7 +109,7 @@ public class UserController {
 				user.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			   userservice.addEntity(user);
 	            NotificationDTO  notificationDTO = notificationService.getNotificationByCode((messageSource.getMessage(ERPConstants.USER_ADD_NOTIFICATION, null, null)));
-			mailSending(userDTO, request, response,notificationDTO);
+		//	mailSending(userDTO, request, response,notificationDTO);
 			return new UserStatus(1, "User added Successfully !");
 			} else {
 				new UserStatus(0, "User is not authenticated.");
