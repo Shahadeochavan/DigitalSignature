@@ -36,7 +36,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nextech.erp.constants.ERPConstants;
-import com.nextech.erp.dto.CreatePDFProductOrder;
+import com.nextech.erp.dto.RMOrderPdf;
 import com.nextech.erp.dto.Mail;
 import com.nextech.erp.dto.ProductOrderDTO;
 import com.nextech.erp.dto.ProductRMAssociationDTO;
@@ -292,7 +292,7 @@ public class RawmaterialorderController {
 	    response.setContentType("application/pdf");
 	    response.setHeader("Content-disposition", "attachment; filename="+ fileName);
 	    try {
-	    	CreatePDFProductOrder createPDF = new CreatePDFProductOrder();
+	    	RMOrderPdf createPDF = new RMOrderPdf();
 	    	createPDF.createPDF(temperotyFilePath+"\\"+fileName,rawmaterialOrderDTO,rmOrderModelDatas,vendor);
 	        ByteArrayOutputStream baos = new ByteArrayOutputStream();
 	        baos = convertPDFToByteArrayOutputStream(temperotyFilePath+"\\"+fileName,rawmaterialOrderDTO,rmOrderModelDatas);

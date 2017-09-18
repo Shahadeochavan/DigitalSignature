@@ -26,7 +26,7 @@ import com.nextech.erp.newDTO.VendorDTO;
 import com.nextech.erp.service.ProductorderService;
 import com.nextech.erp.service.ProductorderassociationService;
 
-public class CreatePDFProductOrder {
+public class RMOrderPdf {
 	private static Font TIME_ROMAN = new Font(Font.FontFamily.TIMES_ROMAN, 18,Font.BOLD);
 	private static Font TIME_ROMAN_SMALL = new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.BOLD);
 	public  float grandtotal = 0;

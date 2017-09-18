@@ -25,7 +25,7 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.nextech.erp.newDTO.ClientDTO;
 
-public class CreatePDF {
+public class ProductOrderPdf {
 
 	public static String answer = "";
 	private static Font TIME_ROMAN = new Font(Font.FontFamily.TIMES_ROMAN, 18,Font.BOLD);
@@ -435,7 +435,7 @@ public class CreatePDF {
 			if(total <= 0)   {                
 				System.out.println("Enter numbers greater than 0");
 			} else {
-				CreatePDF a = new CreatePDF();
+				ProductOrderPdf a = new ProductOrderPdf();
 				a.pw((total/1000000000)," hundred");
 				a.pw((total/10000000)%100," crore");
 				a.pw(((total/100000)%100)," lakh");

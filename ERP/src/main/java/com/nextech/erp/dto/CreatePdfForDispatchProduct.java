@@ -86,26 +86,26 @@ public class CreatePdfForDispatchProduct {
 		   Font bf113 = new Font(FontFamily.TIMES_ROMAN, 12,Font.BOLD);
 		   Font bf1 = new Font(FontFamily.TIMES_ROMAN, 10,Font.BOLD); 
 		   
-		  PdfPTable table00 = new PdfPTable(1);
-		   table00.setWidthPercentage(100);
-		   PdfPTable table1 = new PdfPTable(1);
-		     table1.setWidthPercentage(100);
-		     table1.addCell(getCell1("E.K.ELECTRONICS PVT.LTD", PdfPCell.ALIGN_CENTER,bf12));
-		     table1.addCell(getCell("E-64 MIDC Industrial,Ranjangon Tal Shirur Dist pune-412220", PdfPCell.ALIGN_CENTER));
-		     table1.addCell(getCell("Email:sachi@eksgpl.com/purchase@eksgpl.com", PdfPCell.ALIGN_CENTER));
-		     table1.addCell(getCell1("DISPATCH PRODUCT", PdfPCell.ALIGN_LEFT,bf112));
-		     table00.addCell(table1);
-		     document.add(table00);
+		  PdfPTable fromEKTable = new PdfPTable(1);
+		  fromEKTable.setWidthPercentage(100);
+		   PdfPTable ekAddressTable = new PdfPTable(1);
+		   ekAddressTable.setWidthPercentage(100);
+		   ekAddressTable.addCell(getCell1("E.K.ELECTRONICS PVT.LTD", PdfPCell.ALIGN_CENTER,bf12));
+		   ekAddressTable.addCell(getCell("E-64 MIDC Industrial,Ranjangon Tal Shirur Dist pune-412220", PdfPCell.ALIGN_CENTER));
+		   ekAddressTable.addCell(getCell("Email:sachi@eksgpl.com/purchase@eksgpl.com", PdfPCell.ALIGN_CENTER));
+		   ekAddressTable.addCell(getCell1("DISPATCH PRODUCT", PdfPCell.ALIGN_LEFT,bf112));
+		     fromEKTable.addCell(ekAddressTable);
+		     document.add(fromEKTable);
 		     
 		     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy");
-		     PdfPTable table0 = new PdfPTable(1);
-		     table0.setWidthPercentage(100);
-		     PdfPTable table = new PdfPTable(1); 
-		     table.addCell(getCell1("DISPATCH INVOICE NUMBER : "+dispatchDTO.getInvoiceNo(), PdfPCell.ALIGN_LEFT,bf1));
-		     table.addCell(getCell1("DISCRIPTION : "+dispatchDTO.getDescription(), PdfPCell.ALIGN_LEFT,bf1));
-		     table.addCell(getCell1("DISPATCHED DATE : "+ simpleDateFormat.format(new Date()), PdfPCell.ALIGN_LEFT,bf1));
-		     table0.addCell(table);
-		     document.add(table0);
+		     PdfPTable dispatchInfoTable = new PdfPTable(1);
+		     dispatchInfoTable.setWidthPercentage(100);
+		     PdfPTable diapatchProductTable = new PdfPTable(1); 
+		     diapatchProductTable.addCell(getCell1("DISPATCH INVOICE NUMBER : "+dispatchDTO.getInvoiceNo(), PdfPCell.ALIGN_LEFT,bf1));
+		     diapatchProductTable.addCell(getCell1("DISCRIPTION : "+dispatchDTO.getDescription(), PdfPCell.ALIGN_LEFT,bf1));
+		     diapatchProductTable.addCell(getCell1("DISPATCHED DATE : "+ simpleDateFormat.format(new Date()), PdfPCell.ALIGN_LEFT,bf1));
+		     dispatchInfoTable.addCell(diapatchProductTable);
+		     document.add(dispatchInfoTable);
 
 	}
 
