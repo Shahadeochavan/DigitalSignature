@@ -120,7 +120,6 @@ public class CreatePdfForDispatchProduct {
 		
 		Paragraph paragraph = new Paragraph();
 		DecimalFormat df = new DecimalFormat("0.00");
-
 		  Font bfBold12 = new Font(FontFamily.TIMES_ROMAN, 12, Font.BOLD, new BaseColor(0, 0, 0)); 
 		   Font bf12 = new Font(FontFamily.TIMES_ROMAN, 12); 
 		  //specify column widths
@@ -156,7 +155,6 @@ public class CreatePdfForDispatchProduct {
      document.add(table);
 	}
 	 private void insertCell(PdfPTable table, String text, int align, int colspan, Font font){
-	  
 	  //create a new cell with the specified Text and Font
 	  PdfPCell cell = new PdfPCell(new Phrase(text.trim(), font));
 	  //set the cell alignment

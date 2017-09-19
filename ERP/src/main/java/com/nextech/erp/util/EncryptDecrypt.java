@@ -15,7 +15,6 @@ public class EncryptDecrypt {
 	private Cipher decryptCipher;
 	private sun.misc.BASE64Encoder encoder = new sun.misc.BASE64Encoder();
 	private sun.misc.BASE64Decoder decoder = new sun.misc.BASE64Decoder();
-
 	public EncryptDecrypt() throws SecurityException{
 
 		java.security.Security.addProvider(new com.sun.crypto.provider.SunJCE());
