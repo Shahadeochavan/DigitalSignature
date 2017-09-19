@@ -239,7 +239,6 @@ public class ReportController {
 		}
 		return null;
 	}
-
 	//@Scheduled(initialDelay=10000, fixedRate=60000)
 	private void executeSchedular(){
 		System.out.println("Executed Scheduled method.");
