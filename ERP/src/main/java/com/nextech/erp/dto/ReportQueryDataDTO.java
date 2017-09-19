@@ -1,10 +1,12 @@
 package com.nextech.erp.dto;
 
+import java.util.Date;
 import java.util.List;
 
 public class ReportQueryDataDTO {
 	private long reportId;
 	private long reportType;
+	private Date searchByDate;
 	private List<InputParameter> data;
 	public long getReportId() {
 		return reportId;
@@ -23,5 +25,11 @@ public class ReportQueryDataDTO {
 	}
 	public void setData(List<InputParameter> data) {
 		this.data = data;
+	}
+	public Date getSearchByDate() {
+		return searchByDate;
+	}
+	public void setSearchByDate(Date searchByDate) {
+		this.searchByDate = searchByDate;
 	}
 }

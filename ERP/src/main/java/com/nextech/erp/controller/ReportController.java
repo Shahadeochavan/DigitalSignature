@@ -44,6 +44,7 @@ import com.nextech.erp.service.ReptOptAssoService;
 import com.nextech.erp.service.ReptOptParaService;
 import com.nextech.erp.status.UserStatus;
 import com.nextech.erp.util.DateUtil;
+
 import net.sf.dynamicreports.jasper.builder.JasperReportBuilder;
 import net.sf.dynamicreports.report.builder.DynamicReports;
 import net.sf.dynamicreports.report.builder.column.Columns;
@@ -101,6 +102,9 @@ public class ReportController {
 				}
 				else if(reportinputparameter.getInputType().equals("DATE")){
 					query = query.replace("%"+inputParameter.getId()+"%", "'"+DateUtil.convertToString(DateUtil.convertToDate(inputParameter.getValue().toString()))+"'");
+				String	str = (String) inputParameter.getValue();
+					str = "\"" + str + "\"";
+					query =  query+str;
 				}
 				else {
 					query = query.replace("%"+inputParameter.getId()+"%", inputParameter.getValue().toString());
@@ -235,6 +239,7 @@ public class ReportController {
 		}
 		return null;
 	}
+
 	
 	//@Scheduled(initialDelay=10000, fixedRate=60000)
 	private void executeSchedular(){

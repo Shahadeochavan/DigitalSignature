@@ -132,6 +132,9 @@ public class RawmaterialorderController {
 				return new UserStatus(0, bindingResult.getFieldError().getDefaultMessage());
 			}
 			//TODO save call raw material order
+			if(rawmaterialOrderDTO.getRmOrderAssociationDTOs().isEmpty()){
+				return  new UserStatus(0,"In RM Order data is Empty !Please dont send Empty data");
+			}
 			RawmaterialOrderDTO rawmaterialOrderDTO2	= rawmaterialorderService.addMultipleRawMaterialOrder(rawmaterialOrderDTO, request, response);
 			rawmaterialOrderDTO.setId(rawmaterialOrderDTO2.getId());
 			rawmaterialOrderDTO.setStatusId(rawmaterialOrderDTO2.getStatusId());
@@ -281,7 +284,7 @@ public class RawmaterialorderController {
 			rmOrderModelData.setDescription(rawmaterial.getDescription());
 			rmOrderModelDatas.add(rmOrderModelData);
 		}
-		downloadPDF(request, response, rawmaterialOrderDTO,rmOrderModelDatas,vendor);
+		//downloadPDF(request, response, rawmaterialOrderDTO,rmOrderModelDatas,vendor);
 	}
 	
 	public void downloadPDF(HttpServletRequest request, HttpServletResponse response,RawmaterialOrderDTO rawmaterialOrderDTO,List<RMOrderModelData> rmOrderModelDatas,VendorDTO vendor) throws IOException {

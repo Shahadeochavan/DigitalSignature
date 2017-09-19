@@ -33,4 +33,5 @@ public class ReportColumn {
 	public static ColumnBuilder<?, ?> RM_ID = Columns.column("RM Id", "id", DataTypes.integerType());
 	public static ColumnBuilder<?, ?> RM_DESCRIPTION = Columns.column("Description", "description", DataTypes.stringType());
 	public static ColumnBuilder<?, ?> PART_NUMBER = Columns.column("RM Part Number", "part_number", DataTypes.stringType());
+	
 }
