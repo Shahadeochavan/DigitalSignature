@@ -86,10 +86,9 @@ public class RawmaterialorderassociationController {
 			return new UserStatus(0, e.toString());
 		}
 	}
-
+	
 	@Transactional @RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody Response  getRawmaterialorderassociation() {
-
 		List<RMOrderAssociationDTO> rawmaterialorderassociationList = null;
 		try {
 			rawmaterialorderassociationList = rawmaterialorderassociationService.getRMOrderAssoList();

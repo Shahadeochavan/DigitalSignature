@@ -240,7 +240,6 @@ public class ReportController {
 		return null;
 	}
 
-	
 	//@Scheduled(initialDelay=10000, fixedRate=60000)
 	private void executeSchedular(){
 		System.out.println("Executed Scheduled method.");
@@ -264,7 +263,6 @@ public class ReportController {
 			}
 			File file = new File(fileName);
 			InputStream in = new FileInputStream(file);
-
 			response.setHeader("Content-Disposition", "attachment; filename=" + file.getName());
 			response.setHeader("Content-Length", String.valueOf(file.length()));
 			FileCopyUtils.copy(in, response.getOutputStream());

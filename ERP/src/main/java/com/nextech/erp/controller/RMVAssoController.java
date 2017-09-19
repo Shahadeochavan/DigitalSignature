@@ -117,7 +117,6 @@ public class RMVAssoController {
 			if(rawmaterialvendorassociationList==null){
 				return  new Response(1,"There is no rm vendor association");
 			}
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
