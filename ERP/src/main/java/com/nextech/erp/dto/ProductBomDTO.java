@@ -24,6 +24,4 @@ public class ProductBomDTO {
 	public void setCreatedDate(Date createdDate) {
 		this.createdDate = createdDate;
 	}
-
-
 }

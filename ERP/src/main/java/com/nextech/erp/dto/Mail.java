@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 public class Mail {
+	
 	private String mailFrom;
 
     private String mailTo;

@@ -15,5 +15,4 @@ public class ProductNewAssoicatedList {
 	public void setId(long id) {
 		this.id = id;
 	}
-
 }

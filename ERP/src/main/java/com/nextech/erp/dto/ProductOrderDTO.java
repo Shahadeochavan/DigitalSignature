@@ -68,5 +68,4 @@ public class ProductOrderDTO extends AbstractDTO{
 	public void setPoNO(String poNO) {
 		this.poNO = poNO;
 	}	
-	
 }
