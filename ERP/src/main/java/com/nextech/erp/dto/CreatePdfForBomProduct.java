@@ -38,7 +38,6 @@ public class CreatePdfForBomProduct {
 			throws Exception {
 
 		Document document = null;
-
 		try {
 			document = new Document();
 			PdfWriter.getInstance(document, new FileOutputStream(file));

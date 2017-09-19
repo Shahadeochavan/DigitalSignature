@@ -35,7 +35,6 @@ public class CreatePdfForDispatchProduct {
 	/**
 	 * @param args
 	 */
-	
 	@Autowired
 	BomService bomService;
 
