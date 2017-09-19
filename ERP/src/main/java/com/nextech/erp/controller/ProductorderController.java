@@ -350,8 +350,6 @@ public class ProductorderController {
         model.put("signature", "www.NextechServices.in");
         mail.setModel(model);
         mailService.sendEmail(mail,notification);
-        
-       // mailSendingToRMUser(productOrderDTO);
 	}
 	
 	public void mailSendingToRMUser(ProductOrderDTO productOrderDTO)throws Exception{
@@ -386,7 +384,5 @@ public class ProductorderController {
 	        mail.setModel(model);
 		mailService.sendEmailWithoutPdF(mail, notificationDTO);
 	}
-	
-	
 }
 
