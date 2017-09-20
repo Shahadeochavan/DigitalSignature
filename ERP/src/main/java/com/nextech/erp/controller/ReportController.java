@@ -102,9 +102,6 @@ public class ReportController {
 				}
 				else if(reportinputparameter.getInputType().equals("DATE")){
 					query = query.replace("%"+inputParameter.getId()+"%", "'"+DateUtil.convertToString(DateUtil.convertToDate(inputParameter.getValue().toString()))+"'");
-				String	str = (String) inputParameter.getValue();
-					str = "\"" + str + "\"";
-					query =  query+str;
 				}
 				else {
 					query = query.replace("%"+inputParameter.getId()+"%", inputParameter.getValue().toString());
@@ -274,5 +271,57 @@ public class ReportController {
 			e.printStackTrace();
 		}
 	}	
-	 
+
+	@Transactional @RequestMapping(value = "/queryPara", method = RequestMethod.POST , produces = APPLICATION_JSON, headers = "Accept=application/json")
+	public List<ReportInputDTO> fetchReportByParametrized( @RequestBody ReportQueryDataDTO reportQueryDataDTO, final HttpServletRequest request,
+			final HttpServletResponse response) throws Exception {
+		Report report = reportService.getEntityById(Report.class, reportQueryDataDTO.getReportId());
+		String query = report.getReportQuery();
+		if(reportQueryDataDTO != null && reportQueryDataDTO.getData()!=null && !reportQueryDataDTO.getData().isEmpty()){
+			for (InputParameter inputParameter : reportQueryDataDTO.getData()) {
+				Reportinputparameter reportinputparameter = inpParaService.getEntityById(Reportinputparameter.class, inputParameter.getId());
+				if(reportinputparameter.getInputType().equals("LIST")){
+					query = query.replace("%"+inputParameter.getId()+"%", inputParameter.getValue().toString());
+					String	str = (String) inputParameter.getValue();
+					str = "\"" + str + "\"";
+					query =  query+str;
+				}
+				else if(reportinputparameter.getInputType().equals("TEXT")){
+					query = query.replace("%"+inputParameter.getId()+"%", "\""+inputParameter.getValue()+"\"");
+				}
+				else if(reportinputparameter.getInputType().equals("DATE")){
+					query = query.replace("%"+inputParameter.getId()+"%", "'"+DateUtil.convertToString(DateUtil.convertToDate(inputParameter.getValue().toString()))+"'");
+				String	str = (String) inputParameter.getValue();
+					str = "\"" + str + "\"";
+					query =  query+str;
+				}
+				else {
+					query = query.replace("%"+inputParameter.getId()+"%", inputParameter.getValue().toString());
+				}
+			}
+		}
+		List<Reportoutputassociation> reportoutputassociations = reptOptAssoService.getReportOutputParametersByReportId(reportQueryDataDTO.getReportId());
+		JasperReportBuilder jasperReportBuilder = DynamicReports.report();
+		if(reportoutputassociations != null && !reportoutputassociations.isEmpty()){
+			for (Reportoutputassociation reportoutputassociation : reportoutputassociations) {
+				if(reportoutputassociation.getReportoutputparameter().getDatatype().equals("TEXT")){
+					jasperReportBuilder.addColumn(Columns.column(reportoutputassociation.getReportoutputparameter().getDisplayName(), reportoutputassociation.getReportoutputparameter().getName(), DataTypes.stringType()));
+				}else if(reportoutputassociation.getReportoutputparameter().getDatatype().equals("LONG")){
+					jasperReportBuilder.addColumn(Columns.column(reportoutputassociation.getReportoutputparameter().getDisplayName(), reportoutputassociation.getReportoutputparameter().getName(), DataTypes.integerType()));
+				}else if(reportoutputassociation.getReportoutputparameter().getDatatype().equals("DATE")){
+					jasperReportBuilder.addColumn(Columns.column(reportoutputassociation.getReportoutputparameter().getDisplayName(), reportoutputassociation.getReportoutputparameter().getName(), DataTypes.dateType()));
+				}
+				
+			}
+			
+		}
+		Connection connection = sessionFactory.getSessionFactoryOptions().getServiceRegistry().getService(ConnectionProvider.class).getConnection();
+		jasperReportBuilder.title(Components.text(report.getReport_Name()).setHorizontalAlignment(HorizontalAlignment.CENTER));
+		File f = new File(report.getReportLocation());
+		if(!f.exists())
+			f.mkdirs();
+		jasperReportBuilder.setDataSource(query, connection);
+		downloadReport(jasperReportBuilder, reportQueryDataDTO.getReportType(), report.getReportLocation() + report.getFileName(), response);
+		return null;
+	}
 	}
