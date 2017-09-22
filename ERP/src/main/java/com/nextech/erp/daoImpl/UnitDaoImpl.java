@@ -6,12 +6,9 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-
 import org.springframework.stereotype.Repository;
-
 import com.nextech.erp.dao.UnitDao;
 import com.nextech.erp.model.Unit;
-import com.nextech.erp.model.Usertype;
 
 @Repository
 

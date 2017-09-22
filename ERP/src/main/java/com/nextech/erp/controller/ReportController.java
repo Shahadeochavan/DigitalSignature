@@ -311,7 +311,7 @@ public class ReportController {
 				}else if(reportoutputassociation.getReportoutputparameter().getDatatype().equals("DATE")){
 					jasperReportBuilder.addColumn(Columns.column(reportoutputassociation.getReportoutputparameter().getDisplayName(), reportoutputassociation.getReportoutputparameter().getName(), DataTypes.dateType()));
 				}
-				
+				   
 			}
 			
 		}
