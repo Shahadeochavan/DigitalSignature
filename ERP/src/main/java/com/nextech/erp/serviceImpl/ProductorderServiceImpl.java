@@ -100,6 +100,7 @@ public class ProductorderServiceImpl extends CRUDServiceImpl<Productorder> imple
 		
 		List<ProductOrderDTO> productOrderDTOs =  new ArrayList<ProductOrderDTO>();
 		List<Productorder> productorders = productorderDao.getInCompleteProductOrders(statusId);
+		System.out.println(productorders);
 		if(productorders==null){
 			return null;
 		}
@@ -225,5 +226,20 @@ public class ProductorderServiceImpl extends CRUDServiceImpl<Productorder> imple
 		String invoiceNo = "";
 		invoiceNo = "000";
 		return invoiceNo;
+	}
+	@Override
+	public List<ProductOrderDTO> getNewAndInCompleteProductOrders(long newStatus,long inCompleteStatus)
+			throws Exception {
+		// TODO Auto-generated method stub
+		List<ProductOrderDTO> productOrderDTOs =  new ArrayList<ProductOrderDTO>();
+		List<Productorder> productorders = productorderDao.getNewAndInCompleteProductOrders(newStatus,inCompleteStatus);
+		if(productorders.isEmpty()){
+			return null;
+		}
+		for (Productorder productorder : productorders) {
+			ProductOrderDTO productOrderDTO  =  ProductOrderRequestResponseFactory.setProductOrderDTO(productorder);
+			productOrderDTOs.add(productOrderDTO);
+		}
+		return productOrderDTOs;
 	}
 }

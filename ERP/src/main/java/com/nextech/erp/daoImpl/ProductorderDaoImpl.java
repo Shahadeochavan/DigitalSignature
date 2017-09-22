@@ -8,7 +8,9 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import javax.persistence.metamodel.EntityType;
 import javax.persistence.metamodel.Metamodel;
+
 import org.springframework.stereotype.Repository;
+
 import com.nextech.erp.dao.ProductorderDao;
 import com.nextech.erp.model.Productorder;
 
@@ -76,6 +78,21 @@ public class ProductorderDaoImpl extends SuperDaoImpl<Productorder> implements
 		criteria.select(userRoot).where(builder.equal(userRoot.get("isactive"), true),builder.not(builder.equal(userRoot.get("status"), statusId)));
 		TypedQuery<Productorder> query = session.createQuery(criteria);
 		return query.getResultList();
+	}
+
+	@Override
+	public List<Productorder> getNewAndInCompleteProductOrders(long newStatus,long inCompleteStatus)
+			throws Exception {
+		// TODO Auto-generated method stub
+		session = sessionFactory.openSession();
+		CriteriaBuilder criteriaBuilder=session.getCriteriaBuilder();
+	    CriteriaQuery<Productorder> criteriaQuery=criteriaBuilder.createQuery(Productorder.class);
+	    Metamodel metamodel=session.getMetamodel();
+	    EntityType<Productorder> entityType = metamodel.entity(Productorder.class);
+	    Root<Productorder> root = criteriaQuery.from(entityType);
+	    criteriaQuery.where(root.get("status").in(newStatus,inCompleteStatus));
+	    TypedQuery<Productorder> typedQuery = session.createQuery(criteriaQuery);
+	    return typedQuery.getResultList();
 	}
 
 }

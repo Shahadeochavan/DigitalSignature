@@ -30,4 +30,6 @@ public interface ProductorderService extends CRUDService<Productorder>{
 	public List<ProductOrderData> createProductorderAsso(ProductOrderDTO productOrderDTO,HttpServletRequest request) throws Exception;
 
 	List<ProductOrderDTO> getInCompleteProductOrders(long statusId);
+	
+	List<ProductOrderDTO> getNewAndInCompleteProductOrders(long newStatus,long inCompleteStatus) throws Exception;
 }

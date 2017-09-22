@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+
 import javax.persistence.PersistenceException;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -33,7 +34,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.dto.RMOrderPdf;
 import com.nextech.erp.dto.Mail;
@@ -45,8 +45,8 @@ import com.nextech.erp.dto.RMReqirementDTO;
 import com.nextech.erp.dto.RawmaterialOrderDTO;
 import com.nextech.erp.factory.RMOrderRequestResponseFactory;
 import com.nextech.erp.model.Productinventory;
-import com.nextech.erp.model.Productorderassociation;
 import com.nextech.erp.newDTO.NotificationDTO;
+import com.nextech.erp.newDTO.ProductOrderAssociationDTO;
 import com.nextech.erp.newDTO.RMOrderAssociationDTO;
 import com.nextech.erp.newDTO.RMVendorAssociationDTO;
 import com.nextech.erp.newDTO.RawMaterialDTO;
@@ -361,23 +361,27 @@ public class RawmaterialorderController {
 	public @ResponseBody Response getRequiredRMList() {
 		try{
 		String message = messageSource.getMessage(ERPConstants.STATUS_PRODUCT_ORDER_COMPLETE, null, null);	
-		Long status = Long.parseLong(message);	
-		List<ProductOrderDTO> incompleteOrders = 
-		productorderService.getInCompleteProductOrders(status);
+		String messageNewOrder = messageSource.getMessage(ERPConstants.STATUS_NEW_PRODUCT_ORDER, null,null);
+		Long completeOrderStatus = Long.parseLong(message);	
+		Long newOrderStatus =Long.parseLong(messageNewOrder);
+		List<ProductOrderDTO> incompleteOrders = productorderService.getNewAndInCompleteProductOrders(completeOrderStatus,newOrderStatus);
 		Map<Long, Long> productQuantityMap = new HashMap<Long, Long>();
 		for (Iterator<ProductOrderDTO> iterator = incompleteOrders.iterator(); iterator
 				.hasNext();) {
 			ProductOrderDTO productOrderDTO = (ProductOrderDTO) iterator.next();
-			Productorderassociation productorderassociation = productorderassociationService.getProductAssoByOrder(productOrderDTO.getId());
-			if(productorderassociation !=null){
-			Long productId = productorderassociation.getProduct().getId();
+			//Productorderassociation productorderassociation = productorderassociationService.getProductAssoByOrder(productOrderDTO.getId());
+			List<ProductOrderAssociationDTO> productOrderAssociationDTOs = productorderassociationService.getProductorderassociationByOrderId(productOrderDTO.getId());
+			for (ProductOrderAssociationDTO productOrderAssociationDTO : productOrderAssociationDTOs) {
+			if(productOrderAssociationDTO !=null){
+			Long productId = productOrderAssociationDTO.getProductId().getId();
 			if(productQuantityMap.containsKey(productId)){
-				productQuantityMap.put(productId, (productQuantityMap.get(productId) + productorderassociation.getRemainingQuantity()));
+				productQuantityMap.put(productId, (productQuantityMap.get(productId) + productOrderAssociationDTO.getRemainingQuantity()));
 			}else {
-				productQuantityMap.put(productId, productorderassociation.getRemainingQuantity());
+				productQuantityMap.put(productId, productOrderAssociationDTO.getRemainingQuantity());
 			}
 		}else{
 			return  new Response(1,"There is no product order assocition");
+		}
 		}
 		}
 		
@@ -413,13 +417,13 @@ public class RawmaterialorderController {
 		for (Iterator<Entry<Long, Long>> iterator = rmQuantityEntries.iterator(); iterator
 				.hasNext();) {
 			Entry<Long, Long> rmQtyentry = (Entry<Long, Long>) iterator.next();
-			
 			RMInventoryDTO rmInventoryDTO = rawmaterialinventoryService.getByRMId(rmQtyentry.getKey());
 			RMReqirementDTO rmReqirementDTO = new RMReqirementDTO();
 			rmReqirementDTO.setRmId(rmQtyentry.getKey());
 			rmReqirementDTO.setRmPartNumber(rmInventoryDTO.getRmPartNumber());
-			rmReqirementDTO.setRequiredQuantity(rmQtyentry.getValue());
+			rmReqirementDTO.setRequiredQuantity(rmQtyentry.getValue()-rmInventoryDTO.getQuantityAvailable()+rmInventoryDTO.getMinimumQuantity());
 			rmReqirementDTO.setInventoryQuantity(rmInventoryDTO.getQuantityAvailable());
+			rmReqirementDTO.setMinimumQuantity(rmInventoryDTO.getMinimumQuantity());
 			
 			System.out.println("rmid : " + rmQtyentry.getKey() + " reqQty : " + rmQtyentry.getValue() + " invQty : " + rmReqirementDTO.getInventoryQuantity());
 			if(rmQtyentry.getValue() > rmInventoryDTO.getQuantityAvailable()){

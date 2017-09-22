@@ -6,6 +6,7 @@ public class RMReqirementDTO extends AbstractDTO{
 	public Long rmId;
 	public Long requiredQuantity;
 	public Long inventoryQuantity;
+	public Long minimumQuantity;
 	
 	
 	
@@ -33,7 +34,11 @@ public class RMReqirementDTO extends AbstractDTO{
 	public void setInventoryQuantity(Long inventoryQuantity) {
 		this.inventoryQuantity = inventoryQuantity;
 	}
-	
-	
+	public Long getMinimumQuantity() {
+		return minimumQuantity;
+	}
+	public void setMinimumQuantity(Long minimumQuantity) {
+		this.minimumQuantity = minimumQuantity;
+	}
 	
 }

@@ -10,13 +10,15 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.hibernate.Criteria;
+import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.hibernate.engine.jdbc.connections.spi.ConnectionProvider;
-import org.hibernate.query.NativeQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.FileCopyUtils;
@@ -51,6 +53,7 @@ import net.sf.dynamicreports.report.builder.datatype.DataTypes;
 import net.sf.dynamicreports.report.constant.HorizontalAlignment;
 import net.sf.dynamicreports.report.exception.DRException;
 
+@SuppressWarnings("deprecation")
 @RestController
 @Transactional @RequestMapping("/report")
 public class ReportController {
@@ -98,7 +101,7 @@ public class ReportController {
 					query = query.replace("%"+inputParameter.getId()+"%", "\""+inputParameter.getValue()+"\"");
 				}
 				else if(reportinputparameter.getInputType().equals("DATE")){
-					query = query.replace("%"+inputParameter.getId()+"%", "'"+DateUtil.convertToString(DateUtil.convertToDate(inputParameter.getValue().toString()))+"'");
+					query = query.replace("%"+inputParameter.getId()+"%", " "+DateUtil.convertToString(DateUtil.convertToDate(inputParameter.getValue().toString()))+" ");
 				}
 				else {
 					query = query.replace("%"+inputParameter.getId()+"%", inputParameter.getValue().toString());
@@ -131,7 +134,7 @@ public class ReportController {
 	}
 
 	
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Transactional @RequestMapping(value = "/inputParameters/{id}", method = RequestMethod.GET, produces = APPLICATION_SCV, headers = "Accept=application/json")
 	public List<ReportInputDTO> inputParameters(@PathVariable("id") long id, final HttpServletRequest request,
 			final HttpServletResponse response) throws Exception {
@@ -142,14 +145,15 @@ public class ReportController {
 				ReportInputDTO inputDTO = new ReportInputDTO();
 				Reportinputparameter reportinputparameter = reportinputassociation.getReportinputparameter();
 				if (reportinputparameter != null && reportinputparameter.isQueryParameter()) {
-					NativeQuery query1 = sessionFactory.getCurrentSession().createNativeQuery(reportinputparameter.getQuery());
-					List results = query1.getResultList();
+					Query query1 = sessionFactory.getCurrentSession().createSQLQuery(reportinputparameter.getQuery());
+					query1.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+					List results = query1.list();
 					List<ReportInputDataDTO> dataDTOs = new ArrayList<ReportInputDataDTO>();
 					for (Object object : results) {
-						Object[] data = (Object[]) object;
+						Map<String, Object> data = (Map<String, Object>) object;
 						ReportInputDataDTO dto = new ReportInputDataDTO();
-						dto.setName(data[1] + "");
-						dto.setId(data[0] + "");
+						dto.setName(data.get("Name") + "");
+						dto.setId(data.get("ID") + "");
 						dataDTOs.add(dto);
 					}
 					inputDTO.setData(dataDTOs);
@@ -233,7 +237,6 @@ public class ReportController {
 		return null;
 	}
 	//@Scheduled(initialDelay=10000, fixedRate=60000)
-	@SuppressWarnings("unused")
 	private void executeSchedular(){
 		System.out.println("Executed Scheduled method.");
 	}
@@ -268,57 +271,6 @@ public class ReportController {
 			e.printStackTrace();
 		}
 	}	
+	
+}
 
-	@Transactional @RequestMapping(value = "/queryPara", method = RequestMethod.POST , produces = APPLICATION_JSON, headers = "Accept=application/json")
-	public List<ReportInputDTO> fetchReportByParametrized( @RequestBody ReportQueryDataDTO reportQueryDataDTO, final HttpServletRequest request,
-			final HttpServletResponse response) throws Exception {
-		Report report = reportService.getEntityById(Report.class, reportQueryDataDTO.getReportId());
-		String query = report.getReportQuery();
-		if(reportQueryDataDTO != null && reportQueryDataDTO.getData()!=null && !reportQueryDataDTO.getData().isEmpty()){
-			for (InputParameter inputParameter : reportQueryDataDTO.getData()) {
-				Reportinputparameter reportinputparameter = inpParaService.getEntityById(Reportinputparameter.class, inputParameter.getId());
-				if(reportinputparameter.getInputType().equals("LIST")){
-					query = query.replace("%"+inputParameter.getId()+"%", inputParameter.getValue().toString());
-					String	str = (String) inputParameter.getValue();
-					str = "\"" + str + "\"";
-					query =  query+str;
-				}
-				else if(reportinputparameter.getInputType().equals("TEXT")){
-					query = query.replace("%"+inputParameter.getId()+"%", "\""+inputParameter.getValue()+"\"");
-				}
-				else if(reportinputparameter.getInputType().equals("DATE")){
-					query = query.replace("%"+inputParameter.getId()+"%", "'"+DateUtil.convertToString(DateUtil.convertToDate(inputParameter.getValue().toString()))+"'");
-				String	str = (String) inputParameter.getValue();
-					str = "\"" + str + "\"";
-					query =  query+str;
-				}
-				else {
-					query = query.replace("%"+inputParameter.getId()+"%", inputParameter.getValue().toString());
-				}
-			}
-		}
-		List<Reportoutputassociation> reportoutputassociations = reptOptAssoService.getReportOutputParametersByReportId(reportQueryDataDTO.getReportId());
-		JasperReportBuilder jasperReportBuilder = DynamicReports.report();
-		if(reportoutputassociations != null && !reportoutputassociations.isEmpty()){
-			for (Reportoutputassociation reportoutputassociation : reportoutputassociations) {
-				if(reportoutputassociation.getReportoutputparameter().getDatatype().equals("TEXT")){
-					jasperReportBuilder.addColumn(Columns.column(reportoutputassociation.getReportoutputparameter().getDisplayName(), reportoutputassociation.getReportoutputparameter().getName(), DataTypes.stringType()));
-				}else if(reportoutputassociation.getReportoutputparameter().getDatatype().equals("LONG")){
-					jasperReportBuilder.addColumn(Columns.column(reportoutputassociation.getReportoutputparameter().getDisplayName(), reportoutputassociation.getReportoutputparameter().getName(), DataTypes.integerType()));
-				}else if(reportoutputassociation.getReportoutputparameter().getDatatype().equals("DATE")){
-					jasperReportBuilder.addColumn(Columns.column(reportoutputassociation.getReportoutputparameter().getDisplayName(), reportoutputassociation.getReportoutputparameter().getName(), DataTypes.dateType()));
-				}
-				   
-			}
-			
-		}
-		Connection connection = sessionFactory.getSessionFactoryOptions().getServiceRegistry().getService(ConnectionProvider.class).getConnection();
-		jasperReportBuilder.title(Components.text(report.getReport_Name()).setHorizontalAlignment(HorizontalAlignment.CENTER));
-		File f = new File(report.getReportLocation());
-		if(!f.exists())
-			f.mkdirs();
-		jasperReportBuilder.setDataSource(query, connection);
-		downloadReport(jasperReportBuilder, reportQueryDataDTO.getReportType(), report.getReportLocation() + report.getFileName(), response);
-		return null;
-	}
-	}

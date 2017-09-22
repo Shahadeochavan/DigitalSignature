@@ -320,7 +320,6 @@ public class RawmaterialorderinvoiceController {
 	        model.put("mailFrom", notification.getName());
 	        model.put("signature", "www.NextechServices.in");
 	        mail.setModel(model);
-
 		mailService.sendEmailWithoutPdF(mail, notification);
 	}
 }

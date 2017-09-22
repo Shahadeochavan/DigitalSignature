@@ -174,7 +174,8 @@ public class UserController {
 				}
 				result.put("pages", pages);
 				}
-				return new UserStatus(1, "User logged in Successfully !", result,user2);
+				String success = user.getUserid()+" logged in Successfully";
+				return new UserStatus(1, success, result,user2);
 			}
 		} catch (AuthenticationException authException) {
 			return new UserStatus(0, authException.getCause().getMessage());
