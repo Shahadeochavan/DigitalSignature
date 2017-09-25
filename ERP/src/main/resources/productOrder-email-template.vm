@@ -62,10 +62,10 @@
 												<th align="left">Amount</th>
 											</tr>
 											#set ( $row = 1 ) 
-											#set ( $productSubtotal = 0) 
-											#set ( $sgstTotal = 0) 
-											#set ( $cgstTotal = 0) 
-											#set ( $igstTotal = 0) 
+											#set ( $productSubtotal = 0.00) 
+											#set ( $sgstTotal = 0.00) 
+											#set ( $cgstTotal = 0.00) 
+											#set ( $igstTotal = 0.00) 
 											#foreach ($productOrderData in $productOrderDatas ) 
 												#if ( $row % 2 == 0 ) 
 													#set ($color="#CBDCFF") 

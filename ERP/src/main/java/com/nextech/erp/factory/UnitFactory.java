@@ -32,13 +32,9 @@ public class UnitFactory {
 	public static UnitDTO setUnitDTO(Unit unit){
 		UnitDTO unitDTO =  new UnitDTO();
 		unitDTO.setActive(true);
-		unitDTO.setCreatedBy(unit.getCreatedBy());
-		unitDTO.setCreatedDate(unit.getCreatedDate());
 		unitDTO.setDescription(unit.getDescription());
 		unitDTO.setId(unit.getId());
 		unitDTO.setName(unit.getName());
-		unitDTO.setUpdatedBy(unit.getUpdatedBy());
-		unitDTO.setUpdatedDate(unit.getUpdatedDate());
 		return unitDTO;
 	}
 

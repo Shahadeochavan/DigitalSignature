@@ -44,7 +44,7 @@ public class UserTypeController {
 			if(userTypeService.getUserTypeByUserTypeName(userTypeDTO.getUsertypeName())==null){
 				userTypeService.addEntity(UserTypeFactory.setUserType(userTypeDTO, request));
 			}else{
-				return new UserStatus(2,"User Type name already exit");
+				return new UserStatus(2,"User Type name already exist");
 			}
 		
 			return new UserStatus(1, "Usertype added Successfully !");

@@ -34,6 +34,10 @@ public class RMOrderPdf {
 	public double igstTotal =0;
 	public double cgstTotal = 0;
 	public double sgstTotal =0;
+	public String igst ="";
+	public String cgst ="";
+	public String sgst ="";
+	public String subtoatl ="";
 
 	/**
 	 * @param args
@@ -204,6 +208,8 @@ public class RMOrderPdf {
 	     cgstTax = cgstTax*rmOrderModelData.getPricePerUnit();
 	     cgstTax = cgstTax/100;
 	     cgstTotal  =  cgstTotal+cgstTax;
+	     double d2 =cgstTotal;
+	     cgst= String.format("%.02f", d2);
 	     PdfPTable perAccountGSTTable = new PdfPTable(2);
 	     perAccountGSTTable.setWidthPercentage(100);
 	     PdfPTable perCST = new PdfPTable(1);
@@ -219,6 +225,9 @@ public class RMOrderPdf {
 	    sgstTax = sgstTax*rmOrderModelData.getPricePerUnit();
 	    sgstTax = sgstTax/100;
 	    sgstTotal = sgstTotal+sgstTax;
+	    
+	    double d1 =sgstTotal;
+	    sgst= String.format("%.02f", d1);
 	    PdfPTable perAccountSGSTTable = new PdfPTable(2);
 	    perAccountSGSTTable.setWidthPercentage(100);
 	     PdfPTable perSGSTTable = new PdfPTable(1);
@@ -234,6 +243,8 @@ public class RMOrderPdf {
 	    igstTax = igstTax*rmOrderModelData.getPricePerUnit();
 	    igstTax = igstTax/100;
 	    igstTotal = igstTotal+igstTax;
+	    double d =igstTotal;
+	    igst= String.format("%.02f", d);
 	    PdfPTable perAccountIGSTTable = new PdfPTable(2);
 	    perAccountIGSTTable.setWidthPercentage(100);
 	     PdfPTable perIGSTTable = new PdfPTable(1);
@@ -248,16 +259,19 @@ public class RMOrderPdf {
 	    insertCell(table, (Float.toString(rmOrderModelData.getAmount())), Element.ALIGN_RIGHT, 1, bf1);
 	    grandtotal = grandtotal+rmOrderModelData.getAmount();
 	    tax = rmOrderModelData.getTax();
+	    double d3 =grandtotal;
+	    subtoatl= String.format("%.02f", d3);
     }
      insertCell(table, "CGST TOTAL", Element.ALIGN_RIGHT, 6, bfBold12);
-     insertCell(table, Double.toString(cgstTotal), Element.ALIGN_RIGHT, 1, bfBold12);
+     insertCell(table, cgst, Element.ALIGN_RIGHT, 1, bfBold12);
      insertCell(table, "SGST Total", Element.ALIGN_RIGHT, 6, bfBold12);
-     insertCell(table, Double.toString(sgstTotal), Element.ALIGN_RIGHT, 1, bfBold12);
+     insertCell(table, sgst, Element.ALIGN_RIGHT, 1, bfBold12);
      insertCell(table, "IGST Total", Element.ALIGN_RIGHT, 6, bfBold12);
-     insertCell(table, Double.toString(igstTotal), Element.ALIGN_RIGHT, 1, bfBold12);
+     insertCell(table, igst, Element.ALIGN_RIGHT, 1, bfBold12);
      insertCell(table, "Total", Element.ALIGN_RIGHT, 6, bfBold12);
      int totalTax= (int) (cgstTotal+igstTotal+sgstTotal);
-     grandtotal = (int) (totalTax+grandtotal);
+     Integer intValue = (int) Float.parseFloat(subtoatl);
+     grandtotal = (int) (totalTax+intValue);
      insertCell(table, (Float.toString(grandtotal)), Element.ALIGN_RIGHT, 1, bfBold12);
      document.add(table);
      PdfPTable termsAndCondtionTable = new PdfPTable(2);

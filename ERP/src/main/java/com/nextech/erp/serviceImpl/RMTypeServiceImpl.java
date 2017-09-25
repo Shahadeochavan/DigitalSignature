@@ -55,7 +55,12 @@ public class RMTypeServiceImpl extends CRUDServiceImpl<Rmtype> implements RMType
 		rMTypeDao.update(rmtype);
 		RMTypeDTO rmTypeDTO = RMTypeRequestResponseFactory.setRMTypeDTO(rmtype);
 		return rmTypeDTO;
-		
+	}
+
+	@Override
+	public Rmtype getRMTypeByRMTypeName(String rmTypeName) throws Exception {
+		// TODO Auto-generated method stub
+		return rMTypeDao.getRMTypeByRMTypeName(rmTypeName);
 	}
 
 }

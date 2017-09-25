@@ -50,8 +50,6 @@ public class RMVendorAssoRequestResponseFactory {
 		RMVendorAssociationDTO rawAssociationDTO = new RMVendorAssociationDTO();
 		rawAssociationDTO.setActive(true);
 		rawAssociationDTO.setId(rawmaterialvendorassociation.getId());
-		rawAssociationDTO.setCreatedBy(rawmaterialvendorassociation.getCreatedBy());
-		rawAssociationDTO.setCreatedDate(rawmaterialvendorassociation.getCreatedDate());
 		rawAssociationDTO.setPricePerUnit(rawmaterialvendorassociation.getPricePerUnit());
 		RawMaterialDTO  rawMaterialDTO = new RawMaterialDTO();
 		rawMaterialDTO.setId(rawmaterialvendorassociation.getRawmaterial().getId());
@@ -59,9 +57,6 @@ public class RMVendorAssoRequestResponseFactory {
 		rawMaterialDTO.setPricePerUnit(rawmaterialvendorassociation.getRawmaterial().getPricePerUnit());
 		rawMaterialDTO.setDescription(rawmaterialvendorassociation.getRawmaterial().getDescription());
 		rawAssociationDTO.setRawmaterialId(rawMaterialDTO);
-		rawAssociationDTO.setUpdatedBy(rawmaterialvendorassociation.getUpdatedBy());
-		rawAssociationDTO.setUpdatedDate(rawmaterialvendorassociation.getUpdatedDate());
-		rawAssociationDTO.setUpdatedBy(rawmaterialvendorassociation.getUpdatedBy());
 		VendorDTO  vendorDTO = new VendorDTO();
 		vendorDTO.setId(rawmaterialvendorassociation.getVendor().getId());
 		vendorDTO.setCompanyName(rawmaterialvendorassociation.getVendor().getCompanyName());
@@ -74,7 +69,6 @@ public class RMVendorAssoRequestResponseFactory {
 		taxStructureDTO.setOther2(rawmaterialvendorassociation.getTaxstructure().getOther2());
 		taxStructureDTO.setSgst(rawmaterialvendorassociation.getTaxstructure().getSgst());
 		rawAssociationDTO.setTaxStructureDTO(taxStructureDTO);
-		rawAssociationDTO.setCreatedBy(rawmaterialvendorassociation.getCreatedBy());
 		return rawAssociationDTO;
 	}
 

@@ -30,10 +30,14 @@ public class ProductOrderPdf {
 	public static String answer = "";
 	private static Font TIME_ROMAN = new Font(Font.FontFamily.TIMES_ROMAN, 18,Font.BOLD);
 	private static Font TIME_ROMAN_SMALL = new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.BOLD);
-	public  float SUB_TOTAL = 0;
+	public  double SUB_TOTAL = 0;
 	public double igstTotal =0;
 	public double cgstTotal = 0;
 	public double sgstTotal =0;
+	public String igst ="";
+	public String cgst ="";
+	public String sgst ="";
+	public String subtoatl ="";
 	/**
 	 * @param args
 	 */
@@ -90,8 +94,8 @@ public class ProductOrderPdf {
 		     PdfPTable imageTable = new PdfPTable(1);
 		     imageTable.setWidthPercentage(100);
 		     //TODO change image path
-		     Image img = Image.getInstance("C:/Users/welcome/git/erp-be/ERP/src/main/webapp/img/ekimage.png");
-		     imageTable.addCell(img);
+		    // Image img = Image.getInstance("C:/Users/welcome/git/erp-be/ERP/src/main/webapp/img/ekimage.png");
+		   //  imageTable.addCell(img);
 		     //   document.add(img);
 		     
 		     PdfPTable invoiceTable = new PdfPTable(1);
@@ -238,14 +242,15 @@ public class ProductOrderPdf {
 		     cgstTax = cgstTax*productOrderData.getRate();
 		     cgstTax = cgstTax/100;
 		     cgstTotal  =  cgstTotal+cgstTax;
+		     
+		     
+		     double d2 =cgstTotal;
+		     cgst= String.format("%.02f", d2);
 		     PdfPTable perAmountCGSTTable = new PdfPTable(2);
 		     perAmountCGSTTable.setWidthPercentage(100);
-		    // perAmountCGSTTable.getDefaultCell().setBorder(0);
 		     
 		     PdfPTable perCGSTTable = new PdfPTable(1);
 		     perCGSTTable.addCell(getCel1(""+productOrderData.getCgst(), PdfPCell.ALIGN_LEFT,bf12));
-		    // perCGSTTable.getDefaultCell().setBorderWidthRight(1);
-
 		     
 		     PdfPTable amountCGSTTable = new PdfPTable(1);
 		     amountCGSTTable.addCell(getCel1(""+cgstTax, PdfPCell.ALIGN_LEFT,bf12));
@@ -257,6 +262,9 @@ public class ProductOrderPdf {
 		    sgstTax = sgstTax*productOrderData.getRate();
 		    sgstTax = sgstTax/100;
 		    sgstTotal = sgstTotal+sgstTax;
+		    
+		    double d1 =sgstTotal;
+		    sgst= String.format("%.02f", d1);
 		    PdfPTable perAmountSGSTTable = new PdfPTable(2);
 		    perAmountSGSTTable.setWidthPercentage(100);
 		     PdfPTable perSGSTTable = new PdfPTable(1);
@@ -272,6 +280,9 @@ public class ProductOrderPdf {
 		    igstTax = igstTax*productOrderData.getRate();
 		    igstTax = igstTax/100;
 		    igstTotal = igstTotal+igstTax;
+		    
+		    double d =igstTotal;
+		    igst= String.format("%.02f", d);
 		    PdfPTable perAmoutIGSTTable = new PdfPTable(2);
 		    perAmoutIGSTTable.setWidthPercentage(100);
 		    
@@ -286,20 +297,25 @@ public class ProductOrderPdf {
 		    
 		    insertCell(table, (Float.toString(productOrderData.getAmount())), Element.ALIGN_RIGHT, 1, bf12);
 		    SUB_TOTAL = SUB_TOTAL+productOrderData.getAmount();
+		    double d3 =SUB_TOTAL;
+		    subtoatl= String.format("%.02f", d3);
 	    }
 	     insertCell(table, "Assessble Value", Element.ALIGN_RIGHT, 6, bf123);
-	     insertCell(table, df.format(SUB_TOTAL), Element.ALIGN_RIGHT, 1, bf123);
+	     insertCell(table, subtoatl, Element.ALIGN_RIGHT, 1, bf123);
 	     insertCell(table, "CGST Total", Element.ALIGN_RIGHT, 6, bf123);
-	     insertCell(table, Double.toString(cgstTotal), Element.ALIGN_RIGHT, 1, bf123);
+	     insertCell(table, cgst, Element.ALIGN_RIGHT, 1, bf123);
 	     insertCell(table, "SGST Total", Element.ALIGN_RIGHT, 6, bf123);
-	     insertCell(table, Double.toString(sgstTotal), Element.ALIGN_RIGHT, 1, bf123);
+	     insertCell(table, sgst, Element.ALIGN_RIGHT, 1, bf123);
 	     insertCell(table, "IGST Total", Element.ALIGN_RIGHT, 6, bf123);
-	     insertCell(table, Double.toString(igstTotal), Element.ALIGN_RIGHT, 1, bf123);
+	     insertCell(table, igst, Element.ALIGN_RIGHT, 1, bf123);
 	     insertCell(table, "Total Tax(CGST+SGST+IGST)", Element.ALIGN_RIGHT, 6, bf123);
 	     int totalTax= (int) (cgstTotal+igstTotal+sgstTotal);
-	     insertCell(table, Double.toString(totalTax), Element.ALIGN_RIGHT, 1, bf123);
-	     int totalFinal = (int) (totalTax+SUB_TOTAL);
-	     
+	     double d3 =totalTax;
+		  String  subTotalTax= String.format("%.02f", d3);
+	     insertCell(table, subTotalTax, Element.ALIGN_RIGHT, 1, bf123);
+	     Integer intValue = (int) Float.parseFloat(subtoatl);
+	     int totalFinal = (totalTax+intValue);
+	     System.out.println("sgst is :"+sgst);
 	     document.add(table);
 	     
 			if(totalFinal <= 0)   {                

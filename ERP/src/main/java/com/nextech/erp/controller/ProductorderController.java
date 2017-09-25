@@ -277,7 +277,7 @@ public class ProductorderController {
 	private void addProductOrderAsso(ProductOrderDTO productOrderDTO,HttpServletRequest request,HttpServletResponse response) throws Exception {
 		List<ProductOrderData> productOrderDatas=productorderService.createProductorderAsso(productOrderDTO, request);
 		ClientDTO client = clientService.getClientDTOById(productOrderDTO.getClientId().getId());
-		//downloadPDF(request, response, productOrderDTO,productOrderDatas,client);
+		downloadPDF(request, response, productOrderDTO,productOrderDatas,client);
 	}
 	
 	public void downloadPDF(HttpServletRequest request, HttpServletResponse response,ProductOrderDTO productOrderDTO,List<ProductOrderData> productOrderDatas,ClientDTO client) throws IOException {

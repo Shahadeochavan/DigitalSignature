@@ -48,7 +48,6 @@ public class SecurityCheckOutRequestResponseFactory {
 	public static SecurityCheckOutDTO setSecurityCheckOutDTO(Securitycheckout  securitycheckout){
 		SecurityCheckOutDTO securityCheckOutDTO =  new SecurityCheckOutDTO();
 		securityCheckOutDTO.setClientName(securitycheckout.getClientname());
-		securityCheckOutDTO.setCreateDate(securitycheckout.getCreateDate());
 		securityCheckOutDTO.setDescription(securitycheckout.getDescription());
 		securityCheckOutDTO.setDriverFirstName(securitycheckout.getFirstName());
 		securityCheckOutDTO.setId(securitycheckout.getId());

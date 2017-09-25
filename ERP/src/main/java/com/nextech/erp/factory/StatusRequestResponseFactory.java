@@ -31,14 +31,10 @@ public class StatusRequestResponseFactory {
 	public static StatusDTO setStatusDTO(Status  status){
 		StatusDTO statusDTO =  new StatusDTO();
 		statusDTO.setActive(true);
-		statusDTO.setCreatedBy(status.getCreatedBy());
-		statusDTO.setCreatedDate(status.getCreatedDate());
 		statusDTO.setDescription(status.getDescription());
 		statusDTO.setId(status.getId());
 		statusDTO.setStatusName(status.getName());
 		statusDTO.setStatusType(status.getType());
-		statusDTO.setUpdatedBy(status.getUpdatedBy());
-		statusDTO.setUpdatedDate(status.getUpdatedDate());
 		return statusDTO;
 	}
 

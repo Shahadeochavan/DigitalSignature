@@ -42,7 +42,7 @@ public class UnitController {
 			if(unitservice.getUnitByName(unitDTO.getName())==null){
 				unitservice.addEntity(UnitFactory.setUnit(unitDTO, request));
 			}else{
-				return  new UserStatus(2,"Unit name already exit");
+				return  new UserStatus(2,"Unit name already exist");
 			}
 		 	
 			return new UserStatus(1, "Unit added Successfully !");

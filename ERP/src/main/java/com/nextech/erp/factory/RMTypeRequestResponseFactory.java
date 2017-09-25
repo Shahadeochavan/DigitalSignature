@@ -30,12 +30,8 @@ public class RMTypeRequestResponseFactory {
 	public static RMTypeDTO setRMTypeDTO(Rmtype rmtype){
 		RMTypeDTO rmTypeDTO =  new  RMTypeDTO();
 		rmTypeDTO.setActive(true);
-		rmTypeDTO.setCreatedBy(rmtype.getCreatedBy());
-		rmTypeDTO.setCreatedDate(rmtype.getCreatedDate());
 		rmTypeDTO.setDescription(rmtype.getDescription());
 		rmTypeDTO.setRmTypeName(rmtype.getName());
-		rmTypeDTO.setUpdatedBy(rmtype.getUpdatedBy());
-		rmTypeDTO.setUpdatedDate(rmtype.getUpdatedDate());
 		rmTypeDTO.setId(rmtype.getId());
 		return rmTypeDTO;
 	} 

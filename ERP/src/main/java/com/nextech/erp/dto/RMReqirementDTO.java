@@ -7,7 +7,8 @@ public class RMReqirementDTO extends AbstractDTO{
 	public Long requiredQuantity;
 	public Long inventoryQuantity;
 	public Long minimumQuantity;
-	
+	public Long vendorId;
+	public String companyName;
 	
 	
 	public String getRmPartNumber() {
@@ -39,6 +40,18 @@ public class RMReqirementDTO extends AbstractDTO{
 	}
 	public void setMinimumQuantity(Long minimumQuantity) {
 		this.minimumQuantity = minimumQuantity;
+	}
+	public Long getVendorId() {
+		return vendorId;
+	}
+	public void setVendorId(Long vendorId) {
+		this.vendorId = vendorId;
+	}
+	public String getCompanyName() {
+		return companyName;
+	}
+	public void setCompanyName(String companyName) {
+		this.companyName = companyName;
 	}
 	
 }

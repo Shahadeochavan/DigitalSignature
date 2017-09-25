@@ -64,10 +64,6 @@ public class UserFactory {
 		userTypeDTO.setId(user.getUsertype().getId());
 		userDTO.setUserTypeDTO(userTypeDTO);
 		userDTO.setActive(true);
-		userDTO.setCreatedBy(user.getCreatedBy());
-		userDTO.setCreatedDate(user.getCreatedDate());
-		userDTO.setUpdatedBy(user.getUpdatedBy());
-		userDTO.setUpdatedDate(user.getUpdatedDate());
 		return userDTO;
 	}
 

@@ -418,16 +418,24 @@ public class RawmaterialorderController {
 				.hasNext();) {
 			Entry<Long, Long> rmQtyentry = (Entry<Long, Long>) iterator.next();
 			RMInventoryDTO rmInventoryDTO = rawmaterialinventoryService.getByRMId(rmQtyentry.getKey());
+			RMVendorAssociationDTO rmVendorAssociationDTO = rmvAssoService.getRMVAssoByRMId(rmQtyentry.getKey());
+			if(rmVendorAssociationDTO !=null){
+			VendorDTO vendorDTO =  vendorService.getVendorById(rmVendorAssociationDTO.getVendorId().getId());
 			RMReqirementDTO rmReqirementDTO = new RMReqirementDTO();
 			rmReqirementDTO.setRmId(rmQtyentry.getKey());
 			rmReqirementDTO.setRmPartNumber(rmInventoryDTO.getRmPartNumber());
 			rmReqirementDTO.setRequiredQuantity(rmQtyentry.getValue()-rmInventoryDTO.getQuantityAvailable()+rmInventoryDTO.getMinimumQuantity());
 			rmReqirementDTO.setInventoryQuantity(rmInventoryDTO.getQuantityAvailable());
 			rmReqirementDTO.setMinimumQuantity(rmInventoryDTO.getMinimumQuantity());
-			
+			rmReqirementDTO.setVendorId(vendorDTO.getId());
+			rmReqirementDTO.setCompanyName(vendorDTO.getCompanyName());
+	
 			System.out.println("rmid : " + rmQtyentry.getKey() + " reqQty : " + rmQtyentry.getValue() + " invQty : " + rmReqirementDTO.getInventoryQuantity());
 			if(rmQtyentry.getValue() > rmInventoryDTO.getQuantityAvailable()){
 				rmReqirementDTOs.add(rmReqirementDTO);
+			}}
+			else{
+				return new Response(1,"Please create rm ventor assocition");
 			}
 		}
 		}else{

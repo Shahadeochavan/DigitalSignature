@@ -35,11 +35,6 @@ public class UserTypeFactory {
 		userTypeDTO.setId(usertype.getId());
 		userTypeDTO.setDescription(usertype.getDescription());
 		userTypeDTO.setUsertypeName(usertype.getUsertypeName());
-		userTypeDTO.setActive(true);
-		userTypeDTO.setCreatedBy(usertype.getCreatedBy());
-		userTypeDTO.setUpdatedBy(usertype.getUpdatedBy());
-		userTypeDTO.setCreatedDate(usertype.getCreatedDate());
-		userTypeDTO.setUpdatedDate(usertype.getUpdatedDate());
 		return userTypeDTO;
 	}
 
