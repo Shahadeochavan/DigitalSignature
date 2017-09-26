@@ -34,7 +34,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.nextech.erp.constants.ERPConstants;
+import com.nextech.erp.dto.MultipleRMOrderDTO;
 import com.nextech.erp.dto.RMOrderPdf;
 import com.nextech.erp.dto.Mail;
 import com.nextech.erp.dto.ProductOrderDTO;
@@ -282,7 +284,7 @@ public class RawmaterialorderController {
 			rmOrderModelData.setDescription(rawmaterial.getDescription());
 			rmOrderModelDatas.add(rmOrderModelData);
 		}
-		//downloadPDF(request, response, rawmaterialOrderDTO,rmOrderModelDatas,vendor);
+		downloadPDF(request, response, rawmaterialOrderDTO,rmOrderModelDatas,vendor);
 	}
 	
 	public void downloadPDF(HttpServletRequest request, HttpServletResponse response,RawmaterialOrderDTO rawmaterialOrderDTO,List<RMOrderModelData> rmOrderModelDatas,VendorDTO vendor) throws IOException {
@@ -417,9 +419,11 @@ public class RawmaterialorderController {
 		for (Iterator<Entry<Long, Long>> iterator = rmQuantityEntries.iterator(); iterator
 				.hasNext();) {
 			Entry<Long, Long> rmQtyentry = (Entry<Long, Long>) iterator.next();
+			List<VendorDTO> vendorDTOs = new ArrayList<VendorDTO>();
 			RMInventoryDTO rmInventoryDTO = rawmaterialinventoryService.getByRMId(rmQtyentry.getKey());
-			RMVendorAssociationDTO rmVendorAssociationDTO = rmvAssoService.getRMVAssoByRMId(rmQtyentry.getKey());
-			if(rmVendorAssociationDTO !=null){
+		//	RMVendorAssociationDTO rmVendorAssociationDTO = rmvAssoService.getRMVAssoByRMId(rmQtyentry.getKey());
+			List<RMVendorAssociationDTO> rmVendorAssociationDTOs = rmvAssoService.getRawmaterialvendorassociationListByRMId(rmQtyentry.getKey());
+			for (RMVendorAssociationDTO rmVendorAssociationDTO : rmVendorAssociationDTOs) {
 			VendorDTO vendorDTO =  vendorService.getVendorById(rmVendorAssociationDTO.getVendorId().getId());
 			RMReqirementDTO rmReqirementDTO = new RMReqirementDTO();
 			rmReqirementDTO.setRmId(rmQtyentry.getKey());
@@ -427,16 +431,14 @@ public class RawmaterialorderController {
 			rmReqirementDTO.setRequiredQuantity(rmQtyentry.getValue()-rmInventoryDTO.getQuantityAvailable()+rmInventoryDTO.getMinimumQuantity());
 			rmReqirementDTO.setInventoryQuantity(rmInventoryDTO.getQuantityAvailable());
 			rmReqirementDTO.setMinimumQuantity(rmInventoryDTO.getMinimumQuantity());
-			rmReqirementDTO.setVendorId(vendorDTO.getId());
-			rmReqirementDTO.setCompanyName(vendorDTO.getCompanyName());
-	
+			vendorDTOs.add(vendorDTO);
+			rmReqirementDTO.setVendorDTOs(vendorDTOs);
 			System.out.println("rmid : " + rmQtyentry.getKey() + " reqQty : " + rmQtyentry.getValue() + " invQty : " + rmReqirementDTO.getInventoryQuantity());
 			if(rmQtyentry.getValue() > rmInventoryDTO.getQuantityAvailable()){
 				rmReqirementDTOs.add(rmReqirementDTO);
-			}}
-			else{
-				return new Response(1,"Please create rm ventor assocition");
 			}
+			}
+			
 		}
 		}else{
 			return new Response(1,"There is no any requirmemt");
@@ -447,5 +449,33 @@ public class RawmaterialorderController {
 			return new Response(1, "Error", null);
 		}
 	}
-	
+	@Transactional @RequestMapping(value = "/createMultipleRMOrder", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
+	public @ResponseBody UserStatus addMultipleRMOrder(
+			@Valid  @RequestBody MultipleRMOrderDTO multipleRMOrderDTO, BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
+		try {
+			if (bindingResult.hasErrors()) {
+				return new UserStatus(0, bindingResult.getFieldError().getDefaultMessage());
+			}
+			//TODO save call raw material order
+			for (RawmaterialOrderDTO rawmaterialOrderDTO : multipleRMOrderDTO.getRawmaterialOrderDTOs()) {
+				RawmaterialOrderDTO rawmaterialOrderDTO2	= rawmaterialorderService.addMultipleRawMaterialOrder(rawmaterialOrderDTO, request, response);
+				rawmaterialOrderDTO.setId(rawmaterialOrderDTO2.getId());
+				rawmaterialOrderDTO.setStatusId(rawmaterialOrderDTO2.getStatusId());
+				addRMOrderAsso(rawmaterialOrderDTO, request, response);
+			}
+			return new UserStatus(1, "Multiple Rawmaterial Order added Successfully !");
+		} catch (ConstraintViolationException cve) {
+			System.out.println("Inside ConstraintViolationException");
+			cve.printStackTrace();
+			return new UserStatus(0, cve.getCause().getMessage());
+		} catch (PersistenceException pe) {
+			System.out.println("Inside PersistenceException");
+			pe.printStackTrace();
+			return new UserStatus(0, pe.getCause().getMessage());
+		} catch (Exception e) {
+			System.out.println("Inside Exception");
+			e.printStackTrace();
+			return new UserStatus(0, e.getCause().getMessage());
+		}
+	}
 }

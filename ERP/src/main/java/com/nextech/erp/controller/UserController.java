@@ -109,7 +109,7 @@ public class UserController {
 				user.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			   userservice.addEntity(user);
 	            NotificationDTO  notificationDTO = notificationService.getNotificationByCode((messageSource.getMessage(ERPConstants.USER_ADD_NOTIFICATION, null, null)));
-		//	mailSending(userDTO, request, response,notificationDTO);
+		       mailSending(userDTO, request, response,notificationDTO);
 			return new UserStatus(1, "User added Successfully !");
 			} else {
 				new UserStatus(0, "User is not authenticated.");
@@ -246,12 +246,20 @@ public class UserController {
 			User user = UserFactory.setUserUpdate(userDTO, request);
 			if(userDTO.getPassword().equals(oldUserInfo.getPassword())){
 				user.setPassword(userDTO.getPassword());
+				 EncryptDecrypt encDec = new EncryptDecrypt();
+					String pass = encDec.decrypt(userDTO.getPassword());
+					userDTO.setPassword(pass); 
+				
 			}else{
-			    user.setPassword(new com.nextech.erp.util.EncryptDecrypt().encrypt(userDTO.getPassword()));	
+			    user.setPassword(new com.nextech.erp.util.EncryptDecrypt().encrypt(userDTO.getPassword()));
+			    EncryptDecrypt encDec = new EncryptDecrypt();
+				String pass = encDec.decrypt(user.getPassword());
+				userDTO.setPassword(pass); 
 			}
 	     	userservice.updateEntity(user);
             NotificationDTO  notificationDTO = notificationService.getNotificationByCode((messageSource.getMessage(ERPConstants.USER_UPDATE_NOTIFICATION, null, null)));
-		mailSending(userDTO, request, response, notificationDTO);
+           
+		    mailSending(userDTO, request, response, notificationDTO);
 		return new UserStatus(1, "User update Successfully !");
 		} catch (Exception e) {
 			e.printStackTrace();

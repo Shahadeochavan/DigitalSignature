@@ -36,12 +36,10 @@ import com.nextech.erp.dto.ProductOrderPdf;
 import com.nextech.erp.dto.Mail;
 import com.nextech.erp.dto.ProductOrderDTO;
 import com.nextech.erp.dto.ProductOrderData;
-import com.nextech.erp.dto.ProductOrderRMData;
 import com.nextech.erp.dto.ProductRMAssociationDTO;
 import com.nextech.erp.dto.RMInventoryDTO;
 import com.nextech.erp.newDTO.ClientDTO;
 import com.nextech.erp.newDTO.NotificationDTO;
-import com.nextech.erp.newDTO.ProductDTO;
 import com.nextech.erp.newDTO.ProductOrderAssociationDTO;
 import com.nextech.erp.newDTO.StatusDTO;
 import com.nextech.erp.service.ClientService;
@@ -350,39 +348,6 @@ public class ProductorderController {
         model.put("signature", "www.NextechServices.in");
         mail.setModel(model);
         mailService.sendEmail(mail,notification);
-	}
-	
-	public void mailSendingToRMUser(ProductOrderDTO productOrderDTO)throws Exception{
-		
-		List<ProductOrderAssociationDTO>  productorderassociations= productorderassociationService.getProductorderassociationByOrderId(productOrderDTO.getId());
-		List<ProductOrderRMData> productOrderRMDatas = new ArrayList<ProductOrderRMData>();
-		for (ProductOrderAssociationDTO productorderassociation : productorderassociations) {
-			ProductDTO product = productService.getProductDTO(productorderassociation.getProductId().getId());
-			ProductOrderRMData productOrderRMData = new ProductOrderRMData();	
-			//TODO to check rmaining quantity
-			long totalRMQuantity = 0;
-			if(productorderassociation.getRemainingQuantity()>0){
-			List<ProductRMAssociationDTO> productRMAssociationDTOs = productRMAssoService.getProductRMAssoList(product.getId());
-			for (ProductRMAssociationDTO productRMAssociationDTO : productRMAssociationDTOs) {	
-			//	RawMaterialDTO  rawMaterialDTO = rawmaterialService.getRMDTO(productRMAssociationDTO.getRawmaterialId().getId());
-				productOrderRMData.setProductPartNumber(productorderassociation.getProductId().getPartNumber());
-				productOrderRMData.setRmPartNumber(productRMAssociationDTO.getRawmaterialId().getPartNumber());
-				productOrderRMData.setProductQuantity(productorderassociation.getQuantity());
-				totalRMQuantity = totalRMQuantity+productRMAssociationDTO.getQuantity();
-				productOrderRMData.setRmQuantity(totalRMQuantity);
-			   }
-			productOrderRMDatas.add(productOrderRMData);
-			}
-		}
-		  NotificationDTO  notificationDTO = notificationService.getNotificationByCode((messageSource.getMessage(ERPConstants.RM_NOTIFICATION, null, null)));
-          Mail mail =  userService.emailNotification(notificationDTO);
-	        mail.setMailSubject(notificationDTO.getSubject());
-	        Map < String, Object > model = new HashMap < String, Object > ();
-	        model.put("productOrderRMDatas", productOrderRMDatas);
-	        model.put("location", "Pune");
-	        model.put("signature", "www.NextechServices.in");
-	        mail.setModel(model);
-		mailService.sendEmailWithoutPdF(mail, notificationDTO);
 	}
 }
 

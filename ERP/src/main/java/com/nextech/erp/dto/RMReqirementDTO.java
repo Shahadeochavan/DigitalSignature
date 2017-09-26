@@ -1,5 +1,9 @@
 package com.nextech.erp.dto;
 
+import java.util.List;
+
+import com.nextech.erp.newDTO.VendorDTO;
+
 public class RMReqirementDTO extends AbstractDTO{
 
 	public String rmPartNumber;
@@ -7,9 +11,7 @@ public class RMReqirementDTO extends AbstractDTO{
 	public Long requiredQuantity;
 	public Long inventoryQuantity;
 	public Long minimumQuantity;
-	public Long vendorId;
-	public String companyName;
-	
+	public List<VendorDTO> vendorDTOs;
 	
 	public String getRmPartNumber() {
 		return rmPartNumber;
@@ -41,17 +43,12 @@ public class RMReqirementDTO extends AbstractDTO{
 	public void setMinimumQuantity(Long minimumQuantity) {
 		this.minimumQuantity = minimumQuantity;
 	}
-	public Long getVendorId() {
-		return vendorId;
+
+	public List<VendorDTO> getVendorDTOs() {
+		return vendorDTOs;
 	}
-	public void setVendorId(Long vendorId) {
-		this.vendorId = vendorId;
-	}
-	public String getCompanyName() {
-		return companyName;
-	}
-	public void setCompanyName(String companyName) {
-		this.companyName = companyName;
+	public void setVendorDTOs(List<VendorDTO> vendorDTOs) {
+		this.vendorDTOs = vendorDTOs;
 	}
 	
 }

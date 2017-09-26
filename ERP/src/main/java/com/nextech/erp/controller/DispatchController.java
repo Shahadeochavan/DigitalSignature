@@ -236,12 +236,12 @@ public class DispatchController {
 
 	   CreatePdfForDispatchProduct createPdfForDispatchProduct = new CreatePdfForDispatchProduct();
 	   createPdfForDispatchProduct.createPDF(temperotyFilePath+"\\"+fileName,productorder,dispatchProductDTOs,client,dispatchDTO);
-	        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-	        baos = convertPDFToByteArrayOutputStream(temperotyFilePath+"\\"+fileName,request, response, productorder,dispatchProductDTOs,dispatchDTO);
-	        OutputStream os = response.getOutputStream();
+	     //   ByteArrayOutputStream baos = new ByteArrayOutputStream();
+	         convertPDFToByteArrayOutputStream(temperotyFilePath+"\\"+fileName,request, response, productorder,dispatchProductDTOs,dispatchDTO);
+	      /*  OutputStream os = response.getOutputStream();
 	        baos.writeTo(os);
 	        os.flush();
-
+*/
 	    } catch (Exception e1) {
 	        e1.printStackTrace();
 	    }

@@ -55,16 +55,19 @@ public class UsertypepageassociationController {
 						.getDefaultMessage());
 			}
 			List<UserTypePageAssoPart> userTypePageAssoParts =	userTypePageAssoDTO.getUserTypePageAssoParts();
+			if(!userTypePageAssoParts.isEmpty()){
 			for (UserTypePageAssoPart userTypePageAssoPart : userTypePageAssoParts) {	
 			if (usertypepageassociationService.getUserTypePageAssoByPageIduserTypeId((userTypePageAssoPart.getPageId().getId()),userTypePageAssoDTO.getUsertypeId().getId()) == null){
 				usertypepageassociationService.addMultipleUserTypePageAsso(userTypePageAssoDTO, request.getAttribute("current_user").toString());
 			}else{
 				return new UserStatus(2, messageSource.getMessage(ERPConstants.USERTYPE_PAGE_ASSOCITION_EXIT, null, null));
 			}
-			
+			}
+			}else{
+				return new UserStatus(2,"Please select page and click on add buuton");
 			}
 			return new UserStatus(1,
-					"Usertypepageassociation added Successfully !");
+					"User Type Page Association added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			cve.printStackTrace();
 			return new UserStatus(0, cve.getCause().getMessage());
