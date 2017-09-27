@@ -2,7 +2,6 @@ package com.nextech.erp.daoImpl;
 
 
 import java.util.List;
-
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
