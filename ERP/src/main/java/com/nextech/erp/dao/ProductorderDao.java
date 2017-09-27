@@ -1,8 +1,6 @@
 package com.nextech.erp.dao;
 
 import java.util.List;
-
-import com.nextech.erp.dto.ProductOrderDTO;
 import com.nextech.erp.model.Productorder;
 
 public interface ProductorderDao extends SuperDao<Productorder> {
