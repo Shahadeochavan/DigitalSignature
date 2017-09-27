@@ -19,8 +19,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.factory.UserTypePageAssoFactory;
+import com.nextech.erp.newDTO.PageDTO;
 import com.nextech.erp.newDTO.UserTypePageAssoDTO;
 import com.nextech.erp.newDTO.UserTypePageAssoPart;
 import com.nextech.erp.service.PageService;
@@ -60,14 +60,16 @@ public class UsertypepageassociationController {
 			if (usertypepageassociationService.getUserTypePageAssoByPageIduserTypeId((userTypePageAssoPart.getPageId().getId()),userTypePageAssoDTO.getUsertypeId().getId()) == null){
 				usertypepageassociationService.addMultipleUserTypePageAsso(userTypePageAssoDTO, request.getAttribute("current_user").toString());
 			}else{
-				return new UserStatus(2, messageSource.getMessage(ERPConstants.USERTYPE_PAGE_ASSOCITION_EXIT, null, null));
+				PageDTO pageDTO = pageService.getPageDTOById(userTypePageAssoPart.getPageId().getId());
+				String pageName = pageDTO.getPageName()+" already exists";
+				return new UserStatus(2, pageName);
 			}
 			}
 			}else{
 				return new UserStatus(2,"Please select page and click on add buuton");
 			}
 			return new UserStatus(1,
-					"User Type Page Association added Successfully !");
+					"User Type Page Association added uccessfully !");
 		} catch (ConstraintViolationException cve) {
 			cve.printStackTrace();
 			return new UserStatus(0, cve.getCause().getMessage());
@@ -149,8 +151,9 @@ public class UsertypepageassociationController {
 			if(userTypePageAssoDTO==null){
 				return new Response(1,"There is no any user type page assocition");
 			}
-			return new Response(1,
-					"Usertypepageassociation deleted Successfully !");
+			PageDTO pageDTO = pageService.getPageDTOById(userTypePageAssoDTO.getPage().getId());
+			String message = "From User Type Pagee Association "+pageDTO.getPageName()+" page deleted successfully ";
+			return new Response(1,message);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new Response(0, e.toString());

@@ -43,7 +43,6 @@ public class DailyproductionServiceImpl extends CRUDServiceImpl<Dailyproduction>
 	@Override
 	public List<DailyProductionPlanDTO> getDailyProductionList()
 			throws Exception {
-		
 		List<DailyProductionPlanDTO> dailyProductionPlanDTOs = new ArrayList<DailyProductionPlanDTO>();
 		List<Dailyproduction> dailyproductions =  dailyproductionDao.getList(Dailyproduction.class);
 		if(dailyproductions.isEmpty()){
@@ -59,7 +58,6 @@ public class DailyproductionServiceImpl extends CRUDServiceImpl<Dailyproduction>
 	@Override
 	public DailyProductionPlanDTO getDailyProductionById(long id)
 			throws Exception {
-		
 		Dailyproduction  dailyproduction = dailyproductionDao.getById(Dailyproduction.class, id);
 		if(dailyproduction==null){
 			return null;
@@ -70,7 +68,6 @@ public class DailyproductionServiceImpl extends CRUDServiceImpl<Dailyproduction>
 
 	@Override
 	public DailyProductionPlanDTO deleteDailyProduction(long id) throws Exception {
-		
 		Dailyproduction  dailyproduction = dailyproductionDao.getById(Dailyproduction.class, id);
 		if(dailyproduction==null){
 			return null;

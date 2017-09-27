@@ -111,7 +111,7 @@ public class ProductorderController {
 				}
 				// TODO save call product order
 				if(productOrderDTO.getProductOrderAssociationDTOs().isEmpty()){
-					return new UserStatus(0,"In Product Order data is Empty !Please dont send Empty data");
+					return new UserStatus(0,"Please select product and click on add product button");
 				}
 				ProductOrderDTO productOrderDTO2	=	productorderService.addMultipleProductOrder(productOrderDTO, request, response);
 

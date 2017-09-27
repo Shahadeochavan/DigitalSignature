@@ -225,7 +225,6 @@ public class DispatchServiceImpl extends CRUDServiceImpl<Dispatch> implements Di
 
 		@Override
 		public List<DispatchDTO> getDispatchList() throws Exception {
-			
 			List<DispatchDTO> dispatchDTOs =  new ArrayList<DispatchDTO>();
 			List<Dispatch> dispatchs =  dispatchDao.getList(Dispatch.class);
 			if(dispatchs.isEmpty()){
@@ -240,7 +239,6 @@ public class DispatchServiceImpl extends CRUDServiceImpl<Dispatch> implements Di
 
 		@Override
 		public DispatchDTO getDispatchById(long id) throws Exception {
-			
 			Dispatch dispatch = dispatchDao.getById(Dispatch.class, id);
 			if(dispatch==null){
 				return null;
@@ -251,7 +249,6 @@ public class DispatchServiceImpl extends CRUDServiceImpl<Dispatch> implements Di
 
 		@Override
 		public DispatchDTO deleteDispatchById(long id) throws Exception {
-			
 			Dispatch dispatch = dispatchDao.getById(Dispatch.class, id);
 			if(dispatch==null){
 				return null;

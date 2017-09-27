@@ -102,7 +102,7 @@ public class UserController {
 				if (userservice.getUserByMobile(userDTO.getMobileNo()) == null) {
 				} else {
 					return new UserStatus(2, messageSource.getMessage(
-							ERPConstants.CONTACT_NUMBER_EXIT, null, null));
+							ERPConstants.CONTACT_NUMBER_EXISTS, null, null));
 				}
 				User user = UserFactory.setUser(userDTO, request);
 				user.setPassword(new EncryptDecrypt().encrypt(userDTO.getPassword()));
@@ -240,7 +240,7 @@ public class UserController {
 				if (userservice.getUserByMobile(userDTO.getMobileNo()) == null) {
 				} else {
 					return new UserStatus(2, messageSource.getMessage(
-							ERPConstants.CONTACT_NUMBER_EXIT, null, null));
+							ERPConstants.CONTACT_NUMBER_EXISTS, null, null));
 				}
 			}
 			User user = UserFactory.setUserUpdate(userDTO, request);

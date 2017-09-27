@@ -22,7 +22,6 @@ public class PageServiceImpl extends CRUDServiceImpl<Page> implements PageServic
 	}
 	@Override
 	public List<PageDTO> getPageDTOList(List<PageDTO> pageDTOs) throws Exception {
-		
 		 pageDTOs = new ArrayList<PageDTO>();
 		List<Page> pages = null;
 		pages = pageDao.getList(Page.class);
@@ -37,7 +36,6 @@ public class PageServiceImpl extends CRUDServiceImpl<Page> implements PageServic
 	}
 	@Override
 	public PageDTO getPageDTOById(long id) throws Exception {
-		
 		Page page = pageDao.getById(Page.class, id);
 		if(page==null){
 			return null;
@@ -47,9 +45,7 @@ public class PageServiceImpl extends CRUDServiceImpl<Page> implements PageServic
 	}
 	@Override
 	public PageDTO deletePageById(long id) throws Exception {
-		
 		Page page = pageDao.getById(Page.class, id);
-		
 		if(page==null){
 			return null;
 		}
@@ -58,5 +54,4 @@ public class PageServiceImpl extends CRUDServiceImpl<Page> implements PageServic
 		PageDTO pageDTO = PageFactory.setPageList(page);
 		return pageDTO;
 	}
-	
 }

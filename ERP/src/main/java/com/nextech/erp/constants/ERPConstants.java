@@ -21,7 +21,7 @@ public class ERPConstants {
     public static String STATUS_RAW_MATERIAL_ORDER_COMPLETE="rmOrderComplete";
     public static String CLIENT_ADDED="clientAdded";
     public static String USER_ID="userId";
-    public static String CONTACT_NUMBER_EXIT="contactNumberXit";
+    public static String CONTACT_NUMBER_EXISTS="contactNumberXit";
     public static String PRODUCT_NAME="productName";
     public static String QC_GUIDLINES_FOR_RM="QCGUIDLINESFORRM";
     public static String QC_GUIDLINES_FOR_PRODUCT="QCGUIDLINESFORPRODCUT";

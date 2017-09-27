@@ -371,7 +371,6 @@ public class RawmaterialorderController {
 		for (Iterator<ProductOrderDTO> iterator = incompleteOrders.iterator(); iterator
 				.hasNext();) {
 			ProductOrderDTO productOrderDTO = (ProductOrderDTO) iterator.next();
-			//Productorderassociation productorderassociation = productorderassociationService.getProductAssoByOrder(productOrderDTO.getId());
 			List<ProductOrderAssociationDTO> productOrderAssociationDTOs = productorderassociationService.getProductorderassociationByOrderId(productOrderDTO.getId());
 			for (ProductOrderAssociationDTO productOrderAssociationDTO : productOrderAssociationDTOs) {
 			if(productOrderAssociationDTO !=null){
@@ -421,24 +420,24 @@ public class RawmaterialorderController {
 			Entry<Long, Long> rmQtyentry = (Entry<Long, Long>) iterator.next();
 			List<VendorDTO> vendorDTOs = new ArrayList<VendorDTO>();
 			RMInventoryDTO rmInventoryDTO = rawmaterialinventoryService.getByRMId(rmQtyentry.getKey());
-		//	RMVendorAssociationDTO rmVendorAssociationDTO = rmvAssoService.getRMVAssoByRMId(rmQtyentry.getKey());
-			List<RMVendorAssociationDTO> rmVendorAssociationDTOs = rmvAssoService.getRawmaterialvendorassociationListByRMId(rmQtyentry.getKey());
-			for (RMVendorAssociationDTO rmVendorAssociationDTO : rmVendorAssociationDTOs) {
-			VendorDTO vendorDTO =  vendorService.getVendorById(rmVendorAssociationDTO.getVendorId().getId());
 			RMReqirementDTO rmReqirementDTO = new RMReqirementDTO();
 			rmReqirementDTO.setRmId(rmQtyentry.getKey());
 			rmReqirementDTO.setRmPartNumber(rmInventoryDTO.getRmPartNumber());
 			rmReqirementDTO.setRequiredQuantity(rmQtyentry.getValue()-rmInventoryDTO.getQuantityAvailable()+rmInventoryDTO.getMinimumQuantity());
 			rmReqirementDTO.setInventoryQuantity(rmInventoryDTO.getQuantityAvailable());
 			rmReqirementDTO.setMinimumQuantity(rmInventoryDTO.getMinimumQuantity());
+			List<RMVendorAssociationDTO> rmVendorAssociationDTOs = rmvAssoService.getRawmaterialvendorassociationListByRMId(rmQtyentry.getKey());
+			
+			for (RMVendorAssociationDTO rmVendorAssociationDTO : rmVendorAssociationDTOs) {
+			VendorDTO vendorDTO =  vendorService.getVendorById(rmVendorAssociationDTO.getVendorId().getId());
 			vendorDTOs.add(vendorDTO);
 			rmReqirementDTO.setVendorDTOs(vendorDTOs);
+			}
+			
 			System.out.println("rmid : " + rmQtyentry.getKey() + " reqQty : " + rmQtyentry.getValue() + " invQty : " + rmReqirementDTO.getInventoryQuantity());
 			if(rmQtyentry.getValue() > rmInventoryDTO.getQuantityAvailable()){
 				rmReqirementDTOs.add(rmReqirementDTO);
 			}
-			}
-			
 		}
 		}else{
 			return new Response(1,"There is no any requirmemt");
