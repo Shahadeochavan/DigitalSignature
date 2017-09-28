@@ -192,7 +192,6 @@ public class UserController {
 		EncryptDecrypt encDec = new EncryptDecrypt();
 		//TODO NIKHIL- Do not trim of make checking case insensitive. 
 		String pass = encDec.decrypt(dbUser.getPassword());
-		System.out.println(pass);
 		boolean password =formUser.getPassword().equals(pass);
 		if(password==true){
 			return true;

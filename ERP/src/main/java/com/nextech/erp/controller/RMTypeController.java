@@ -42,7 +42,7 @@ public class RMTypeController {
 			if(rmTypeService.getRMTypeByRMTypeName(rmTypeDTO.getRmTypeName())==null){
 				rmTypeService.addEntity(RMTypeRequestResponseFactory.setRMType(rmTypeDTO, request));
 			}else{
-				return new UserStatus(2,"RM Type Name already exist");
+				return new UserStatus(2,"RM Type Name already exists");
 			}
 		
 			return new UserStatus(1, "RM Type added Successfully !");

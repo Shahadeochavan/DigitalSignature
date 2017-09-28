@@ -347,7 +347,7 @@ public class RMOrderPdf {
 	 }
 	 public PdfPCell getCell(String text, int alignment) {
 		    PdfPCell cell = new PdfPCell(new Phrase(text));
-		    cell.setPadding(0);
+		    cell.setPaddingLeft(10f);
 		    cell.setExtraParagraphSpace(1);
 		    cell.setHorizontalAlignment(alignment);
 		    cell.setBorder(PdfPCell.NO_BORDER);
@@ -356,14 +356,14 @@ public class RMOrderPdf {
 	 
 	 public PdfPCell getCell1(String text, int alignment,Font bf12) {
 		    PdfPCell cell = new PdfPCell(new Phrase(text,bf12));
-		    cell.setPadding(0);
+		    cell.setPaddingLeft(10f);
 		    cell.setHorizontalAlignment(alignment);
 		    cell.setBorder(PdfPCell.NO_BORDER);
 		    return cell;
 		}
 	 public PdfPCell getCell2(String text, int alignment,Font font) {
 		    PdfPCell cell = new PdfPCell(new Phrase(text));
-		    cell.setPadding(0);
+		    cell.setPaddingLeft(10f);
 		    cell.setExtraParagraphSpace(1);
 		    cell.setVerticalAlignment(alignment);
 		    cell.setBorder(PdfPCell.NO_BORDER);
@@ -380,7 +380,7 @@ public class RMOrderPdf {
 	 
 	 public PdfPCell getCell12(String text, int alignment,Font font) {
 		    PdfPCell cell = new PdfPCell(new Phrase(text,font));
-		    cell.setPadding(0);
+		    cell.setPaddingLeft(10f);
 		    cell.setExtraParagraphSpace(30);
 		    cell.setHorizontalAlignment(alignment);
 		    cell.setBorder(PdfPCell.NO_BORDER);

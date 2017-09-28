@@ -139,6 +139,7 @@ public class RawmaterialorderController {
 			RawmaterialOrderDTO rawmaterialOrderDTO2	= rawmaterialorderService.addMultipleRawMaterialOrder(rawmaterialOrderDTO, request, response);
 			rawmaterialOrderDTO.setId(rawmaterialOrderDTO2.getId());
 			rawmaterialOrderDTO.setStatusId(rawmaterialOrderDTO2.getStatusId());
+			rawmaterialOrderDTO.setName(rawmaterialOrderDTO2.getName());
 			addRMOrderAsso(rawmaterialOrderDTO, request, response);
 			return new UserStatus(1, "Multiple Rawmaterial Order added Successfully !");
 		} catch (ConstraintViolationException cve) {
@@ -297,11 +298,8 @@ public class RawmaterialorderController {
 	    try {
 	    	RMOrderPdf createPDF = new RMOrderPdf();
 	    	createPDF.createPDF(temperotyFilePath+"\\"+fileName,rawmaterialOrderDTO,rmOrderModelDatas,vendor);
-	        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-	        baos = convertPDFToByteArrayOutputStream(temperotyFilePath+"\\"+fileName,rawmaterialOrderDTO,rmOrderModelDatas);
-	        OutputStream os = response.getOutputStream();
-	        baos.writeTo(os);
-	        os.flush();
+	        //ByteArrayOutputStream baos = new ByteArrayOutputStream();
+	       convertPDFToByteArrayOutputStream(temperotyFilePath+"\\"+fileName,rawmaterialOrderDTO,rmOrderModelDatas);
 	    } catch (Exception e1) {
 	        e1.printStackTrace();
 	    }
@@ -460,6 +458,7 @@ public class RawmaterialorderController {
 				RawmaterialOrderDTO rawmaterialOrderDTO2	= rawmaterialorderService.addMultipleRawMaterialOrder(rawmaterialOrderDTO, request, response);
 				rawmaterialOrderDTO.setId(rawmaterialOrderDTO2.getId());
 				rawmaterialOrderDTO.setStatusId(rawmaterialOrderDTO2.getStatusId());
+				rawmaterialOrderDTO.setName(rawmaterialOrderDTO2.getName());
 				addRMOrderAsso(rawmaterialOrderDTO, request, response);
 			}
 			return new UserStatus(1, "Multiple Rawmaterial Order added Successfully !");
