@@ -7,10 +7,11 @@ import com.nextech.erp.model.Productionplanning;
 import com.nextech.erp.model.Productorderassociation;
 
 public interface ProductorderassociationDao extends SuperDao<Productorderassociation>{
-	public Productorderassociation getProductorderassociationByProdcutOrderIdandProdcutId(
-			long pOrderId,long pId) throws Exception;
+	
+	public Productorderassociation getProductorderassociationByProdcutOrderIdandProdcutId(long pOrderId,long pId) throws Exception;
 
 	public List<Productorderassociation> getProductorderassociationByProductId(long pId) throws Exception;
+	
 	public List<Productorderassociation> getProductorderassociationByOrderId(long oderID) throws Exception;
 
 	public List<Productorderassociation> getIncompleteProductOrderAssoByProductId(long productId) throws Exception;
