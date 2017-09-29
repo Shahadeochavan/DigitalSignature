@@ -288,11 +288,8 @@ public class ProductorderController {
 	    try {
 	    	ProductOrderPdf ceCreatePDFProductOrder = new ProductOrderPdf();
 	    	ceCreatePDFProductOrder.createPDF(temperotyFilePath+"\\"+fileName,productOrderDTO,productOrderDatas,client);
-	       // ByteArrayOutputStream baos = new ByteArrayOutputStream();
 	         convertPDFToByteArrayOutputStream(temperotyFilePath+"\\"+fileName,productOrderDTO,productOrderDatas);
-	     /*   OutputStream os = response.getOutputStream();
-	        baos.writeTo(os);
-	        os.flush();*/
+	  
 	    } catch (Exception e1) {
 	        e1.printStackTrace();
 	    }
