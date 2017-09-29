@@ -1,6 +1,7 @@
 package com.nextech.erp.dao;
 
 public class QualityCheckInvoiceDTO {
+
 	private long id;
 	private String name;
 	
