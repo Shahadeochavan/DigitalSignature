@@ -6,8 +6,8 @@ import java.util.List;
 import com.nextech.erp.model.Productionplanning;
 
 public interface ProductionplanningDao extends SuperDao<Productionplanning> {
-	public Productionplanning getProductionPlanningforCurrentMonthByProductIdAndDate(
-			long pId, Date date) throws Exception;
+	
+	public Productionplanning getProductionPlanningforCurrentMonthByProductIdAndDate(long pId, Date date) throws Exception;
 
 	public List<Productionplanning> getProductionplanningByCurrentMonth(Date month) throws Exception;
 
@@ -15,8 +15,7 @@ public interface ProductionplanningDao extends SuperDao<Productionplanning> {
 
 	public List<Productionplanning> updateProductionPlanByMonthYear(String month_year) throws Exception;
 
-	public Productionplanning getProductionPlanningByDateAndProductId(Date productionDateStart,Date productionDateEnd,
-			long product_id);
+	public Productionplanning getProductionPlanningByDateAndProductId(Date productionDateStart,Date productionDateEnd,long product_id);
 
 	public Productionplanning getProductionplanByDateAndProductId(Date date,long pId)throws Exception;
 
