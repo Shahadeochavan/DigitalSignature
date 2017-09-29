@@ -42,6 +42,7 @@ import com.nextech.erp.service.ReptInpAssoService;
 import com.nextech.erp.service.ReptInpParaService;
 import com.nextech.erp.service.ReptOptAssoService;
 import com.nextech.erp.service.ReptOptParaService;
+import com.nextech.erp.status.Response;
 import com.nextech.erp.status.UserStatus;
 import com.nextech.erp.util.DateUtil;
 
@@ -87,7 +88,7 @@ public class ReportController {
 	
 	
 	@Transactional @RequestMapping(value = "/query", method = RequestMethod.POST , produces = APPLICATION_JSON, headers = "Accept=application/json")
-	public List<ReportInputDTO> fetchReport( @RequestBody ReportQueryDataDTO reportQueryDataDTO, final HttpServletRequest request,
+	public Response fetchReport( @RequestBody ReportQueryDataDTO reportQueryDataDTO, final HttpServletRequest request,
 			final HttpServletResponse response) throws Exception {
 		Report report = reportService.getEntityById(Report.class, reportQueryDataDTO.getReportId());
 		String query = report.getReportQuery();
@@ -129,8 +130,8 @@ public class ReportController {
 		if(!f.exists())
 			f.mkdirs();
 		jasperReportBuilder.setDataSource(query, connection);
-		downloadReport(jasperReportBuilder, reportQueryDataDTO.getReportType(), report.getReportLocation() + report.getFileName(), response);
-		return null;
+		String fileName =downloadReport(jasperReportBuilder, reportQueryDataDTO.getReportType(), report.getReportLocation() + report.getFileName(), response);
+		return new Response(1,"Report downloaded sucessfully",fileName);
 	}
 
 	
@@ -241,7 +242,7 @@ public class ReportController {
 		System.out.println("Executed Scheduled method.");
 	}
 	
-	private void downloadReport(JasperReportBuilder report, long reportType, String fileName,
+	private String downloadReport(JasperReportBuilder report, long reportType, String fileName,
 			HttpServletResponse response) {
 		try {
 			if (reportType == XLS) {
@@ -270,6 +271,7 @@ public class ReportController {
 		} catch (DRException e) {
 			e.printStackTrace();
 		}
+		return fileName;
 	}	
 	
 }

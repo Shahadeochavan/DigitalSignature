@@ -37,6 +37,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.dto.MultipleRMOrderDTO;
+import com.nextech.erp.dto.ProductRMAssociationModelParts;
 import com.nextech.erp.dto.RMOrderPdf;
 import com.nextech.erp.dto.Mail;
 import com.nextech.erp.dto.ProductOrderDTO;
@@ -47,7 +48,9 @@ import com.nextech.erp.dto.RMReqirementDTO;
 import com.nextech.erp.dto.RawmaterialOrderDTO;
 import com.nextech.erp.factory.RMOrderRequestResponseFactory;
 import com.nextech.erp.model.Productinventory;
+import com.nextech.erp.model.Vendor;
 import com.nextech.erp.newDTO.NotificationDTO;
+import com.nextech.erp.newDTO.ProductDTO;
 import com.nextech.erp.newDTO.ProductOrderAssociationDTO;
 import com.nextech.erp.newDTO.RMOrderAssociationDTO;
 import com.nextech.erp.newDTO.RMVendorAssociationDTO;
@@ -454,7 +457,41 @@ public class RawmaterialorderController {
 				return new UserStatus(0, bindingResult.getFieldError().getDefaultMessage());
 			}
 			//TODO save call raw material order
-			for (RawmaterialOrderDTO rawmaterialOrderDTO : multipleRMOrderDTO.getRawmaterialOrderDTOs()) {
+			List<RawmaterialOrderDTO> rawmaterialOrderDTOs =  new ArrayList<RawmaterialOrderDTO>();
+			HashMap<Long, List<RMOrderAssociationDTO>> multipleOrder = new HashMap<Long, List<RMOrderAssociationDTO>>();
+			RawmaterialOrderDTO newrawmaterialOrderDTO = new RawmaterialOrderDTO();
+			for(RawmaterialOrderDTO rawmaterialOrderDTO : multipleRMOrderDTO.getRawmaterialOrderDTOs()){
+				newrawmaterialOrderDTO.setExpectedDeliveryDate(rawmaterialOrderDTO.getExpectedDeliveryDate());
+				newrawmaterialOrderDTO.setCreateDate(rawmaterialOrderDTO.getCreateDate());
+				newrawmaterialOrderDTO.setDescription(rawmaterialOrderDTO.getDescription());
+				List<RMOrderAssociationDTO> rmOrderAssociationDTOs = null;
+				if(multipleOrder.get(rawmaterialOrderDTO.getVendorId().getId()) == null){
+					rmOrderAssociationDTOs = new ArrayList<RMOrderAssociationDTO>();
+				}else{
+					rmOrderAssociationDTOs = multipleOrder.get(rawmaterialOrderDTO.getVendorId().getId());
+				}
+				RMOrderAssociationDTO rmOrderAssociationDTO = new RMOrderAssociationDTO();
+				for (RMOrderAssociationDTO rmOrderAssociationDTO1 : rawmaterialOrderDTO.getRmOrderAssociationDTOs()) {
+					rmOrderAssociationDTO.setQuantity(rmOrderAssociationDTO1.getQuantity());
+					rmOrderAssociationDTO.setRawmaterialId(rmOrderAssociationDTO1.getRawmaterialId());
+					rmOrderAssociationDTOs.add(rmOrderAssociationDTO);
+					multipleOrder.put(rawmaterialOrderDTO.getVendorId().getId(), rmOrderAssociationDTOs);
+				}
+				
+			}
+			Set<Entry<Long, List<RMOrderAssociationDTO>>> multpleRMAssoEntries =  multipleOrder.entrySet();
+			for(Entry<Long, List<RMOrderAssociationDTO>> multpleRMAssoEntry : multpleRMAssoEntries){
+				RawmaterialOrderDTO rawmaterialOrderDTO = new RawmaterialOrderDTO();
+				rawmaterialOrderDTO.setRmOrderAssociationDTOs(multpleRMAssoEntry.getValue());
+				Vendor vendor =  new Vendor();
+				vendor.setId(multpleRMAssoEntry.getKey());
+				rawmaterialOrderDTO.setVendorId(vendor);
+				rawmaterialOrderDTO.setExpectedDeliveryDate(newrawmaterialOrderDTO.getExpectedDeliveryDate());
+				rawmaterialOrderDTO.setCreateDate(newrawmaterialOrderDTO.getCreateDate());
+				rawmaterialOrderDTO.setDescription(newrawmaterialOrderDTO.getDescription());
+				rawmaterialOrderDTOs.add(rawmaterialOrderDTO);
+			}
+			for (RawmaterialOrderDTO rawmaterialOrderDTO : rawmaterialOrderDTOs) {
 				RawmaterialOrderDTO rawmaterialOrderDTO2	= rawmaterialorderService.addMultipleRawMaterialOrder(rawmaterialOrderDTO, request, response);
 				rawmaterialOrderDTO.setId(rawmaterialOrderDTO2.getId());
 				rawmaterialOrderDTO.setStatusId(rawmaterialOrderDTO2.getStatusId());
