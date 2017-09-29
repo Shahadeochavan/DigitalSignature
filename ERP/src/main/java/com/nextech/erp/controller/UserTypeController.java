@@ -18,9 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.factory.UserTypeFactory;
-import com.nextech.erp.model.User;
 import com.nextech.erp.model.Usertype;
 import com.nextech.erp.newDTO.UserTypeDTO;
 import com.nextech.erp.service.UserTypeService;
