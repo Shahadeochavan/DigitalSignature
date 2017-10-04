@@ -138,7 +138,6 @@ public class BomController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		//  downloadPDF(request, response, bomList);
 		return new Response(1,bomList);
 	}
 	
@@ -160,7 +159,6 @@ public class BomController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		//  downloadPDF(request, response, bomList);
 		return new Response(1, bomModelDatas);
 	}
 	

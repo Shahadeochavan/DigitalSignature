@@ -7,7 +7,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -37,7 +36,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.dto.MultipleRMOrderDTO;
-import com.nextech.erp.dto.ProductRMAssociationModelParts;
 import com.nextech.erp.dto.RMOrderPdf;
 import com.nextech.erp.dto.Mail;
 import com.nextech.erp.dto.ProductOrderDTO;
@@ -50,7 +48,6 @@ import com.nextech.erp.factory.RMOrderRequestResponseFactory;
 import com.nextech.erp.model.Productinventory;
 import com.nextech.erp.model.Vendor;
 import com.nextech.erp.newDTO.NotificationDTO;
-import com.nextech.erp.newDTO.ProductDTO;
 import com.nextech.erp.newDTO.ProductOrderAssociationDTO;
 import com.nextech.erp.newDTO.RMOrderAssociationDTO;
 import com.nextech.erp.newDTO.RMVendorAssociationDTO;
@@ -424,6 +421,7 @@ public class RawmaterialorderController {
 			RMReqirementDTO rmReqirementDTO = new RMReqirementDTO();
 			rmReqirementDTO.setRmId(rmQtyentry.getKey());
 			rmReqirementDTO.setRmPartNumber(rmInventoryDTO.getRmPartNumber());
+			if(rmInventoryDTO.getQuantityAvailable()<rmInventoryDTO.getMinimumQuantity()){
 			rmReqirementDTO.setRequiredQuantity(rmQtyentry.getValue()-rmInventoryDTO.getQuantityAvailable()+rmInventoryDTO.getMinimumQuantity());
 			rmReqirementDTO.setInventoryQuantity(rmInventoryDTO.getQuantityAvailable());
 			rmReqirementDTO.setMinimumQuantity(rmInventoryDTO.getMinimumQuantity());
@@ -438,6 +436,7 @@ public class RawmaterialorderController {
 			System.out.println("rmid : " + rmQtyentry.getKey() + " reqQty : " + rmQtyentry.getValue() + " invQty : " + rmReqirementDTO.getInventoryQuantity());
 			if(rmQtyentry.getValue() > rmInventoryDTO.getQuantityAvailable()){
 				rmReqirementDTOs.add(rmReqirementDTO);
+			}
 			}
 		}
 		}else{
@@ -474,6 +473,7 @@ public class RawmaterialorderController {
 				for (RMOrderAssociationDTO rmOrderAssociationDTO1 : rawmaterialOrderDTO.getRmOrderAssociationDTOs()) {
 					rmOrderAssociationDTO.setQuantity(rmOrderAssociationDTO1.getQuantity());
 					rmOrderAssociationDTO.setRawmaterialId(rmOrderAssociationDTO1.getRawmaterialId());
+					rmOrderAssociationDTO.setExpectedDeliveryDate(rawmaterialOrderDTO.getExpectedDeliveryDate());
 					rmOrderAssociationDTOs.add(rmOrderAssociationDTO);
 					multipleOrder.put(rawmaterialOrderDTO.getVendorId().getId(), rmOrderAssociationDTOs);
 				}
@@ -486,9 +486,11 @@ public class RawmaterialorderController {
 				Vendor vendor =  new Vendor();
 				vendor.setId(multpleRMAssoEntry.getKey());
 				rawmaterialOrderDTO.setVendorId(vendor);
-				rawmaterialOrderDTO.setExpectedDeliveryDate(newrawmaterialOrderDTO.getExpectedDeliveryDate());
-				rawmaterialOrderDTO.setCreateDate(newrawmaterialOrderDTO.getCreateDate());
-				rawmaterialOrderDTO.setDescription(newrawmaterialOrderDTO.getDescription());
+				for(RMOrderAssociationDTO rmOrderAssociationDTO:rawmaterialOrderDTO.getRmOrderAssociationDTOs()){
+					rawmaterialOrderDTO.setExpectedDeliveryDate(rmOrderAssociationDTO.getExpectedDeliveryDate());	
+				}
+				//rawmaterialOrderDTO.setCreateDate(newrawmaterialOrderDTO.getCreateDate());
+			//	rawmaterialOrderDTO.setDescription(newrawmaterialOrderDTO.getDescription());
 				rawmaterialOrderDTOs.add(rawmaterialOrderDTO);
 			}
 			for (RawmaterialOrderDTO rawmaterialOrderDTO : rawmaterialOrderDTOs) {

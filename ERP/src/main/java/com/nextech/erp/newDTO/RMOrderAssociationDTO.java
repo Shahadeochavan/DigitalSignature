@@ -1,6 +1,8 @@
 package com.nextech.erp.newDTO;
 
 
+import java.util.Date;
+
 import com.nextech.erp.dto.AbstractDTO;
 import com.nextech.erp.dto.RawmaterialOrderDTO;
 
@@ -10,6 +12,7 @@ public class RMOrderAssociationDTO extends AbstractDTO {
 	private long remainingQuantity;
 	private RawMaterialDTO rawmaterialId;
 	private RawmaterialOrderDTO rawmaterialOrderId;
+	private Date expectedDeliveryDate;
 	
 	public RMOrderAssociationDTO(){
 		
@@ -40,6 +43,12 @@ public class RMOrderAssociationDTO extends AbstractDTO {
 	}
 	public void setRawmaterialOrderId(RawmaterialOrderDTO rawmaterialOrderId) {
 		this.rawmaterialOrderId = rawmaterialOrderId;
+	}
+	public Date getExpectedDeliveryDate() {
+		return expectedDeliveryDate;
+	}
+	public void setExpectedDeliveryDate(Date expectedDeliveryDate) {
+		this.expectedDeliveryDate = expectedDeliveryDate;
 	}
 	
 }
