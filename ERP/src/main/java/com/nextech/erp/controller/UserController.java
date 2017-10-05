@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
@@ -79,6 +80,8 @@ public class UserController {
 	@Autowired
 	MailService mailService;
 	
+	static Logger logger = Logger.getLogger(UserController.class);
+	
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addUser(@Valid @RequestBody UserDTO userDTO,
 			BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
@@ -137,10 +140,14 @@ public class UserController {
 	public UserStatus login(@RequestBody User user, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 		User user2 = userservice.getUserByUserId(user.getUserid());
+		
 		try {
 
 			System.out.println(messageSource.getMessage(ERPConstants.COUNT,
 					null, null));
+			logger.info("this is a information log message");
+			logger.warn("this is a warning log message");
+			logger.error("this is a error log message");
 			if (user2 != null && authenticate(user, user2)) {
 				Authorization authorization = new Authorization();
 				authorization.setUserid(user.getUserid());
@@ -272,6 +279,7 @@ public class UserController {
 		List<UserDTO> userList = null;
 		try {
 			userList = userservice.getUserList(userList);
+			logger.debug("this is a debudg log message");
 			if(userList==null){
 				return new Response(1,"There is no any user list");
 			}
