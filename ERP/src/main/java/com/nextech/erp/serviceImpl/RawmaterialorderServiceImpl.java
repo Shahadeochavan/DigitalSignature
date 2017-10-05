@@ -133,7 +133,6 @@ public class RawmaterialorderServiceImpl extends CRUDServiceImpl<Rawmaterialorde
 
 	@Override
 	public RawmaterialOrderDTO deleteRMOrder(long id) throws Exception {
-		
 		Rawmaterialorder rawmaterialorder = rawmaterialorderDao.getById(Rawmaterialorder.class, id);
 		if(rawmaterialorder==null){
 			return null;

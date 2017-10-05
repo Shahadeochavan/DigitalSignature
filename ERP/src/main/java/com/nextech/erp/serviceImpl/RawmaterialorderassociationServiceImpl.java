@@ -20,7 +20,6 @@ public class RawmaterialorderassociationServiceImpl extends CRUDServiceImpl<Rawm
 	@Override
 	public List<RMOrderAssociationDTO> getRMOrderRMAssociationByRMOrderId(long id) throws Exception {
 		
-		
 		List<RMOrderAssociationDTO> rmOrderAssociationDTOs = new ArrayList<RMOrderAssociationDTO>();
 		List<Rawmaterialorderassociation> rawmaterialorderassociations = rawmaterialorderassociationDao.getRMOrderRMAssociationByRMOrderId(id);
 		for (Rawmaterialorderassociation rawmaterialorderassociation : rawmaterialorderassociations) {
