@@ -80,12 +80,10 @@ public class Vendor implements Serializable {
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "vendor", cascade = CascadeType.ALL)
 	private List<Bomrmvendorassociation> bomrmvendorassociations;
 
-	//bi-directional many-to-one association to Rawmaterialorder
 	@JsonIgnore
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "vendor", cascade = CascadeType.ALL)
 	private List<Rawmaterialorder> rawmaterialorders;
 
-	//bi-directional many-to-one association to Rawmaterialvendorassociation
 	@JsonIgnore
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "vendor", cascade = CascadeType.ALL)
 	private List<Rawmaterialvendorassociation> rawmaterialvendorassociations;

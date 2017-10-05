@@ -74,7 +74,6 @@ public class User implements Serializable {
 	@Size(min = 5, max = 255, message = "{userid sholud be greater than 5 or less than 255 characters or digits}")
 	private String userid;
 
-	//bi-directional many-to-one association to Usertype
 	@ManyToOne
 	@JoinColumn(name="usertypeid")
 	private Usertype usertype;
