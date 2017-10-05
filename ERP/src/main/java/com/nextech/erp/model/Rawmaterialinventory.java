@@ -50,7 +50,6 @@ public class Rawmaterialinventory implements Serializable {
 	private Rawmaterial rawmaterial;
 	
 
-	//bi-directional many-to-one association to Rawmaterialinventoryhistory
 	@JsonIgnore
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "rawmaterialinventory", cascade = CascadeType.ALL)
 	private List<Rawmaterialinventoryhistory> rawmaterialinventoryhistories;

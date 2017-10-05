@@ -52,10 +52,7 @@ public class Rawmaterialorder implements Serializable {
 	@Column(name="other_charges")
 	private float otherCharges;
 
-
-//	@Min(value = 1 ,message="Please enter atleast 1 quantity")
 	private int quantity;
-
 
 	private float tax;
 

@@ -60,17 +60,14 @@ public class Rawmaterial implements Serializable {
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "rawmaterial", cascade = CascadeType.ALL)
 	private List<Bomrmvendorassociation> bomrmvendorassociations;
 
-	//bi-directional many-to-one association to Productrawmaterialassociation
 	@JsonIgnore
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "rawmaterial", cascade = CascadeType.ALL)
 	private List<Productrawmaterialassociation> productrawmaterialassociations;
 
-	//bi-directional many-to-one association to Qualitycheckrawmaterial
 	@JsonIgnore
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "rawmaterial", cascade = CascadeType.ALL)
 	private List<Qualitycheckrawmaterial> qualitycheckrawmaterials;
 
-	//bi-directional many-to-one association to Unit
 	@ManyToOne
 	private Unit unit;
 
