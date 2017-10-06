@@ -34,12 +34,10 @@ public class Rawmaterialorderinvoiceassociation implements Serializable {
 	@Column(name="updated_date")
 	private Timestamp updatedDate;
 
-	//bi-directional many-to-one association to Rawmaterialorder
 	@ManyToOne
 	@JoinColumn(name="rawmaterialorderid")
 	private Rawmaterialorder rawmaterialorder;
 
-	//bi-directional many-to-one association to Rawmaterialorderinvoice
 	@ManyToOne
 	@JoinColumn(name="rmorderinvoiceid")
 	private Rawmaterialorderinvoice rawmaterialorderinvoice;
