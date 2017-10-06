@@ -43,12 +43,10 @@ public class Status implements Serializable {
 	@Column(name="updated_date")
 	private Timestamp updatedDate;
 
-	//bi-directional many-to-one association to Dailyproduction
 	@JsonIgnore
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "status", cascade = CascadeType.ALL)
 	private List<Dailyproduction> dailyproductions;
 
-	//bi-directional many-to-one association to Dispatch
 	@JsonIgnore
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "status", cascade = CascadeType.ALL)
 	private List<Dispatch> dispatches;
