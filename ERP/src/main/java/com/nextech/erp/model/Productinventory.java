@@ -37,16 +37,11 @@ public class Productinventory implements Serializable {
 	private long maximum_quantity;
 	private boolean isactive;
 
-	/*@NotBlank(message="{name should not be blank}")
-	@Size(min = 2, max = 255, message = "{name sholud be greater than 2 or less than 255 characters}")*/
 	private String name;
 
 
-   // @Min(value = 0, message = " please enter quantityavailabl")
 	private long quantityavailable;
 
-/*    @Min(value = 1, message = "racknumber should be greater than 1 digit")
-	 @Max(value = 100, message = "racknumber should be less than 100 digit")*/
 	private long racknumber;
 
 	@Column(name="updated_by")

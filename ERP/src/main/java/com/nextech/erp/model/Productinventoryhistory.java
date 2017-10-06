@@ -20,10 +20,8 @@ public class Productinventoryhistory implements Serializable {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private long id;
 
-	// @Min(value = 0, message = " please enter after quantity")
 	private long afterquantity;
 
-	// @Min(value = 0, message = " please enter before quantity")
 	private long beforequantity;
 
 	@Column(name="created_by")
