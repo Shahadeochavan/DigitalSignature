@@ -34,7 +34,6 @@ public class Storeoutrmassociation implements Serializable {
 	@Column(name="updated_date")
 	private Timestamp updatedDate;
 
-	//bi-directional many-to-one association to Storeout
 	@ManyToOne
 	@JoinColumn(name="storeOutId")
 	private Storeout storeout;

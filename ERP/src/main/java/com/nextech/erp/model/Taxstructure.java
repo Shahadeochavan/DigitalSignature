@@ -49,7 +49,6 @@ public class Taxstructure implements Serializable {
 	@Column(name="updated_date")
 	private Timestamp updatedDate;
 
-	//bi-directional many-to-one association to Product
 	@JsonIgnore
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "taxstructure", cascade = CascadeType.ALL)
 	private List<Product> products;

@@ -47,7 +47,6 @@ public class Storeoutrm implements Serializable {
 	@ManyToOne
 	private Status status;
 
-	//bi-directional many-to-one association to Rawmaterial
 	@ManyToOne
 	@JoinColumn(name="rawmaterialId")
 	private Rawmaterial rawmaterial;
