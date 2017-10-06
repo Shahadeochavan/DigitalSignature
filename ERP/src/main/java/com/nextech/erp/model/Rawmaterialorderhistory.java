@@ -54,7 +54,6 @@ public class Rawmaterialorderhistory implements Serializable {
 	@JoinColumn(name="status_id_to")
 	private Status status2;
 
-	//bi-directional many-to-one association to Rawmaterialorderinvoice
 	@ManyToOne
 	@JoinColumn(name="rmorderinvoiceid")
 	private Rawmaterialorderinvoice rawmaterialorderinvoice;
