@@ -50,8 +50,7 @@ public class Client implements Serializable {
 	private boolean isactive;
 	private String  renge;
 
-	//private String range;
-//add code
+
 	@Column(name="updated_by")
 	private long updatedBy;
 

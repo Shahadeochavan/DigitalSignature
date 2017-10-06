@@ -44,7 +44,6 @@ public class Dailyproduction implements Serializable {
 	@Column(name="updated_date")
 	private Timestamp updatedDate;
 
-	//bi-directional many-to-one association to Productionplanning
 	@ManyToOne
 	@JoinColumn(name="productionPlanid")
 	private Productionplanning productionplanning;

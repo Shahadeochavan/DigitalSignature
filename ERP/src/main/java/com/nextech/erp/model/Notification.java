@@ -49,7 +49,6 @@ public class Notification implements Serializable {
 	@Column(name="updated_date")
 	private Timestamp updatedDate;
 
-	//bi-directional many-to-one association to Status
 	@ManyToOne
 	@JoinColumn(name="fromStatus")
 	private Status status1;

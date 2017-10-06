@@ -42,7 +42,6 @@ public class Dispatch implements Serializable {
 	@Column(name = "updated_date")
 	private Timestamp updatedDate;
 
-	// bi-directional many-to-one association to Product
 	@ManyToOne
 	@JoinColumn(name = "productid")
 	private Product product;
