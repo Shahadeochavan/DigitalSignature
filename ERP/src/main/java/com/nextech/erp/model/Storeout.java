@@ -43,12 +43,10 @@ public class Storeout implements Serializable {
 	@Column(name="updated_date")
 	private Timestamp updatedDate;
 
-	//bi-directional many-to-one association to Product
 	@ManyToOne
 	@JoinColumn(name="productId")
 	private Product product;
 
-	//bi-directional many-to-one association to Productionplanning
 	@ManyToOne
 	@JoinColumn(name="productionPlanid")
 	private Productionplanning productionplanning;
