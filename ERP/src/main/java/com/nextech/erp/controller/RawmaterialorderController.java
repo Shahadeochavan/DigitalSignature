@@ -424,9 +424,20 @@ public class RawmaterialorderController {
 			RMReqirementDTO rmReqirementDTO = new RMReqirementDTO();
 			rmReqirementDTO.setRmId(rmQtyentry.getKey());
 			rmReqirementDTO.setRmPartNumber(rmInventoryDTO.getRmPartNumber());
+			long maintainAvailablelQuantity =0;
 			if(rmInventoryDTO.getQuantityAvailable()<rmInventoryDTO.getMinimumQuantity()){
-				long maintainAvailablelQuantity = rmInventoryDTO.getMinimumQuantity()-rmInventoryDTO.getQuantityAvailable();
-			rmReqirementDTO.setRequiredQuantity(rmQtyentry.getValue()-rmInventoryDTO.getQuantityAvailable()+maintainAvailablelQuantity);
+				List<RMOrderAssociationDTO> rmOrderAssociationDTOs = rawmaterialorderassociationService.getRMListByRMId(rmQtyentry.getKey());
+				if(rmOrderAssociationDTOs !=null){
+				long totalRMRemainingQuantity=0;
+				for (RMOrderAssociationDTO rmOrderAssociationDTO : rmOrderAssociationDTOs) {
+					totalRMRemainingQuantity = totalRMRemainingQuantity+rmOrderAssociationDTO.getRemainingQuantity();
+				}
+				 maintainAvailablelQuantity = rmInventoryDTO.getMinimumQuantity()-rmInventoryDTO.getQuantityAvailable();
+			  rmReqirementDTO.setRequiredQuantity(rmQtyentry.getValue()-totalRMRemainingQuantity+maintainAvailablelQuantity);
+				}else{
+					maintainAvailablelQuantity = rmInventoryDTO.getMinimumQuantity()-rmInventoryDTO.getQuantityAvailable();
+					rmReqirementDTO.setRequiredQuantity(rmQtyentry.getValue()-rmInventoryDTO.getQuantityAvailable()+maintainAvailablelQuantity);
+				}
 			rmReqirementDTO.setInventoryQuantity(rmInventoryDTO.getQuantityAvailable());
 			rmReqirementDTO.setMinimumQuantity(rmInventoryDTO.getMinimumQuantity());
 			List<RMVendorAssociationDTO> rmVendorAssociationDTOs = rmvAssoService.getRawmaterialvendorassociationListByRMId(rmQtyentry.getKey());
@@ -449,18 +460,27 @@ public class RawmaterialorderController {
 		}
 		}else{
 			//RM Inventory  quantity display when product order are not created
-			List<RMReqirementDTO> rmReqirementDTOs2 = getRMRequirmentDto();
-			for (RMReqirementDTO rmReqirementDTO : rmReqirementDTOs2) {
+			Response rmReqirementDTOs2 = getRMRequirmentDto();
+			if(rmReqirementDTOs2.getRmReqirementDTOs() !=null){
+			for (RMReqirementDTO rmReqirementDTO : rmReqirementDTOs2.getRmReqirementDTOs()) {
 				rmReqirementDTOs.add(rmReqirementDTO);
+			}
+			}else{
+				String errorMessage = rmReqirementDTOs2.getMessage();
+				return new Response(1,errorMessage);
 			}
 			return new Response(0, "Success", rmReqirementDTOs);
 		}
 		//RM Inventory quantity and required quantity display when product order created
-		List<RMReqirementDTO> rmReqirementDTOs2 = getRMRequirmentDto();
-		for (RMReqirementDTO rmReqirementDTO : rmReqirementDTOs2) {
+		Response rmReqirementDTOs2 = getRMRequirmentDto();
+		if(rmReqirementDTOs2.getRmReqirementDTOs() !=null){
+		for (RMReqirementDTO rmReqirementDTO : rmReqirementDTOs2.getRmReqirementDTOs()) {
 			if(!rmIds.contains(rmReqirementDTO.getRmId())){
 				rmReqirementDTOs.add(rmReqirementDTO);
 			}
+		}}else{
+			String errorMessage = rmReqirementDTOs2.getMessage();
+			return new Response(1,errorMessage);
 		}
 		return new Response(0, "Success", rmReqirementDTOs);
 		}catch(Exception ex){
@@ -534,7 +554,7 @@ public class RawmaterialorderController {
 			return new UserStatus(0, e.getCause().getMessage());
 		}
 	}
-	public List<RMReqirementDTO> getRMRequirmentDto() throws Exception{
+	public Response getRMRequirmentDto() throws Exception{
 		List<RMReqirementDTO> rmReqirementDTOs = new ArrayList<RMReqirementDTO>();
 		List<RMInventoryDTO> rmInventoryDTOs = rawmaterialinventoryService.getRMInventoryList();
 		for (RMInventoryDTO rmInventoryDTO : rmInventoryDTOs) {
@@ -542,21 +562,37 @@ public class RawmaterialorderController {
 			List<VendorDTO> vendorDTOs = new ArrayList<VendorDTO>();
 			rmReqirementDTO.setRmId(rmInventoryDTO.getRawmaterialId().getId());
 			rmReqirementDTO.setRmPartNumber(rmInventoryDTO.getRmPartNumber());
+			long maintainAvailablelQuantity =0;
 			if(rmInventoryDTO.getQuantityAvailable()<rmInventoryDTO.getMinimumQuantity()){
-				long maintainAvailablelQuantity = rmInventoryDTO.getMinimumQuantity()-rmInventoryDTO.getQuantityAvailable();
-			rmReqirementDTO.setRequiredQuantity(rmInventoryDTO.getQuantityAvailable()+maintainAvailablelQuantity);
+				List<RMOrderAssociationDTO> rmOrderAssociationDTOs = rawmaterialorderassociationService.getRMListByRMId(rmInventoryDTO.getRawmaterialId().getId());
+				if(rmOrderAssociationDTOs !=null){
+				long totalRMRemainingQuantity=0;
+				for (RMOrderAssociationDTO rmOrderAssociationDTO : rmOrderAssociationDTOs) {
+					totalRMRemainingQuantity = totalRMRemainingQuantity+rmOrderAssociationDTO.getRemainingQuantity();
+				}
+				 maintainAvailablelQuantity = rmInventoryDTO.getMinimumQuantity()-rmInventoryDTO.getQuantityAvailable();
+			  rmReqirementDTO.setRequiredQuantity(maintainAvailablelQuantity-totalRMRemainingQuantity);
+				}else{
+					maintainAvailablelQuantity = rmInventoryDTO.getMinimumQuantity()-rmInventoryDTO.getQuantityAvailable();
+					rmReqirementDTO.setRequiredQuantity(rmInventoryDTO.getQuantityAvailable()+maintainAvailablelQuantity);
+				}
+			//rmReqirementDTO.setRequiredQuantity(rmInventoryDTO.getQuantityAvailable()+maintainAvailablelQuantity);
 			rmReqirementDTO.setInventoryQuantity(rmInventoryDTO.getQuantityAvailable());
 			rmReqirementDTO.setMinimumQuantity(rmInventoryDTO.getMinimumQuantity());
 			List<RMVendorAssociationDTO> rmVendorAssociationDTOs = rmvAssoService.getRawmaterialvendorassociationListByRMId(rmInventoryDTO.getRawmaterialId().getId());
-			
+			if(rmVendorAssociationDTOs !=null){
 			for (RMVendorAssociationDTO rmVendorAssociationDTO : rmVendorAssociationDTOs) {
 			VendorDTO vendorDTO =  vendorService.getVendorById(rmVendorAssociationDTO.getVendorId().getId());
 			vendorDTOs.add(vendorDTO);
 			rmReqirementDTO.setVendorDTOs(vendorDTOs);
 			}
+			}else{
+				String message ="Please create rm vendor association for "+rmInventoryDTO.getRmPartNumber();
+				return new Response(1,message);
+			}
 			rmReqirementDTOs.add(rmReqirementDTO);
 			}
 		}
-		return rmReqirementDTOs;
+		return new Response(2,rmReqirementDTOs);
 	}
 }

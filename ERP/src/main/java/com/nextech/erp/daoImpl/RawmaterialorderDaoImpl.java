@@ -12,6 +12,8 @@ import javax.persistence.metamodel.Metamodel;
 import org.springframework.stereotype.Repository;
 
 import com.nextech.erp.dao.RawmaterialorderDao;
+import com.nextech.erp.dto.RawmaterialOrderDTO;
+import com.nextech.erp.model.Productorder;
 import com.nextech.erp.model.Rawmaterialorder;
 
 @Repository
@@ -84,5 +86,20 @@ public class RawmaterialorderDaoImpl extends SuperDaoImpl<Rawmaterialorder> impl
 				criteriaBuilder.equal(root.get("isactive"), true));
 		TypedQuery<Rawmaterialorder> typedQuery = session.createQuery(criteriaQuery);
 		return typedQuery.getResultList();
+	}
+
+	@Override
+	public List<Rawmaterialorder> getRMOrderListByNewAndIncompleteOrder(
+			long inCompleteOrder, long newOrder) throws Exception {
+		// TODO Auto-generated method stub
+		session = sessionFactory.openSession();
+		CriteriaBuilder criteriaBuilder=session.getCriteriaBuilder();
+	    CriteriaQuery<Rawmaterialorder> criteriaQuery=criteriaBuilder.createQuery(Rawmaterialorder.class);
+	    Metamodel metamodel=session.getMetamodel();
+	    EntityType<Rawmaterialorder> entityType = metamodel.entity(Rawmaterialorder.class);
+	    Root<Rawmaterialorder> root = criteriaQuery.from(entityType);
+	    criteriaQuery.where(root.get("status").in(inCompleteOrder,newOrder));
+	    TypedQuery<Rawmaterialorder> typedQuery = session.createQuery(criteriaQuery);
+	    return typedQuery.getResultList();
 	}
 }

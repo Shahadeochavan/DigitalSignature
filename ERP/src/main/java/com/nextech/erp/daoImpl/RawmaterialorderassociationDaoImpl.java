@@ -50,4 +50,17 @@ public class RawmaterialorderassociationDaoImpl extends SuperDaoImpl<Rawmaterial
 		    }
 		    return results.get(0);
 	}
+
+	@Override
+	public List<Rawmaterialorderassociation> getRMListByRMId(long rmId)
+			throws Exception {
+		// TODO Auto-generated method stub
+		session = sessionFactory.openSession();
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<Rawmaterialorderassociation> criteria = builder.createQuery(Rawmaterialorderassociation.class);
+		Root<Rawmaterialorderassociation> userRoot  = (Root<Rawmaterialorderassociation>) criteria.from(Rawmaterialorderassociation.class);
+		criteria.select(userRoot).where(builder.equal(userRoot.get("rawmaterial"), rmId),builder.equal(userRoot.get("isactive"), true));
+		TypedQuery<Rawmaterialorderassociation> query = session.createQuery(criteria);
+		return query.getResultList();
+	}
 }

@@ -2,6 +2,7 @@ package com.nextech.erp.dao;
 
 import java.util.List;
 
+import com.nextech.erp.dto.RawmaterialOrderDTO;
 import com.nextech.erp.model.Rawmaterialorder;
 
 public interface RawmaterialorderDao extends SuperDao<Rawmaterialorder> {
@@ -13,5 +14,7 @@ public interface RawmaterialorderDao extends SuperDao<Rawmaterialorder> {
 	public List<Rawmaterialorder> getRawmaterialorderByVendor(long vendorId)throws Exception;
 
 	public List<Rawmaterialorder> getRawmaterialorderByVendorId(long vendorId,long statusId1, long statusId2) throws Exception;
+	
+	public List<Rawmaterialorder> getRMOrderListByNewAndIncompleteOrder(long inCompleteOrder,long newOrder) throws Exception;
 
 }

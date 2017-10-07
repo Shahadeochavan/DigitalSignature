@@ -16,5 +16,7 @@ public interface RawmaterialorderassociationService extends	CRUDService<Rawmater
 	public List<RMOrderAssociationDTO> getRMOrderAssoList() throws Exception;
 	
 	public RMOrderAssociationDTO deleteRMOrderAsso(long id)throws Exception;
+	
+	public List<RMOrderAssociationDTO> getRMListByRMId(long rmId) throws Exception;
 
 }
