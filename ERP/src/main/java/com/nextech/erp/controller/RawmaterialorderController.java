@@ -412,7 +412,6 @@ public class RawmaterialorderController {
 				return  new Response(1,"There is no any product RM List");
 			}
 		}
-		//List<RMReqirementDTO> rmReqirementDTOs = new ArrayList<RMReqirementDTO>();
 		Set<Entry<Long, Long>> rmQuantityEntries = rmQuantityMap.entrySet();
 		if(rmQuantityEntries !=null){
 	

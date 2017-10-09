@@ -145,9 +145,9 @@ public class UserController {
 
 			System.out.println(messageSource.getMessage(ERPConstants.COUNT,
 					null, null));
-			logger.info("this is a information log message");
-			logger.warn("this is a warning log message");
-			logger.error("this is a error log message");
+//			logger.info("this is a information log message");
+//			logger.warn("this is a warning log message");
+//			logger.error("this is a error log message");
 			if (user2 != null && authenticate(user, user2)) {
 				Authorization authorization = new Authorization();
 				authorization.setUserid(user.getUserid());

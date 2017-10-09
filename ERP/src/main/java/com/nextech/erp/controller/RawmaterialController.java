@@ -57,13 +57,13 @@ public class RawmaterialController {
 			@RequestParam("unitId") long unitId, @RequestParam("rmTypeId") long rmTypeId) {
 		try {
 			if(inputFile==null){
-			RawMaterialDTO  rawMaterialDTO =	setRM(rmName, description, pricePerUnit, partNumber, unitId, rmTypeId);
+			RawMaterialDTO  rawMaterialDTO = setRM(rmName, description, pricePerUnit, partNumber, unitId, rmTypeId);
 			long id = rawmaterialService.addEntity(RMRequestResponseFactory.setRawMaterial(rawMaterialDTO, request));
 			rawMaterialDTO.setId(id);
 			addRMInventory(rawMaterialDTO, Long.parseLong(request.getAttribute("current_user").toString()));
 			}else{
 				String destinationFilePath = ImageUploadUtil.imgaeUpload(inputFile);
-				RawMaterialDTO  rawMaterialDTO =	setRM(rmName, description, pricePerUnit, partNumber, unitId, rmTypeId);
+				RawMaterialDTO  rawMaterialDTO = setRM(rmName, description, pricePerUnit, partNumber, unitId, rmTypeId);
 				rawMaterialDTO.setDesign(destinationFilePath);
 				long id = rawmaterialService.addEntity(RMRequestResponseFactory.setRawMaterial(rawMaterialDTO, request));
 				rawMaterialDTO.setId(id);
@@ -107,12 +107,12 @@ public class RawmaterialController {
 			@RequestParam("unitId") long unitId, @RequestParam("rmTypeId") long rmTypeId) {
 		try {
 			if(inputFile==null){
-				RawMaterialDTO  rawMaterialDTO =	setRM(rmName, description, pricePerUnit, partNumber, unitId, rmTypeId);
+				RawMaterialDTO  rawMaterialDTO = setRM(rmName, description, pricePerUnit, partNumber, unitId, rmTypeId);
 				rawMaterialDTO.setId(id);
 				rawmaterialService.updateEntity(RMRequestResponseFactory.setRawMaterialUpdate(rawMaterialDTO, request));
 			}else{
 				String destinationFilePath = ImageUploadUtil.imgaeUpload(inputFile);
-				RawMaterialDTO  rawMaterialDTO =	setRM(rmName, description, pricePerUnit, partNumber, unitId, rmTypeId);
+				RawMaterialDTO  rawMaterialDTO = setRM(rmName, description, pricePerUnit, partNumber, unitId, rmTypeId);
 				rawMaterialDTO.setId(id);
 				rawMaterialDTO.setDesign(destinationFilePath);
 				rawmaterialService.updateEntity(RMRequestResponseFactory.setRawMaterialUpdate(rawMaterialDTO, request));
