@@ -8,10 +8,12 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.persistence.PersistenceException;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -51,6 +53,7 @@ import com.nextech.erp.service.StatusService;
 import com.nextech.erp.service.UserService;
 import com.nextech.erp.status.Response;
 import com.nextech.erp.status.UserStatus;
+import com.nextech.erp.util.PDFToByteArrayOutputStreamUtil;
 
 @Controller
 @Transactional
@@ -200,7 +203,7 @@ public class DispatchController {
 
 	}
 
-	private void mailSending(ProductOrderDTO productorder,HttpServletRequest request, HttpServletResponse response,ClientDTO client, StatusDTO status,String fileName,List<DispatchProductDTO> dispatchProductDTOs,DispatchDTO dispatchDTO) throws NumberFormatException,Exception {
+	private void mailSending(ProductOrderDTO productorder,ClientDTO client, StatusDTO status,String fileName,List<DispatchProductDTO> dispatchProductDTOs,DispatchDTO dispatchDTO) throws NumberFormatException,Exception {
 		  NotificationDTO  notificationDTO = notificationService.getNotifiactionByStatus(status.getId());
 	    Mail mail = userService.emailNotification(notificationDTO);
 	    mail.setAttachment(fileName);
@@ -233,25 +236,26 @@ public class DispatchController {
 
 	   CreatePdfForDispatchProduct createPdfForDispatchProduct = new CreatePdfForDispatchProduct();
 	   createPdfForDispatchProduct.createPDF(temperotyFilePath+"\\"+fileName,productorder,dispatchProductDTOs,client,dispatchDTO);
-	     //   ByteArrayOutputStream baos = new ByteArrayOutputStream();
-	         convertPDFToByteArrayOutputStream(temperotyFilePath+"\\"+fileName,request, response, productorder,dispatchProductDTOs,dispatchDTO);
-	      /*  OutputStream os = response.getOutputStream();
-	        baos.writeTo(os);
-	        os.flush();
-*/
+	   
+	  //      convertPDFToByteArrayOutputStream(temperotyFilePath+"\\"+fileName, productorder,dispatchProductDTOs,dispatchDTO);
+	        String file =    PDFToByteArrayOutputStreamUtil.convertPDFToByteArrayOutputStream(temperotyFilePath+"\\"+fileName);
+	   System.out.println(file);
+	   StatusDTO status = statusService.getStatusById(productorder.getStatusId().getId());
+	   mailSending(productorder, client, status, file, dispatchProductDTOs, dispatchDTO);
+
 	    } catch (Exception e1) {
 	        e1.printStackTrace();
 	    }
 
 	}
 
-	private ByteArrayOutputStream convertPDFToByteArrayOutputStream(String fileName,HttpServletRequest request, HttpServletResponse response,ProductOrderDTO productorder,List<DispatchProductDTO> dispatchProductDTOs,DispatchDTO dispatchDTO) throws Exception {
+	private String convertPDFToByteArrayOutputStream(String fileName,ProductOrderDTO productorder,List<DispatchProductDTO> dispatchProductDTOs,DispatchDTO dispatchDTO) throws Exception {
 
 
 		StatusDTO status = statusService.getStatusById(productorder.getStatusId().getId());
 		ClientDTO client = clientService.getClientDTOById(productorder.getClientId().getId());
 
-        mailSending(productorder, request, response, client, status, fileName,dispatchProductDTOs,dispatchDTO);
+      //  mailSending(productorder, client, status, fileName,dispatchProductDTOs,dispatchDTO);
 
 		InputStream inputStream = null;
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -279,6 +283,6 @@ public class DispatchController {
 				}
 			}
 		}
-		return baos;
+		return fileName;
 	}
 }

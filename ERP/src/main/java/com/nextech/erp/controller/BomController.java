@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import org.apache.log4j.Logger;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -70,6 +71,8 @@ public class BomController {
 	@Autowired
 	RMVAssoService rMVAssoService;
 	
+	static Logger logger = Logger.getLogger(BomController.class);
+	
 	@RequestMapping(value = "/createmultiple", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addMultipleBom(
 			@Valid @RequestBody BomDTO bomDTO, BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
@@ -85,15 +88,15 @@ public class BomController {
 			addBomRMVendorAsso(bomDTO, request, response);
 			return new UserStatus(1, "Bom added Successfully !");
 		} catch (ConstraintViolationException cve) {
-			System.out.println("Inside ConstraintViolationException");
+			logger.info("Inside ConstraintViolationException ");
 			cve.printStackTrace();
 			return new UserStatus(0, cve.getCause().getMessage());
 		} catch (PersistenceException pe) {
-			System.out.println("Inside PersistenceException");
+			logger.info("Inside PersistenceException");
 			pe.printStackTrace();
 			return new UserStatus(0, pe.getCause().getMessage());
 		} catch (Exception e) {
-			System.out.println("Inside Exception");
+			logger.info(" Inside Exception");
 			e.printStackTrace();
 			return new UserStatus(0, e.getCause().getMessage());
 		}
@@ -231,7 +234,6 @@ public class BomController {
 					RawMaterialDTO rawmaterial = rawmaterialService.getRMDTO(bomrmVendorAssociation.getRawmaterialId().getId());
 					VendorDTO vendor = vendorService.getVendorById(bomrmVendorAssociation.getVendorId().getId());
 					ProductDTO product = productService.getProductDTO( bom.getProduct().getId());
-				//	RMVendorAssociationDTO rawmaterialvendorassociation = rMVAssoService.getRMVendor(rawmaterial.getId());
 					bomRMVendorModel.setDescription(rawmaterial.getDescription());
 					bomRMVendorModel.setVendorName(vendor.getCompanyName());
 					bomRMVendorModel.setProductName(product.getName());

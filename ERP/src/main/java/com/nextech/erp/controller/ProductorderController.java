@@ -55,6 +55,7 @@ import com.nextech.erp.service.StatusService;
 import com.nextech.erp.service.UserService;
 import com.nextech.erp.status.Response;
 import com.nextech.erp.status.UserStatus;
+import com.nextech.erp.util.PDFToByteArrayOutputStreamUtil;
 
 @Controller
 @Transactional @RequestMapping("/productorder")
@@ -287,45 +288,17 @@ public class ProductorderController {
 	    try {
 	    	ProductOrderPdf ceCreatePDFProductOrder = new ProductOrderPdf();
 	    	ceCreatePDFProductOrder.createPDF(temperotyFilePath+"\\"+fileName,productOrderDTO,productOrderDatas,client);
-	         convertPDFToByteArrayOutputStream(temperotyFilePath+"\\"+fileName,productOrderDTO,productOrderDatas);
+	 
+	     String attachedfile =    PDFToByteArrayOutputStreamUtil.convertPDFToByteArrayOutputStream(temperotyFilePath+"\\"+fileName);
+	 	StatusDTO status = statusService.getStatusById(productOrderDTO.getStatusId().getId());
+		NotificationDTO notificationDTO = notificationService.getNotifiactionByStatus(status.getId());
+	     mailSending(notificationDTO, productOrderDatas, client, attachedfile, productOrderDTO);
 	  
 	    } catch (Exception e1) {
 	        e1.printStackTrace();
 	    }
 	}
-
-	private ByteArrayOutputStream convertPDFToByteArrayOutputStream(String fileName,ProductOrderDTO productOrderDTO,List<ProductOrderData> productOrderDatas) throws Exception {
-		StatusDTO status = statusService.getStatusById(productOrderDTO.getStatusId().getId());
-		NotificationDTO notificationDTO = notificationService.getNotifiactionByStatus(status.getId());
-		ClientDTO client = clientService.getClientDTOById(productOrderDTO.getClientId().getId());
-		//TODO mail sending
-        mailSending(notificationDTO, productOrderDatas, client,fileName,productOrderDTO);
-		InputStream inputStream = null;
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		try {
-			inputStream = new FileInputStream(fileName);
-			byte[] buffer = new byte[1024];
-			baos = new ByteArrayOutputStream();
-			int bytesRead;
-			while ((bytesRead = inputStream.read(buffer)) != -1) {
-				baos.write(buffer, 0, bytesRead);
-			}
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			if (inputStream != null) {
-				try {
-					inputStream.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-		return baos;
-	}
-
+	
 	private void mailSending(NotificationDTO notification,List<ProductOrderData> productOrderDatas,ClientDTO client,String fileName,ProductOrderDTO productOrderDTO) throws Exception{
 	Mail mail =  userService.emailNotification(notification); 
 	 String userEmailCC = mail.getMailCc()+","+client.getEmailId();

@@ -79,7 +79,7 @@ public class VendorController {
               
               vendorService.addEntity(VendorFactory.setVendor(vendorDTO, request));
               NotificationDTO  notificationDTO = notificationService.getNotificationByCode((messageSource.getMessage(ERPConstants.VENDOR_ADDED_SUCCESSFULLY, null, null)));
-		      mailSending(vendorDTO, request, response, notificationDTO);
+		      mailSending(vendorDTO, notificationDTO);
 			return new UserStatus(1, "vendor added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			cve.printStackTrace();
@@ -127,7 +127,7 @@ public class VendorController {
 			 }
             vendorService.updateEntity( VendorFactory.setVendor(vendorDTO, request));
             NotificationDTO  notificationDTO = notificationService.getNotificationByCode((messageSource.getMessage(ERPConstants.VENDOR_UPDATE_SUCCESSFULLY, null, null)));
-		   mailSending(vendorDTO, request, response, notificationDTO);
+		   mailSending(vendorDTO, notificationDTO);
 			return new UserStatus(1, "Vendor update Successfully !");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -164,7 +164,7 @@ public class VendorController {
 
 	}
 	
-	private void mailSending(VendorDTO vendorDTO,HttpServletRequest request,HttpServletResponse response,NotificationDTO  notificationDTO) throws Exception{
+	private void mailSending(VendorDTO vendorDTO,NotificationDTO  notificationDTO) throws Exception{
 		 Mail mail = userService.emailNotification(notificationDTO);
 		 String vendorEmail = mail.getMailTo()+","+vendorDTO.getEmail();
 		   mail.setMailTo(vendorEmail);

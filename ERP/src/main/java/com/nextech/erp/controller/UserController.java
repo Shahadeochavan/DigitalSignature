@@ -80,6 +80,8 @@ public class UserController {
 	@Autowired
 	MailService mailService;
 	
+	@Autowired
+	
 	static Logger logger = Logger.getLogger(UserController.class);
 	
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
@@ -112,7 +114,8 @@ public class UserController {
 				user.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			   userservice.addEntity(user);
 	            NotificationDTO  notificationDTO = notificationService.getNotificationByCode((messageSource.getMessage(ERPConstants.USER_ADD_NOTIFICATION, null, null)));
-		       mailSending(userDTO, request, response,notificationDTO);
+		     //  mailSending(userDTO, request, response,notificationDTO);
+	            mailService.emailNotification(userDTO, notificationDTO);
 			return new UserStatus(1, "User added Successfully !");
 			} else {
 				new UserStatus(0, "User is not authenticated.");
@@ -190,6 +193,11 @@ public class UserController {
 			System.out.println("Inside Exception");
 			e.printStackTrace();
 			return new UserStatus(0, e.getCause().getMessage());
+		}
+		if(user2==null){
+			return new UserStatus(0,"Please enetr correct userId");
+		}else if(!user.getPassword().equals(user2.getPassword())){
+			return  new UserStatus(0,"Please enetr correct password");
 		}
 		return new UserStatus(0, "Please enter correct credentials");
 
@@ -318,7 +326,7 @@ public class UserController {
 		        model.put("location", "Pune");
 		        model.put("signature", "www.NextechServices.in");
 		        mail.setModel(model);
-		        mailService.sendEmailWithoutPdF(mail, notificationDTO);
+		       // mailService.sendEmailWithoutPdF(mail, notificationDTO);
 	}
 
 }

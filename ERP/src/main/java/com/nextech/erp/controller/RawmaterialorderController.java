@@ -71,6 +71,7 @@ import com.nextech.erp.service.UserService;
 import com.nextech.erp.service.VendorService;
 import com.nextech.erp.status.Response;
 import com.nextech.erp.status.UserStatus;
+import com.nextech.erp.util.PDFToByteArrayOutputStreamUtil;
 
 @Controller
 @Transactional @RequestMapping("/rawmaterialorder")
@@ -298,45 +299,16 @@ public class RawmaterialorderController {
 	    try {
 	    	RMOrderPdf createPDF = new RMOrderPdf();
 	    	createPDF.createPDF(temperotyFilePath+"\\"+fileName,rawmaterialOrderDTO,rmOrderModelDatas,vendor);
-	        //ByteArrayOutputStream baos = new ByteArrayOutputStream();
-	       convertPDFToByteArrayOutputStream(temperotyFilePath+"\\"+fileName,rawmaterialOrderDTO,rmOrderModelDatas);
+	    	
+	       String attachedfile =    PDFToByteArrayOutputStreamUtil.convertPDFToByteArrayOutputStream(temperotyFilePath+"\\"+fileName);
+			StatusDTO status = statusService.getStatusById(rawmaterialOrderDTO.getStatusId().getId());
+			NotificationDTO notification = notificationService.getNotifiactionByStatus(status.getId());
+	       mailSending(notification, rawmaterialOrderDTO, vendor, attachedfile, rmOrderModelDatas);
 	    } catch (Exception e1) {
 	        e1.printStackTrace();
 	    }
 	}
 	
-	private ByteArrayOutputStream convertPDFToByteArrayOutputStream(String fileName,RawmaterialOrderDTO rawmaterialOrderDTO,List<RMOrderModelData> rmOrderModelDatas) throws Exception {
-		StatusDTO status = statusService.getStatusById(rawmaterialOrderDTO.getStatusId().getId());
-		NotificationDTO notification = notificationService.getNotifiactionByStatus(status.getId());
-		VendorDTO vendor = vendorService.getVendorById(rawmaterialOrderDTO.getVendorId().getId());
-		//TODO mail sending
-        mailSending(notification, rawmaterialOrderDTO, vendor,fileName,rmOrderModelDatas);
-		InputStream inputStream = null;
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		try {
-			inputStream = new FileInputStream(fileName);
-			byte[] buffer = new byte[1024];
-			baos = new ByteArrayOutputStream();
-			int bytesRead;
-			while ((bytesRead = inputStream.read(buffer)) != -1) {
-				baos.write(buffer, 0, bytesRead);
-			}
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			if (inputStream != null) {
-				try {
-					inputStream.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-		return baos;
-	}
-
 	private void mailSending(NotificationDTO notification,RawmaterialOrderDTO rawmaterialOrderDTO,VendorDTO vendor,String fileName,List<RMOrderModelData> rmOrderModelDatas) throws Exception{
 	Mail mail =  userService.emailNotification(notification);
 	 String userEmailCC = mail.getMailCc()+","+vendor.getEmail();

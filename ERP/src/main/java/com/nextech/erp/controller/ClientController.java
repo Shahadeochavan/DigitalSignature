@@ -82,7 +82,7 @@ public class ClientController {
        
 		    	clientService.addEntity(ClientFactory.setClient(clientDTO, request));
 	            NotificationDTO  notificationDTO = notificationService.getNotificationByCode((messageSource.getMessage(ERPConstants.CLIENT_ADDED_SUCCESSFULLY, null, null)));
-		        mailSending(clientDTO, request, response,notificationDTO);
+		        mailSending(clientDTO,notificationDTO);
 			return new UserStatus(1, messageSource.getMessage(
 					ERPConstants.CLIENT_ADDED, null, null));
 		} catch (ConstraintViolationException cve) {
@@ -135,7 +135,7 @@ public class ClientController {
 			 }
 	    	clientService.updateEntity(ClientFactory.setClientUpdate(clientDTO, request));
             NotificationDTO  notificationDTO = notificationService.getNotificationByCode((messageSource.getMessage(ERPConstants.CLIENT_UPDATE_SUCCESSFULLY, null, null)));
-	        mailSending(clientDTO, request, response, notificationDTO);
+	        mailSending(clientDTO,notificationDTO);
 			return new UserStatus(1, messageSource.getMessage(
 					ERPConstants.CLIENT_UPDATE, null, null));
 		} catch (Exception e) {
@@ -173,7 +173,7 @@ public class ClientController {
 		}
 
 	}
-	private void mailSending(ClientDTO client,HttpServletRequest request, HttpServletResponse response,NotificationDTO  notificationDTO) throws Exception{
+	private void mailSending(ClientDTO client,NotificationDTO  notificationDTO) throws Exception{
 	Mail mail =  userService.emailNotification(notificationDTO);
 	String clientTO = mail.getMailTo()+","+client.getEmailId();
 	      mail.setMailTo(clientTO);

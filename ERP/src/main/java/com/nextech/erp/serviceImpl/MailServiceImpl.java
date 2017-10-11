@@ -1,10 +1,9 @@
 package com.nextech.erp.serviceImpl;
 
+import java.util.HashMap;
 import java.util.Map;
-
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-
 import org.apache.velocity.app.VelocityEngine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
@@ -13,19 +12,22 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.velocity.VelocityEngineUtils;
-
 import com.nextech.erp.dto.Mail;
-import com.nextech.erp.model.Notification;
 import com.nextech.erp.newDTO.NotificationDTO;
+import com.nextech.erp.newDTO.UserDTO;
 import com.nextech.erp.service.MailService;
+import com.nextech.erp.service.UserService;
 @Service
-public class MailServiceImpl extends CRUDServiceImpl<Notification> implements MailService {
+public class MailServiceImpl  implements MailService {
 
 	@Autowired
 	JavaMailSender mailSender;
 
 	@Autowired
 	VelocityEngine velocityEngine;
+	
+	@Autowired
+	UserService userService;
 
 	@Async
 	public void sendEmail( Mail mail,NotificationDTO notification) {
@@ -97,6 +99,23 @@ public class MailServiceImpl extends CRUDServiceImpl<Notification> implements Ma
 		}
 	}
 
-
-
+	@Override
+	public void emailNotification(UserDTO userDTO, NotificationDTO notificationDTO)
+			throws Exception {
+		// TODO Auto-generated method stub
+		 Mail mail = userService.emailNotification(notificationDTO);
+         String userEmailTo = mail.getMailTo()+","+userDTO.getEmailId();
+                mail.setMailTo(userEmailTo);      
+		        mail.setMailSubject(notificationDTO.getSubject());
+		        Map < String, Object > model = new HashMap < String, Object > ();
+		        model.put("firstName", userDTO.getFirstName());
+		        model.put("lastName", userDTO.getLastName());
+		        model.put("userId", userDTO.getUserId());
+		        model.put("password", userDTO.getPassword());
+		        model.put("email", userDTO.getEmailId());
+		        model.put("location", "Pune");
+		        model.put("signature", "www.NextechServices.in");
+		        mail.setModel(model);
+		        sendEmailWithoutPdF(mail, notificationDTO);
+	}
 }
