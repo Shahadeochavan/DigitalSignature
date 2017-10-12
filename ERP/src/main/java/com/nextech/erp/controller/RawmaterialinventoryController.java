@@ -173,7 +173,6 @@ public class RawmaterialinventoryController {
 			}
 			}else{
 				logger.info("There is no any rm inventory list");
-				//return new Response(1,"There is no any rm inventory list");
 			}
 			if(rmInventoryDTOs != null&& ! rmInventoryDTOs.isEmpty()){
 				emailNotificationRMInventory(rmInventoryDTOs);
@@ -181,7 +180,6 @@ public class RawmaterialinventoryController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		//return null;
 	}
 	
 	private void emailNotificationRMInventory(List<RMInventoryDTO> rmInventoryDTOs) throws Exception {

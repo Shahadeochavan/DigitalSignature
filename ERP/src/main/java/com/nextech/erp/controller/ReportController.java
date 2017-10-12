@@ -89,7 +89,6 @@ public class ReportController {
 	
 	static Logger logger = Logger.getLogger(ReportController.class);
 	
-	
 	@Transactional @RequestMapping(value = "/query", method = RequestMethod.POST , produces = APPLICATION_JSON, headers = "Accept=application/json")
 	public Response fetchReport( @RequestBody ReportQueryDataDTO reportQueryDataDTO, final HttpServletRequest request,
 			final HttpServletResponse response) throws Exception {
@@ -136,7 +135,6 @@ public class ReportController {
 		String fileName =downloadReport(jasperReportBuilder, reportQueryDataDTO.getReportType(), report.getReportLocation() + report.getFileName(), response);
 		return new Response(1,"Report downloaded sucessfully",fileName);
 	}
-
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Transactional @RequestMapping(value = "/inputParameters/{id}", method = RequestMethod.GET, produces = APPLICATION_SCV, headers = "Accept=application/json")
