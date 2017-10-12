@@ -11,7 +11,6 @@ import com.nextech.erp.model.Qualitycheckguideline;
 
 @Repository
 public class QualityCheckGuidelineDaoImpl extends SuperDaoImpl<Qualitycheckguideline> implements QualityCheckGuidelineDao{
-
 	@Override
 	public Qualitycheckguideline getQCGuidlineByRMId(long rmId)
 			throws Exception {

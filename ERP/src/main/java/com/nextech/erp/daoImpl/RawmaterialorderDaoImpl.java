@@ -12,8 +12,6 @@ import javax.persistence.metamodel.Metamodel;
 import org.springframework.stereotype.Repository;
 
 import com.nextech.erp.dao.RawmaterialorderDao;
-import com.nextech.erp.dto.RawmaterialOrderDTO;
-import com.nextech.erp.model.Productorder;
 import com.nextech.erp.model.Rawmaterialorder;
 
 @Repository
@@ -51,7 +49,6 @@ public class RawmaterialorderDaoImpl extends SuperDaoImpl<Rawmaterialorder> impl
 
 	@Override
 	public List<Rawmaterialorder> getRawmaterialorderByVendor(long vendorId) throws Exception {
-		
 		session = sessionFactory.openSession();
 		CriteriaBuilder builder = session.getCriteriaBuilder();
 		CriteriaQuery<Rawmaterialorder> criteria = builder.createQuery(Rawmaterialorder.class);
