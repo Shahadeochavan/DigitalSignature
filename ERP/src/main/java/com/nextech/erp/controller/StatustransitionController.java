@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import org.apache.log4j.Logger;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -36,6 +37,8 @@ public class StatustransitionController {
 	
 	@Autowired
 	private MessageSource messageSource;
+	
+	static Logger logger = Logger.getLogger(StatustransitionController.class);
 
 	@Transactional @RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addStatustransition(
@@ -55,15 +58,15 @@ public class StatustransitionController {
 				return new UserStatus(1, messageSource.getMessage(ERPConstants.EMAIL_ALREADY_EXIT, null, null));
 			return new UserStatus(1, "Statustransition added Successfully !");
 		} catch (ConstraintViolationException cve) {
-			System.out.println("Inside ConstraintViolationException");
+			logger.error("Inside ConstraintViolationException");
 			cve.printStackTrace();
 			return new UserStatus(0, cve.getCause().getMessage());
 		} catch (PersistenceException pe) {
-			System.out.println("Inside PersistenceException");
+			logger.error("Inside PersistenceException");
 			pe.printStackTrace();
 			return new UserStatus(0, pe.getCause().getMessage());
 		} catch (Exception e) {
-			System.out.println("Inside Exception");
+			logger.error("Inside Exception");
 			e.printStackTrace();
 			return new UserStatus(0, e.getCause().getMessage());
 		}
@@ -76,6 +79,7 @@ public class StatustransitionController {
 		try {
 			statustransition = statustransitionService.getStatusTranstionbyId(id);
 			if(statustransition==null){
+			logger.error("There is no any stattus transtion");
 			 return  new Response(1,"There is no any status transtion");
 			}
 		} catch (Exception e) {
@@ -103,6 +107,7 @@ public class StatustransitionController {
 		try {
 			statustransitionList = statustransitionService.getStatusTranstionList();
 			if(statustransitionList==null){
+				logger.error("There is no any stattus transtion list");
 				return new Response(1,"There is no any statsus transition list");
 			}
 
@@ -120,6 +125,7 @@ public class StatustransitionController {
 		try {
 			StatusTransitionDTO statusTransitionDTO =	statustransitionService.deleteStatusTranstion(id);
 			if(statusTransitionDTO==null){
+				logger.error("There is no any stattus transtion");
 				return  new Response(1,"There is no any stattus transtion");
 			}
 			return new Response(1, "Statustransition deleted Successfully !");

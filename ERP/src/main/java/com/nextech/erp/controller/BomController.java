@@ -108,6 +108,7 @@ public class BomController {
 		try {
 			bom = bomService.getBomById(id);
 			if(bom==null){
+				logger.error("There is no any bom");
 				return new Response(1,"There is no any bom");
 			}
 		} catch (Exception e) {
@@ -123,6 +124,7 @@ public class BomController {
 			bomService.updateEntity(BOMFactory.setBom(bomDTO,request));
 			return new UserStatus(1, "Bom update Successfully !");
 		} catch (Exception e) {
+			logger.error("There is no any bom");
 			 e.printStackTrace();
 			return new UserStatus(0, e.toString());
 		}
@@ -135,6 +137,7 @@ public class BomController {
 		try {
 			bomList = bomService.getBomList();
 			if(bomList==null){
+				logger.error("There is no any bom List");
 				return  new Response(1,"There is no any bom list");
 			}
 
@@ -179,6 +182,7 @@ public class BomController {
 			e.printStackTrace();
 		}
 		if(products == null){
+			logger.error("Please add Product RM Association to Create BOM");
 			response = new Response(0,"Please add Product RM Association to Create BOM", products);
 		}else{
 			response = new Response(1,"Success", products);
@@ -192,6 +196,7 @@ public class BomController {
 		try {
 		BomDTO bomDTO =	bomService.deleteBom(id);
 		if(bomDTO==null){
+			logger.error("There is no any bom");
 			return  new Response(1,"There is no any bom");
 		}
 			return new Response(1, "Bom deleted Successfully !");
@@ -210,13 +215,12 @@ public class BomController {
 			if(boList==null){
 				return new Response(1,"There is no any bom list");
 			}
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		return new Response(1,boList);
 	}
+	
 	@RequestMapping(value = "downloadBomPdf/{PRODUCT-ID}/{BOM-ID}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody Response getBomPdfByProductIdAndBomId(@PathVariable("PRODUCT-ID") long productId,@PathVariable("BOM-ID") long bomId,HttpServletRequest request, HttpServletResponse response) throws IOException {
 
@@ -244,21 +248,19 @@ public class BomController {
 					productBomDTO.setProductPartNumber(product.getPartNumber()); 
 					productBomDTO.setCreatedDate(bom.getCreatedDate());
 					bomRMVendorModels.add(bomRMVendorModel);
-					
 				}
 				}else{
+					logger.error("There is no any bom rm vendor association");
 					return new Response(1,"There is no any bom rm vendor association");
 				}
-				
 			}
 			}else{
 				return new Response(1,"There is no any bom list for download pdf");
 			}
-			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-    downloadPDF(request, response, bomRMVendorModels,productBomDTO);
+		createBOMPdf(request, response, bomRMVendorModels,productBomDTO);
 //		return boList;
 	return new Response(1,"Pdf downloaded successfully");
 	}
@@ -274,7 +276,7 @@ public class BomController {
 		}
 	}
 
-	public void downloadPDF(HttpServletRequest request, HttpServletResponse response,List<BomRMVendorModel> bomRMVendorModels,ProductBomDTO productBomDTO) throws IOException {
+	public void createBOMPdf(HttpServletRequest request, HttpServletResponse response,List<BomRMVendorModel> bomRMVendorModels,ProductBomDTO productBomDTO) throws IOException {
 
 		final ServletContext servletContext = request.getSession().getServletContext();
 	    final File tempDirectory = (File) servletContext.getAttribute("javax.servlet.context.tempdir");
@@ -304,7 +306,6 @@ public class BomController {
 		InputStream inputStream = null;
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		try {
-
 			inputStream = new FileInputStream(fileName);
 			byte[] buffer = new byte[1024];
 			baos = new ByteArrayOutputStream();

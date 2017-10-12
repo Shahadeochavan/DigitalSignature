@@ -62,11 +62,10 @@ public class ProductorderServiceImpl extends CRUDServiceImpl<Productorder> imple
 	BOMRMVendorAssociationDao bomrmVendorAssociationDao;
 	
 	@Override
-	public Productorder getProductorderByProductOrderId(long pOrderId)
-			throws Exception {
-		
-		return productorderDao.getProductorderByProductOrderId(pOrderId);
+	public Productorder getProductorderByProductOrderId(long productOrderId)throws Exception {
+		return productorderDao.getProductorderByProductOrderId(productOrderId);
 	}
+	
 	@Override
 	public List<ProductOrderDTO> getPendingProductOrders(long statusId,long statusId1) {
 		List<ProductOrderDTO> productOrderDTOs =  new ArrayList<ProductOrderDTO>();

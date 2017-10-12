@@ -5,11 +5,13 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import org.apache.log4j.Logger;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -107,6 +109,7 @@ public class RawmaterialorderinvoiceController {
 	@Autowired
 	MailService mailService;
 
+	static Logger logger = Logger.getLogger(RawmaterialorderinvoiceController.class);
 
 	@Transactional @RequestMapping(value = "/securitycheck", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addRawmaterialOrderInvoice(
@@ -138,19 +141,16 @@ public class RawmaterialorderinvoiceController {
 
 			return new UserStatus(1,"Rawmaterialorderinvoice added Successfully !");
 
-		} catch(RMOrderInvoiceExistsException rmOrderInvoiceExistsException){
-			rmOrderInvoiceExistsException.printStackTrace();
-			return new UserStatus(0, rmOrderInvoiceExistsException.getCause().getMessage());
 		} catch (ConstraintViolationException cve) {
-			System.out.println("Inside ConstraintViolationException");
+			logger.error("Inside ConstraintViolationException");
 			cve.printStackTrace();
 			return new UserStatus(0, cve.getCause().getMessage());
 		} catch (PersistenceException pe) {
-			System.out.println("Inside PersistenceException");
+			logger.error("Inside PersistenceException");
 			pe.printStackTrace();
 			return new UserStatus(0, pe.getCause().getMessage());
 		} catch (Exception e) {
-			System.out.println("Inside Exception");
+			logger.error("Inside Exception");
 			e.printStackTrace();
 			return new UserStatus(0, e.getCause().getMessage());
 		}
@@ -161,9 +161,9 @@ public class RawmaterialorderinvoiceController {
 
 		List<Rawmaterialorderinvoice> rawmaterialorderinvoiceList = null;
 		try {
-			rawmaterialorderinvoiceList = rawmaterialorderinvoiceservice
-					.getEntityList(Rawmaterialorderinvoice.class);
+			rawmaterialorderinvoiceList = rawmaterialorderinvoiceservice.getEntityList(Rawmaterialorderinvoice.class);
 			if(rawmaterialorderinvoiceList.isEmpty()){
+				logger.error("There is no rm invoice list");
 				return new Response(1,"There is no rm invoice list");
 			}
 
@@ -204,6 +204,7 @@ public class RawmaterialorderinvoiceController {
 					rawmaterialorderinvoiceList.add(checkInvoiceDTO);
 				}
 			}else{
+				logger.error("There is no rm invoice list");
 				return new Response(1,"There is no any rm security list");
 			}
 		} catch (Exception e) {

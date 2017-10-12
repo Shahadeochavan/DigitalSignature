@@ -2,10 +2,13 @@ package com.nextech.erp.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+
+import org.apache.log4j.Logger;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -65,6 +68,8 @@ public class ProductqualityController {
 
 	@Autowired
 	DailyproductionService dailyproductionService;
+	
+	static Logger logger = Logger.getLogger(ProductqualityController.class);
 
 	@RequestMapping(value = "getQualityPendingListByDate/{date}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody Response getProductionPlanDate1(@PathVariable("date") String date,HttpServletRequest request,HttpServletResponse response) {
@@ -108,15 +113,15 @@ public class ProductqualityController {
 			
 			return new UserStatus(1, "Productquality added Successfully !");
 		} catch (ConstraintViolationException cve) {
-			System.out.println("Inside ConstraintViolationException");
+			logger.error("Inside ConstraintViolationException");
 			cve.printStackTrace();
 			return new UserStatus(0, cve.getCause().getMessage());
 		} catch (PersistenceException pe) {
-			System.out.println("Inside PersistenceException");
+			logger.error("Inside PersistenceException");
 			pe.printStackTrace();
 			return new UserStatus(0, pe.getCause().getMessage());
 		} catch (Exception e) {
-			System.out.println("Inside Exception");
+			logger.error("Inside Exception");
 			e.printStackTrace();
 			return new UserStatus(0, e.getCause().getMessage());
 		}
@@ -153,6 +158,7 @@ public class ProductqualityController {
 
 			productquality = productqualityService.getProductQualityById(id);
 			if(productquality==null){
+				logger.error("There is no any product quality");
 				return new Response(1,"There is no any product quality");
 			}
 		} catch (Exception e) {
@@ -178,6 +184,7 @@ public class ProductqualityController {
 		try {
 			productqualityList = productqualityService.getProductQualityList();
 			if(productqualityList==null){
+				logger.error("There is no any product quality list");
 				return  new Response(1,"There is no any product quality list");
 			}
 
@@ -192,6 +199,7 @@ public class ProductqualityController {
 		try {
 			ProductQualityDTO productQualityDTO =	productqualityService.deleteproductQuality(id);
 			if(productQualityDTO==null){
+				logger.error("There is no any product quality list");
 				return new Response(1,"There is no any product quality");
 			}
 			return new Response(1, "Productquality deleted Successfully !");

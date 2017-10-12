@@ -7,7 +7,7 @@ import com.nextech.erp.newDTO.NotificationUserAssociatinsDTO;
 
 public interface NotificationUserAssociationService extends CRUDService<Notificationuserassociation>{
 
-	List<Notificationuserassociation> getNotificationuserassociationByUserId(long userId) throws Exception;
+	List<Notificationuserassociation> getNotificationUserAssociationByUserId(long userId) throws Exception;
 	
 	List<Notificationuserassociation> getNotificationuserassociationBynotificationId(long notificationId) throws Exception;
 	

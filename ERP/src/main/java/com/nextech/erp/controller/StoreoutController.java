@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
@@ -64,6 +65,8 @@ public class StoreoutController {
 
 	@Autowired
 	RawmaterialinventoryService rawmaterialinventoryService;
+	
+	static Logger logger = Logger.getLogger(StoreoutController.class);
 
 	@RequestMapping(value = "/createStoreOut", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addStoreOutRM(@Valid @RequestBody StoreOutDTO storeOutDTO,
@@ -77,15 +80,15 @@ public class StoreoutController {
 			
 			return new UserStatus(1, "Storeout added Successfully !");
 		} catch (ConstraintViolationException cve) {
-			System.out.println("Inside ConstraintViolationException");
+			logger.error("Inside ConstraintViolationException");
 			cve.printStackTrace();
 			return new UserStatus(0, cve.getCause().getMessage());
 		} catch (PersistenceException pe) {
-			System.out.println("Inside PersistenceException");
+			logger.error("Inside PersistenceException");
 			pe.printStackTrace();
 			return new UserStatus(0, pe.getCause().getMessage());
 		} catch (Exception e) {
-			System.out.println("Inside Exception");
+			logger.error("Inside Exception");
 			e.printStackTrace();
 			return new UserStatus(0, e.getCause().getMessage());
 		}
@@ -97,6 +100,7 @@ public class StoreoutController {
 		try {
 			Storeout = storeoutService.getStoreOutById(id);
 			if(Storeout==null){
+				 logger.error("There is no any store out rm");
 				return  new Response(1,"There is no any store out rm");
 			}
 		} catch (Exception e) {
@@ -124,6 +128,7 @@ public class StoreoutController {
 		try {
 			 storeouts =  storeoutService.getStoreOutlist();
 			 if(storeouts==null){
+				 logger.error("There is no any store out list");
 				 return new Response(1,"There is no any store out list");
 			 }
 
@@ -140,6 +145,7 @@ public class StoreoutController {
 		try {
 			StoreOutDTO storeOutDTO  = storeoutService.deleteStoreOutById(id);
 			if(storeOutDTO==null){
+				 logger.error("There is no any store out rm");
 				return  new Response(1,"There is no any store out rm");
 			}
 			return new Response(1, "Storeout deleted Successfully !");

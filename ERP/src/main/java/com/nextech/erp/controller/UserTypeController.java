@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -31,6 +32,9 @@ public class UserTypeController {
 	@Autowired
 	UserTypeService userTypeService;
 	
+	static Logger logger = Logger.getLogger(UserTypeController.class);
+	
+	
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addUserType(@Valid @RequestBody UserTypeDTO userTypeDTO,
 			BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
@@ -47,15 +51,15 @@ public class UserTypeController {
 		
 			return new UserStatus(1, "Usertype added Successfully !");
 		} catch (ConstraintViolationException cve) {
-			System.out.println("Inside ConstraintViolationException");
+			logger.error("Inside ConstraintViolationException");
 			cve.printStackTrace();
 			return new UserStatus(0, cve.getCause().getMessage());
 		} catch (PersistenceException pe) {
-			System.out.println("Inside PersistenceException");
+			logger.error("Inside PersistenceException");
 			pe.printStackTrace();
 			return new UserStatus(0, pe.getCause().getMessage());
 		} catch (Exception e) {
-			System.out.println("Inside Exception");
+			logger.error("Inside Exception");
 			e.printStackTrace();
 			return new UserStatus(0, e.getCause().getMessage());
 		}
@@ -67,6 +71,7 @@ public class UserTypeController {
 		try {
 			userTypeDTO = userTypeService.getUserTypeDto(id);
 			if(userTypeDTO==null){
+				logger.info("there is no any user type ");
 				return new Response(1,"There is no any user type");
 			}
 		} catch (Exception e) {
@@ -101,6 +106,7 @@ public class UserTypeController {
 		try {
 			userList = userTypeService.getUserTypeDTO();
 			if(userList==null){
+				 logger.info("there is no any user type list");
 				return new Response(1,"There is no any user type list");
 			}
 
@@ -117,6 +123,7 @@ public class UserTypeController {
 		try {
 			UserTypeDTO userTypeDTO =userTypeService.deleteUserType(id);
 			if (userTypeDTO==null) {
+				 logger.info("there is no any user type");
 				return new Response(1,"there is no any user type");
 			}
 			return new Response(1, "UserType deleted Successfully !");

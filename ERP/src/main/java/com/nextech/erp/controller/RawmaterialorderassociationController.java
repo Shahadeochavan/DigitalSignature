@@ -2,11 +2,13 @@ package com.nextech.erp.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import org.apache.log4j.Logger;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -37,6 +39,9 @@ public class RawmaterialorderassociationController {
 
 	@Autowired
 	RawmaterialService rawmaterialService;
+	
+	static Logger logger = Logger.getLogger(RawmaterialorderassociationController.class);
+	
 	@Transactional @RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addRawmaterialorderassociation(
 			@Valid @RequestBody RMOrderAssociationDTO rmOrderAssociationDTO,
@@ -48,12 +53,15 @@ public class RawmaterialorderassociationController {
 			rawmaterialorderassociationService.addEntity(RMOrderAssociationRequestResponseFactory.setRMOrderAssocition(rmOrderAssociationDTO, request));
 			return new UserStatus(1,"Rawmaterialorderassociation added Successfully !");
 		} catch (ConstraintViolationException cve) {
+			logger.error("Inside ConstraintViolationException");
 			cve.printStackTrace();
 			return new UserStatus(0, cve.getCause().getMessage());
 		} catch (PersistenceException pe) {
+			logger.error("Inside PersistenceException");
 			pe.printStackTrace();
 			return new UserStatus(0, pe.getCause().getMessage());
 		} catch (Exception e) {
+			logger.error("Inside Exception");
 			e.printStackTrace();
 			return new UserStatus(0, e.getCause().getMessage());
 		}
@@ -66,6 +74,7 @@ public class RawmaterialorderassociationController {
 		try {
 			rawmaterialorderassociation = rawmaterialorderassociationService.getRMOrderAssoById(id);
 			if (rawmaterialorderassociation==null) {
+				logger.error("There is no rm association");
 				return new UserStatus(1,"There is no rm association");
 			}
 		} catch (Exception e) {
@@ -92,6 +101,7 @@ public class RawmaterialorderassociationController {
 		try {
 			rawmaterialorderassociationList = rawmaterialorderassociationService.getRMOrderAssoList();
 			if(rawmaterialorderassociationList==null){
+				logger.error("There is no rm association list");
 				return new Response(1,"There is no any rm assocition list");
 			}
 		} catch (Exception e) {
@@ -113,7 +123,7 @@ public class RawmaterialorderassociationController {
 		if(rawmaterialorderassociations == null || rawmaterialorderassociations.size() == 0){
 			 message = "Invalid RM Order Data";
 			 code = 0;
-			 System.out.println("There are no raw materials for the RM Order. Hence this RM Order is invalid");
+			 logger.info("There are no raw materials for the RM Order. Hence this RM Order is invalid");
 		}
 		Response response = new Response(code, message, qualityCheckRMDTO);
 		return response;
@@ -125,6 +135,7 @@ public class RawmaterialorderassociationController {
 		try {
 			RMOrderAssociationDTO rawAssociationDTO = 	rawmaterialorderassociationService.deleteRMOrderAsso(id);
 			if(rawAssociationDTO==null){
+				logger.error("There is no rm association");
 				return new Response(1,"There is no rm association");
 			}
 			return new Response(1,

@@ -5,10 +5,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
+
 import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+
+import org.apache.log4j.Logger;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -21,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.dto.ProductRMAssociationDTO;
 import com.nextech.erp.dto.ProductRMAssociationModelParts;
@@ -64,6 +68,8 @@ public class ProductRMAssoController {
 
 	@Autowired
 	ProductionplanningService productionplanningService;
+	
+	static Logger logger = Logger.getLogger(ProductRMAssoController.class);
 
 	@Transactional @RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addProductrawmaterialassociation(
@@ -82,15 +88,15 @@ public class ProductRMAssoController {
 				return new UserStatus(1,messageSource.getMessage(ERPConstants.PRODUCT_RM_ASSO_EXIT, null, null));
 			return new UserStatus(1,"Productrawmaterialassociation added Successfully !");
 		} catch (ConstraintViolationException cve) {
-			System.out.println("Inside ConstraintViolationException");
+			logger.error("Inside ConstraintViolationException");
 			cve.printStackTrace();
 			return new UserStatus(0, cve.getCause().getMessage());
 		} catch (PersistenceException pe) {
-			System.out.println("Inside PersistenceException");
+			logger.error("Inside PersistenceException");
 			pe.printStackTrace();
 			return new UserStatus(0, pe.getCause().getMessage());
 		} catch (Exception e) {
-			System.out.println("Inside Exception");
+			logger.error("Inside Exception");
 			e.printStackTrace();
 			return new UserStatus(0, e.getCause().getMessage());
 		}
@@ -109,15 +115,15 @@ public class ProductRMAssoController {
 			productRMAssoService.addMultipleRawmaterialorder(productRMAssociationDTO, request.getAttribute("current_user").toString());
 			return new UserStatus(1, "Multiple Rawmaterialorder added Successfully !");
 		} catch (ConstraintViolationException cve) {
-			System.out.println("Inside ConstraintViolationException");
+			logger.error("Inside ConstraintViolationException");
 			cve.printStackTrace();
 			return new UserStatus(0, cve.getCause().getMessage());
 		} catch (PersistenceException pe) {
-			System.out.println("Inside PersistenceException");
+			logger.error("Inside PersistenceException");
 			pe.printStackTrace();
 			return new UserStatus(0, pe.getCause().getMessage());
 		} catch (Exception e) {
-			System.out.println("Inside Exception");
+			logger.error("Inside Exception");
 			e.printStackTrace();
 			return new UserStatus(0, e.getCause().getMessage());
 		}
@@ -269,6 +275,7 @@ public class ProductRMAssoController {
 		try {
 			ProductRMAssociationDTO productRMAssociationDTO =	productRMAssoService.deleteProductRMAssoById(id);
 			if(productRMAssociationDTO==null){
+				logger.error("There is no any product rm association");
 				return new Response(1,"There is no any product rm association");
 			}
 			return new Response(1,"Productrawmaterialassociation deleted Successfully !");
@@ -283,11 +290,10 @@ public class ProductRMAssoController {
 		try {
 			List<ProductRMAssociationDTO> productrawmaterialassociations = productRMAssoService.getProductRMAssoList(productId);
 			if(productrawmaterialassociations==null){
+				logger.error("There is no any product rm association");
 				return new Response(1,"There is no any product rm association");
 			}
 			for(ProductRMAssociationDTO productrawmaterialassociation : productrawmaterialassociations){
-				//Remove all Product RM Associations
-				//productRMAssoService.deleteEntity(Productrawmaterialassociation.class, productrawmaterialassociation.getId());
 				deleteProductrawmaterialassociation(productrawmaterialassociation.getId());
 			}
 			return new Response(1,"Product Raw Material Associations deleted Successfully !");

@@ -1,12 +1,8 @@
 package com.nextech.erp.controller;
 
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -21,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import org.apache.log4j.Logger;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -125,7 +122,8 @@ public class RawmaterialorderController {
 	@Autowired 
 	RMVAssoService rmvAssoService;
 
-
+	static Logger logger = Logger.getLogger(RawmaterialorderController.class);
+	
 	@Transactional @RequestMapping(value = "/createMultiple", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addMultipleRawMaterialOrder(
 			@Valid @RequestBody RawmaterialOrderDTO rawmaterialOrderDTO, BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
@@ -144,15 +142,15 @@ public class RawmaterialorderController {
 			addRMOrderAsso(rawmaterialOrderDTO, request, response);
 			return new UserStatus(1, "Multiple Rawmaterial Order added Successfully !");
 		} catch (ConstraintViolationException cve) {
-			System.out.println("Inside ConstraintViolationException");
+			logger.error("Inside ConstraintViolationException");
 			cve.printStackTrace();
 			return new UserStatus(0, cve.getCause().getMessage());
 		} catch (PersistenceException pe) {
-			System.out.println("Inside PersistenceException");
+			logger.error("Inside PersistenceException");
 			pe.printStackTrace();
 			return new UserStatus(0, pe.getCause().getMessage());
 		} catch (Exception e) {
-			System.out.println("Inside Exception");
+			logger.error("Inside Exception");
 			e.printStackTrace();
 			return new UserStatus(0, e.getCause().getMessage());
 		}
@@ -165,6 +163,7 @@ public class RawmaterialorderController {
 		try {
 			rawmaterialorder = rawmaterialorderService.getRMOrderById(id);
 			if(rawmaterialorder==null){
+				logger.error("There is no rm order list");
 				return new Response(1,"There is no rm order");
 			}
 		} catch (Exception e) {
@@ -191,10 +190,9 @@ public class RawmaterialorderController {
 		try {
 			rawmaterialorderList = rawmaterialorderService.getRMOrderList();
 			if(rawmaterialorderList==null){
+				logger.error("There is no rm order list");
 				return new Response(1,"There is no rm order list");
 			}
-			
-			//getRequiredRMList();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -212,7 +210,6 @@ public class RawmaterialorderController {
 			if(rawmaterialorderList==null){
 				return new Response(1,"There is no rm order list");
 			}
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -226,9 +223,9 @@ public class RawmaterialorderController {
 			rawmaterialorderList = rawmaterialorderService
 					.getRawmaterialorderByQualityCheckStatusId(Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_QUALITY_CHECK, null, null)));
 			if(rawmaterialorderList==null){
+				logger.error("There is no rm order list");
 				return new Response(1,"There is no rm order list");
 			}
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -241,6 +238,7 @@ public class RawmaterialorderController {
 		try {
 			RawmaterialOrderDTO rawmaterialOrderDTO =	rawmaterialorderService.deleteRMOrder(id);
 			if(rawmaterialOrderDTO==null){
+				logger.error("There is no rm order");
 				return new Response(1,"There is no rm order");
 			}
 			return new Response(1, "Rawmaterial Order deleted Successfully !");
@@ -255,6 +253,7 @@ public class RawmaterialorderController {
 		try {
 			rawmaterialorderList = rawmaterialorderService.getRawmaterialorderByVendor(vendorId);
 			if(rawmaterialorderList==null){
+				logger.error("There is no rm order list");
 				return new Response(1,"There is no rm order list");
 			}
 		} catch (Exception e) {
@@ -286,10 +285,10 @@ public class RawmaterialorderController {
 			rmOrderModelData.setDescription(rawmaterial.getDescription());
 			rmOrderModelDatas.add(rmOrderModelData);
 		}
-		downloadPDF(request, response, rawmaterialOrderDTO,rmOrderModelDatas,vendor);
+		createRMOrderPdf(request, response, rawmaterialOrderDTO,rmOrderModelDatas,vendor);
 	}
 	
-	public void downloadPDF(HttpServletRequest request, HttpServletResponse response,RawmaterialOrderDTO rawmaterialOrderDTO,List<RMOrderModelData> rmOrderModelDatas,VendorDTO vendor) throws IOException {
+	public void createRMOrderPdf(HttpServletRequest request, HttpServletResponse response,RawmaterialOrderDTO rawmaterialOrderDTO,List<RMOrderModelData> rmOrderModelDatas,VendorDTO vendor) throws IOException {
 		final ServletContext servletContext = request.getSession().getServletContext();
 	    final File tempDirectory = (File) servletContext.getAttribute("javax.servlet.context.tempdir");
 	    final String temperotyFilePath = tempDirectory.getAbsolutePath();
@@ -338,10 +337,10 @@ public class RawmaterialorderController {
 		Long newOrderStatus =Long.parseLong(messageNewOrder);
 		List<RMReqirementDTO> rmReqirementDTOs = new ArrayList<RMReqirementDTO>();
 		List<Long> rmIds = new ArrayList<Long>();
-		List<ProductOrderDTO> incompleteOrders = productorderService.getNewAndInCompleteProductOrders(completeOrderStatus,newOrderStatus);
-		if(incompleteOrders!=null){
+		List<ProductOrderDTO> newAndIncompleteOrders = productorderService.getNewAndInCompleteProductOrders(completeOrderStatus,newOrderStatus);
+		if(newAndIncompleteOrders!=null){
 		Map<Long, Long> productQuantityMap = new HashMap<Long, Long>();
-		for (Iterator<ProductOrderDTO> iterator = incompleteOrders.iterator(); iterator
+		for (Iterator<ProductOrderDTO> iterator = newAndIncompleteOrders.iterator(); iterator
 				.hasNext();) {
 			ProductOrderDTO productOrderDTO = (ProductOrderDTO) iterator.next();
 			List<ProductOrderAssociationDTO> productOrderAssociationDTOs = productorderassociationService.getProductorderassociationByOrderId(productOrderDTO.getId());
@@ -419,7 +418,7 @@ public class RawmaterialorderController {
 			rmReqirementDTO.setVendorDTOs(vendorDTOs);
 			}
 			
-			System.out.println("rmid : " + rmQtyentry.getKey() + " reqQty : " + rmQtyentry.getValue() + " invQty : " + rmReqirementDTO.getInventoryQuantity());
+			logger.info("rmid : " + rmQtyentry.getKey() + " reqQty : " + rmQtyentry.getValue() + " invQty : " + rmReqirementDTO.getInventoryQuantity());
 			if(rmQtyentry.getValue() > rmInventoryDTO.getQuantityAvailable()){
 				rmReqirementDTOs.add(rmReqirementDTO);
 				rmIds.add(rmReqirementDTO.getRmId());
@@ -500,7 +499,6 @@ public class RawmaterialorderController {
 				for(RMOrderAssociationDTO rmOrderAssociationDTO:rawmaterialOrderDTO.getRmOrderAssociationDTOs()){
 					rawmaterialOrderDTO.setExpectedDeliveryDate(rmOrderAssociationDTO.getExpectedDeliveryDate());	
 				}
-		
 				rawmaterialOrderDTOs.add(rawmaterialOrderDTO);
 			}
 			for (RawmaterialOrderDTO rawmaterialOrderDTO : rawmaterialOrderDTOs) {
@@ -542,12 +540,11 @@ public class RawmaterialorderController {
 					totalRMRemainingQuantity = totalRMRemainingQuantity+rmOrderAssociationDTO.getRemainingQuantity();
 				}
 				 maintainAvailablelQuantity = rmInventoryDTO.getMinimumQuantity()-rmInventoryDTO.getQuantityAvailable();
-			  rmReqirementDTO.setRequiredQuantity(maintainAvailablelQuantity-totalRMRemainingQuantity);
+			     rmReqirementDTO.setRequiredQuantity(maintainAvailablelQuantity-totalRMRemainingQuantity);
 				}else{
 					maintainAvailablelQuantity = rmInventoryDTO.getMinimumQuantity()-rmInventoryDTO.getQuantityAvailable();
 					rmReqirementDTO.setRequiredQuantity(rmInventoryDTO.getQuantityAvailable()+maintainAvailablelQuantity);
 				}
-			//rmReqirementDTO.setRequiredQuantity(rmInventoryDTO.getQuantityAvailable()+maintainAvailablelQuantity);
 			rmReqirementDTO.setInventoryQuantity(rmInventoryDTO.getQuantityAvailable());
 			rmReqirementDTO.setMinimumQuantity(rmInventoryDTO.getMinimumQuantity());
 			List<RMVendorAssociationDTO> rmVendorAssociationDTOs = rmvAssoService.getRawmaterialvendorassociationListByRMId(rmInventoryDTO.getRawmaterialId().getId());

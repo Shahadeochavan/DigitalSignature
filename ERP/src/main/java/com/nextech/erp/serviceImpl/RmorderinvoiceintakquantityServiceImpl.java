@@ -15,8 +15,7 @@ public class RmorderinvoiceintakquantityServiceImpl extends CRUDServiceImpl<Rmor
 	RmorderinvoiceintakquantityDao rmorderinvoiceintakquantityDao;
 
 	@Override
-	public List<Rmorderinvoiceintakquantity> getRmorderinvoiceintakquantityByRMOInvoiceId(
-			long id) throws Exception {
+	public List<Rmorderinvoiceintakquantity> getRmorderinvoiceintakquantityByRMOInvoiceId(long id) throws Exception {
 		return rmorderinvoiceintakquantityDao.getRmorderinvoiceintakquantityByRMOInvoiceId(id);
 	}
 

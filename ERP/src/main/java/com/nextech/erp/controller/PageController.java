@@ -6,6 +6,8 @@ import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+
+import org.apache.log4j.Logger;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.nextech.erp.factory.PageFactory;
 import com.nextech.erp.newDTO.PageDTO;
 import com.nextech.erp.service.PageService;
@@ -29,6 +32,9 @@ public class PageController {
 
 	@Autowired
 	PageService pageservice;
+	
+	static Logger logger = Logger.getLogger(PageController.class);
+	
 	@Transactional @RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addPage(@Valid @RequestBody PageDTO pageDTO,
 			BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
@@ -40,15 +46,15 @@ public class PageController {
 			pageservice.addEntity(PageFactory.setPage(pageDTO, request));
 			return new UserStatus(1, "Page added Successfully !");
 		} catch (ConstraintViolationException cve) {
-			System.out.println("Inside ConstraintViolationException");
+			logger.error("Inside ConstraintViolationException");
 			cve.printStackTrace();
 			return new UserStatus(0, cve.getCause().getMessage());
 		} catch (PersistenceException pe) {
-			System.out.println("Inside PersistenceException");
+			logger.error("Inside PersistenceException");
 			pe.printStackTrace();
 			return new UserStatus(0, pe.getCause().getMessage());
 		} catch (Exception e) {
-			System.out.println("Inside Exception");
+			logger.error("Inside Exception");
 			e.printStackTrace();
 			return new UserStatus(0, e.getCause().getMessage());
 		}
@@ -60,6 +66,7 @@ public class PageController {
 		try {
 			pageDTO = pageservice.getPageDTOById(id);
 			if(pageDTO==null){
+				logger.error("There is no any page");
 				return new Response(1,"There is no any page");
 			}
 		} catch (Exception e) {
@@ -87,13 +94,12 @@ public class PageController {
 		try {
 			pageList = pageservice.getPageDTOList(pageList);
 			if(pageList==null){
+				logger.error("There is no any page list");
 				return new Response(1,"There is no any page list");
 			}
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		return new Response(1,pageList);
 	}
 
@@ -103,12 +109,12 @@ public class PageController {
 		try {
 			PageDTO pageDTO= pageservice.deletePageById(id);
 			if(pageDTO==null){
+				logger.error("There is no any page for delete");
 				return  new Response(1,"There is no any page");
 			}
 			return new Response(1, "Page deleted Successfully !");
 		} catch (Exception e) {
 			return new Response(0, e.toString());
 		}
-
 	}
 }

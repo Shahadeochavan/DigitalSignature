@@ -170,21 +170,5 @@ public class RawmaterialorderServiceImpl extends CRUDServiceImpl<Rawmaterialorde
 		rawmaterialorderDao.update(rawmaterialorder);
 		return rawmaterialOrderDTO;
 	}
-
-	@Override
-	public List<RawmaterialOrderDTO> getRMOrderListByNewAndIncompleteOrder(
-			long inCompleteOrder, long newOrder) throws Exception {
-		// TODO Auto-generated method stub
-		List<RawmaterialOrderDTO> rawmaterialOrderDTOs =  new ArrayList<RawmaterialOrderDTO>();
-		List<Rawmaterialorder> rawmaterialorders = rawmaterialorderDao.getRMOrderListByNewAndIncompleteOrder(inCompleteOrder, newOrder);
-		if(rawmaterialorders.isEmpty()){
-			return null;
-		}
-		for (Rawmaterialorder rawmaterialorder : rawmaterialorders) {
-			RawmaterialOrderDTO  rawmaterialOrderDTO = RMOrderRequestResponseFactory.setRMOrderDTO(rawmaterialorder);
-			rawmaterialOrderDTOs.add(rawmaterialOrderDTO);
-		}
-		return rawmaterialOrderDTOs;
-	}
 }
 

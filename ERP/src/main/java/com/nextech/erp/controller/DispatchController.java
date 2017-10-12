@@ -1,10 +1,6 @@
 package com.nextech.erp.controller;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +10,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -107,6 +104,8 @@ public class DispatchController {
 
 	@Autowired
 	MailService mailService;
+	
+	static Logger logger = Logger.getLogger(DispatchController.class);
 
 
 	@Transactional
@@ -119,26 +118,28 @@ public class DispatchController {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
-		Response responseList=	dispatchservice.addDispatchProduct(dispatchDTO, request);
+		     Response responseList = dispatchservice.addDispatchProduct(dispatchDTO, request);
 			ProductOrderDTO productorder = productorderService.getProductById(dispatchDTO.getOrderId());
 			ClientDTO client = clientService.getClientDTOById(productorder.getClientId().getId());
-		List<DispatchProductDTO> 	dispatchProductDTOs = responseList.getDispatchProductDTOs();
-		if(dispatchProductDTOs==null){
+	    	List<DispatchProductDTO> 	dispatchProductDTOs = responseList.getDispatchProductDTOs();
+		     if(dispatchProductDTOs==null){
+			logger.error("Please create bom for dispatch product");
 			return new UserStatus(1,"Please create bom for dispatch product");
-		}
-			//mailSending(productorder, request, response, client, status);
-			downloadPDF(request, response, productorder, dispatchProductDTOs, client,dispatchDTO);
+		    }
+		     
+		     createPDFDispatch(request, response, productorder, dispatchProductDTOs, client,dispatchDTO);
+			
 			return new UserStatus(1, "Dispatch added Successfully !");
 		} catch (ConstraintViolationException cve) {
-			System.out.println("Inside ConstraintViolationException");
+			logger.error("Inside ConstraintViolationException");
 			cve.printStackTrace();
 			return new UserStatus(0, cve.getCause().getMessage());
 		} catch (PersistenceException pe) {
-			System.out.println("Inside PersistenceException");
+			logger.error("Inside PersistenceException");
 			pe.printStackTrace();
 			return new UserStatus(0, pe.getCause().getMessage());
 		} catch (Exception e) {
-			System.out.println("Inside Exception");
+			logger.error("Inside Exception");
 			e.printStackTrace();
 			return new UserStatus(0, e.getCause().getMessage());
 		}
@@ -150,6 +151,7 @@ public class DispatchController {
 		try {
 			dispatch = dispatchservice.getDispatchById(id);
 			if(dispatch==null){
+				logger.error("There is no any dispatch product");
 				return new Response(1,"There is no any dispatch product");
 			}
 		} catch (Exception e) {
@@ -166,7 +168,7 @@ public class DispatchController {
 			dispatchservice.updateEntity(DispatchRequestResponseFactory.setdispatch(dispatchDTO, request));
 			return new UserStatus(1, "Dispatch update Successfully !");
 		} catch (Exception e) {
-			// e.printStackTrace();
+			 e.printStackTrace();
 			return new UserStatus(0, e.toString());
 		}
 	}
@@ -178,7 +180,8 @@ public class DispatchController {
 		try {
 			dispatchList = dispatchservice.getDispatchList();
 			if(dispatchList==null){
-				return new Response(1,dispatchList);
+				logger.error("There is no any dispatch product");
+				return new Response(1,"There is no any dispatch product list");
 			}
 
 		} catch (Exception e) {
@@ -194,6 +197,7 @@ public class DispatchController {
 		try {
 			DispatchDTO dispatchDTO = dispatchservice.deleteDispatchById(id);
 			if(dispatchDTO==null){
+				logger.error("There is no any dispatch product for delete");
 				return new Response(1,"There is no any dispatch product");
 			}
 			return new Response(1, "Dispatch deleted Successfully !");
@@ -222,67 +226,26 @@ public class DispatchController {
 		mailService.sendEmail(mail, notificationDTO);
 	}
 	
-	public void downloadPDF(HttpServletRequest request, HttpServletResponse response,ProductOrderDTO productorder,List<DispatchProductDTO> dispatchProductDTOs,ClientDTO client,DispatchDTO dispatchDTO) throws IOException {
+	public void createPDFDispatch(HttpServletRequest request, HttpServletResponse response,ProductOrderDTO productorder,List<DispatchProductDTO> dispatchProductDTOs,ClientDTO client,DispatchDTO dispatchDTO) throws IOException {
 
 		final ServletContext servletContext = request.getSession().getServletContext();
 	    final File tempDirectory = (File) servletContext.getAttribute("javax.servlet.context.tempdir");
 	    final String temperotyFilePath = tempDirectory.getAbsolutePath();
-
 	    String fileName = "Dispatch.pdf";
 	    response.setContentType("application/pdf");
 	    response.setHeader("Content-disposition", "attachment; filename="+ fileName);
-
 	    try {
-
+	    	
 	   CreatePdfForDispatchProduct createPdfForDispatchProduct = new CreatePdfForDispatchProduct();
 	   createPdfForDispatchProduct.createPDF(temperotyFilePath+"\\"+fileName,productorder,dispatchProductDTOs,client,dispatchDTO);
 	   
-	  //      convertPDFToByteArrayOutputStream(temperotyFilePath+"\\"+fileName, productorder,dispatchProductDTOs,dispatchDTO);
-	        String file =    PDFToByteArrayOutputStreamUtil.convertPDFToByteArrayOutputStream(temperotyFilePath+"\\"+fileName);
-	   System.out.println(file);
+	   String dispatchPdfFile =    PDFToByteArrayOutputStreamUtil.convertPDFToByteArrayOutputStream(temperotyFilePath+"\\"+fileName);
 	   StatusDTO status = statusService.getStatusById(productorder.getStatusId().getId());
-	   mailSending(productorder, client, status, file, dispatchProductDTOs, dispatchDTO);
+	   mailSending(productorder, client, status, dispatchPdfFile, dispatchProductDTOs, dispatchDTO);
 
 	    } catch (Exception e1) {
 	        e1.printStackTrace();
 	    }
 
-	}
-
-	private String convertPDFToByteArrayOutputStream(String fileName,ProductOrderDTO productorder,List<DispatchProductDTO> dispatchProductDTOs,DispatchDTO dispatchDTO) throws Exception {
-
-
-		StatusDTO status = statusService.getStatusById(productorder.getStatusId().getId());
-		ClientDTO client = clientService.getClientDTOById(productorder.getClientId().getId());
-
-      //  mailSending(productorder, client, status, fileName,dispatchProductDTOs,dispatchDTO);
-
-		InputStream inputStream = null;
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		try {
-
-			inputStream = new FileInputStream(fileName);
-			byte[] buffer = new byte[1024];
-			baos = new ByteArrayOutputStream();
-
-			int bytesRead;
-			while ((bytesRead = inputStream.read(buffer)) != -1) {
-				baos.write(buffer, 0, bytesRead);
-			}
-
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			if (inputStream != null) {
-				try {
-					inputStream.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-		return fileName;
 	}
 }

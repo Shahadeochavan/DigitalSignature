@@ -4,15 +4,18 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import org.apache.log4j.Logger;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -63,6 +66,8 @@ public class RawmaterialinventoryController {
 	@Autowired
 	RawmaterialService rawmaterialService;
 	
+	static Logger logger = Logger.getLogger(RawmaterialinventoryController.class);
+	
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addRawMaterialInventory(
 			@Valid @RequestBody RMInventoryDTO rmInventoryDTO, BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
@@ -77,12 +82,15 @@ public class RawmaterialinventoryController {
 				return new UserStatus(0, messageSource.getMessage(ERPConstants.RAW_MATERIAL_INVENTORY, null, null));
 			return new UserStatus(1, "Rawmaterialinventory added Successfully !");
 		} catch (ConstraintViolationException cve) {
+			logger.error("Inside ConstraintViolationException");
 			cve.printStackTrace();
 			return new UserStatus(0, cve.getCause().getMessage());
 		} catch (PersistenceException pe) {
+			logger.error("Inside PersistenceException");
 			pe.printStackTrace();
 			return new UserStatus(0, pe.getCause().getMessage());
 		} catch (Exception e) {
+			logger.error("Inside Exception");
 			e.printStackTrace();
 			return new UserStatus(0, e.getCause().getMessage());
 		}
@@ -94,6 +102,7 @@ public class RawmaterialinventoryController {
 		try {
 			rawmaterialinventory = rawmaterialinventoryService.getRMInventoryById(id);
 			if(rawmaterialinventory==null){
+				logger.error("There is no rm inventory");
 				return new Response(1,"There is no rm inventory");
 			}
 		} catch (Exception e) {
@@ -119,7 +128,8 @@ public class RawmaterialinventoryController {
 		List<RMInventoryDTO> rawmaterialinventoryList = null;
 		try {
 			rawmaterialinventoryList = rawmaterialinventoryService.getRMInventoryList();
-			if(rawmaterialinventoryList.isEmpty()){
+			if(rawmaterialinventoryList==null){
+				logger.error("There is no rm inventory list");
 				return new Response(1,"There is no rm inventory");
 			}
 		} catch (Exception e) {
@@ -142,15 +152,16 @@ public class RawmaterialinventoryController {
 	}
 
 	//@Scheduled(initialDelay=60000, fixedRate=60000)
-	public Response executeSchedular() throws Exception{
+	public void executeSchedular() throws Exception{
 		List<RMInventoryDTO> rawmaterialinventoryList = null;
-		System.out.println("RM Inventory Check");
+		logger.info("RM Inventory Check");
 		List<RMInventoryDTO> rmInventoryDTOs = new ArrayList<RMInventoryDTO>();
-		RMInventoryDTO  rmInventoryDTO = new RMInventoryDTO();
+	
 		try { 
 			rawmaterialinventoryList = rawmaterialinventoryService.getRMInventoryList();
 			if(rawmaterialinventoryList !=null){
 			for (RMInventoryDTO rawmaterialinventory : rawmaterialinventoryList) {
+				RMInventoryDTO  rmInventoryDTO = new RMInventoryDTO();
 				RawMaterialDTO rawmaterial = rawmaterialService.getRMDTO(rawmaterialinventory.getRawmaterialId().getId());
 				if(rawmaterialinventory.getQuantityAvailable()>=rawmaterialinventory.getMinimumQuantity()){
 				}else{
@@ -161,18 +172,19 @@ public class RawmaterialinventoryController {
 				}
 			}
 			}else{
-				return new Response(1,"There is no any rm inventory list");
+				logger.info("There is no any rm inventory list");
+				//return new Response(1,"There is no any rm inventory list");
 			}
 			if(rmInventoryDTOs != null&& ! rmInventoryDTOs.isEmpty()){
-				mailSendingRMInventroy(rmInventoryDTOs);
+				emailNotificationRMInventory(rmInventoryDTOs);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return null;
+		//return null;
 	}
 	
-	private void mailSendingRMInventroy(List<RMInventoryDTO> rmInventoryDTOs) throws Exception {
+	private void emailNotificationRMInventory(List<RMInventoryDTO> rmInventoryDTOs) throws Exception {
 		   NotificationDTO  notificationDTO = notificationService.getNotificationByCode((messageSource.getMessage(ERPConstants.RM_INVENTORY_NOTIFICATION, null, null)));
 		Mail mail = userService.emailNotification(notificationDTO);
 		mail.setMailSubject(notificationDTO.getSubject());

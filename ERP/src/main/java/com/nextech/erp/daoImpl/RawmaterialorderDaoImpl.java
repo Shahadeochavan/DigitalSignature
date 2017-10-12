@@ -51,18 +51,7 @@ public class RawmaterialorderDaoImpl extends SuperDaoImpl<Rawmaterialorder> impl
 
 	@Override
 	public List<Rawmaterialorder> getRawmaterialorderByVendor(long vendorId) throws Exception {
-		/*
-		 * session = sessionFactory.openSession();
-		 * 
-		 * @SuppressWarnings("deprecation") Criteria criteria =
-		 * session.createCriteria(Rawmaterialorder.class);
-		 * criteria.add(Restrictions.eq("isactive", true));
-		 * criteria.add(Restrictions.eq("vendor.id", vendorId));
-		 * criteria.add(Restrictions.and(Restrictions.not(Restrictions.eq(
-		 * "status.id", STATUS_RAW_MATERIAL_ORDER_COMPLETE)))); return
-		 * criteria.list();
-		 */
-
+		
 		session = sessionFactory.openSession();
 		CriteriaBuilder builder = session.getCriteriaBuilder();
 		CriteriaQuery<Rawmaterialorder> criteria = builder.createQuery(Rawmaterialorder.class);
@@ -86,20 +75,5 @@ public class RawmaterialorderDaoImpl extends SuperDaoImpl<Rawmaterialorder> impl
 				criteriaBuilder.equal(root.get("isactive"), true));
 		TypedQuery<Rawmaterialorder> typedQuery = session.createQuery(criteriaQuery);
 		return typedQuery.getResultList();
-	}
-
-	@Override
-	public List<Rawmaterialorder> getRMOrderListByNewAndIncompleteOrder(
-			long inCompleteOrder, long newOrder) throws Exception {
-		// TODO Auto-generated method stub
-		session = sessionFactory.openSession();
-		CriteriaBuilder criteriaBuilder=session.getCriteriaBuilder();
-	    CriteriaQuery<Rawmaterialorder> criteriaQuery=criteriaBuilder.createQuery(Rawmaterialorder.class);
-	    Metamodel metamodel=session.getMetamodel();
-	    EntityType<Rawmaterialorder> entityType = metamodel.entity(Rawmaterialorder.class);
-	    Root<Rawmaterialorder> root = criteriaQuery.from(entityType);
-	    criteriaQuery.where(root.get("status").in(inCompleteOrder,newOrder));
-	    TypedQuery<Rawmaterialorder> typedQuery = session.createQuery(criteriaQuery);
-	    return typedQuery.getResultList();
 	}
 }

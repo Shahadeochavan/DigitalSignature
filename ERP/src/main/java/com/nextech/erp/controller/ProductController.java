@@ -5,10 +5,13 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.persistence.PersistenceException;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.io.IOUtils;
+import org.apache.log4j.Logger;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -86,6 +89,8 @@ public class ProductController {
 	@Autowired 
 	NotificationUserAssociationService notificationUserAssociationService;
 	
+	static Logger logger = Logger.getLogger(PageController.class);
+	
 	
 	@Transactional @RequestMapping(value = "/create",headers = "Content-Type=*/*", method = RequestMethod.POST)
 	public @ResponseBody UserStatus addProduct(HttpServletRequest request,
@@ -108,20 +113,24 @@ public class ProductController {
 			    ProductDTO productDTO =	setProductDTO(clientPartNumber, name, description, partNumber);
 			  //TODO Save call Tax Structure
 			    TaxStructureDTO taxStructureDTO = setTaxStructureDTO(cgst, igst, other1, other2, sgst);
-			 long taxid =   taxstructureService.addEntity(TaxStructureRequestResponseFactory.setTaxStructure(taxStructureDTO, request));
+			    
+			    long taxid =   taxstructureService.addEntity(TaxStructureRequestResponseFactory.setTaxStructure(taxStructureDTO, request));
+			 
 			    taxStructureDTO.setId(taxid);
 			    productDTO.setTaxStructureDTO(taxStructureDTO);
 			    long id =	productService.addEntity(ProductRequestResponseFactory.setProduct(productDTO, request));
 		       	productDTO.setId(id); 
 				addProductInventory(productDTO,Long.parseLong(request.getAttribute("current_user").toString()));
+				
 			}else{
 				String destinationFilePath = ImageUploadUtil.imgaeUpload(inputFile);
 				ProductDTO productDTO =	setProductDTO(clientPartNumber, name, description, partNumber);
 				productDTO.setDesign(destinationFilePath);
 				//TODO Save call Tax Structure
 			    TaxStructureDTO taxStructureDTO = setTaxStructureDTO(cgst, igst, other1, other2, sgst);
+			    
 			      long taxid =   taxstructureService.addEntity(TaxStructureRequestResponseFactory.setTaxStructure(taxStructureDTO, request));
-				taxStructureDTO.setId(taxid);
+				 taxStructureDTO.setId(taxid);
 			     productDTO.setTaxStructureDTO(taxStructureDTO);
 			    long id =	productService.addEntity(ProductRequestResponseFactory.setProduct(productDTO, request));
 			   	productDTO.setId(id); 
@@ -129,14 +138,15 @@ public class ProductController {
 			}
 			return new UserStatus(1, "product added Successfully !");
 		} catch (ConstraintViolationException cve) {
+			logger.error("Inside ConstraintViolationException");
 			cve.printStackTrace();
 			return new UserStatus(0, cve.getCause().getMessage());
 		} catch (PersistenceException pe) {
-			System.out.println("Inside PersistenceException");
+			logger.error("Inside PersistenceException");
 			pe.printStackTrace();
 			return new UserStatus(0, pe.getCause().getMessage());
 		} catch (Exception e) {
-			System.out.println("Inside Exception");
+			logger.error("Inside Exception");
 			e.printStackTrace();
 			return new UserStatus(0, e.getCause().getMessage());
 		}
@@ -200,14 +210,15 @@ public class ProductController {
 				}
 			return new UserStatus(1, "product added Successfully !");
 		} catch (ConstraintViolationException cve) {
+			logger.error("Inside ConstraintViolationException");
 			cve.printStackTrace();
 			return new UserStatus(0, cve.getCause().getMessage());
 		} catch (PersistenceException pe) {
-			System.out.println("Inside PersistenceException");
+			logger.error("Inside PersistenceException");
 			pe.printStackTrace();
 			return new UserStatus(0, pe.getCause().getMessage());
 		} catch (Exception e) {
-			System.out.println("Inside Exception");
+			logger.error("Inside Exception");
 			e.printStackTrace();
 			return new UserStatus(0, e.getCause().getMessage());
 		}
@@ -220,12 +231,12 @@ public class ProductController {
 		try {
 			productList = productService.getProductList();
 			if(productList==null){
+				logger.error("There is no product list");
 				return new Response(1,"There is no product list");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		return new Response(1,productList);
 	}
 	@Transactional @RequestMapping(value = "/list/newProductRMAssociation", method = RequestMethod.GET, headers = "Accept=application/json")
@@ -244,12 +255,9 @@ public class ProductController {
 					productNewAssoicatedLists.add(productNewAssoicatedList);
 				}
 			}
-
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		return new Response(1,"New Productrawmaterialassociation List",productNewAssoicatedLists);
 	}
 
@@ -259,6 +267,7 @@ public class ProductController {
 		try {
 			ProductDTO productDTO =productService.deleteProduct(id);
 			if(productDTO==null){
+				logger.error("There is no product for delete");
 				return new Response(1,"There is no product id");
 			}
 			return new Response(1, "Product deleted Successfully !");
@@ -280,7 +289,6 @@ public class ProductController {
 		    final HttpHeaders headers = new HttpHeaders();
 		    headers.setContentType(MediaType.IMAGE_PNG);
 		    return new ResponseEntity<byte[]>(IOUtils.toByteArray(in), headers, HttpStatus.CREATED);
-
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
@@ -309,5 +317,4 @@ public class ProductController {
 		taxStructureDTO.setSgst(sgst);
 		return taxStructureDTO;
 	}
-	
 }

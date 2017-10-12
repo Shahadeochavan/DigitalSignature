@@ -11,7 +11,7 @@ import com.nextech.erp.status.Response;
 
 public interface DispatchService  extends CRUDService<Dispatch>{
 
-	public Dispatch getDispatchByProductOrderIdAndProductId(long orderID,long productID) throws Exception;
+	public Dispatch getDispatchByProductOrderIdAndProductId(long orderId,long productId) throws Exception;
 
 	public List<Dispatch> getDispatchByProductOrderId(long productOrderId) throws Exception;
 	

@@ -28,7 +28,5 @@ public interface RawmaterialorderService extends CRUDService<Rawmaterialorder> {
 	
 	public RawmaterialOrderDTO deleteRMOrder(long id) throws Exception;
 	
-	public List<RawmaterialOrderDTO> getRMOrderListByNewAndIncompleteOrder(long inCompleteOrder,long newOrder) throws Exception;
-	
 } 
 

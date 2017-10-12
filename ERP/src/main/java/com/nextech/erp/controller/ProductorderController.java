@@ -1,11 +1,7 @@
 package com.nextech.erp.controller;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import org.apache.log4j.Logger;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -100,6 +97,7 @@ public class ProductorderController {
 	@Autowired
 	RawmaterialinventoryService rawMaterialInventoryService;
 
+	static Logger logger = Logger.getLogger(ProductorderController.class);
 
 	@Transactional @RequestMapping(value = "/createMultiple", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addMultipleProductOrder(
@@ -127,19 +125,19 @@ public class ProductorderController {
 				checkInventoryStatus(productOrderDTO);
 			return new UserStatus(1,
 					"Multiple Product Order added Successfully !");
-		} catch (ConstraintViolationException cve) {
-			System.out.println("Inside ConstraintViolationException");
-			cve.printStackTrace();
-			return new UserStatus(0, cve.getCause().getMessage());
-		} catch (PersistenceException pe) {
-			System.out.println("Inside PersistenceException");
-			pe.printStackTrace();
-			return new UserStatus(0, pe.getCause().getMessage());
-		} catch (Exception e) {
-			System.out.println("Inside Exception");
-			e.printStackTrace();
-			return new UserStatus(0, e.getCause().getMessage());
-		}
+			} catch (ConstraintViolationException cve) {
+				logger.error("Inside ConstraintViolationException");
+				cve.printStackTrace();
+				return new UserStatus(0, cve.getCause().getMessage());
+			} catch (PersistenceException pe) {
+				logger.error("Inside PersistenceException");
+				pe.printStackTrace();
+				return new UserStatus(0, pe.getCause().getMessage());
+			} catch (Exception e) {
+				logger.error("Inside Exception");
+				e.printStackTrace();
+				return new UserStatus(0, e.getCause().getMessage());
+			}
 	}
 	
 	public void checkInventoryStatus(ProductOrderDTO productOrderDTO) throws Exception{
@@ -165,9 +163,9 @@ public class ProductorderController {
 			RMInventoryDTO rmInventory = rawMaterialInventoryService.getByRMId(rmId);
 			if(rmInventory != null){
 				long inventoryQuantity = rmInventory.getQuantityAvailable();
-				System.out.println(rmId + " Quantity Required : " + rawMaterialQtyMap.get(rmId) + " Inventory Quantity : " + inventoryQuantity);
+				logger.info(rmId + " Quantity Required : " + rawMaterialQtyMap.get(rmId) + " Inventory Quantity : " + inventoryQuantity);
 			}else{
-				System.out.println("RM Inventory is not added for RM Id : " +  rmId);
+				logger.info("RM Inventory is not added for RM Id : " +  rmId);
 			}
 		}
 	}
@@ -187,8 +185,7 @@ public class ProductorderController {
 	}
 
 	@Transactional @RequestMapping(value = "productorderId/{orderId}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody Response getProductOrder(
-			@PathVariable("orderId") long id) {
+	public @ResponseBody Response getProductOrder(@PathVariable("orderId") long id) {
 		List<ProductOrderAssociationDTO> productorderassociations = null;
 		try {
 			productorderassociations = productorderassociationService.getProductorderassociationByOrderId(id);
@@ -219,6 +216,7 @@ public class ProductorderController {
 		try {
 			productorderList = productorderService.getProductOrderList();
 			if(productorderList==null){
+				logger.error("There is no product order list");
 				return new Response(1,"There is no product order list");
 			}
 
@@ -235,6 +233,7 @@ public class ProductorderController {
 			productorderList = productorderService.getPendingProductOrders(Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_NEW_PRODUCT_ORDER, null, null)),
 					Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_PRODUCT_ORDER_INCOMPLETE, null, null)));
 			if(productorderList==null){
+				logger.error("There is no any pending list");
 				return new Response(1,"There is no any pending list");
 			}
 		} catch (Exception e) {
@@ -250,7 +249,8 @@ public class ProductorderController {
 			productorderList = productorderService.getInCompleteProductOrder(clientId,Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_PRODUCT_ORDER_INCOMPLETE, null, null)),
 			Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_PRODUCT_ORDER_COMPLETE, null, null)));
 			if(productorderList==null){
-				return new Response(1,"There is no product order");
+				logger.error("There is no product order list");
+				return new Response(1,"There is no product order list");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -264,6 +264,7 @@ public class ProductorderController {
 		try {
 		ProductOrderDTO  productOrderDTO =	productorderService.deleteProductOrder(id);
 		if(productOrderDTO==null){
+			logger.error("There is no product order");
 			return  new Response(1,"There is no product order");
 		}
 			return new Response(1, "Product Order deleted Successfully !");
@@ -275,10 +276,10 @@ public class ProductorderController {
 	private void addProductOrderAsso(ProductOrderDTO productOrderDTO,HttpServletRequest request,HttpServletResponse response) throws Exception {
 		List<ProductOrderData> productOrderDatas=productorderService.createProductorderAsso(productOrderDTO, request);
 		ClientDTO client = clientService.getClientDTOById(productOrderDTO.getClientId().getId());
-		downloadPDF(request, response, productOrderDTO,productOrderDatas,client);
+		createPdfProductOrder(request, response, productOrderDTO,productOrderDatas,client);
 	}
 	
-	public void downloadPDF(HttpServletRequest request, HttpServletResponse response,ProductOrderDTO productOrderDTO,List<ProductOrderData> productOrderDatas,ClientDTO client) throws IOException {
+	public void createPdfProductOrder(HttpServletRequest request, HttpServletResponse response,ProductOrderDTO productOrderDTO,List<ProductOrderData> productOrderDatas,ClientDTO client) throws IOException {
 		final ServletContext servletContext = request.getSession().getServletContext();
 	    final File tempDirectory = (File) servletContext.getAttribute("javax.servlet.context.tempdir");
 	    final String temperotyFilePath = tempDirectory.getAbsolutePath();
@@ -289,11 +290,10 @@ public class ProductorderController {
 	    	ProductOrderPdf ceCreatePDFProductOrder = new ProductOrderPdf();
 	    	ceCreatePDFProductOrder.createPDF(temperotyFilePath+"\\"+fileName,productOrderDTO,productOrderDatas,client);
 	 
-	     String attachedfile =    PDFToByteArrayOutputStreamUtil.convertPDFToByteArrayOutputStream(temperotyFilePath+"\\"+fileName);
-	 	StatusDTO status = statusService.getStatusById(productOrderDTO.getStatusId().getId());
-		NotificationDTO notificationDTO = notificationService.getNotifiactionByStatus(status.getId());
-	     mailSending(notificationDTO, productOrderDatas, client, attachedfile, productOrderDTO);
-	  
+	       String productOrderPdfFile =    PDFToByteArrayOutputStreamUtil.convertPDFToByteArrayOutputStream(temperotyFilePath+"\\"+fileName);
+	 	   StatusDTO status = statusService.getStatusById(productOrderDTO.getStatusId().getId());
+		   NotificationDTO notificationDTO = notificationService.getNotifiactionByStatus(status.getId());
+	       mailSending(notificationDTO, productOrderDatas, client, productOrderPdfFile, productOrderDTO);
 	    } catch (Exception e1) {
 	        e1.printStackTrace();
 	    }

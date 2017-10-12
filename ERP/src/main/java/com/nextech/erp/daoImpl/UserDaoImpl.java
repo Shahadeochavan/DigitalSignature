@@ -79,6 +79,7 @@ public class UserDaoImpl extends SuperDaoImpl<User> implements UserDao {
 
 	@Override
 	public List<User> getMultipleUsersById(List<Long> ids) throws Exception {
+		session = sessionFactory.openSession();
 		  CriteriaBuilder criteriaBuilder=session.getCriteriaBuilder();
 		    CriteriaQuery<User> criteriaQuery=criteriaBuilder.createQuery(User.class);
 		    Metamodel metamodel=session.getMetamodel();

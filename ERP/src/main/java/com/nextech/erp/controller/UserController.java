@@ -14,6 +14,7 @@ import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 
 import org.apache.log4j.Logger;
+import org.apache.log4j.pattern.LogEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
@@ -113,9 +114,10 @@ public class UserController {
 				user.setPassword(new EncryptDecrypt().encrypt(userDTO.getPassword()));
 				user.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			   userservice.addEntity(user);
+			   
 	            NotificationDTO  notificationDTO = notificationService.getNotificationByCode((messageSource.getMessage(ERPConstants.USER_ADD_NOTIFICATION, null, null)));
-		     //  mailSending(userDTO, request, response,notificationDTO);
-	            mailService.emailNotification(userDTO, notificationDTO);
+	            emailNotificationUser(userDTO, request, response,notificationDTO);
+	            
 			return new UserStatus(1, "User added Successfully !");
 			} else {
 				new UserStatus(0, "User is not authenticated.");
@@ -145,12 +147,7 @@ public class UserController {
 		User user2 = userservice.getUserByUserId(user.getUserid());
 		
 		try {
-
-			System.out.println(messageSource.getMessage(ERPConstants.COUNT,
-					null, null));
-//			logger.info("this is a information log message");
-//			logger.warn("this is a warning log message");
-//			logger.error("this is a error log message");
+		logger.error(messageSource.getMessage(ERPConstants.COUNT,null, null));
 			if (user2 != null && authenticate(user, user2)) {
 				Authorization authorization = new Authorization();
 				authorization.setUserid(user.getUserid());
@@ -190,7 +187,7 @@ public class UserController {
 		} catch (AuthenticationException authException) {
 			return new UserStatus(0, authException.getCause().getMessage());
 		} catch (Exception e) {
-			System.out.println("Inside Exception");
+			logger.error("Inside Exception");
 			e.printStackTrace();
 			return new UserStatus(0, e.getCause().getMessage());
 		}
@@ -223,9 +220,11 @@ public class UserController {
 		try {
 			userDTO = userservice.getUserDTO(id);
 			if(userDTO==null){
+				logger.error("There is no any user");
 				return  new Response(1,"There is no any user");
 			}
 		} catch (Exception e) {
+			logger.error("Exception in user");
 			e.printStackTrace();
 		}
 		return new Response(1,userDTO);
@@ -273,7 +272,8 @@ public class UserController {
 	     	userservice.updateEntity(user);
             NotificationDTO  notificationDTO = notificationService.getNotificationByCode((messageSource.getMessage(ERPConstants.USER_UPDATE_NOTIFICATION, null, null)));
            
-		    mailSending(userDTO, request, response, notificationDTO);
+            emailNotificationUser(userDTO, request, response, notificationDTO);
+		   
 		return new UserStatus(1, "User update Successfully !");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -287,11 +287,13 @@ public class UserController {
 		List<UserDTO> userList = null;
 		try {
 			userList = userservice.getUserList(userList);
-			logger.debug("this is a debudg log message");
+			
 			if(userList==null){
+				logger.info("there is no any user list");
 				return new Response(1,"There is no any user list");
 			}
 		} catch (Exception e) {
+			logger.info("Exception in user list");
 			e.printStackTrace();
 		}
 
@@ -304,6 +306,7 @@ public class UserController {
 		try {
 			 UserDTO user =userservice.deleteUser(id);
 			 if (user==null) {
+				 logger.info("there is no any user for delete");
 				 return new Response(1,"There is no any user for delete");
 			}
 			return new Response(1, "User deleted Successfully !");
@@ -312,21 +315,16 @@ public class UserController {
 		}
 
 	}
-	private void mailSending(UserDTO userDTO,HttpServletRequest request,HttpServletResponse response,NotificationDTO  notificationDTO) throws NumberFormatException, Exception{
-         Mail mail = userservice.emailNotification(notificationDTO);
+	private void emailNotificationUser(UserDTO userDTO,HttpServletRequest request,HttpServletResponse response,NotificationDTO  notificationDTO) throws NumberFormatException, Exception{
+        Mail mail =  mailService.setMailDetails(userDTO.getFirstName(), userDTO.getLastName(), userDTO.getEmailId(), notificationDTO);
          String userEmailTo = mail.getMailTo()+","+userDTO.getEmailId();
-                mail.setMailTo(userEmailTo);      
-		        mail.setMailSubject(notificationDTO.getSubject());
+                mail.setMailTo(userEmailTo);
 		        Map < String, Object > model = new HashMap < String, Object > ();
-		        model.put("firstName", userDTO.getFirstName());
-		        model.put("lastName", userDTO.getLastName());
 		        model.put("userId", userDTO.getUserId());
 		        model.put("password", userDTO.getPassword());
-		        model.put("email", userDTO.getEmailId());
-		        model.put("location", "Pune");
-		        model.put("signature", "www.NextechServices.in");
+		        model.putAll(mail.getModel());
 		        mail.setModel(model);
-		       // mailService.sendEmailWithoutPdF(mail, notificationDTO);
+		        mailService.sendEmailWithoutPdF(mail, notificationDTO);
 	}
 
 }

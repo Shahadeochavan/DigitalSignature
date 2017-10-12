@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import org.apache.log4j.Logger;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -110,6 +111,8 @@ public class QualitycheckrawmaterialController {
 	@Autowired
 	private MessageSource messageSource;
 
+	static Logger logger = Logger.getLogger(QualitycheckrawmaterialController.class);
+	
 	@RequestMapping(value = "/qualitycheck", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	@Transactional
 	public @ResponseBody UserStatus addRawmaterialorderinvoice(
@@ -149,12 +152,15 @@ public class QualitycheckrawmaterialController {
 			qualitycheckrawmaterialService.addRawmaterialOrderInvoiceReadyStore(rawMaterialInvoiceDTO, request, response);
 			return new UserStatus(1,"Store Quality Check information save succesfully");
 		} catch (ConstraintViolationException cve) {
+			logger.error("Inside ConstraintViolationException");
 			cve.printStackTrace();
 			return new UserStatus(0, cve.getCause().getMessage());
 		} catch (PersistenceException pe) {
+			logger.error("Inside PersistenceException");
 			pe.printStackTrace();
 			return new UserStatus(0, pe.getCause().getMessage());
 		} catch (Exception e) {
+			logger.error("Inside Exception");
 			e.printStackTrace();
 			return new UserStatus(0, e.getCause().getMessage());
 		}
@@ -167,7 +173,8 @@ public class QualitycheckrawmaterialController {
 		try {
 			List<Rmorderinvoiceintakquantity> rmorderinvoiceintakquantities = rmorderinvoiceintakquantityService.getRmorderinvoiceintakquantityByRMOInvoiceId(id);
 			if(rmorderinvoiceintakquantities.isEmpty()){
-				return  new Response(1,"There is no any qc rm");
+				logger.error("There is no any rm invoice quantity");
+				return  new Response(1,"There is no any rm invoice quantity");
 			}
 			for (Rmorderinvoiceintakquantity rmorderinvoiceintakquantity : rmorderinvoiceintakquantities) {
 				QualityCheckRMDTO qualityCheckRMDTO = QualityRequestResponseFactory.createQualityResonse(rmorderinvoiceintakquantity);
@@ -187,6 +194,7 @@ public class QualitycheckrawmaterialController {
 		try {
 			List<Qualitycheckrawmaterial> qualitycheckrawmaterials = qualitycheckrawmaterialService.getQualitycheckrawmaterialByInvoiceId(id);
 			if(qualitycheckrawmaterials.isEmpty()){
+				logger.error("there is no any qc rm list");
 				return new Response(1,"there is no any qc rm list");
 			}
 			for (Qualitycheckrawmaterial qualitycheckrawmaterial : qualitycheckrawmaterials) {

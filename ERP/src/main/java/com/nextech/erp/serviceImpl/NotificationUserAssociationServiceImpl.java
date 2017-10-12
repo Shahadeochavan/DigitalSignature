@@ -19,7 +19,7 @@ public class NotificationUserAssociationServiceImpl extends CRUDServiceImpl<Noti
 
 
 	@Override
-	public List<Notificationuserassociation> getNotificationuserassociationByUserId(
+	public List<Notificationuserassociation> getNotificationUserAssociationByUserId(
 			long userId) throws Exception {
 		
 		return notificationUserassociationDao.getNotificationuserassociationByUserId(userId);

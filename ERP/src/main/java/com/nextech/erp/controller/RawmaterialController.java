@@ -4,9 +4,12 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.List;
+
 import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.io.IOUtils;
+import org.apache.log4j.Logger;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -22,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+
 import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.factory.RMRequestResponseFactory;
 import com.nextech.erp.model.Rawmaterial;
@@ -47,6 +51,8 @@ public class RawmaterialController {
 
 	@Autowired
 	private MessageSource messageSource;
+	
+	static Logger logger = Logger.getLogger(RawmaterialController.class);
 
 	@Transactional
 	@RequestMapping(value = "/create", headers = "Content-Type=*/*", method = RequestMethod.POST)
@@ -71,12 +77,15 @@ public class RawmaterialController {
 			}
 			return new UserStatus(1, messageSource.getMessage(ERPConstants.RAW_MATERAIL_ADD, null, null));
 		} catch (ConstraintViolationException cve) {
+			logger.error("Inside ConstraintViolationException");
 			cve.printStackTrace();
 			return new UserStatus(0, cve.getCause().getMessage());
 		} catch (PersistenceException pe) {
+			logger.error("Inside PersistenceException");
 			pe.printStackTrace();
 			return new UserStatus(0, pe.getCause().getMessage());
 		} catch (Exception e) {
+			logger.error("Inside Exception");
 			e.printStackTrace();
 			return new UserStatus(0, e.getCause().getMessage());
 		}
@@ -89,6 +98,7 @@ public class RawmaterialController {
 		try {
 			rawmaterial = rawmaterialService.getRMDTO(id);
 			if (rawmaterial == null) {
+				logger.error("There is no any rm");
 				return new UserStatus(1, "There is no any rm");
 			}
 		} catch (Exception e) {
@@ -130,7 +140,8 @@ public class RawmaterialController {
 		List<RawMaterialDTO> rawmaterialList = null;
 		try {
 			rawmaterialList = rawmaterialService.getRMList();
-			if (rawmaterialList.isEmpty()) {
+			if (rawmaterialList==null) {
+				logger.error("There is no any rm list");
 				return new UserStatus(1, "There is no any rm list");
 			}
 		} catch (Exception e) {
@@ -145,6 +156,7 @@ public class RawmaterialController {
 		try {
 			RawMaterialDTO rawMaterialDTO = rawmaterialService.deleteRM(id);
 			if (rawMaterialDTO == null) {
+				logger.error("There is no any rm");
 				return new UserStatus(1, "There is no any rm");
 			}
 			return new UserStatus(1, messageSource.getMessage(ERPConstants.RAW_MATERAIL_DELETE, null, null));
@@ -194,7 +206,8 @@ public class RawmaterialController {
 		List<RawMaterialDTO> rawmaterialList = null;
 		try {
 			rawmaterialList = rawmaterialService.getRMByRMTypeId(id);
-			if (rawmaterialList.isEmpty()) {
+			if (rawmaterialList==null) {
+				logger.error("There is no any rm list");
 				return new UserStatus(1, "There is no any rm list");
 			}
 		} catch (Exception e) {

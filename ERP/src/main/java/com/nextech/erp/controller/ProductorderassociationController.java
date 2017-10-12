@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import org.apache.log4j.Logger;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -43,6 +44,8 @@ public class ProductorderassociationController {
 
 	@Autowired
 	ProductService productService;
+	
+	static Logger logger = Logger.getLogger(ProductorderassociationController.class);
 
 	@Transactional @RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addProductOrderAssociation(
@@ -54,14 +57,15 @@ public class ProductorderassociationController {
 			productorderassociationService.addEntity(ProductOrderAssoRequestResponseFactory.setProductPrderAsso(productOrderAssociationDTO, request));
 			return new UserStatus(1, "Productorderassociation added Successfully !");
 		} catch (ConstraintViolationException cve) {
+			logger.error("Inside ConstraintViolationException");
 			cve.printStackTrace();
 			return new UserStatus(0, cve.getCause().getMessage());
 		} catch (PersistenceException pe) {
-			System.out.println("Inside PersistenceException");
+			logger.error("Inside PersistenceException");
 			pe.printStackTrace();
 			return new UserStatus(0, pe.getCause().getMessage());
 		} catch (Exception e) {
-			System.out.println("Inside Exception");
+			logger.error("Inside Exception");
 			e.printStackTrace();
 			return new UserStatus(0, e.getCause().getMessage());
 		}
@@ -73,6 +77,7 @@ public class ProductorderassociationController {
 		try {
 			productorderassociation = productorderassociationService.getProductOrderAsoById(id);
 			if (productorderassociation==null) {
+				logger.error("There is no any product order association");
 				return new Response(1,"There is no any product order association");
 				
 			}
@@ -99,6 +104,7 @@ public class ProductorderassociationController {
 		try {
 			productorderassociationList = productorderassociationService.getProductOrderAssoList();
 			if(productorderassociationList==null){
+				logger.error("there is no any product order assocition");
 				return new Response(1,"There is no any product order assocition list");
 			}
 		} catch (Exception e) {
@@ -127,6 +133,7 @@ public class ProductorderassociationController {
 					productOrderInventoryList.add(productOrderInventoryData);
 				}
 				}else{
+					logger.error("there is no any product inventories");
 					return new Response(1,"There is no any product inventories");
 				}
 			}

@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import org.apache.log4j.Logger;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -30,7 +31,9 @@ public class RMTypeController {
 
 	@Autowired
 	RMTypeService rmTypeService;
-
+	
+	static Logger logger = Logger.getLogger(RMTypeController.class);
+	
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addRMType(@Valid @RequestBody RMTypeDTO rmTypeDTO,HttpServletRequest request,HttpServletResponse response,
 			BindingResult bindingResult) {
@@ -47,14 +50,15 @@ public class RMTypeController {
 		
 			return new UserStatus(1, "RM Type added Successfully !");
 		} catch (ConstraintViolationException cve) {
+			logger.error("Inside ConstraintViolationException");
 			cve.printStackTrace();
 			return new UserStatus(0, cve.getCause().getMessage());
 		} catch (PersistenceException pe) {
-			System.out.println("Inside PersistenceException");
+			logger.error("Inside PersistenceException");
 			pe.printStackTrace();
 			return new UserStatus(0, pe.getCause().getMessage());
 		} catch (Exception e) {
-			System.out.println("Inside Exception");
+			logger.error("Inside Exception");
 			e.printStackTrace();
 			return new UserStatus(0, e.getCause().getMessage());
 		}
@@ -66,6 +70,7 @@ public class RMTypeController {
 		try {
 			rmTypeDTO = rmTypeService.getRMTypeById(id);
 			if(rmTypeDTO==null){
+				logger.error("There is no any rm type ");
 				return new Response(1,"There is no any rm type ");
 			}
 		} catch (Exception e) {
@@ -92,6 +97,7 @@ public class RMTypeController {
 		try {
 			rmTypeDTOs = rmTypeService.getRMTypeList();
 			if(rmTypeDTOs==null){
+				logger.error("There is no any rm type list ");
 				return  new Response(1,"There is no any rm type list");
 			}
 
@@ -108,6 +114,7 @@ public class RMTypeController {
 		try {
 			RMTypeDTO rmTypeDTO =rmTypeService.deleteRMType(id);
 			if(rmTypeDTO==null){
+				logger.error("There is no any rm type ");
 				return  new Response(1,"There is no rm type");
 			}
 			return new Response(1, "RM Type deleted Successfully !");

@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import org.apache.log4j.Logger;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -44,6 +45,9 @@ public class UsertypepageassociationController {
 
 	@Autowired
 	private MessageSource messageSource;
+	
+	static Logger logger = Logger.getLogger(UsertypepageassociationController.class);
+	
 
 	@RequestMapping(value = "/createMultiple", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addMultipleUserTypePageAsso(
@@ -71,12 +75,15 @@ public class UsertypepageassociationController {
 			return new UserStatus(1,
 					"User Type Page Association added uccessfully !");
 		} catch (ConstraintViolationException cve) {
+			logger.error("Inside ConstraintViolationException");
 			cve.printStackTrace();
 			return new UserStatus(0, cve.getCause().getMessage());
 		} catch (PersistenceException pe) {
+			logger.error("Inside PersistenceException");
 			pe.printStackTrace();
 			return new UserStatus(0, pe.getCause().getMessage());
 		} catch (Exception e) {
+			logger.error("Inside Exception");
 			e.printStackTrace();
 			return new UserStatus(0, e.getCause().getMessage());
 		}
@@ -89,6 +96,7 @@ public class UsertypepageassociationController {
 		try {
 			userTypePageAssoDTO = usertypepageassociationService.getUserTypeDto(id);
 			if(userTypePageAssoDTO==null){
+				logger.info("There is no any user type page association");
 				return new Response(1,"There is no any user type page association");
 			}
 		} catch (Exception e) {
@@ -116,6 +124,7 @@ public class UsertypepageassociationController {
 		try {
 			userTypePageAssoDTOs = usertypepageassociationService.getUserTypePageAssList();
 			if(userTypePageAssoDTOs.isEmpty()){
+				logger.info("There is no any user type page association list");
 				return new Response(1,"There is no any user type page association list");
 			}
 
@@ -133,6 +142,7 @@ public class UsertypepageassociationController {
 		try {
 			UserTypePageAssoDTO = usertypepageassociationService.getPagesByUsertype(id);
 			if(UserTypePageAssoDTO==null){
+				logger.info("There is no any user type page association");
 				return new Response(1,"There is no user type page association");
 			}
 
@@ -149,6 +159,7 @@ public class UsertypepageassociationController {
 		try {
 			UserTypePageAssoDTO userTypePageAssoDTO =	usertypepageassociationService.deleteUserTypePage(id);
 			if(userTypePageAssoDTO==null){
+				logger.info("There is no any user type page association");
 				return new Response(1,"There is no any user type page assocition");
 			}
 			PageDTO pageDTO = pageService.getPageDTOById(userTypePageAssoDTO.getPage().getId());

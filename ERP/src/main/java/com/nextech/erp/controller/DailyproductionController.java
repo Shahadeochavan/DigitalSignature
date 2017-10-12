@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import org.apache.log4j.Logger;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -44,6 +45,8 @@ public class DailyproductionController {
 	
 	@Autowired
 	ProductionplanningService productionplanningService;
+	
+	static Logger logger = Logger.getLogger(ClientController.class);
 
 	@RequestMapping(value = "/dailyproductionSave", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addDailyProduction(@Valid @RequestBody TodaysProductionPlanDTO todaysProductionPlanDTO,HttpServletRequest request,HttpServletResponse response,
@@ -55,11 +58,11 @@ public class DailyproductionController {
 			dailyproductionservice.addDailyProduction(todaysProductionPlanDTO, request);
 			return new UserStatus(1, "Dailyproduction added Successfully !");
 		} catch (ConstraintViolationException cve) {
-			System.out.println("Inside ConstraintViolationException");
+			logger.error("Inside ConstraintViolationException");
 			cve.printStackTrace();
 			return new UserStatus(0, cve.getCause().getMessage());
 		} catch (PersistenceException pe) {
-			System.out.println("Inside PersistenceException");
+			logger.error("Inside PersistenceException");
 			pe.printStackTrace();
 			return new UserStatus(0, pe.getCause().getMessage());
 		} catch (Exception e) {
@@ -75,6 +78,7 @@ public class DailyproductionController {
 		try {
 			dailyproduction = dailyproductionservice.getDailyProductionById(id);
 			if(dailyproduction== null){
+				logger.error("There is no any daily production");
 				return  new Response(1,"There is no any daily production");
 			}
 		} catch (Exception e) {
@@ -101,10 +105,12 @@ public class DailyproductionController {
 		try {
 			dailyproductionList = dailyproductionservice.getDailyProductionList();
 			if(dailyproductionList==null){
+				logger.error("There is no any daily production list");
 				return  new Response(1,"There is no any dailyproduction list");
 			}
 
 		} catch (Exception e) {
+			logger.error("exception daily production list");
 			e.printStackTrace();
 		}
 		return new Response(1,dailyproductionList);
@@ -116,6 +122,7 @@ public class DailyproductionController {
 		try {
 			DailyProductionPlanDTO dailyProductionPlanDTO =dailyproductionservice.deleteDailyProduction(id);
 			if(dailyProductionPlanDTO==null){
+				logger.error("There is no any daily production plan");
 				return  new Response(1,"There is no any daily production plan");
 			}
 			return new Response(1, "Dailyproduction deleted Successfully !");

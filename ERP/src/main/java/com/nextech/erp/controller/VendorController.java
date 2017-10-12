@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import org.apache.log4j.Logger;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -57,6 +58,8 @@ public class VendorController {
 	@Autowired
 	MailService mailService;
 	
+	static Logger logger = Logger.getLogger(VendorController.class);
+	
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addVendor(Model model,
 			@Valid @RequestBody VendorDTO  vendorDTO, BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
@@ -82,12 +85,15 @@ public class VendorController {
 		      mailSending(vendorDTO, notificationDTO);
 			return new UserStatus(1, "vendor added Successfully !");
 		} catch (ConstraintViolationException cve) {
+			logger.info("Inside ConstraintViolationException ");
 			cve.printStackTrace();
 			return new UserStatus(0, cve.getCause().getMessage());
 		} catch (PersistenceException pe) {
+			logger.info("Inside PersistenceException ");
 			pe.printStackTrace();
 			return new UserStatus(0, pe.getCause().getMessage());
 		} catch (Exception e) {
+			logger.info("Inside Exception ");
 			e.printStackTrace();
 			return new UserStatus(0, e.getCause().getMessage());
 		}
@@ -102,6 +108,7 @@ public class VendorController {
 				return new Response(1,"There is no vendor");
 			}
 		} catch (Exception e) {
+			logger.error("Exception in vendor ");
 			e.printStackTrace();
 		}
 		return new Response(1,vendorDTO);
@@ -130,6 +137,7 @@ public class VendorController {
 		   mailSending(vendorDTO, notificationDTO);
 			return new UserStatus(1, "Vendor update Successfully !");
 		} catch (Exception e) {
+			logger.error("Exception in vendor update");
 			e.printStackTrace();
 			return new UserStatus(0, e.toString());
 		}
@@ -141,9 +149,11 @@ public class VendorController {
 		try {
 			vendorDTOs = vendorService.getVendorList(vendorDTOs);
 			if(vendorDTOs==null){
+				logger.error("There is no any vendor list");
 				return new Response(1,"There is no vendor list");
 			}
 		} catch (Exception e) {
+			logger.error("Exception in vendor delete");
 			e.printStackTrace();
 		}
 		return new Response(1,vendorDTOs);
@@ -155,10 +165,12 @@ public class VendorController {
 		try {
 			VendorDTO vendorDTO = vendorService.deleteVendor(id);
 			if(vendorDTO==null){
+				logger.info("There is no any data in vendor");
 				return new Response(1,"There is no any vendor for delete");
 			}
 			return new Response(1, "Vendor deleted Successfully !");
 		} catch (Exception e) {
+			logger.error("Exception in vendor delete");
 			return new Response(0, e.toString());
 		}
 

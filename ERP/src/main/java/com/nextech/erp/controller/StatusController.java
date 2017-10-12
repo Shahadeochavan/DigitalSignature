@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import org.apache.log4j.Logger;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.nextech.erp.factory.StatusRequestResponseFactory;
 import com.nextech.erp.newDTO.StatusDTO;
 import com.nextech.erp.service.StatusService;
@@ -30,6 +32,8 @@ public class StatusController {
 
 	@Autowired
 	StatusService statusService;
+	
+	static Logger logger = Logger.getLogger(StatusController.class);
 
 	@Transactional @RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addStatustransition(
@@ -42,14 +46,15 @@ public class StatusController {
 			statusService.addEntity(StatusRequestResponseFactory.setStatus(statusDTO, request));
 			return new UserStatus(1, "Status added Successfully !");
 		} catch (ConstraintViolationException cve) {
+			logger.error("Inside ConstraintViolationException");
 			cve.printStackTrace();
 			return new UserStatus(0, cve.getCause().getMessage());
 		} catch (PersistenceException pe) {
-			System.out.println("Inside PersistenceException");
+			logger.error("Inside PersistenceException");
 			pe.printStackTrace();
 			return new UserStatus(0, pe.getCause().getMessage());
 		} catch (Exception e) {
-			System.out.println("Inside Exception");
+			logger.error("Inside Exception");
 			e.printStackTrace();
 			return new UserStatus(0, e.getCause().getMessage());
 		}
@@ -61,6 +66,7 @@ public class StatusController {
 		try {
 			status = statusService.getStatusById(id);
 			if(status==null){
+				logger.error("There is no any status ");
 				return  new Response(1,"There is no any status ");
 			}
 		} catch (Exception e) {
@@ -87,6 +93,7 @@ public class StatusController {
 		try {
 			statusList = statusService.getStatusList();
 			if(statusList==null){
+				logger.error("There is no any status list");
 				return  new Response(1,"There is no any status list");
 			}
 
@@ -103,6 +110,7 @@ public class StatusController {
 		try {
 		StatusDTO statusDTO = statusService.deleteStatus(id);
 		if(statusDTO==null){
+			logger.error("There is no any status ");
 			return  new Response(1,"There is no any status");
 		}
 			return new Response(1, "Status deleted Successfully !");
@@ -118,6 +126,7 @@ public class StatusController {
 		try {
 			statuList = statusService.getStatusByType(type);
 			if(statuList==null){
+				logger.error("There is no any status list ");
 				return  new Response(1,"There is no any status type list");
 			}
 		} catch (Exception e) {

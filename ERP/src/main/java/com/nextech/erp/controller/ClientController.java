@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import org.apache.log4j.Logger;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -57,6 +58,7 @@ public class ClientController {
 	@Autowired
 	MailService mailService;
 
+	static Logger logger = Logger.getLogger(ClientController.class);
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addClient(
@@ -68,32 +70,27 @@ public class ClientController {
 						.getDefaultMessage());
 			}
 			if (clientService.getClientByCompanyName(clientDTO.getCompanyName()) == null) {
-
 			} else {
-				return new UserStatus(2, messageSource.getMessage(
-						ERPConstants.COMPANY_NAME_EXIT, null, null));
-
+				return new UserStatus(2, messageSource.getMessage(ERPConstants.COMPANY_NAME_EXIT, null, null));
 			}
+			
 			if (clientService.getClientByEmail(clientDTO.getEmailId()) == null) {
 			} else {
-				return new UserStatus(2, messageSource.getMessage(
-						ERPConstants.EMAIL_ALREADY_EXIT, null, null));
+				return new UserStatus(2, messageSource.getMessage(ERPConstants.EMAIL_ALREADY_EXIT, null, null));
 			}
-       
-		    	clientService.addEntity(ClientFactory.setClient(clientDTO, request));
-	            NotificationDTO  notificationDTO = notificationService.getNotificationByCode((messageSource.getMessage(ERPConstants.CLIENT_ADDED_SUCCESSFULLY, null, null)));
-		        mailSending(clientDTO,notificationDTO);
-			return new UserStatus(1, messageSource.getMessage(
-					ERPConstants.CLIENT_ADDED, null, null));
+		    	 clientService.addEntity(ClientFactory.setClient(clientDTO, request));
+	             NotificationDTO  notificationDTO = notificationService.getNotificationByCode((messageSource.getMessage(ERPConstants.CLIENT_ADDED_SUCCESSFULLY, null, null)));
+		          mailSending(clientDTO,notificationDTO);
+			     return new UserStatus(1, messageSource.getMessage(ERPConstants.CLIENT_ADDED, null, null));
 		} catch (ConstraintViolationException cve) {
 			cve.printStackTrace();
 			return new UserStatus(0, cve.getCause().getMessage());
 		} catch (PersistenceException pe) {
-			System.out.println("Inside PersistenceException");
+			logger.error("Inside PersistenceException");
 			pe.printStackTrace();
 			return new UserStatus(0, pe.getCause().getMessage());
 		} catch (Exception e) {
-			System.out.println("Inside Exception");
+			logger.error("Inside Exception");
 			e.printStackTrace();
 			return new UserStatus(0, e.getCause().getMessage());
 		}
@@ -105,9 +102,11 @@ public class ClientController {
 		try {
 			clientDTO = clientService.getClientDTOById(id);
 			if(clientDTO==null){
+				logger.error("There is no client");
 				return new Response(1,"Thare is no client");
 			}
 		} catch (Exception e) {
+			logger.error("Inside exception");
 			e.printStackTrace();
 		}
 		return new Response(1,clientDTO);
@@ -136,8 +135,7 @@ public class ClientController {
 	    	clientService.updateEntity(ClientFactory.setClientUpdate(clientDTO, request));
             NotificationDTO  notificationDTO = notificationService.getNotificationByCode((messageSource.getMessage(ERPConstants.CLIENT_UPDATE_SUCCESSFULLY, null, null)));
 	        mailSending(clientDTO,notificationDTO);
-			return new UserStatus(1, messageSource.getMessage(
-					ERPConstants.CLIENT_UPDATE, null, null));
+			return new UserStatus(1, messageSource.getMessage(ERPConstants.CLIENT_UPDATE, null, null));
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new UserStatus(0, e.toString());
@@ -150,6 +148,7 @@ public class ClientController {
 		try {
 			clientList = clientService.getClientList(clientList);
 			if(clientList==null){
+				logger.error("There is no client list");
 				return new Response(1,"There is no client list");
 			}
 		} catch (Exception e) {
@@ -164,15 +163,16 @@ public class ClientController {
 		try {
 			ClientDTO clientDTO =clientService.deleteClient(id);
 			if(clientDTO==null){
+				logger.error("There is no client list");
 				return new Response(1,"There is no client for delete");
 			}
-			return new Response(1, messageSource.getMessage(
-					ERPConstants.CLIENT_DELETE, null, null));
+			return new Response(1, messageSource.getMessage(ERPConstants.CLIENT_DELETE, null, null));
 		} catch (Exception e) {
 			return new Response(0, e.toString());
 		}
 
 	}
+	
 	private void mailSending(ClientDTO client,NotificationDTO  notificationDTO) throws Exception{
 	Mail mail =  userService.emailNotification(notificationDTO);
 	String clientTO = mail.getMailTo()+","+client.getEmailId();

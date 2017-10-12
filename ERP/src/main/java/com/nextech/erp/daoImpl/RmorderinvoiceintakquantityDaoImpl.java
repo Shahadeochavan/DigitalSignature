@@ -18,9 +18,7 @@ import com.nextech.erp.model.Rmorderinvoiceintakquantity;
 
 @Repository
 
-public class RmorderinvoiceintakquantityDaoImpl extends
-		SuperDaoImpl<Rmorderinvoiceintakquantity> implements
-		RmorderinvoiceintakquantityDao {
+public class RmorderinvoiceintakquantityDaoImpl extends SuperDaoImpl<Rmorderinvoiceintakquantity> implements RmorderinvoiceintakquantityDao {
 	@Autowired
 	SessionFactory sessionFactory;
 	Session session = null;
@@ -36,5 +34,4 @@ public class RmorderinvoiceintakquantityDaoImpl extends
 		TypedQuery<Rmorderinvoiceintakquantity> query = session.createQuery(criteria);
 		return query.getResultList();
 	}
-
 }

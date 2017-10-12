@@ -6,6 +6,8 @@ import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+
+import org.apache.log4j.Logger;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -17,12 +19,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.nextech.erp.factory.NotificationRequestResponseFactory;
 import com.nextech.erp.newDTO.NotificationDTO;
 import com.nextech.erp.service.NotificationService;
 import com.nextech.erp.status.Response;
 import com.nextech.erp.status.UserStatus;
-
 
 @Controller
 @Transactional @RequestMapping("/notification")
@@ -30,6 +32,8 @@ public class NotificationController {
 
 	@Autowired
 	NotificationService notificationservice;
+	
+	static Logger logger = Logger.getLogger(NotificationController.class);
 	
 	@Transactional @RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addNotification(@Valid @RequestBody NotificationDTO notificationDTO,
@@ -42,16 +46,17 @@ public class NotificationController {
 			notificationDTO.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			notificationservice.addEntity(NotificationRequestResponseFactory.setNotification(notificationDTO));
 			return new UserStatus(1, "Notification added Successfully !");
+			
 		} catch (ConstraintViolationException cve) {
-			System.out.println("Inside ConstraintViolationException");
+			logger.error("Inside ConstraintViolationException");
 			cve.printStackTrace();
 			return new UserStatus(0, cve.getCause().getMessage());
 		} catch (PersistenceException pe) {
-			System.out.println("Inside PersistenceException");
+			logger.error("Inside PersistenceException");
 			pe.printStackTrace();
 			return new UserStatus(0, pe.getCause().getMessage());
 		} catch (Exception e) {
-			System.out.println("Inside Exception");
+			logger.error("Inside Exception");
 			e.printStackTrace();
 			return new UserStatus(0, e.getCause().getMessage());
 		}
@@ -63,6 +68,7 @@ public class NotificationController {
 		try {
 			notification = notificationservice.getNotificationDTOById(id);
 			if(notification==null){
+				logger.error("There is no any notification");
 				return  new Response(1,"There is no any notification");
 			}
 		} catch (Exception e) {
@@ -91,6 +97,7 @@ public class NotificationController {
 		try {
 			notificationList = notificationservice.getNofificationList(notificationList);
 			if(notificationList==null){
+				logger.error("There is no any notification list");
 				return new Response(1,"There is no any list");
 			}
 
@@ -107,6 +114,7 @@ public class NotificationController {
 		try {
 			NotificationDTO notificationDTO =notificationservice.deleteNofificationById(id);
 			if(notificationDTO==null){
+				logger.error("There is no any notification for delete");
 				return  new Response(1,"There is no any notification for delete");
 			}
 			return new Response(1, "Notification deleted Successfully !");

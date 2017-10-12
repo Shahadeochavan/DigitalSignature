@@ -7,6 +7,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
@@ -39,6 +40,7 @@ import com.nextech.erp.service.StatusService;
 import com.nextech.erp.status.Response;
 import com.nextech.erp.status.UserStatus;
 import com.nextech.erp.util.DateUtil;
+
 @Controller
 @Transactional @RequestMapping("/productionplanning")
 public class ProductionplanningController {
@@ -73,6 +75,8 @@ public class ProductionplanningController {
 
 	@Autowired
 	RawmaterialinventoryService rawmaterialinventoryService;
+	
+	static Logger logger = Logger.getLogger(ProductionplanningController.class);
 
 	@Transactional @RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody ProductionPlanningDTO getProductionplanning(@PathVariable("id") long id) {
@@ -146,6 +150,7 @@ public class ProductionplanningController {
 		try {
 			productionplanningList = productionplanningService.updateProductionPlanByMonthYear(month_year);
 			if(productionplanningList==null){
+				logger.error("There is no any production planning list");
 				return  new Response(1,"There is no any production planning list");
 			}
 		} catch (Exception e) {
@@ -159,11 +164,12 @@ public class ProductionplanningController {
 		List<Product> productList = null;
 		try {
 			productList = productService.getEntityList(Product.class);
-								productionplanningList = productionplanningService.createProductionPlanMonthYear( productList, month_year, request, response);
-								if(productionplanningList==null){
-									return  new Response(1,"There is no any production planning list");
-								}
-			
+		   productionplanningList = productionplanningService.createProductionPlanMonthYear( productList, month_year, request, response);
+			if(productionplanningList==null){
+			logger.error("There is no any production planning list");	
+			return  new Response(1,"There is no any production planning list");
+		}
+		
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -176,6 +182,7 @@ public class ProductionplanningController {
 		try {
 		ProductionPlanningDTO productionPlanningDTO = 	productionplanningService.deleteProduction(id);
 		if (productionPlanningDTO==null) {
+			logger.error("There is no any production planning ");	
 			return  new Response(1,"There is no any production planning");
 			
 		}
@@ -204,11 +211,7 @@ public class ProductionplanningController {
 			if(productionplannings!=null){
 			for (ProductionPlanningDTO productionplanning : productionplannings) {
 				boolean isProductionRemaining = false;
-				//TODO Can we add this if condition below to Query along with condition target quantity?
-//				if(productionplanning.getStatusId().getId() 
-//						== Long.parseLong(messageSource.getMessage(ERPConstants.PRODUCTION_PLAN_READY_TO_START, null, null))
-//					|| 	productionplanning.getStatusId().getId()
-//						==Long.parseLong(messageSource.getMessage(ERPConstants.PROD_PLAN_COMPLETE, null, null))){
+				//TODO Can we add this if condition below to Query along with condition target quantity
 					if(productionplanning.getTargetQuantity() > 0){
 						List<ProductOrderAssociationDTO> productorderassociations = 
 								productorderassociationService.getIncompleteProductOrderAssoByProductId(productionplanning.getProductId().getId());
@@ -222,9 +225,6 @@ public class ProductionplanningController {
 						}
 						//return new Response(101,"Please get RM from RM Store Out. So that Today's Production Plan will be generated.",productionplanningFinalList);
 					}
-//				}else{
-//					return new Response(101,"There is no production plan for today.",productionplanningFinalList);
-//				}
 				if(isProductionRemaining)
 					productionplanningFinalList.add(productionplanning);
 			}
@@ -236,7 +236,6 @@ public class ProductionplanningController {
 		}
 		return new Response(1,"Success",productionplanningFinalList);
 	}
-	
 	
 	@Transactional @RequestMapping(value = "getProductionPlanListByDate/{date}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody Response getProductionPlanDate1(@PathVariable("date") String date) {
@@ -262,6 +261,7 @@ public class ProductionplanningController {
 					productionplanningFinalList.add(productionplanning);
 			}
 			}else{
+				logger.error("There is no any production planning list ! you can update production plan for current date");
 				return  new Response(1,"There is no any production planning list ! you can update production plan for current date");
 			}
 		} catch (Exception e) {
@@ -270,7 +270,6 @@ public class ProductionplanningController {
 		return new Response(1,productionplanningFinalList);
 	}
 	
-
 	@Transactional @RequestMapping(value = "getProductionPlanByDate/{date}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody Response getProductionPlanDate(@PathVariable("date") String date) {
 
@@ -303,7 +302,6 @@ public class ProductionplanningController {
 
 		return new Response(1,productionplanningFinalList);
 	}
-
 
 	@Transactional @RequestMapping(value = "getProductionPlanListForStoreOutByDateAndPId/{date}/{productID}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody Response getProductionPlanListByDate(@PathVariable("date") String date,@PathVariable("productID") long productID) {

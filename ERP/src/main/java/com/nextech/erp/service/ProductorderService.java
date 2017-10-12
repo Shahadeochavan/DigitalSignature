@@ -11,7 +11,7 @@ import com.nextech.erp.model.Productorder;
 
 public interface ProductorderService extends CRUDService<Productorder>{
 
-	public Productorder getProductorderByProductOrderId(long pOrderId) throws Exception;
+	public Productorder getProductorderByProductOrderId(long productOrderId) throws Exception;
 
 	public List<ProductOrderDTO> getPendingProductOrders(long statusId,long statusId1);
 

@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import org.apache.log4j.Logger;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.dto.Mail;
 import com.nextech.erp.dto.ProductInventoryDTO;
@@ -63,6 +65,7 @@ public class ProductinventoryController {
 	@Autowired
 	ProductService productService;
 	
+	static Logger logger = Logger.getLogger(ProductinventoryController.class);
 
 	@Transactional @RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addProductinventory(
@@ -77,19 +80,19 @@ public class ProductinventoryController {
 				productinventoryService.addEntity(ProductInventoryRequestResponseFactory.setProductInventory(productInventoryDTO, request));
 			}	
 			else
-				return new UserStatus(0, messageSource.getMessage(
-						ERPConstants.PRODUCT_INVENTORY_ASSO_EXIT, null, null));
+				return new UserStatus(0, messageSource.getMessage(ERPConstants.PRODUCT_INVENTORY_ASSO_EXIT, null, null));
+			
 			return new UserStatus(1, "Productinventory added Successfully !");
 		} catch (ConstraintViolationException cve) {
-			System.out.println("Inside ConstraintViolationException");
+			logger.error("Inside ConstraintViolationException");
 			cve.printStackTrace();
 			return new UserStatus(0, cve.getCause().getMessage());
 		} catch (PersistenceException pe) {
-			System.out.println("Inside PersistenceException");
+			logger.error("Inside PersistenceException");
 			pe.printStackTrace();
 			return new UserStatus(0, pe.getCause().getMessage());
 		} catch (Exception e) {
-			System.out.println("Inside Exception");
+			logger.error("Inside Exception");
 			e.printStackTrace();
 			return new UserStatus(0, e.getCause().getMessage());
 		}
@@ -101,6 +104,7 @@ public class ProductinventoryController {
 		try {
 			productinventory = productinventoryService.getProductInventory(id);
 			if(productinventory==null){
+				logger.error("There is no any product inventory");
 				return new Response(1,"There is no any product inventory");
 			}
 		} catch (Exception e) {
@@ -127,15 +131,12 @@ public class ProductinventoryController {
 		try {
 			productinventoryList = productinventoryService.getproductInventoryDTO();
 			if (productinventoryList==null) {
-				System.out.println("Please add product inventory");
-				return new Response(1, "Product Inventory is empty",
-						productinventoryList);
+				logger.error("Please add product inventory");
+				return new Response(1, "Product Inventory is empty");
 			}
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		return new Response(1, productinventoryList);
 	}
 
@@ -145,6 +146,7 @@ public class ProductinventoryController {
 		try {
 			ProductInventoryDTO productInventoryDTO = productinventoryService.deleteProductInventory(id);
 			if (productInventoryDTO==null) {
+				logger.error("There is no any product Inventory");
 				return new Response(1,"There is no any product Inventory");
 			}
 			return new Response(1, "Productinventory deleted Successfully !");
@@ -156,7 +158,7 @@ public class ProductinventoryController {
 
 	//@Scheduled(initialDelay=600000, fixedRate=600000)
 	public void executeSchedular() throws Exception{
-		System.out.println("Product Inventory Check");
+		logger.info("Product Inventory Check");
 		List<ProductInventoryDTO> productinventoryList = null;
 		List<ProductInventoryDTO> productInventoryDTOs = new ArrayList<ProductInventoryDTO>();
 		ProductInventoryDTO productInventoryDTO = new ProductInventoryDTO();
@@ -164,7 +166,6 @@ public class ProductinventoryController {
 			productinventoryList = productinventoryService.getproductInventoryDTO();
 			for (ProductInventoryDTO productInventoryDTO1 : productinventoryList) {
 				ProductDTO  product = productService.getProductDTO(productInventoryDTO1.getProductId().getId());
-				
 				if(productInventoryDTO1.getQuantityAvailable()>=productInventoryDTO1.getMinimumQuantity()){
 				}else{
 					productInventoryDTO.setInventoryQuantity(productInventoryDTO1.getQuantityAvailable());
@@ -172,19 +173,17 @@ public class ProductinventoryController {
 					productInventoryDTO.setMinimumQuantity(productInventoryDTO1.getMinimumQuantity());
 					productInventoryDTOs.add(productInventoryDTO);
 				}
-				
 			}
 			if(productInventoryDTOs != null&& ! productInventoryDTOs.isEmpty()){
-				System.out.println("value  of product  inventroy"+productInventoryDTOs);
-				System.out.println();
-				mailSendingProductInventroy(productInventoryDTOs);	
+				emailNotifiactionProductInventory(productInventoryDTOs);	
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
 	}
-	private void mailSendingProductInventroy(List<ProductInventoryDTO> productInventoryDTOs) throws Exception{
+	
+	public void emailNotifiactionProductInventory(List<ProductInventoryDTO> productInventoryDTOs) throws Exception{
 		   NotificationDTO  notificationDTO = notificationService.getNotificationByCode((messageSource.getMessage(ERPConstants.PRODUCT_INVENTORY_NOTIFICATION, null, null)));
 		  Mail mail = userService.emailNotification(notificationDTO);
 	        mail.setMailSubject(notificationDTO.getSubject());
@@ -193,6 +192,6 @@ public class ProductinventoryController {
 	        model.put("location", "Pune");
 	        model.put("signature", "www.NextechServices.in");
 	        mail.setModel(model);
-		mailService.sendEmailWithoutPdF(mail, notificationDTO);
+		   mailService.sendEmailWithoutPdF(mail, notificationDTO);
 	}
 }

@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
@@ -54,7 +55,7 @@ public class SecuritycheckoutController {
 	@Autowired
 	DispatchService dispatchService;
 
-
+	static Logger logger = Logger.getLogger(SecuritycheckoutController.class);
 
 	@Transactional @RequestMapping(value = "/productOrderCheckOut", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addSecurityCheckOut(@Valid @RequestBody SecurityCheckOutDTO securityCheckOutDTO,
@@ -70,15 +71,15 @@ public class SecuritycheckoutController {
 
 			return new UserStatus(1, "Securitycheckout added Successfully !");
 		} catch (ConstraintViolationException cve) {
-			System.out.println("Inside ConstraintViolationException");
+			logger.error("Inside ConstraintViolationException");
 			cve.printStackTrace();
 			return new UserStatus(0, cve.getCause().getMessage());
 		} catch (PersistenceException pe) {
-			System.out.println("Inside PersistenceException");
+			logger.error("Inside PersistenceException");
 			pe.printStackTrace();
 			return new UserStatus(0, pe.getCause().getMessage());
 		} catch (Exception e) {
-			System.out.println("Inside Exception");
+			logger.error("Inside Exception");
 			e.printStackTrace();
 			return new UserStatus(0, e.getCause().getMessage());
 		}
@@ -90,6 +91,7 @@ public class SecuritycheckoutController {
 		try {
 			securitycheckout = securitycheckoutService.getSecurityCheckOutById(id);
 			if(securitycheckout==null){
+				logger.error("There is no any security check out");
 				return  new Response(1,"There is no any security check out");
 			}
 		} catch (Exception e) {
@@ -117,6 +119,7 @@ public class SecuritycheckoutController {
 		try {
 			securitycheckoutList = securitycheckoutService.getSecurityCheckOutList();
 			if(securitycheckoutList==null){
+				logger.error("There is no any security check out list");
 				return  new Response(1,"There is no any secruty check out list");
 			}
 
@@ -133,6 +136,7 @@ public class SecuritycheckoutController {
 		try {
 		SecurityCheckOutDTO  securityCheckOutDTO =	securitycheckoutService.deleteSecurityCheckOut(id);
 		if(securityCheckOutDTO==null){
+			logger.error("There is no any security check out");
 			return  new Response(1,"There is no any security check out");
 		}
 			return new Response(1, "Securitycheckout deleted Successfully !");

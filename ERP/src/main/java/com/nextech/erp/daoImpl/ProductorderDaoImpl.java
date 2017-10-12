@@ -51,14 +51,6 @@ public class ProductorderDaoImpl extends SuperDaoImpl<Productorder> implements
 	public List<Productorder> getInCompleteProductOrder(long clientId,long statusId,long statusId1) {
 		
 		session = sessionFactory.openSession();
-	/*	@SuppressWarnings("deprecation")
-		Criteria criteria = session.createCriteria(Productorder.class);
-		criteria.add(Restrictions.eq("client.id", clientId));
-		Criterion criterion = Restrictions.in("status.id", Arrays.asList(statusId,statusId1));
-		criteria.add(Restrictions.and(criterion));
-		criteria.add(Restrictions.eq("isactive", true));
-		return (List<Productorder>) (criteria.list().size() > 0 ? criteria.list() : null);*/
-		
 		CriteriaBuilder criteriaBuilder=session.getCriteriaBuilder();
 	    CriteriaQuery<Productorder> criteriaQuery=criteriaBuilder.createQuery(Productorder.class);
 	    Metamodel metamodel=session.getMetamodel();
