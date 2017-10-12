@@ -163,7 +163,6 @@ public class RawmaterialorderServiceImpl extends CRUDServiceImpl<Rawmaterialorde
 	@Override
 	public RawmaterialOrderDTO updateRMOrder(RawmaterialOrderDTO rawmaterialOrderDTO,HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		
 		Rawmaterialorder  rawmaterialorder = RMOrderRequestResponseFactory.setRMOrder(rawmaterialOrderDTO);
 		rawmaterialorder.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 		rawmaterialorder.setStatus(StatusDao.getById(Status.class,Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_NEW_RM_ORDER, null, null))));

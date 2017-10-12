@@ -99,13 +99,11 @@ public class ProductionplanningServiceImpl extends
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(new Date());
 		cal.set(Calendar.DAY_OF_MONTH, 1);
-//		int myMonth=cal.get(Calendar.MONTH);
 		Date startDate = cal.getTime();
 		cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
 		Date endDate = cal.getTime();
 		List<Productionplanning> productionplanningList = productionplanningDao.getProductionPlanByMonthYear(startDate,endDate);
 		return getProductionPlan(getProductProductPlanMap(productionplanningList), new SimpleDateFormat("MM-yyyy").format(new Date()));
-		//return null;
 	}
 
 	private List<ProductionPlan> getProductionPlan(
