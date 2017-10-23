@@ -184,7 +184,7 @@ public class RawmaterialinventoryController {
 	
 	private void emailNotificationRMInventory(List<RMInventoryDTO> rmInventoryDTOs) throws Exception {
 		   NotificationDTO  notificationDTO = notificationService.getNotificationByCode((messageSource.getMessage(ERPConstants.RM_INVENTORY_NOTIFICATION, null, null)));
-		Mail mail = userService.emailNotification(notificationDTO);
+		   Mail mail = mailService.setMailCCBCCAndTO(notificationDTO);
 		mail.setMailSubject(notificationDTO.getSubject());
 		Map<String, Object> model = new HashMap<String, Object>();
 		model.put("rmInventoryDTOs", rmInventoryDTOs);

@@ -28,6 +28,7 @@ import com.nextech.erp.dto.Mail;
 import com.nextech.erp.dto.QualityCheckRMDTO;
 import com.nextech.erp.dto.RawMaterialInvoiceDTO;
 import com.nextech.erp.dto.StoreInDTO;
+import com.nextech.erp.factory.MailResponseRequestFactory;
 import com.nextech.erp.factory.QualityRequestResponseFactory;
 import com.nextech.erp.factory.StoreRequestResponseFactory;
 import com.nextech.erp.model.Qualitycheckrawmaterial;
@@ -131,7 +132,7 @@ public class QualitycheckrawmaterialController {
 			Status status = statusService.getEntityById(Status.class, rawmaterialorderinvoiceNew.getStatus().getId());
 			Vendor vendor = vendorService.getEntityById(Vendor.class, Long.parseLong(rawmaterialorderinvoiceNew.getVendorname()));
 			NotificationDTO notificationDTO = notificationService.getNotifiactionByStatus(status.getId());
-			mailSending(notificationDTO, vendor,qualityCheckRMDTOs,rawmaterialorder);
+			emailNitificationRMQuality(notificationDTO, vendor,qualityCheckRMDTOs,rawmaterialorder);
 			return new UserStatus(1,"Quality Check RM Succesfully");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -206,18 +207,10 @@ public class QualitycheckrawmaterialController {
 		return new Response(1,storeInDTOs);
 	}
 	
-	private void mailSending(NotificationDTO notification,Vendor vendor,List<QualityCheckRMDTO> qualityCheckRMDTOs,Rawmaterialorder rawmaterialorder) throws Exception{
-		  Mail mail = userService.emailNotification(notification);
-        mail.setMailSubject(notification.getSubject());
-        Map < String, Object > model = new HashMap < String, Object > ();
-        model.put("firstName", vendor.getFirstName());
-        model.put("qualityCheckRMDTOs", qualityCheckRMDTOs);
-        model.put("address", vendor.getAddress());
-        model.put("companyName", vendor.getCompanyName());
-        model.put("lastName", vendor.getLastName());
-        model.put("location", "Pune");
-        model.put("signature", "www.NextechServices.in");
-        mail.setModel(model);
+	private void emailNitificationRMQuality(NotificationDTO notification,Vendor vendor,List<QualityCheckRMDTO> qualityCheckRMDTOs,Rawmaterialorder rawmaterialorder) throws Exception{
+	    Mail mail = mailService.setMailCCBCCAndTO(notification);
+        mail.setModel(MailResponseRequestFactory.setMailDetailsRMQuantity(notification, vendor, qualityCheckRMDTOs));
 		mailService.sendEmailWithoutPdF(mail,notification);
 	}
+	
 }

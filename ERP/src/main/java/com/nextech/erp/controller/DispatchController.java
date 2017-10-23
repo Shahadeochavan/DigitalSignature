@@ -1,9 +1,7 @@
 package com.nextech.erp.controller;
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.persistence.PersistenceException;
 import javax.servlet.ServletContext;
@@ -31,6 +29,7 @@ import com.nextech.erp.dto.DispatchProductDTO;
 import com.nextech.erp.dto.Mail;
 import com.nextech.erp.dto.ProductOrderDTO;
 import com.nextech.erp.factory.DispatchRequestResponseFactory;
+import com.nextech.erp.factory.MailResponseRequestFactory;
 import com.nextech.erp.newDTO.ClientDTO;
 import com.nextech.erp.newDTO.NotificationDTO;
 import com.nextech.erp.newDTO.StatusDTO;
@@ -183,11 +182,9 @@ public class DispatchController {
 				logger.error("There is no any dispatch product");
 				return new Response(1,"There is no any dispatch product list");
 			}
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		return new Response(1,dispatchList);
 	}
 
@@ -207,23 +204,14 @@ public class DispatchController {
 
 	}
 
-	private void mailSending(ProductOrderDTO productorder,ClientDTO client, StatusDTO status,String fileName,List<DispatchProductDTO> dispatchProductDTOs,DispatchDTO dispatchDTO) throws NumberFormatException,Exception {
+	private void mailSending(ProductOrderDTO productorder,ClientDTO clientDTO, StatusDTO status,String fileName,List<DispatchProductDTO> dispatchProductDTOs,DispatchDTO dispatchDTO) throws NumberFormatException,Exception {
 		  NotificationDTO  notificationDTO = notificationService.getNotifiactionByStatus(status.getId());
-	    Mail mail = userService.emailNotification(notificationDTO);
-	    mail.setAttachment(fileName);
-		mail.setMailSubject(notificationDTO.getSubject());
-		mail.setMailTo(client.getEmailId());
-		Map<String, Object> model = new HashMap<String, Object>();
-		model.put("firstName", client.getCompanyName());
-		model.put("mailfrom", "Nextech");
-		model.put("address", client.getAddress());
-		model.put("dispatchProductDTOs", dispatchProductDTOs);
-		model.put("invoiceNo", dispatchDTO.getInvoiceNo());
-		model.put("discription", dispatchDTO.getDescription());
-		model.put("location", "Pune");
-		model.put("signature", "www.NextechServices.in");
-		mail.setModel(model);
-		mailService.sendEmail(mail, notificationDTO);
+		  Mail mail = mailService.setMailCCBCCAndTO(notificationDTO);
+	      mail.setAttachment(fileName);
+	      mail.setMailSubject(notificationDTO.getSubject());
+		  mail.setMailTo(clientDTO.getEmailId());
+		  mail.setModel(MailResponseRequestFactory.setMailDetailsDispatch(clientDTO, dispatchProductDTOs, dispatchDTO));
+		 mailService.sendEmail(mail, notificationDTO);
 	}
 	
 	public void createPDFDispatch(HttpServletRequest request, HttpServletResponse response,ProductOrderDTO productorder,List<DispatchProductDTO> dispatchProductDTOs,ClientDTO client,DispatchDTO dispatchDTO) throws IOException {
@@ -238,11 +226,9 @@ public class DispatchController {
 	    	
 	   CreatePdfForDispatchProduct createPdfForDispatchProduct = new CreatePdfForDispatchProduct();
 	   createPdfForDispatchProduct.createPDF(temperotyFilePath+"\\"+fileName,productorder,dispatchProductDTOs,client,dispatchDTO);
-	   
 	   String dispatchPdfFile =    PDFToByteArrayOutputStreamUtil.convertPDFToByteArrayOutputStream(temperotyFilePath+"\\"+fileName);
 	   StatusDTO status = statusService.getStatusById(productorder.getStatusId().getId());
 	   mailSending(productorder, client, status, dispatchPdfFile, dispatchProductDTOs, dispatchDTO);
-
 	    } catch (Exception e1) {
 	        e1.printStackTrace();
 	    }

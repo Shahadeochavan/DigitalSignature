@@ -1,14 +1,10 @@
 package com.nextech.erp.controller;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
 import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-
 import org.apache.log4j.Logger;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.dto.Mail;
 import com.nextech.erp.factory.ClientFactory;
+import com.nextech.erp.factory.MailResponseRequestFactory;
 import com.nextech.erp.newDTO.ClientDTO;
 import com.nextech.erp.newDTO.NotificationDTO;
 import com.nextech.erp.service.ClientService;
@@ -170,21 +167,13 @@ public class ClientController {
 		} catch (Exception e) {
 			return new Response(0, e.toString());
 		}
-
 	}
 	
 	private void mailSending(ClientDTO client,NotificationDTO  notificationDTO) throws Exception{
-	Mail mail =  userService.emailNotification(notificationDTO);
-	String clientTO = mail.getMailTo()+","+client.getEmailId();
-	      mail.setMailTo(clientTO);
-	        mail.setMailSubject(notificationDTO.getSubject());
-	        Map < String, Object > model = new HashMap < String, Object > ();
-	        model.put("firstName", client.getCompanyName());
-	        model.put("email", client.getEmailId());
-	        model.put("contactNumber", client.getContactNumber());
-	        model.put("location", "Pune");
-	        model.put("signature", "www.NextechServices.in");
-	        mail.setModel(model);
+		Mail mail = mailService.setMailCCBCCAndTO(notificationDTO);
+	    String clientTO = mail.getMailTo()+","+client.getEmailId();
+	    mail.setMailTo(clientTO);
+	    mail.setModel(MailResponseRequestFactory.setMailDetailsClient(client));
 		mailService.sendEmailWithoutPdF(mail, notificationDTO);
 	}
 }

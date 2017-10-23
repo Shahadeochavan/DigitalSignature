@@ -185,7 +185,7 @@ public class ProductinventoryController {
 	
 	public void emailNotifiactionProductInventory(List<ProductInventoryDTO> productInventoryDTOs) throws Exception{
 		   NotificationDTO  notificationDTO = notificationService.getNotificationByCode((messageSource.getMessage(ERPConstants.PRODUCT_INVENTORY_NOTIFICATION, null, null)));
-		  Mail mail = userService.emailNotification(notificationDTO);
+		   Mail mail = mailService.setMailCCBCCAndTO(notificationDTO);
 	        mail.setMailSubject(notificationDTO.getSubject());
 	        Map < String, Object > model = new HashMap < String, Object > ();
 	        model.put("productInventoryDTOs", productInventoryDTOs);

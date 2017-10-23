@@ -34,6 +34,7 @@ import com.nextech.erp.dto.ProductOrderDTO;
 import com.nextech.erp.dto.ProductOrderData;
 import com.nextech.erp.dto.ProductRMAssociationDTO;
 import com.nextech.erp.dto.RMInventoryDTO;
+import com.nextech.erp.factory.MailResponseRequestFactory;
 import com.nextech.erp.newDTO.ClientDTO;
 import com.nextech.erp.newDTO.NotificationDTO;
 import com.nextech.erp.newDTO.ProductOrderAssociationDTO;
@@ -287,35 +288,24 @@ public class ProductorderController {
 	    response.setContentType("application/pdf");
 	    response.setHeader("Content-disposition", "attachment; filename="+ fileName);
 	    try {
-	    	ProductOrderPdf ceCreatePDFProductOrder = new ProductOrderPdf();
-	    	ceCreatePDFProductOrder.createPDF(temperotyFilePath+"\\"+fileName,productOrderDTO,productOrderDatas,client);
+	    	ProductOrderPdf createPDFProductOrder = new ProductOrderPdf();
+	    	createPDFProductOrder.createPDF(temperotyFilePath+"\\"+fileName,productOrderDTO,productOrderDatas,client);
 	 
 	       String productOrderPdfFile =    PDFToByteArrayOutputStreamUtil.convertPDFToByteArrayOutputStream(temperotyFilePath+"\\"+fileName);
 	 	   StatusDTO status = statusService.getStatusById(productOrderDTO.getStatusId().getId());
 		   NotificationDTO notificationDTO = notificationService.getNotifiactionByStatus(status.getId());
-	       mailSending(notificationDTO, productOrderDatas, client, productOrderPdfFile, productOrderDTO);
+		   emailNotificationProductOrder(notificationDTO, productOrderDatas, client, productOrderPdfFile, productOrderDTO);
 	    } catch (Exception e1) {
 	        e1.printStackTrace();
 	    }
 	}
 	
-	private void mailSending(NotificationDTO notification,List<ProductOrderData> productOrderDatas,ClientDTO client,String fileName,ProductOrderDTO productOrderDTO) throws Exception{
-	Mail mail =  userService.emailNotification(notification); 
-	 String userEmailCC = mail.getMailCc()+","+client.getEmailId();
+	private void emailNotificationProductOrder(NotificationDTO notification,List<ProductOrderData> productOrderDatas,ClientDTO client,String fileName,ProductOrderDTO productOrderDTO) throws Exception{
+		 Mail mail = mailService.setMailCCBCCAndTO(notification);
+	    String userEmailCC = mail.getMailCc()+","+client.getEmailId();
 	    mail.setMailCc(userEmailCC);
 	    mail.setAttachment(fileName);
-		mail.setMailSubject(notification.getSubject());
-        Map < String, Object > model = new HashMap < String, Object >();
-        mail.setAttachment(fileName);
-        model.put("companyName", client.getCompanyName());
-        model.put("mailfrom", notification.getName());
-        model.put("location", "Pune");
-        model.put("productOrderDatas",productOrderDatas);
-        model.put("invoiceNumber",productOrderDTO.getInvoiceNo());
-        model.put("date",productOrderDTO.getCreatedDate());
-        model.put("address", client.getAddress());
-        model.put("signature", "www.NextechServices.in");
-        mail.setModel(model);
+        mail.setModel(MailResponseRequestFactory.setMailDetailsProductOrder(notification, productOrderDatas, client, productOrderDTO));
         mailService.sendEmail(mail,notification);
 	}
 }

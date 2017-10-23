@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.naming.AuthenticationException;
 import javax.persistence.PersistenceException;
@@ -14,7 +13,6 @@ import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 
 import org.apache.log4j.Logger;
-import org.apache.log4j.pattern.LogEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
@@ -28,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.dto.Mail;
+import com.nextech.erp.factory.MailResponseRequestFactory;
 import com.nextech.erp.factory.UserFactory;
 import com.nextech.erp.filter.TokenFactory;
 import com.nextech.erp.model.Authorization;
@@ -68,26 +67,26 @@ public class UserController {
 
 	@Autowired
 	UsertypepageassociationService usertypepageassociationService;
-	
+
 	@Autowired
 	NotificationUserAssociationService notificationUserAssService;
 
 	@Autowired
 	NotificationService notificationService;
-	
+
 	@Autowired
 	ReportusertypeassociationService reportusertypeassociationService;
 
 	@Autowired
 	MailService mailService;
-	
+
 	@Autowired
-	
 	static Logger logger = Logger.getLogger(UserController.class);
-	
+
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus addUser(@Valid @RequestBody UserDTO userDTO,
-			BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
+	public @ResponseBody UserStatus addUser(
+			@Valid @RequestBody UserDTO userDTO, BindingResult bindingResult,
+			HttpServletRequest request, HttpServletResponse response) {
 		try {
 			if (bindingResult.hasErrors()) {
 				return new UserStatus(0, bindingResult.getFieldError()
@@ -111,14 +110,19 @@ public class UserController {
 							ERPConstants.CONTACT_NUMBER_EXISTS, null, null));
 				}
 				User user = UserFactory.setUser(userDTO, request);
-				user.setPassword(new EncryptDecrypt().encrypt(userDTO.getPassword()));
-				user.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-			   userservice.addEntity(user);
-			   
-	            NotificationDTO  notificationDTO = notificationService.getNotificationByCode((messageSource.getMessage(ERPConstants.USER_ADD_NOTIFICATION, null, null)));
-	            emailNotificationUser(userDTO, request, response,notificationDTO);
-	            
-			return new UserStatus(1, "User added Successfully !");
+				user.setPassword(new EncryptDecrypt().encrypt(userDTO
+						.getPassword()));
+				user.setCreatedBy(Long.parseLong(request.getAttribute(
+						"current_user").toString()));
+				userservice.addEntity(user);
+
+				NotificationDTO notificationDTO = notificationService
+						.getNotificationByCode((messageSource.getMessage(
+								ERPConstants.USER_ADD_NOTIFICATION, null, null)));
+				emailNotificationUser(userDTO, request, response,
+						notificationDTO);
+
+				return new UserStatus(1, "User added Successfully !");
 			} else {
 				new UserStatus(0, "User is not authenticated.");
 			}
@@ -145,9 +149,10 @@ public class UserController {
 	public UserStatus login(@RequestBody User user, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 		User user2 = userservice.getUserByUserId(user.getUserid());
-		
+
 		try {
-		logger.error(messageSource.getMessage(ERPConstants.COUNT,null, null));
+			logger.error(messageSource.getMessage(ERPConstants.COUNT, null,
+					null));
 			if (user2 != null && authenticate(user, user2)) {
 				Authorization authorization = new Authorization();
 				authorization.setUserid(user.getUserid());
@@ -156,33 +161,35 @@ public class UserController {
 				String token = TokenFactory.createAccessJwtToken(user2);
 				authorization.setToken(token);
 				response.addHeader("auth_token", token);
-				Usertype usertype = userTypeService.getEntityById(Usertype.class, user2.getUsertype().getId());
+				Usertype usertype = userTypeService.getEntityById(
+						Usertype.class, user2.getUsertype().getId());
 				List<UserTypePageAssoDTO> usertypepageassociations = usertypepageassociationService
 						.getPagesByUsertype(usertype.getId());
-				List<Reportusertypeassociation> reportusertypeassociations = reportusertypeassociationService.getReportByUsertype(usertype.getId());
+				List<Reportusertypeassociation> reportusertypeassociations = reportusertypeassociationService
+						.getReportByUsertype(usertype.getId());
 				HashMap<String, Object> result = new HashMap<String, Object>();
 				List<Page> pages = new ArrayList<Page>();
 				List<Report> reports = new ArrayList<Report>();
-				if(!reportusertypeassociations.isEmpty()){
+				if (!reportusertypeassociations.isEmpty()) {
 					for (Reportusertypeassociation reportusertypeassociation : reportusertypeassociations) {
 						reports.add(reportusertypeassociation.getReport());
 					}
 					result.put("reports", reports);
 				}
-				if(!usertypepageassociations.isEmpty()){
-				for (UserTypePageAssoDTO usertypepageassociation : usertypepageassociations) {
-					Page pageDTO =  new Page();
-					pageDTO.setId(usertypepageassociation.getPage().getId());
-					pageDTO.setMenu(usertypepageassociation.getPage().getMenu());
-					pageDTO.setPageName(usertypepageassociation.getPage().getPageName());
-					pageDTO.setSubmenu(usertypepageassociation.getPage().getSubmenu());
-					pageDTO.setUrl(usertypepageassociation.getPage().getUrl());
-					pages.add(pageDTO);
+				if (!usertypepageassociations.isEmpty()) {
+					for (UserTypePageAssoDTO usertypepageassociation : usertypepageassociations) {
+						Page pageDTO = new Page();
+						pageDTO.setId(usertypepageassociation.getPage().getId());
+						pageDTO.setMenu(usertypepageassociation.getPage().getMenu());
+						pageDTO.setPageName(usertypepageassociation.getPage().getPageName());
+						pageDTO.setSubmenu(usertypepageassociation.getPage().getSubmenu());
+						pageDTO.setUrl(usertypepageassociation.getPage().getUrl());
+						pages.add(pageDTO);
+					}
+					result.put("pages", pages);
 				}
-				result.put("pages", pages);
-				}
-				String success = user.getUserid()+" logged in Successfully";
-				return new UserStatus(1, success, result,user2);
+				String success = user.getUserid() + " logged in Successfully";
+				return new UserStatus(1, success, result, user2);
 			}
 		} catch (AuthenticationException authException) {
 			return new UserStatus(0, authException.getCause().getMessage());
@@ -191,10 +198,10 @@ public class UserController {
 			e.printStackTrace();
 			return new UserStatus(0, e.getCause().getMessage());
 		}
-		if(user2==null){
-			return new UserStatus(0,"Please enetr correct userId");
-		}else if(!user.getPassword().equals(user2.getPassword())){
-			return  new UserStatus(0,"Please enetr correct password");
+		if (user2 == null) {
+			return new UserStatus(0, "Please enetr correct userId");
+		} else if (!user.getPassword().equals(user2.getPassword())) {
+			return new UserStatus(0, "Please enetr correct password");
 		}
 		return new UserStatus(0, "Please enter correct credentials");
 
@@ -202,52 +209,54 @@ public class UserController {
 
 	private boolean authenticate(User formUser, User dbUser) {
 		EncryptDecrypt encDec = new EncryptDecrypt();
-		//TODO NIKHIL- Do not trim of make checking case insensitive. 
+		// TODO NIKHIL- Do not trim of make checking case insensitive.
 		String pass = encDec.decrypt(dbUser.getPassword());
-		boolean password =formUser.getPassword().equals(pass);
-		if(password==true){
+		boolean password = formUser.getPassword().equals(pass);
+		if (password == true) {
 			return true;
-		} 	
-		else {
+		} else {
 			return false;
 		}
 	}
-	
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody Response getUser(@PathVariable("id") long id) {
 		UserDTO userDTO = null;
 		try {
 			userDTO = userservice.getUserDTO(id);
-			if(userDTO==null){
+			if (userDTO == null) {
 				logger.error("There is no any user");
-				return  new Response(1,"There is no any user");
+				return new Response(1, "There is no any user");
 			}
 		} catch (Exception e) {
 			logger.error("Exception in user");
 			e.printStackTrace();
 		}
-		return new Response(1,userDTO);
+		return new Response(1, userDTO);
 	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
-	public @ResponseBody UserStatus updateUser(@RequestBody UserDTO userDTO,HttpServletRequest request,HttpServletResponse response) {
+	public @ResponseBody UserStatus updateUser(@RequestBody UserDTO userDTO,
+			HttpServletRequest request, HttpServletResponse response) {
 		try {
-			User oldUserInfo = userservice.getEntityById(User.class, userDTO.getId());
-			if(userDTO.getUserId().equals(oldUserInfo.getUserid())){  
-			} else { 
+			User oldUserInfo = userservice.getEntityById(User.class,
+					userDTO.getId());
+			if (userDTO.getUserId().equals(oldUserInfo.getUserid())) {
+			} else {
 				if (userservice.getUserByUserId(userDTO.getUserId()) == null) {
-			    }else{  
-				return new UserStatus(2, messageSource.getMessage(ERPConstants.USER_ID, null, null));
+				} else {
+					return new UserStatus(2, messageSource.getMessage(
+							ERPConstants.USER_ID, null, null));
 				}
-			 }
-            if(userDTO.getEmailId().equals(oldUserInfo.getEmail())){  
-			} else { 
+			}
+			if (userDTO.getEmailId().equals(oldUserInfo.getEmail())) {
+			} else {
 				if (userservice.getUserByEmail(userDTO.getEmailId()) == null) {
-			    }else{  
-				return new UserStatus(2, messageSource.getMessage(ERPConstants.EMAIL_ALREADY_EXIT, null, null));
+				} else {
+					return new UserStatus(2, messageSource.getMessage(
+							ERPConstants.EMAIL_ALREADY_EXIT, null, null));
 				}
-			 }           
+			}
 			if (userDTO.getMobileNo().equals(oldUserInfo.getMobile())) {
 			} else {
 				if (userservice.getUserByMobile(userDTO.getMobileNo()) == null) {
@@ -257,74 +266,67 @@ public class UserController {
 				}
 			}
 			User user = UserFactory.setUserUpdate(userDTO, request);
-			if(userDTO.getPassword().equals(oldUserInfo.getPassword())){
+			if (userDTO.getPassword().equals(oldUserInfo.getPassword())) {
 				user.setPassword(userDTO.getPassword());
-				 EncryptDecrypt encDec = new EncryptDecrypt();
-					String pass = encDec.decrypt(userDTO.getPassword());
-					userDTO.setPassword(pass); 
-				
-			}else{
-			    user.setPassword(new com.nextech.erp.util.EncryptDecrypt().encrypt(userDTO.getPassword()));
-			    EncryptDecrypt encDec = new EncryptDecrypt();
+				EncryptDecrypt encDec = new EncryptDecrypt();
+				String pass = encDec.decrypt(userDTO.getPassword());
+				userDTO.setPassword(pass);
+
+			} else {
+				user.setPassword(new com.nextech.erp.util.EncryptDecrypt().encrypt(userDTO.getPassword()));
+				EncryptDecrypt encDec = new EncryptDecrypt();
 				String pass = encDec.decrypt(user.getPassword());
-				userDTO.setPassword(pass); 
+				userDTO.setPassword(pass);
 			}
-	     	userservice.updateEntity(user);
-            NotificationDTO  notificationDTO = notificationService.getNotificationByCode((messageSource.getMessage(ERPConstants.USER_UPDATE_NOTIFICATION, null, null)));
-           
-            emailNotificationUser(userDTO, request, response, notificationDTO);
-		   
-		return new UserStatus(1, "User update Successfully !");
+			userservice.updateEntity(user);
+			NotificationDTO notificationDTO = notificationService.getNotificationByCode((messageSource.getMessage(ERPConstants.USER_UPDATE_NOTIFICATION, null, null)));
+			emailNotificationUser(userDTO, request, response, notificationDTO);
+			return new UserStatus(1, "User update Successfully !");
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new UserStatus(0, e.toString());
 		}
 	}
-	
+
 	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody Response getUser() {
 
 		List<UserDTO> userList = null;
 		try {
 			userList = userservice.getUserList(userList);
-			
-			if(userList==null){
+			if (userList == null) {
 				logger.info("there is no any user list");
-				return new Response(1,"There is no any user list");
+				return new Response(1, "There is no any user list");
 			}
 		} catch (Exception e) {
 			logger.info("Exception in user list");
 			e.printStackTrace();
 		}
-
-		return new Response(1,userList);
+		return new Response(1, userList);
 	}
 
 	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
 	public @ResponseBody Response deleteEmployee(@PathVariable("id") long id) {
 
 		try {
-			 UserDTO user =userservice.deleteUser(id);
-			 if (user==null) {
-				 logger.info("there is no any user for delete");
-				 return new Response(1,"There is no any user for delete");
+			UserDTO user = userservice.deleteUser(id);
+			if (user == null) {
+				logger.info("there is no any user for delete");
+				return new Response(1, "There is no any user for delete");
 			}
 			return new Response(1, "User deleted Successfully !");
 		} catch (Exception e) {
 			return new Response(0, e.toString());
 		}
-
-	}
-	private void emailNotificationUser(UserDTO userDTO,HttpServletRequest request,HttpServletResponse response,NotificationDTO  notificationDTO) throws NumberFormatException, Exception{
-        Mail mail =  mailService.setMailDetails(userDTO.getFirstName(), userDTO.getLastName(), userDTO.getEmailId(), notificationDTO);
-         String userEmailTo = mail.getMailTo()+","+userDTO.getEmailId();
-                mail.setMailTo(userEmailTo);
-		        Map < String, Object > model = new HashMap < String, Object > ();
-		        model.put("userId", userDTO.getUserId());
-		        model.put("password", userDTO.getPassword());
-		        model.putAll(mail.getModel());
-		        mail.setModel(model);
-		        mailService.sendEmailWithoutPdF(mail, notificationDTO);
 	}
 
+	private void emailNotificationUser(UserDTO userDTO,HttpServletRequest request, HttpServletResponse response,NotificationDTO notificationDTO) throws NumberFormatException,Exception {
+		Mail mail = mailService.setMailCCBCCAndTO(notificationDTO);
+		String mailSubject  = mailService.getSubject(notificationDTO);
+		String userEmailTo = mail.getMailTo() + "," + userDTO.getEmailId();
+		mail.setMailSubject(mailSubject);
+		mail.setMailTo(userEmailTo);
+		mail.setModel(MailResponseRequestFactory.setMailDetailsUser(userDTO));
+		mailService.sendEmailWithoutPdF(mail, notificationDTO);
+	}
 }
