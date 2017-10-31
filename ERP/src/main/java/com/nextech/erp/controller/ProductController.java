@@ -100,15 +100,12 @@ public class ProductController {
 			@RequestParam("partNumber") String partNumber,@RequestParam("cgst") double cgst,@RequestParam("igst") double igst,
 			@RequestParam("other1") double other1,@RequestParam("other2") double other2,@RequestParam("sgst") double sgst) {
 		try {
-			if (productService.getProductByName(name) == null) {
-
-			} else {
+			if (productService.getProductByName(name) != null) {
 				return new UserStatus(0, messageSource.getMessage(ERPConstants.PRODUCT_NAME, null, null));
-			}
-			if (productService.getProductByPartNumber(partNumber) == null) {
-			} else {
+			} 
+			if (productService.getProductByPartNumber(partNumber) != null) {
 				return new UserStatus(0, messageSource.getMessage(ERPConstants.PART_NUMBER, null, null));
-			}
+			} 
 			if(inputFile==null){
 			    ProductDTO productDTO =	setProductDTO(clientPartNumber, name, description, partNumber);
 			  //TODO Save call Tax Structure
@@ -176,17 +173,14 @@ public class ProductController {
 		try {
 			ProductDTO oldProductInfo = productService.getProductDTO(id);
 			if(name.equals(oldProductInfo.getName())){ 	
-				} else { 
-					if (productService.getProductByName(name) == null) {
-				    }else{  
-				    	return new UserStatus(0, messageSource.getMessage(ERPConstants.PRODUCT_NAME, null, null));
-					}
+			    if (productService.getProductByName(name) != null) {
+						return new UserStatus(0, messageSource.getMessage(ERPConstants.PRODUCT_NAME, null, null));
+				    }
 				 }
 	            if(partNumber.equals(oldProductInfo.getPartNumber())){  			
-				} else { if (productService.getProductByPartNumber(partNumber) == null) {
-				    }else{  
-				    	return new UserStatus(0, messageSource.getMessage(ERPConstants.PART_NUMBER, null, null));
-					}
+			         if (productService.getProductByPartNumber(partNumber) != null) {
+					return new UserStatus(0, messageSource.getMessage(ERPConstants.PART_NUMBER, null, null));
+				    }
 				 }
 	    		if(inputFile==null){
 				    ProductDTO productDTO =	setProductDTO(clientPartNumber, name, description, partNumber);
@@ -208,7 +202,7 @@ public class ProductController {
 					productDTO.setDesign(destinationFilePath);
 					productService.updateEntity(ProductRequestResponseFactory.setProductUpdate(productDTO, request));
 				}
-			return new UserStatus(1, "product added Successfully !");
+			return new UserStatus(1, "product update Successfully !");
 		} catch (ConstraintViolationException cve) {
 			logger.error("Inside ConstraintViolationException");
 			cve.printStackTrace();

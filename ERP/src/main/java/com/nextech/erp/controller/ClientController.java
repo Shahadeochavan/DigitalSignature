@@ -66,18 +66,15 @@ public class ClientController {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
-			if (clientService.getClientByCompanyName(clientDTO.getCompanyName()) == null) {
-			} else {
+			if (clientService.getClientByCompanyName(clientDTO.getCompanyName()) != null) {
 				return new UserStatus(2, messageSource.getMessage(ERPConstants.COMPANY_NAME_EXIT, null, null));
-			}
-			
-			if (clientService.getClientByEmail(clientDTO.getEmailId()) == null) {
-			} else {
+			} 
+			if (clientService.getClientByEmail(clientDTO.getEmailId()) != null) {
 				return new UserStatus(2, messageSource.getMessage(ERPConstants.EMAIL_ALREADY_EXIT, null, null));
 			}
-		    	 clientService.addEntity(ClientFactory.setClient(clientDTO, request));
-	             NotificationDTO  notificationDTO = notificationService.getNotificationByCode((messageSource.getMessage(ERPConstants.CLIENT_ADDED_SUCCESSFULLY, null, null)));
-		          mailSending(clientDTO,notificationDTO);
+		     clientService.addEntity(ClientFactory.setClient(clientDTO, request));
+	           NotificationDTO  notificationDTO = notificationService.getNotificationByCode((messageSource.getMessage(ERPConstants.CLIENT_ADDED_SUCCESSFULLY, null, null)));
+		       mailSending(clientDTO,notificationDTO);
 			     return new UserStatus(1, messageSource.getMessage(ERPConstants.CLIENT_ADDED, null, null));
 		} catch (ConstraintViolationException cve) {
 			cve.printStackTrace();
@@ -114,18 +111,13 @@ public class ClientController {
 			HttpServletRequest request, HttpServletResponse response) {
 		try {
 			ClientDTO oldClientInfo = clientService.getClientDTOById(clientDTO.getId());
-			System.out.println(oldClientInfo);
 			if(clientDTO.getCompanyName().equals(oldClientInfo.getCompanyName())){  	
-			} else { 
-				if (clientService.getClientByCompanyName(clientDTO.getCompanyName()) == null) {
-			    }else{  
+				if (clientService.getClientByCompanyName(clientDTO.getCompanyName()) != null) {
 				return new UserStatus(2, messageSource.getMessage(ERPConstants.COMPANY_NAME_EXIT, null, null));
 				}
 			 }
             if(clientDTO.getEmailId().equals(oldClientInfo.getEmailId())){  			
-			} else { 
-				if (clientService.getClientByEmail(clientDTO.getEmailId()) == null) {
-			    }else{  
+				if (clientService.getClientByEmail(clientDTO.getEmailId()) != null) {
 				return new UserStatus(2, messageSource.getMessage(ERPConstants.EMAIL_ALREADY_EXIT, null, null));
 				}
 			 }

@@ -69,16 +69,12 @@ public class VendorController {
 						.getDefaultMessage());
 			}
 
-			if (vendorService.getVendorByCompanyName(vendorDTO.getCompanyName()) == null) {
-   
-			} else {
+			if (vendorService.getVendorByCompanyName(vendorDTO.getCompanyName()) != null) {
 				return new UserStatus(2, messageSource.getMessage(ERPConstants.COMPANY_NAME_EXIT, null, null));
 			}
-			if (vendorService.getVendorByEmail(vendorDTO.getEmail()) == null) {
-			} else {
+			if (vendorService.getVendorByEmail(vendorDTO.getEmail()) != null) {
 				return new UserStatus(2,messageSource.getMessage(ERPConstants.EMAIL_ALREADY_EXIT, null, null));
-			}
-              
+			} 
               vendorService.addEntity(VendorFactory.setVendor(vendorDTO, request));
               NotificationDTO  notificationDTO = notificationService.getNotificationByCode((messageSource.getMessage(ERPConstants.VENDOR_ADDED_SUCCESSFULLY, null, null)));
               emailNotificationVendor(vendorDTO, notificationDTO);
@@ -117,17 +113,13 @@ public class VendorController {
 	public @ResponseBody UserStatus updateVendor(@RequestBody VendorDTO vendorDTO,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			VendorDTO oldVendorInfo = vendorService.getVendorById(vendorDTO.getId());
-			if(vendorDTO.getCompanyName().equals(oldVendorInfo.getCompanyName())){  	
-			} else { 
-				if (vendorService.getVendorByCompanyName(vendorDTO.getCompanyName()) == null) {
-			    }else{  
+			if(vendorDTO.getCompanyName().equals(oldVendorInfo.getCompanyName())){ 
+				if (vendorService.getVendorByCompanyName(vendorDTO.getCompanyName()) != null) {
 				return new UserStatus(2, messageSource.getMessage(ERPConstants.COMPANY_NAME_EXIT, null, null));
 				}
 			 }
             if(vendorDTO.getEmail().equals(oldVendorInfo.getEmail())){  	
-			} else { 
-				if (vendorService.getVendorByEmail(vendorDTO.getEmail()) == null) {
-			    }else{  
+				if (vendorService.getVendorByEmail(vendorDTO.getEmail()) != null) {
 				return new UserStatus(2, messageSource.getMessage(ERPConstants.EMAIL_ALREADY_EXIT, null, null));
 				}
 			 }
