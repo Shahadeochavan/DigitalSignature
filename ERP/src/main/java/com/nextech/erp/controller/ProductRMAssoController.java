@@ -79,13 +79,10 @@ public class ProductRMAssoController {
 			if (bindingResult.hasErrors()) {
 				return new UserStatus(0, bindingResult.getFieldError().getDefaultMessage());
 			}
-			if (productRMAssoService.getPRMAssociationByPidRmid(
-					productRMAssociationDTO.getProduct(),
-					productRMAssociationDTO.getRawmaterialId().getId()) == null){
-				productRMAssoService.addEntity(ProductRMAssoRequestResponseFactory.setProductRMAsso(productRMAssociationDTO, request));
+			if (productRMAssoService.getPRMAssociationByPidRmid(productRMAssociationDTO.getProduct(),productRMAssociationDTO.getRawmaterialId().getId()) != null){
+				return new UserStatus(1,messageSource.getMessage(ERPConstants.PRODUCT_RM_ASSO_SHOULD_BE_UNIQUE, null, null));
 			}
-			else
-				return new UserStatus(1,messageSource.getMessage(ERPConstants.PRODUCT_RM_ASSO_EXIT, null, null));
+			productRMAssoService.addEntity(ProductRMAssoRequestResponseFactory.setProductRMAsso(productRMAssociationDTO, request));
 			return new UserStatus(1,"Productrawmaterialassociation added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			logger.error("Inside ConstraintViolationException");

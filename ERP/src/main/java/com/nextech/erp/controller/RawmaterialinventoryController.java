@@ -75,11 +75,10 @@ public class RawmaterialinventoryController {
 			if (bindingResult.hasErrors()) {
 				return new UserStatus(0, bindingResult.getFieldError().getDefaultMessage());
 			}
-			if(rawmaterialinventoryService.getByRMId(rmInventoryDTO.getRawmaterialId().getId())==null){
-				rawmaterialinventoryService.addEntity(RMInventoryRequestResponseFactory.setRMInventory(rmInventoryDTO, request));
-			}
-			else
+			if(rawmaterialinventoryService.getByRMId(rmInventoryDTO.getRawmaterialId().getId())!=null){
 				return new UserStatus(0, messageSource.getMessage(ERPConstants.RAW_MATERIAL_INVENTORY, null, null));
+			}
+			rawmaterialinventoryService.addEntity(RMInventoryRequestResponseFactory.setRMInventory(rmInventoryDTO, request));
 			return new UserStatus(1, "Rawmaterialinventory added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			logger.error("Inside ConstraintViolationException");

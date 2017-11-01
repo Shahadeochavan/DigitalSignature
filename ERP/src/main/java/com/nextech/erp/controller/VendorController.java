@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.dto.Mail;
+import com.nextech.erp.exceptions.DuplicateEnteryException;
 import com.nextech.erp.factory.MailResponseRequestFactory;
 import com.nextech.erp.factory.VendorFactory;
 import com.nextech.erp.newDTO.NotificationDTO;
@@ -61,7 +62,7 @@ public class VendorController {
 	
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addVendor(Model model,
-			@Valid @RequestBody VendorDTO  vendorDTO, BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
+			@Valid @RequestBody VendorDTO  vendorDTO, BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) throws DuplicateEnteryException {
 		try {
 			if (bindingResult.hasErrors()) {
 				model.addAttribute("vendor", vendorDTO);
@@ -70,10 +71,10 @@ public class VendorController {
 			}
 
 			if (vendorService.getVendorByCompanyName(vendorDTO.getCompanyName()) != null) {
-				return new UserStatus(2, messageSource.getMessage(ERPConstants.COMPANY_NAME_EXIT, null, null));
+				return new UserStatus(2, messageSource.getMessage(ERPConstants.COMPANY_NAME_SHOULD_BE_UNIQUE, null, null));
 			}
 			if (vendorService.getVendorByEmail(vendorDTO.getEmail()) != null) {
-				return new UserStatus(2,messageSource.getMessage(ERPConstants.EMAIL_ALREADY_EXIT, null, null));
+				return new UserStatus(2,messageSource.getMessage(ERPConstants.EMAIL_SHOULD_BE_UNIQUE, null, null));
 			} 
               vendorService.addEntity(VendorFactory.setVendor(vendorDTO, request));
               NotificationDTO  notificationDTO = notificationService.getNotificationByCode((messageSource.getMessage(ERPConstants.VENDOR_ADDED_SUCCESSFULLY, null, null)));
@@ -81,8 +82,8 @@ public class VendorController {
 			return new UserStatus(1, "vendor added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			logger.info("Inside ConstraintViolationException ");
-			cve.printStackTrace();
-			return new UserStatus(0, cve.getCause().getMessage());
+			throw new DuplicateEnteryException("ConstraintViolationException");
+			//return new UserStatus(0, cve.getCause().getMessage());
 		} catch (PersistenceException pe) {
 			logger.info("Inside PersistenceException ");
 			pe.printStackTrace();
@@ -113,14 +114,14 @@ public class VendorController {
 	public @ResponseBody UserStatus updateVendor(@RequestBody VendorDTO vendorDTO,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			VendorDTO oldVendorInfo = vendorService.getVendorById(vendorDTO.getId());
-			if(vendorDTO.getCompanyName().equals(oldVendorInfo.getCompanyName())){ 
+			if(!vendorDTO.getCompanyName().equals(oldVendorInfo.getCompanyName())){ 
 				if (vendorService.getVendorByCompanyName(vendorDTO.getCompanyName()) != null) {
-				return new UserStatus(2, messageSource.getMessage(ERPConstants.COMPANY_NAME_EXIT, null, null));
+				return new UserStatus(2, messageSource.getMessage(ERPConstants.COMPANY_NAME_SHOULD_BE_UNIQUE, null, null));
 				}
 			 }
-            if(vendorDTO.getEmail().equals(oldVendorInfo.getEmail())){  	
+            if(!vendorDTO.getEmail().equals(oldVendorInfo.getEmail())){  	
 				if (vendorService.getVendorByEmail(vendorDTO.getEmail()) != null) {
-				return new UserStatus(2, messageSource.getMessage(ERPConstants.EMAIL_ALREADY_EXIT, null, null));
+				return new UserStatus(2, messageSource.getMessage(ERPConstants.EMAIL_SHOULD_BE_UNIQUE, null, null));
 				}
 			 }
             vendorService.updateEntity( VendorFactory.setVendor(vendorDTO, request));

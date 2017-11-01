@@ -67,10 +67,10 @@ public class ClientController {
 						.getDefaultMessage());
 			}
 			if (clientService.getClientByCompanyName(clientDTO.getCompanyName()) != null) {
-				return new UserStatus(2, messageSource.getMessage(ERPConstants.COMPANY_NAME_EXIT, null, null));
+				return new UserStatus(2, messageSource.getMessage(ERPConstants.COMPANY_NAME_SHOULD_BE_UNIQUE, null, null));
 			} 
 			if (clientService.getClientByEmail(clientDTO.getEmailId()) != null) {
-				return new UserStatus(2, messageSource.getMessage(ERPConstants.EMAIL_ALREADY_EXIT, null, null));
+				return new UserStatus(2, messageSource.getMessage(ERPConstants.EMAIL_SHOULD_BE_UNIQUE, null, null));
 			}
 		     clientService.addEntity(ClientFactory.setClient(clientDTO, request));
 	           NotificationDTO  notificationDTO = notificationService.getNotificationByCode((messageSource.getMessage(ERPConstants.CLIENT_ADDED_SUCCESSFULLY, null, null)));
@@ -111,14 +111,14 @@ public class ClientController {
 			HttpServletRequest request, HttpServletResponse response) {
 		try {
 			ClientDTO oldClientInfo = clientService.getClientDTOById(clientDTO.getId());
-			if(clientDTO.getCompanyName().equals(oldClientInfo.getCompanyName())){  	
+			if(!clientDTO.getCompanyName().equals(oldClientInfo.getCompanyName())){  	
 				if (clientService.getClientByCompanyName(clientDTO.getCompanyName()) != null) {
-				return new UserStatus(2, messageSource.getMessage(ERPConstants.COMPANY_NAME_EXIT, null, null));
+				return new UserStatus(2, messageSource.getMessage(ERPConstants.COMPANY_NAME_SHOULD_BE_UNIQUE, null, null));
 				}
 			 }
-            if(clientDTO.getEmailId().equals(oldClientInfo.getEmailId())){  			
+            if(!clientDTO.getEmailId().equals(oldClientInfo.getEmailId())){  			
 				if (clientService.getClientByEmail(clientDTO.getEmailId()) != null) {
-				return new UserStatus(2, messageSource.getMessage(ERPConstants.EMAIL_ALREADY_EXIT, null, null));
+				return new UserStatus(2, messageSource.getMessage(ERPConstants.EMAIL_SHOULD_BE_UNIQUE, null, null));
 				}
 			 }
 	    	clientService.updateEntity(ClientFactory.setClientUpdate(clientDTO, request));

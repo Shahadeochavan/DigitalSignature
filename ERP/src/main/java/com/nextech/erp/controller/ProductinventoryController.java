@@ -75,13 +75,10 @@ public class ProductinventoryController {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
-			if (productinventoryService.getProductinventoryByProductId(
-					productInventoryDTO.getProductId().getId()) == null){
-				productinventoryService.addEntity(ProductInventoryRequestResponseFactory.setProductInventory(productInventoryDTO, request));
-			}	
-			else
+			if (productinventoryService.getProductinventoryByProductId(productInventoryDTO.getProductId().getId()) != null){
 				return new UserStatus(0, messageSource.getMessage(ERPConstants.PRODUCT_INVENTORY_ASSO_EXIT, null, null));
-			
+			}
+			productinventoryService.addEntity(ProductInventoryRequestResponseFactory.setProductInventory(productInventoryDTO, request));
 			return new UserStatus(1, "Productinventory added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			logger.error("Inside ConstraintViolationException");

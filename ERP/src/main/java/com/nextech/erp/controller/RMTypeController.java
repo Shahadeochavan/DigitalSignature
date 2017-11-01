@@ -42,12 +42,10 @@ public class RMTypeController {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
-			if(rmTypeService.getRMTypeByRMTypeName(rmTypeDTO.getRmTypeName())==null){
-				rmTypeService.addEntity(RMTypeRequestResponseFactory.setRMType(rmTypeDTO, request));
-			}else{
+			if(rmTypeService.getRMTypeByRMTypeName(rmTypeDTO.getRmTypeName())!=null){
 				return new UserStatus(2,"RM Type Name already exists");
 			}
-		
+			rmTypeService.addEntity(RMTypeRequestResponseFactory.setRMType(rmTypeDTO, request));
 			return new UserStatus(1, "RM Type added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			logger.error("Inside ConstraintViolationException");

@@ -49,13 +49,10 @@ public class StatustransitionController {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
-			if (statustransitionService
-					.getStatustransitionByEmail(statusTransitionDTO
-							.getIsNotificationEmail()) == null){
-				statustransitionService.addEntity(StatusTransitionRequestResponseFactory.setStatusTransitin(statusTransitionDTO, request));
+			if (statustransitionService.getStatustransitionByEmail(statusTransitionDTO.getIsNotificationEmail()) != null){
+				return new UserStatus(1, messageSource.getMessage(ERPConstants.EMAIL_SHOULD_BE_UNIQUE, null, null));
 			}
-			else
-				return new UserStatus(1, messageSource.getMessage(ERPConstants.EMAIL_ALREADY_EXIT, null, null));
+			statustransitionService.addEntity(StatusTransitionRequestResponseFactory.setStatusTransitin(statusTransitionDTO, request));
 			return new UserStatus(1, "Statustransition added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			logger.error("Inside ConstraintViolationException");

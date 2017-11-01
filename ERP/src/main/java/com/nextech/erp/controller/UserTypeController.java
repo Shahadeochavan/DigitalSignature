@@ -40,15 +40,14 @@ public class UserTypeController {
 			BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			if (bindingResult.hasErrors()) {
-				return new UserStatus(0, bindingResult.getFieldError()
-						.getDefaultMessage());
+				return new UserStatus(0, bindingResult.getFieldError().getDefaultMessage());
 			}
-			if(userTypeService.getUserTypeByUserTypeName(userTypeDTO.getUsertypeName())==null){
-				userTypeService.addEntity(UserTypeFactory.setUserType(userTypeDTO, request));
-			}else{
+			
+			if(userTypeService.getUserTypeByUserTypeName(userTypeDTO.getUsertypeName())!=null){
 				return new UserStatus(2,"User Type name already exist");
 			}
-		
+			
+			userTypeService.addEntity(UserTypeFactory.setUserType(userTypeDTO, request));
 			return new UserStatus(1, "Usertype added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			logger.error("Inside ConstraintViolationException");
@@ -83,15 +82,15 @@ public class UserTypeController {
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
 	public @ResponseBody UserStatus updateUserType(@RequestBody UserTypeDTO userTypeDTO,HttpServletRequest request,HttpServletResponse response) {
 		try {
+			
 			Usertype oldUserInfo = userTypeService.getEntityById(Usertype.class, userTypeDTO.getId());
-			if(userTypeDTO.getUsertypeName().equals(oldUserInfo.getUsertypeName())){  
-			} else { 
-				if (userTypeService.getUserTypeByUserTypeName(userTypeDTO.getUsertypeName()) == null) {
-			    }else{  
+			if(!userTypeDTO.getUsertypeName().equals(oldUserInfo.getUsertypeName())){  
+				if (userTypeService.getUserTypeByUserTypeName(userTypeDTO.getUsertypeName()) != null) {
 				return new UserStatus(2, "User Type name already exit");
 				}
 			 }
-		userTypeService.updateEntity(UserTypeFactory.setUserTypeUpdate(userTypeDTO, request));
+			
+		     userTypeService.updateEntity(UserTypeFactory.setUserTypeUpdate(userTypeDTO, request));
 			return new UserStatus(1, "UserType update Successfully !");
 		} catch (Exception e) {
 			 e.printStackTrace();

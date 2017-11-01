@@ -93,34 +93,25 @@ public class UserController {
 						.getDefaultMessage());
 			}
 			if ((Boolean) request.getAttribute("auth_token")) {
-				if (userservice.getUserByUserId(userDTO.getUserId()) == null) {
-
-				} else {
-					return new UserStatus(2, messageSource.getMessage(
-							ERPConstants.USER_ID, null, null));
+				if (userservice.getUserByUserId(userDTO.getUserId()) != null) {
+					return new UserStatus(2, messageSource.getMessage(ERPConstants.USER_ID_SHOULD_BE_UNIQUE, null, null));
 				}
-				if (userservice.getUserByEmail(userDTO.getEmailId()) == null) {
-				} else {
-					return new UserStatus(2, messageSource.getMessage(
-							ERPConstants.EMAIL_ALREADY_EXIT, null, null));
+				
+				if (userservice.getUserByEmail(userDTO.getEmailId()) != null) {
+					return new UserStatus(2, messageSource.getMessage(ERPConstants.EMAIL_SHOULD_BE_UNIQUE, null, null));
 				}
+				
 				if (userservice.getUserByMobile(userDTO.getMobileNo()) == null) {
-				} else {
-					return new UserStatus(2, messageSource.getMessage(
-							ERPConstants.CONTACT_NUMBER_EXISTS, null, null));
+					return new UserStatus(2, messageSource.getMessage(ERPConstants.CONTACT_NUMBER_SHOULD_BE_UNIQUE, null, null));
 				}
+				
 				User user = UserFactory.setUser(userDTO, request);
-				user.setPassword(new EncryptDecrypt().encrypt(userDTO
-						.getPassword()));
-				user.setCreatedBy(Long.parseLong(request.getAttribute(
-						"current_user").toString()));
+				user.setPassword(new EncryptDecrypt().encrypt(userDTO.getPassword()));
+				user.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 				userservice.addEntity(user);
 
-				NotificationDTO notificationDTO = notificationService
-						.getNotificationByCode((messageSource.getMessage(
-								ERPConstants.USER_ADD_NOTIFICATION, null, null)));
-				emailNotificationUser(userDTO, request, response,
-						notificationDTO);
+				NotificationDTO notificationDTO = notificationService.getNotificationByCode((messageSource.getMessage(ERPConstants.USER_ADD_NOTIFICATION, null, null)));
+				emailNotificationUser(userDTO, request, response,notificationDTO);
 
 				return new UserStatus(1, "User added Successfully !");
 			} else {
@@ -239,30 +230,21 @@ public class UserController {
 	public @ResponseBody UserStatus updateUser(@RequestBody UserDTO userDTO,
 			HttpServletRequest request, HttpServletResponse response) {
 		try {
-			User oldUserInfo = userservice.getEntityById(User.class,
-					userDTO.getId());
-			if (userDTO.getUserId().equals(oldUserInfo.getUserid())) {
-			} else {
-				if (userservice.getUserByUserId(userDTO.getUserId()) == null) {
-				} else {
-					return new UserStatus(2, messageSource.getMessage(
-							ERPConstants.USER_ID, null, null));
-				}
-			}
-			if (userDTO.getEmailId().equals(oldUserInfo.getEmail())) {
-			} else {
-				if (userservice.getUserByEmail(userDTO.getEmailId()) == null) {
-				} else {
-					return new UserStatus(2, messageSource.getMessage(
-							ERPConstants.EMAIL_ALREADY_EXIT, null, null));
-				}
-			}
-			if (userDTO.getMobileNo().equals(oldUserInfo.getMobile())) {
-			} else {
-				if (userservice.getUserByMobile(userDTO.getMobileNo()) == null) {
-				} else {
-					return new UserStatus(2, messageSource.getMessage(
-							ERPConstants.CONTACT_NUMBER_EXISTS, null, null));
+			User oldUserInfo = userservice.getEntityById(User.class,userDTO.getId());
+			if (!userDTO.getUserId().equals(oldUserInfo.getUserid())) {
+				if (userservice.getUserByUserId(userDTO.getUserId()) != null) {
+					return new UserStatus(2, messageSource.getMessage(ERPConstants.USER_ID_SHOULD_BE_UNIQUE, null, null));
+				 }
+			 }
+			
+		    	if (!userDTO.getEmailId().equals(oldUserInfo.getEmail())) {
+				   if (userservice.getUserByEmail(userDTO.getEmailId()) != null) {
+					return new UserStatus(2, messageSource.getMessage(ERPConstants.EMAIL_SHOULD_BE_UNIQUE, null, null));
+				   }
+		    	}
+			if (!userDTO.getMobileNo().equals(oldUserInfo.getMobile())) {
+				if (userservice.getUserByMobile(userDTO.getMobileNo()) != null) {
+					return new UserStatus(2, messageSource.getMessage(ERPConstants.CONTACT_NUMBER_SHOULD_BE_UNIQUE, null, null));
 				}
 			}
 			User user = UserFactory.setUserUpdate(userDTO, request);
@@ -290,7 +272,6 @@ public class UserController {
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody Response getUser() {
-
 		List<UserDTO> userList = null;
 		try {
 			userList = userservice.getUserList(userList);
