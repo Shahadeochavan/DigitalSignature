@@ -112,7 +112,7 @@ public class DispatchServiceImpl extends CRUDServiceImpl<Dispatch> implements Di
 						Product product = productDao.getById(Product.class,productorderassociation.getProduct().getId());
 						Bom bom = bomDao.getBomByProductId(product.getId());
 						if(bom==null){
-							throw new BomProductNotExistException("Please create bom for this product");
+							return new Response("Please create bom for this product");
 						}else{
 						List<Bomrmvendorassociation> bomrmvendorassociations = bOMRMVendorAssociationDao.getBomRMVendorByBomId(bom.getId());
 						float totalCost = 0;
