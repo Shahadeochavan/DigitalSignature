@@ -1,4 +1,4 @@
-package com.nextech.erp.exceptions;
+package com.nextech.erp.exception;
 
 public class RMOrderInvoiceExistsException extends Exception {
 	
