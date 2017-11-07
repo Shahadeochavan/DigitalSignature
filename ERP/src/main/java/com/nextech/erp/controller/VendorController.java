@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.dto.Mail;
-import com.nextech.erp.exceptions.DuplicateEnteryException;
+import com.nextech.erp.exception.DuplicateEnteryException;
 import com.nextech.erp.factory.MailResponseRequestFactory;
 import com.nextech.erp.factory.VendorFactory;
 import com.nextech.erp.newDTO.NotificationDTO;
