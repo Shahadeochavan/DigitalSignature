@@ -70,10 +70,9 @@ public class UsertypepageassociationController {
 			}
 			}
 			}else{
-				return new UserStatus(2,"Please select page and click on add buuton");
+				return new UserStatus(2,"Please select page and click on add button");
 			}
-			return new UserStatus(1,
-					"User Type Page Association added uccessfully !");
+			return new UserStatus(1,"User Type Page Association added uccessfully !");
 		} catch (ConstraintViolationException cve) {
 			logger.error("Inside ConstraintViolationException");
 			cve.printStackTrace();

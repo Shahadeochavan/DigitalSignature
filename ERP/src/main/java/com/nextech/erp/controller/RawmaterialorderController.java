@@ -41,6 +41,7 @@ import com.nextech.erp.dto.RMInventoryDTO;
 import com.nextech.erp.dto.RMOrderModelData;
 import com.nextech.erp.dto.RMReqirementDTO;
 import com.nextech.erp.dto.RawmaterialOrderDTO;
+import com.nextech.erp.factory.MailResponseRequestFactory;
 import com.nextech.erp.factory.RMOrderRequestResponseFactory;
 import com.nextech.erp.model.Productinventory;
 import com.nextech.erp.model.Vendor;
@@ -299,32 +300,22 @@ public class RawmaterialorderController {
 	    	RMOrderPdf createPDF = new RMOrderPdf();
 	    	createPDF.createPDF(temperotyFilePath+"\\"+fileName,rawmaterialOrderDTO,rmOrderModelDatas,vendor);
 	    	
-	       String attachedfile =    PDFToByteArrayOutputStreamUtil.convertPDFToByteArrayOutputStream(temperotyFilePath+"\\"+fileName);
+	       String rmOrderPdffile =    PDFToByteArrayOutputStreamUtil.convertPDFToByteArrayOutputStream(temperotyFilePath+"\\"+fileName);
 			StatusDTO status = statusService.getStatusById(rawmaterialOrderDTO.getStatusId().getId());
 			NotificationDTO notification = notificationService.getNotifiactionByStatus(status.getId());
-	       mailSending(notification, rawmaterialOrderDTO, vendor, attachedfile, rmOrderModelDatas);
+			emailNotificationRMOrder(notification, rawmaterialOrderDTO, vendor, rmOrderPdffile, rmOrderModelDatas);
 	    } catch (Exception e1) {
 	        e1.printStackTrace();
 	    }
 	}
 	
-	private void mailSending(NotificationDTO notification,RawmaterialOrderDTO rawmaterialOrderDTO,VendorDTO vendor,String fileName,List<RMOrderModelData> rmOrderModelDatas) throws Exception{
-	Mail mail =  userService.emailNotification(notification);
+	private void emailNotificationRMOrder(NotificationDTO notification,RawmaterialOrderDTO rawmaterialOrderDTO,VendorDTO vendor,String fileName,List<RMOrderModelData> rmOrderModelDatas) throws Exception{
+		Mail mail = mailService.setMailCCBCCAndTO(notification);
 	 String userEmailCC = mail.getMailCc()+","+vendor.getEmail();
 	    mail.setMailCc(userEmailCC);
 		mail.setMailSubject(notification.getSubject());
 		mail.setAttachment(fileName);
-		Map<String, Object> model = new HashMap<String, Object>();
-		model.put("firstName", vendor.getFirstName());
-		model.put("lastName", vendor.getLastName());
-		model.put("location", "Pune");
-		model.put("rmOrderModelDatas", rmOrderModelDatas);
-		model.put("address", vendor.getAddress());
-		model.put("companyName", vendor.getCompanyName());
-		model.put("tax", rawmaterialOrderDTO.getTax());
-		model.put("mailFrom", notification.getName());
-		model.put("signature", "www.NextechServices.in");
-		mail.setModel(model);
+		mail.setModel(MailResponseRequestFactory.setMailDetailsRMOrder(notification, rawmaterialOrderDTO, vendor, rmOrderModelDatas));
 		mailService.sendEmail(mail,notification);
 	}
 	

@@ -55,21 +55,15 @@ public class RMVAssoController {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
-			if (rmvAssoService.getRMVAssoByVendorIdRMId(
-					rmVendorAssociationDTO.getVendorId().getId(),
-					rmVendorAssociationDTO.getRawmaterialId().getId()) == null){
-				long id=	taxstructureService.addEntity(TaxStructureRequestResponseFactory.setTaxStructure(rmVendorAssociationDTO.getTaxStructureDTO(), request));
-				TaxStructureDTO  taxStructureDTO =  new TaxStructureDTO();
-				taxStructureDTO.setId(id);
-				rmVendorAssociationDTO.setTaxStructureDTO(taxStructureDTO);
-			
-				rmvAssoService.addEntity(RMVendorAssoRequestResponseFactory.setRMVendorAsso(rmVendorAssociationDTO, request));
-			}	
-			else
-				return new UserStatus(2, messageSource.getMessage(
-						ERPConstants.VENDOR_RM_ASSO_EXIT, null, null));
-			return new UserStatus(1,
-					"Rawmaterialvendorassociation added Successfully !");
+			if (rmvAssoService.getRMVAssoByVendorIdRMId(rmVendorAssociationDTO.getVendorId().getId(),rmVendorAssociationDTO.getRawmaterialId().getId()) != null){
+				return new UserStatus(2, messageSource.getMessage(ERPConstants.VENDOR_RM_ASSO_EXIT, null, null));
+			}
+			long id=	taxstructureService.addEntity(TaxStructureRequestResponseFactory.setTaxStructure(rmVendorAssociationDTO.getTaxStructureDTO(), request));
+			TaxStructureDTO  taxStructureDTO =  new TaxStructureDTO();
+			taxStructureDTO.setId(id);
+			rmVendorAssociationDTO.setTaxStructureDTO(taxStructureDTO);
+			rmvAssoService.addEntity(RMVendorAssoRequestResponseFactory.setRMVendorAsso(rmVendorAssociationDTO, request));
+			return new UserStatus(1,"Rawmaterialvendorassociation added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			logger.error("Inside ConstraintViolationException");
 			cve.printStackTrace();

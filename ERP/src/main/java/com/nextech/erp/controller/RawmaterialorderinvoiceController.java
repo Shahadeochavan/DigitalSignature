@@ -31,6 +31,7 @@ import com.nextech.erp.dto.QualityCheckRMDTO;
 import com.nextech.erp.dto.RMOrderModelData;
 import com.nextech.erp.dto.RawMaterialInvoiceDTO;
 import com.nextech.erp.exceptions.RMOrderInvoiceExistsException;
+import com.nextech.erp.factory.MailResponseRequestFactory;
 import com.nextech.erp.factory.RawMaterialInvoiceRequestResponseFactory;
 import com.nextech.erp.model.Rawmaterial;
 import com.nextech.erp.model.Rawmaterialorder;
@@ -249,7 +250,7 @@ public class RawmaterialorderinvoiceController {
 			Status status = statusService.getEntityById(Status.class, rawmaterialorderinvoice.getStatus().getId());
 			NotificationDTO notification = notificationService.getNotifiactionByStatus(status.getId());
 			Vendor vendor = vendorService.getEntityById(Vendor.class, Long.parseLong(rawmaterialorderinvoice.getVendorname()));
-	        mailSending(notification, rawmaterialorder, vendor);
+			emailNotificationRMInvoice(notification, rawmaterialorder, vendor);
 
 		}else{
 			message = messageSource.getMessage(ERPConstants.RM_ORDER_INVOICE_EXIT, null, null);
@@ -292,9 +293,9 @@ public class RawmaterialorderinvoiceController {
 		rawmaterialorderService.updateEntity(rawmaterialorder);
 	}
 	
-	private void mailSending(NotificationDTO notification,Rawmaterialorder rawmaterialorder,Vendor vendor) throws Exception{
+	private void emailNotificationRMInvoice(NotificationDTO notificationDTO,Rawmaterialorder rawmaterialorder,Vendor vendor) throws Exception{
 		List<RMOrderModelData> rmOrderModelDatas = new ArrayList<RMOrderModelData>();
-		  Mail mail = userService.emailNotification(notification);
+		Mail mail = mailService.setMailCCBCCAndTO(notificationDTO);
 		  List<RMOrderAssociationDTO> rawmaterialorderassociations = rawmaterialorderassociationService.getRMOrderRMAssociationByRMOrderId(rawmaterialorder.getId());
 		for (RMOrderAssociationDTO rawmaterialorderassociation : rawmaterialorderassociations) {
 			RMOrderModelData rmOrderModelData = new RMOrderModelData();
@@ -308,18 +309,7 @@ public class RawmaterialorderinvoiceController {
 			rmOrderModelData.setTax(rawmaterialorder.getTax());
 			rmOrderModelDatas.add(rmOrderModelData);
 		}
-	        mail.setMailSubject(notification.getSubject());
-	        Map < String, Object > model = new HashMap < String, Object > ();
-	        model.put("firstName", vendor.getFirstName());
-	        model.put("lastName", vendor.getLastName());
-	        model.put("location", "Pune");
-	        model.put("rmOrderModelDatas",rmOrderModelDatas);
-	        model.put("address", vendor.getAddress());
-	        model.put("companyName", vendor.getCompanyName());
-	        model.put("tax", rawmaterialorder.getTax());
-	        model.put("mailFrom", notification.getName());
-	        model.put("signature", "www.NextechServices.in");
-	        mail.setModel(model);
-		mailService.sendEmailWithoutPdF(mail, notification);
+	        mail.setModel(MailResponseRequestFactory.setMailDetailsRMInvoice(notificationDTO, rawmaterialorder, vendor, rmOrderModelDatas));
+		mailService.sendEmailWithoutPdF(mail, notificationDTO);
 	}
 }

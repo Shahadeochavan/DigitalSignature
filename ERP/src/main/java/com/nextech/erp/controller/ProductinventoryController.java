@@ -75,13 +75,10 @@ public class ProductinventoryController {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
-			if (productinventoryService.getProductinventoryByProductId(
-					productInventoryDTO.getProductId().getId()) == null){
-				productinventoryService.addEntity(ProductInventoryRequestResponseFactory.setProductInventory(productInventoryDTO, request));
-			}	
-			else
+			if (productinventoryService.getProductinventoryByProductId(productInventoryDTO.getProductId().getId()) != null){
 				return new UserStatus(0, messageSource.getMessage(ERPConstants.PRODUCT_INVENTORY_ASSO_EXIT, null, null));
-			
+			}
+			productinventoryService.addEntity(ProductInventoryRequestResponseFactory.setProductInventory(productInventoryDTO, request));
 			return new UserStatus(1, "Productinventory added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			logger.error("Inside ConstraintViolationException");
@@ -185,7 +182,7 @@ public class ProductinventoryController {
 	
 	public void emailNotifiactionProductInventory(List<ProductInventoryDTO> productInventoryDTOs) throws Exception{
 		   NotificationDTO  notificationDTO = notificationService.getNotificationByCode((messageSource.getMessage(ERPConstants.PRODUCT_INVENTORY_NOTIFICATION, null, null)));
-		  Mail mail = userService.emailNotification(notificationDTO);
+		   Mail mail = mailService.setMailCCBCCAndTO(notificationDTO);
 	        mail.setMailSubject(notificationDTO.getSubject());
 	        Map < String, Object > model = new HashMap < String, Object > ();
 	        model.put("productInventoryDTOs", productInventoryDTOs);

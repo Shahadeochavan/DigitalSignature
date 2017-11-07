@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.dao.BOMRMVendorAssociationDao;
@@ -25,6 +26,7 @@ import com.nextech.erp.dao.StatusDao;
 import com.nextech.erp.dto.DispatchDTO;
 import com.nextech.erp.dto.DispatchPartDTO;
 import com.nextech.erp.dto.DispatchProductDTO;
+import com.nextech.erp.exceptions.BomProductNotExistException;
 import com.nextech.erp.factory.DispatchRequestResponseFactory;
 import com.nextech.erp.model.Bom;
 import com.nextech.erp.model.Bomrmvendorassociation;
@@ -110,7 +112,7 @@ public class DispatchServiceImpl extends CRUDServiceImpl<Dispatch> implements Di
 						Product product = productDao.getById(Product.class,productorderassociation.getProduct().getId());
 						Bom bom = bomDao.getBomByProductId(product.getId());
 						if(bom==null){
-							return new Response(1,"Please create bom for this product");
+							return new Response("Please create bom for this product");
 						}else{
 						List<Bomrmvendorassociation> bomrmvendorassociations = bOMRMVendorAssociationDao.getBomRMVendorByBomId(bom.getId());
 						float totalCost = 0;

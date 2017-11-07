@@ -1,6 +1,7 @@
 package com.nextech.erp.serviceImpl;
 
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import javax.mail.MessagingException;
@@ -15,10 +16,14 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 
+import com.nextech.erp.dao.UserDao;
 import com.nextech.erp.dto.Mail;
+import com.nextech.erp.model.User;
 import com.nextech.erp.newDTO.NotificationDTO;
+import com.nextech.erp.newDTO.NotificationUserAssociatinsDTO;
 import com.nextech.erp.service.MailService;
-import com.nextech.erp.service.UserService;
+import com.nextech.erp.service.NotificationUserAssociationService;
+
 @Service
 public class MailServiceImpl  implements MailService {
 
@@ -29,7 +34,10 @@ public class MailServiceImpl  implements MailService {
 	VelocityEngine velocityEngine;
 	
 	@Autowired
-	UserService userService;
+	UserDao userDao;
+	
+	@Autowired
+	NotificationUserAssociationService notificationUserAssociationService;
 
 	@Async
 	public void sendEmail( Mail mail,NotificationDTO notification) {
@@ -100,19 +108,71 @@ public class MailServiceImpl  implements MailService {
 			e.printStackTrace();
 		}
 	}
+	
+	@Override
+	public Mail setMailCCBCCAndTO(NotificationDTO notificationDTO)throws Exception {
+		StringBuilder stringBuilderCC = new StringBuilder();
+		StringBuilder stringBuilderTO = new StringBuilder();
+		StringBuilder stringBuilderBCC = new StringBuilder();
+
+		String prefixCC = "";
+		String prefixTO = "";
+		String prefixBCC = "";
+
+		String multipleCC = "";
+		String multipleBCC = "";
+		String multipleTO = "";
+		Mail mail = new Mail();
+		List<NotificationUserAssociatinsDTO> notificationUserAssociatinsDTOs = notificationUserAssociationService.getNotificationUserAssociatinsDTOs(notificationDTO.getId());
+		
+		List<Long> ids = new ArrayList<Long>();
+		for (NotificationUserAssociatinsDTO notificationUserAssociatinsDTO : notificationUserAssociatinsDTOs) {
+			ids.add(notificationUserAssociatinsDTO.getUserId().getId());
+		}
+		List<User> userList = userDao.getMultipleUsersById(ids);
+		for (NotificationUserAssociatinsDTO notificationuserassociation : notificationUserAssociatinsDTOs) {
+			for (User user : userList) {
+				if (notificationuserassociation.getTo()) {
+					if(notificationuserassociation.getUserId().getId()==user.getId()){
+					stringBuilderTO.append(prefixTO);
+					prefixTO = ",";
+					stringBuilderTO.append(user.getEmail());
+					multipleTO = stringBuilderTO.toString();
+					}
+				} else if (notificationuserassociation.getBcc()) {
+					if(notificationuserassociation.getUserId().getId()==user.getId()){
+					stringBuilderBCC.append(prefixBCC);
+					prefixBCC = ",";
+					stringBuilderBCC.append(user.getEmail());
+					multipleBCC = stringBuilderBCC.toString();
+					}
+				} else if (notificationuserassociation.getCc()) {
+					if(notificationuserassociation.getUserId().getId()==user.getId()){
+					stringBuilderCC.append(prefixCC);
+					prefixCC = ",";
+					stringBuilderCC.append(user.getEmail());
+					multipleCC = stringBuilderCC.toString();
+					}
+				}
+			}
+		}
+		mail.setMailSubject(notificationDTO.getSubject());
+		mail.setMailTo(multipleTO);
+		mail.setMailBcc(multipleBCC);
+		mail.setMailCc(multipleCC);
+		return mail;
+	}
 
 	@Override
-	public Mail setMailDetails(String firstName,String lastName,String email,NotificationDTO  notificationDTO) throws Exception {
-		// TODO Auto-generated method stub
-		 Mail mail = userService.emailNotification(notificationDTO);
-		   mail.setMailSubject(notificationDTO.getSubject());
-	        Map < String, Object > model = new HashMap < String, Object > ();
-	        model.put("firstName", firstName);
-	        model.put("lastName", lastName);
-	        model.put("email", email);
-	        model.put("location", "Pune");
-	        model.put("signature", "www.NextechServices.in");
-	        mail.setModel(model);
-		return mail;
+	public String getSubject(NotificationDTO notificationDTO) {
+		Mail mail = new Mail();
+         mail.setMailSubject(notificationDTO.getSubject());
+		String mailSubject = mail.getMailSubject();
+		return mailSubject;
+	}
+
+	@Override
+	public String getContent(NotificationDTO notificationDTO) {
+		return null;
 	}
 }

@@ -42,12 +42,10 @@ public class UnitController {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
-			if(unitservice.getUnitByName(unitDTO.getName())==null){
-				unitservice.addEntity(UnitFactory.setUnit(unitDTO, request));
-			}else{
+			if(unitservice.getUnitByName(unitDTO.getName())!=null){
 				return  new UserStatus(2,"Unit name already exist");
 			}
-		 	
+			unitservice.addEntity(UnitFactory.setUnit(unitDTO, request));
 			return new UserStatus(1, "Unit added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			logger.error("Inside ConstraintViolationException");

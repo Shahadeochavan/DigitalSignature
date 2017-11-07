@@ -75,11 +75,10 @@ public class RawmaterialinventoryController {
 			if (bindingResult.hasErrors()) {
 				return new UserStatus(0, bindingResult.getFieldError().getDefaultMessage());
 			}
-			if(rawmaterialinventoryService.getByRMId(rmInventoryDTO.getRawmaterialId().getId())==null){
-				rawmaterialinventoryService.addEntity(RMInventoryRequestResponseFactory.setRMInventory(rmInventoryDTO, request));
-			}
-			else
+			if(rawmaterialinventoryService.getByRMId(rmInventoryDTO.getRawmaterialId().getId())!=null){
 				return new UserStatus(0, messageSource.getMessage(ERPConstants.RAW_MATERIAL_INVENTORY, null, null));
+			}
+			rawmaterialinventoryService.addEntity(RMInventoryRequestResponseFactory.setRMInventory(rmInventoryDTO, request));
 			return new UserStatus(1, "Rawmaterialinventory added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			logger.error("Inside ConstraintViolationException");
@@ -184,7 +183,7 @@ public class RawmaterialinventoryController {
 	
 	private void emailNotificationRMInventory(List<RMInventoryDTO> rmInventoryDTOs) throws Exception {
 		   NotificationDTO  notificationDTO = notificationService.getNotificationByCode((messageSource.getMessage(ERPConstants.RM_INVENTORY_NOTIFICATION, null, null)));
-		Mail mail = userService.emailNotification(notificationDTO);
+		   Mail mail = mailService.setMailCCBCCAndTO(notificationDTO);
 		mail.setMailSubject(notificationDTO.getSubject());
 		Map<String, Object> model = new HashMap<String, Object>();
 		model.put("rmInventoryDTOs", rmInventoryDTOs);
