@@ -15,7 +15,7 @@ import com.nextech.erp.dao.QualitycheckrawmaterialDao;
 import com.nextech.erp.dto.QualityCheckRMDTO;
 import com.nextech.erp.dto.RMInventoryDTO;
 import com.nextech.erp.dto.RawMaterialInvoiceDTO;
-import com.nextech.erp.exceptions.InvalidRMQuantityInQC;
+import com.nextech.erp.exception.InvalidRMQuantityInQC;
 import com.nextech.erp.factory.QualityRequestResponseFactory;
 import com.nextech.erp.factory.RMOrderHistoryRequestResponseFactory;
 import com.nextech.erp.model.Qualitycheckrawmaterial;
