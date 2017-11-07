@@ -77,13 +77,13 @@ public class TokenFactory {
 		return decryptedText.split("-")[1];
 	}
 	
-	public static String getTimestamp(String encryptedText) throws Exception {
+	public static boolean isValidSession(String encryptedText,long sessionTime) throws Exception {
 		Cipher cipher = Cipher.getInstance("AES");
 		Base64.Decoder decoder = Base64.getDecoder();
 		byte[] encryptedTextByte = decoder.decode(encryptedText);
 		cipher.init(Cipher.DECRYPT_MODE, getSecretKeySpec());
 		byte[] decryptedByte = cipher.doFinal(encryptedTextByte);
 		String decryptedText = new String(decryptedByte);
-		return decryptedText.split("-")[2];
+		return Long.parseLong(decryptedText.split("-")[2]) < (new Date().getTime() - sessionTime);
 	}
 }

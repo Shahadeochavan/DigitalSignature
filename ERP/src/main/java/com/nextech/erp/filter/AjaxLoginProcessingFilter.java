@@ -1,7 +1,5 @@
 package com.nextech.erp.filter;
 
-import java.util.Date;
-
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
@@ -15,29 +13,14 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.exception.InvalidUserException;
 import com.nextech.erp.model.User;
-import com.nextech.erp.service.PageService;
 import com.nextech.erp.service.UserService;
-import com.nextech.erp.service.UserTypeService;
-import com.nextech.erp.service.UsertypepageassociationService;
 public class AjaxLoginProcessingFilter extends HandlerInterceptorAdapter {
 
 	@Autowired
 	UserService userService;
 
 	@Autowired
-	TokenFactory tokenFactory;
-
-	@Autowired
 	private MessageSource messageSource;
-
-	@Autowired
-	UserTypeService userTypeService;
-
-	@Autowired
-	UsertypepageassociationService usertypepageassociationService;
-
-	@Autowired
-	PageService pageservice;
 
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
@@ -55,16 +38,14 @@ public class AjaxLoginProcessingFilter extends HandlerInterceptorAdapter {
 			setResponse(request, response);
 			throw new InvalidUserException("Unauthorized user requested. Please check credentials.");
 		}
-		String token = TokenFactory.decrypt(((HttpServletRequest) request).getHeader("auth_token"));
-		String[] string = token.split("-");
-		User user = userService.getUserByUserId(string[0]);
-		if(user == null || !user.getPassword().equals(string[1])){
+		String token = ((HttpServletRequest) request).getHeader("auth_token");
+		User user = userService.getUserByUserId(TokenFactory.getUserId(token));
+		if(user == null || !user.getPassword().equals(TokenFactory.getUserPassword(token))){
 			setResponse(request, response);
 			throw new InvalidUserException("Unauthorized user requested. Please check credentials.");
 		}
-		String str = string[string.length - 1];
 		Long time = new Long(messageSource.getMessage(ERPConstants.SESSIONTIMEOUT,null, null));
-		if (new Long(str) < new Date().getTime() - time) {
+		if (TokenFactory.isValidSession(token, time)) {
 			setResponse(request, response);
 			throw new InvalidUserException("User Session has expired. Please login again");
 		}
