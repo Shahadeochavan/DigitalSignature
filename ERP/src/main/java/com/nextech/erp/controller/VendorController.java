@@ -80,11 +80,13 @@ public class VendorController {
               NotificationDTO  notificationDTO = notificationService.getNotificationByCode((messageSource.getMessage(ERPConstants.VENDOR_ADDED_SUCCESSFULLY, null, null)));
               emailNotificationVendor(vendorDTO, notificationDTO);
 			return new UserStatus(1, "vendor added Successfully !");
-		} catch (ConstraintViolationException cve) {
+		}
+		catch (ConstraintViolationException cve) {
 			logger.info("Inside ConstraintViolationException ");
 			throw new DuplicateEnteryException("ConstraintViolationException");
 			//return new UserStatus(0, cve.getCause().getMessage());
-		} catch (PersistenceException pe) {
+		} 
+		catch (PersistenceException pe) {
 			logger.info("Inside PersistenceException ");
 			pe.printStackTrace();
 			return new UserStatus(0, pe.getCause().getMessage());
