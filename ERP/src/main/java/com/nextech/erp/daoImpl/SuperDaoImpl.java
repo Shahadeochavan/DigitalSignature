@@ -11,11 +11,11 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.stereotype.Service;
 
 import com.nextech.erp.dao.SuperDao;
 
-@Transactional
+@Service("superDao")
 public class SuperDaoImpl<T> implements SuperDao<T>{
 
 	@Autowired

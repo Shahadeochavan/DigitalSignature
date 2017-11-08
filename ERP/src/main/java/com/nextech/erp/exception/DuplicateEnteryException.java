@@ -1,4 +1,4 @@
-package com.nextech.erp.exceptions;
+package com.nextech.erp.exception;
 
 public class DuplicateEnteryException extends Exception {
 

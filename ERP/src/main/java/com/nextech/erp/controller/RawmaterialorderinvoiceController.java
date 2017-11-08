@@ -30,7 +30,7 @@ import com.nextech.erp.dto.Mail;
 import com.nextech.erp.dto.QualityCheckRMDTO;
 import com.nextech.erp.dto.RMOrderModelData;
 import com.nextech.erp.dto.RawMaterialInvoiceDTO;
-import com.nextech.erp.exceptions.RMOrderInvoiceExistsException;
+import com.nextech.erp.exception.RMOrderInvoiceExistsException;
 import com.nextech.erp.factory.MailResponseRequestFactory;
 import com.nextech.erp.factory.RawMaterialInvoiceRequestResponseFactory;
 import com.nextech.erp.model.Rawmaterial;
