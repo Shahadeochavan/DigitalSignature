@@ -7,53 +7,80 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import com.nextech.erp.constants.ERPConstants;
-import com.nextech.erp.exception.InvalidUserException;
 import com.nextech.erp.model.User;
+import com.nextech.erp.service.PageService;
 import com.nextech.erp.service.UserService;
+import com.nextech.erp.service.UserTypeService;
+import com.nextech.erp.service.UsertypepageassociationService;
 public class AjaxLoginProcessingFilter extends HandlerInterceptorAdapter {
 
 	@Autowired
 	UserService userService;
 
 	@Autowired
+	TokenFactory tokenFactory;
+
+	@Autowired
 	private MessageSource messageSource;
 
+	@Autowired
+	UserTypeService userTypeService;
+
+	@Autowired
+	UsertypepageassociationService usertypepageassociationService;
+
+	@Autowired
+	PageService pageservice;
+
+	@Transactional
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
-		if (!(request instanceof HttpServletRequest)) {
-			return false;
+		if (request instanceof HttpServletRequest) {
+			String url = ((HttpServletRequest) request).getRequestURL().toString();
+			if (!url.contains("login")) {
+				try {
+					if(((HttpServletRequest) request).getHeader("auth_token") != null){
+						String encryptedToken = ((HttpServletRequest) request).getHeader("auth_token");
+						User user = userService.getUserByUserId(TokenFactory.getUserId(encryptedToken));
+						if(user != null && user.getPassword().equals(TokenFactory.getUserPassword(encryptedToken))){
+							Long time = new Long(messageSource.getMessage(ERPConstants.SESSIONTIMEOUT,null, null));
+							if (TokenFactory.isValidSession(encryptedToken, time)) {
+								String generatedToken = TokenFactory.createAccessJwtToken(user);
+								request.setAttribute("current_user", user.getId());
+								((HttpServletResponse) response).addHeader("auth_token", generatedToken);
+								request.setAttribute("auth_token", true);
+								return true;
+							} else {
+								HttpServletResponse httpServletResponse = setResponse(request, response);
+								httpServletResponse.sendError(599,ERPConstants.SESSION_EXPIRED);
+							}
+						}
+						else{
+							HttpServletResponse httpServletResponse = setResponse(request, response);
+							httpServletResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+						}
+					}else{
+						if(((HttpServletRequest) request).getHeader("Access-Control-Request-Headers")==null){
+							HttpServletResponse httpServletResponse = setResponse(request, response);
+							httpServletResponse.sendError(HttpServletResponse.SC_FORBIDDEN);
+						}
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			} else {
+				request.setAttribute("auth_token", true);
+				request.setAttribute("current_token", true);
+				return true;
+			}
 		}
-		String url = ((HttpServletRequest) request).getRequestURL().toString();
-		if (url.contains("login")) {
-			request.setAttribute("auth_token", true);
-			request.setAttribute("current_token", true);
-			return true;
-		}
-		if(((HttpServletRequest) request).getHeader("auth_token") == null){
-			setResponse(request, response);
-			throw new InvalidUserException("Unauthorized user requested. Please check credentials.");
-		}
-		String token = ((HttpServletRequest) request).getHeader("auth_token");
-		User user = userService.getUserByUserId(TokenFactory.getUserId(token));
-		if(user == null || !user.getPassword().equals(TokenFactory.getUserPassword(token))){
-			setResponse(request, response);
-			throw new InvalidUserException("Unauthorized user requested. Please check credentials.");
-		}
-		Long time = new Long(messageSource.getMessage(ERPConstants.SESSIONTIMEOUT,null, null));
-		if (TokenFactory.isValidSession(token, time)) {
-			setResponse(request, response);
-			throw new InvalidUserException("User Session has expired. Please login again");
-		}
-		String generatedToken = TokenFactory.createAccessJwtToken(user);
-		request.setAttribute("current_user", user.getId());
-		((HttpServletResponse) response).addHeader("auth_token", generatedToken);
-		request.setAttribute("auth_token", true);
-		return true;
+		return false;
 	}
 
 	@Override

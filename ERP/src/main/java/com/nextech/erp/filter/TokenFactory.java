@@ -58,32 +58,14 @@ public class TokenFactory {
 	}
 	
 	public static String getUserId(String encryptedText) throws Exception {
-		Cipher cipher = Cipher.getInstance("AES");
-		Base64.Decoder decoder = Base64.getDecoder();
-		byte[] encryptedTextByte = decoder.decode(encryptedText);
-		cipher.init(Cipher.DECRYPT_MODE, getSecretKeySpec());
-		byte[] decryptedByte = cipher.doFinal(encryptedTextByte);
-		String decryptedText = new String(decryptedByte);
-		return decryptedText.split("-")[0];
+		return decrypt(encryptedText).split("-")[0];
 	}
 	
 	public static String getUserPassword(String encryptedText) throws Exception {
-		Cipher cipher = Cipher.getInstance("AES");
-		Base64.Decoder decoder = Base64.getDecoder();
-		byte[] encryptedTextByte = decoder.decode(encryptedText);
-		cipher.init(Cipher.DECRYPT_MODE, getSecretKeySpec());
-		byte[] decryptedByte = cipher.doFinal(encryptedTextByte);
-		String decryptedText = new String(decryptedByte);
-		return decryptedText.split("-")[1];
+		return decrypt(encryptedText).split("-")[1];
 	}
 	
 	public static boolean isValidSession(String encryptedText,long sessionTime) throws Exception {
-		Cipher cipher = Cipher.getInstance("AES");
-		Base64.Decoder decoder = Base64.getDecoder();
-		byte[] encryptedTextByte = decoder.decode(encryptedText);
-		cipher.init(Cipher.DECRYPT_MODE, getSecretKeySpec());
-		byte[] decryptedByte = cipher.doFinal(encryptedTextByte);
-		String decryptedText = new String(decryptedByte);
-		return Long.parseLong(decryptedText.split("-")[2]) < (new Date().getTime() - sessionTime);
+		return Long.parseLong(decrypt(encryptedText).split("-")[2]) > (new Date().getTime() - sessionTime);
 	}
 }
