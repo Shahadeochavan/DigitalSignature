@@ -151,15 +151,15 @@ public class QualitycheckrawmaterialController {
 			qualitycheckrawmaterialService.addRawmaterialOrderInvoiceReadyStore(rawMaterialInvoiceDTO, request, response);
 			return new UserStatus(1,"Store Quality Check information save succesfully");
 		} catch (ConstraintViolationException cve) {
-			logger.error("Inside ConstraintViolationException");
+			logger.error(cve);
 			cve.printStackTrace();
 			return new UserStatus(0, cve.getCause().getMessage());
 		} catch (PersistenceException pe) {
-			logger.error("Inside PersistenceException");
+			logger.error(pe);
 			pe.printStackTrace();
 			return new UserStatus(0, pe.getCause().getMessage());
 		} catch (Exception e) {
-			logger.error("Inside Exception");
+			logger.error(e);
 			e.printStackTrace();
 			return new UserStatus(0, e.getCause().getMessage());
 		}
@@ -181,6 +181,7 @@ public class QualitycheckrawmaterialController {
 				qualityCheckRMDTOs.add(qualityCheckRMDTO);
 			}
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 		}
 		return new Response(1,qualityCheckRMDTOs);
@@ -200,6 +201,7 @@ public class QualitycheckrawmaterialController {
 				storeInDTOs.add(StoreRequestResponseFactory.createStoreInResonse(qualitycheckrawmaterial));
 			}
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 		}
 		return new Response(1,storeInDTOs);

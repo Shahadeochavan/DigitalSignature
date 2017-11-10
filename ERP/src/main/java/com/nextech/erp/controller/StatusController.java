@@ -46,15 +46,15 @@ public class StatusController {
 			statusService.addEntity(StatusRequestResponseFactory.setStatus(statusDTO, request));
 			return new UserStatus(1, "Status added Successfully !");
 		} catch (ConstraintViolationException cve) {
-			logger.error("Inside ConstraintViolationException");
+			logger.error(cve);
 			cve.printStackTrace();
 			return new UserStatus(0, cve.getCause().getMessage());
 		} catch (PersistenceException pe) {
-			logger.error("Inside PersistenceException");
+			logger.error(pe);
 			pe.printStackTrace();
 			return new UserStatus(0, pe.getCause().getMessage());
 		} catch (Exception e) {
-			logger.error("Inside Exception");
+			logger.error(e);
 			e.printStackTrace();
 			return new UserStatus(0, e.getCause().getMessage());
 		}
@@ -70,6 +70,7 @@ public class StatusController {
 				return  new Response(1,"There is no any status ");
 			}
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 		}
 		return new Response(1,status);
@@ -98,6 +99,7 @@ public class StatusController {
 			}
 
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 		}
 
@@ -115,6 +117,7 @@ public class StatusController {
 		}
 			return new Response(1, "Status deleted Successfully !");
 		} catch (Exception e) {
+			logger.error(e);
 			return new Response(0, e.toString());
 		}
 
@@ -130,6 +133,7 @@ public class StatusController {
 				return  new Response(1,"There is no any status type list");
 			}
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 		}
 		return new Response(1,statuList);

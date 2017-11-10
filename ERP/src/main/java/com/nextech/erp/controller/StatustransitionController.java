@@ -55,15 +55,15 @@ public class StatustransitionController {
 			statustransitionService.addEntity(StatusTransitionRequestResponseFactory.setStatusTransitin(statusTransitionDTO, request));
 			return new UserStatus(1, "Statustransition added Successfully !");
 		} catch (ConstraintViolationException cve) {
-			logger.error("Inside ConstraintViolationException");
+			logger.error(cve);
 			cve.printStackTrace();
 			return new UserStatus(0, cve.getCause().getMessage());
 		} catch (PersistenceException pe) {
-			logger.error("Inside PersistenceException");
+			logger.error(pe);
 			pe.printStackTrace();
 			return new UserStatus(0, pe.getCause().getMessage());
 		} catch (Exception e) {
-			logger.error("Inside Exception");
+			logger.error(e);
 			e.printStackTrace();
 			return new UserStatus(0, e.getCause().getMessage());
 		}
@@ -80,6 +80,7 @@ public class StatustransitionController {
 			 return  new Response(1,"There is no any status transtion");
 			}
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 		}
 		return new Response(1,statustransition);
@@ -92,6 +93,7 @@ public class StatustransitionController {
 			statustransitionService.updateEntity(StatusTransitionRequestResponseFactory.setStatusTransitin(statusTransitionDTO, request));
 			return new UserStatus(1, "Statustransition update Successfully !");
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 			return new UserStatus(0, e.toString());
 		}
@@ -109,6 +111,7 @@ public class StatustransitionController {
 			}
 
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 		}
 
@@ -127,6 +130,7 @@ public class StatustransitionController {
 			}
 			return new Response(1, "Statustransition deleted Successfully !");
 		} catch (Exception e) {
+			logger.error(e);
 			return new Response(0, e.toString());
 		}
 

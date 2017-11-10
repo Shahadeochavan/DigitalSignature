@@ -143,15 +143,15 @@ public class RawmaterialorderController {
 			addRMOrderAsso(rawmaterialOrderDTO, request, response);
 			return new UserStatus(1, "Multiple Rawmaterial Order added Successfully !");
 		} catch (ConstraintViolationException cve) {
-			logger.error("Inside ConstraintViolationException");
+			logger.error(cve);
 			cve.printStackTrace();
 			return new UserStatus(0, cve.getCause().getMessage());
 		} catch (PersistenceException pe) {
-			logger.error("Inside PersistenceException");
+			logger.error(pe);
 			pe.printStackTrace();
 			return new UserStatus(0, pe.getCause().getMessage());
 		} catch (Exception e) {
-			logger.error("Inside Exception");
+			logger.error(e);
 			e.printStackTrace();
 			return new UserStatus(0, e.getCause().getMessage());
 		}
@@ -168,6 +168,7 @@ public class RawmaterialorderController {
 				return new Response(1,"There is no rm order");
 			}
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 		}
 		return new Response(1,rawmaterialorder);
@@ -180,6 +181,7 @@ public class RawmaterialorderController {
 			rawmaterialorderService.updateRMOrder(rawmaterialOrderDTO, request, response);
 			return new UserStatus(1, "Rawmaterial Order update Successfully !");
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 			return new UserStatus(0, e.toString());
 		}
@@ -195,6 +197,7 @@ public class RawmaterialorderController {
 				return new Response(1,"There is no rm order list");
 			}
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 		}
 		return new Response(1,rawmaterialorderList);
@@ -258,6 +261,7 @@ public class RawmaterialorderController {
 				return new Response(1,"There is no rm order list");
 			}
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 		}
 		return new Response(1,rawmaterialorderList);
@@ -444,8 +448,9 @@ public class RawmaterialorderController {
 			return new Response(1,errorMessage);
 		}
 		return new Response(0, "Success", rmReqirementDTOs);
-		}catch(Exception ex){
-			ex.printStackTrace();
+		}catch(Exception e){
+			logger.error(e);
+			e.printStackTrace();
 			return new Response(1, "Error", null);
 		}
 	}
@@ -501,15 +506,15 @@ public class RawmaterialorderController {
 			}
 			return new UserStatus(1, "Multiple Rawmaterial Order added Successfully !");
 		} catch (ConstraintViolationException cve) {
-			System.out.println("Inside ConstraintViolationException");
+			logger.error(cve);
 			cve.printStackTrace();
 			return new UserStatus(0, cve.getCause().getMessage());
 		} catch (PersistenceException pe) {
-			System.out.println("Inside PersistenceException");
+			logger.error(pe);
 			pe.printStackTrace();
 			return new UserStatus(0, pe.getCause().getMessage());
 		} catch (Exception e) {
-			System.out.println("Inside Exception");
+			logger.error(e);
 			e.printStackTrace();
 			return new UserStatus(0, e.getCause().getMessage());
 		}

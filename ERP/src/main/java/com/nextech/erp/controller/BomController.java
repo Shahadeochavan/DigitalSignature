@@ -88,16 +88,13 @@ public class BomController {
 			addBomRMVendorAsso(bomDTO, request, response);
 			return new UserStatus(1, "Bom added Successfully !");
 		} catch (ConstraintViolationException cve) {
-			logger.info("Inside ConstraintViolationException ");
-			cve.printStackTrace();
+			logger.error(cve);
 			return new UserStatus(0, cve.getCause().getMessage());
 		} catch (PersistenceException pe) {
-			logger.info("Inside PersistenceException");
-			pe.printStackTrace();
+			logger.error(pe);
 			return new UserStatus(0, pe.getCause().getMessage());
 		} catch (Exception e) {
-			logger.info(" Inside Exception");
-			e.printStackTrace();
+			logger.error(e);
 			return new UserStatus(0, e.getCause().getMessage());
 		}
 	}
@@ -112,7 +109,8 @@ public class BomController {
 				return new Response(1,"There is no any bom");
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e);
+			logger.error(e);
 		}
 		return new Response(1,bom);
 	}
@@ -124,8 +122,7 @@ public class BomController {
 			bomService.updateEntity(BOMFactory.setBom(bomDTO,request));
 			return new UserStatus(1, "Bom update Successfully !");
 		} catch (Exception e) {
-			logger.error("There is no any bom");
-			 e.printStackTrace();
+			logger.error(e);
 			return new UserStatus(0, e.toString());
 		}
 	}
@@ -142,7 +139,7 @@ public class BomController {
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e);
 		}
 		return new Response(1,bomList);
 	}
@@ -163,6 +160,7 @@ public class BomController {
 			}
 
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 		}
 		return new Response(1, bomModelDatas);
@@ -179,6 +177,7 @@ public class BomController {
 			products = productService.getProductList(productIdList);
 
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 		}
 		if(products == null){
@@ -201,6 +200,7 @@ public class BomController {
 		}
 			return new Response(1, "Bom deleted Successfully !");
 		} catch (Exception e) {
+			logger.error(e);
 			return new Response(0, e.toString());
 		}
 
@@ -216,6 +216,7 @@ public class BomController {
 				return new Response(1,"There is no any bom list");
 			}
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 		}
 		return new Response(1,boList);
@@ -258,6 +259,7 @@ public class BomController {
 				return new Response(1,"There is no any bom list for download pdf");
 			}
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 		}
 		createBOMPdf(request, response, bomRMVendorModels,productBomDTO);
@@ -316,14 +318,17 @@ public class BomController {
 			}
 
 		} catch (FileNotFoundException e) {
+			logger.error(e);
 			e.printStackTrace();
 		} catch (IOException e) {
+			logger.error(e);
 			e.printStackTrace();
 		} finally {
 			if (inputStream != null) {
 				try {
 					inputStream.close();
 				} catch (IOException e) {
+					logger.error(e);
 					e.printStackTrace();
 				}
 			}

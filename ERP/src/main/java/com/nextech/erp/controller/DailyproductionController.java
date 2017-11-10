@@ -58,15 +58,15 @@ public class DailyproductionController {
 			dailyproductionservice.addDailyProduction(todaysProductionPlanDTO, request);
 			return new UserStatus(1, "Dailyproduction added Successfully !");
 		} catch (ConstraintViolationException cve) {
-			logger.error("Inside ConstraintViolationException");
+			logger.error(cve);
 			cve.printStackTrace();
 			return new UserStatus(0, cve.getCause().getMessage());
 		} catch (PersistenceException pe) {
-			logger.error("Inside PersistenceException");
+			logger.error(pe);
 			pe.printStackTrace();
 			return new UserStatus(0, pe.getCause().getMessage());
 		} catch (Exception e) {
-			System.out.println("Inside Exception");
+			logger.error(e);
 			e.printStackTrace();
 			return new UserStatus(0, e.getCause().getMessage());
 		}

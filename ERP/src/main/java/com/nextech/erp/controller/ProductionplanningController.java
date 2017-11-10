@@ -84,6 +84,7 @@ public class ProductionplanningController {
 		try {
 			productionplanning = productionplanningService.getProductionPlanById(id);
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 		}
 		return productionplanning;
@@ -95,6 +96,7 @@ public class ProductionplanningController {
 			productionplanningService.updateEntity(ProductionPlanningRequestResponseFactory.setProductionPlanning(productionPlanningDTO, request));
 			return new UserStatus(1, "Productionplanning update Successfully !");
 		} catch (Exception e) {
+			logger.error(e);
 			 e.printStackTrace();
 			return new UserStatus(0, e.toString());
 		}
@@ -106,6 +108,7 @@ public class ProductionplanningController {
 			productionplanningService.updateProductionplanningForCurrentMonth(productionplanningList, request, response);
 			return new UserStatus(1, "Productionplanning update Successfully !");
 		} catch (Exception e) {
+			logger.error(e);
 			 e.printStackTrace();
 			return new UserStatus(0, e.toString());
 		}
@@ -117,6 +120,7 @@ public class ProductionplanningController {
 		try {
 			productionplanningList = productionplanningService.getProductionPlanList();
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 		}
 		return productionplanningList;
@@ -128,6 +132,7 @@ public class ProductionplanningController {
 		try {
 			productionplanningList = productionplanningService.getProductionplanningByMonth(month);
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 		}
 		return productionplanningList;
@@ -140,6 +145,7 @@ public class ProductionplanningController {
 		try {
 			productionplanningList = productionplanningService.getProductionPlanForCurrentMonth();
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 		}
 		return productionplanningList;
@@ -154,6 +160,7 @@ public class ProductionplanningController {
 				return  new Response(1,"There is no any production planning list");
 			}
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 		}
 		return new Response(1,productionplanningList);
@@ -171,6 +178,7 @@ public class ProductionplanningController {
 		}
 		
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 		}
 
@@ -188,6 +196,7 @@ public class ProductionplanningController {
 		}
 			return new Response(1, "Productionplanning deleted Successfully !");
 		} catch (Exception e) {
+			logger.error(e);
 			return new Response(0, e.toString());
 		}
 	}
@@ -198,6 +207,7 @@ public class ProductionplanningController {
 		try {
 			productionplanning = productionplanningService.getProductionplanByDateAndProductId(DateUtil.convertToDate(date),pId);
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 		}
 		return productionplanning;
@@ -232,6 +242,7 @@ public class ProductionplanningController {
 				return  new Response(1,"There is no any production planning lisy");
 			}
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 		}
 		return new Response(1,"Success",productionplanningFinalList);
@@ -265,6 +276,7 @@ public class ProductionplanningController {
 				return  new Response(1,"There is no any production planning list ! you can update production plan for current date");
 			}
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 		}
 		return new Response(1,productionplanningFinalList);
@@ -297,6 +309,7 @@ public class ProductionplanningController {
 			}
 
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 		}
 

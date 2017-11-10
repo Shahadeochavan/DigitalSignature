@@ -65,15 +65,15 @@ public class RMVAssoController {
 			rmvAssoService.addEntity(RMVendorAssoRequestResponseFactory.setRMVendorAsso(rmVendorAssociationDTO, request));
 			return new UserStatus(1,"Rawmaterialvendorassociation added Successfully !");
 		} catch (ConstraintViolationException cve) {
-			logger.error("Inside ConstraintViolationException");
+			logger.error(cve);
 			cve.printStackTrace();
 			return new UserStatus(0, cve.getCause().getMessage());
 		} catch (PersistenceException pe) {
-			logger.error("Inside PersistenceException");
+			logger.error(pe);
 			pe.printStackTrace();
 			return new UserStatus(0, pe.getCause().getMessage());
 		} catch (Exception e) {
-			logger.error("Inside Exception");
+			logger.error(e);
 			e.printStackTrace();
 			return new UserStatus(0, e.getCause().getMessage());
 		}
@@ -103,6 +103,7 @@ public class RMVAssoController {
 			return new UserStatus(1,
 					"Rawmaterialvendorassociation update Successfully !");
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 			return new UserStatus(0, e.toString());
 		}
@@ -119,6 +120,7 @@ public class RMVAssoController {
 				return  new Response(1,"There is no rm vendor association");
 			}
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 		}
 
@@ -136,7 +138,7 @@ public class RMVAssoController {
 			}
 			
 		} catch (Exception e) {
-			
+			logger.error(e);
 		}
 		return new Response(1,rmRawmaterialvendorassociations);
 	}
@@ -151,9 +153,9 @@ public class RMVAssoController {
 				logger.error("There is no any rm vendor association");
 				return new Response(1,"There is no rm vendor association");
 			}
-			return new Response(1,
-					"Rawmaterialvendorassociation deleted Successfully !");
+			return new Response(1,"Rawmaterialvendorassociation deleted Successfully !");
 		} catch (Exception e) {
+			logger.error(e);
 			return new Response(0, e.toString());
 		}
 	}

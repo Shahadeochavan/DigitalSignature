@@ -85,15 +85,15 @@ public class ProductRMAssoController {
 			productRMAssoService.addEntity(ProductRMAssoRequestResponseFactory.setProductRMAsso(productRMAssociationDTO, request));
 			return new UserStatus(1,"Productrawmaterialassociation added Successfully !");
 		} catch (ConstraintViolationException cve) {
-			logger.error("Inside ConstraintViolationException");
+			logger.error(cve);
 			cve.printStackTrace();
 			return new UserStatus(0, cve.getCause().getMessage());
 		} catch (PersistenceException pe) {
-			logger.error("Inside PersistenceException");
+			logger.error(pe);
 			pe.printStackTrace();
 			return new UserStatus(0, pe.getCause().getMessage());
 		} catch (Exception e) {
-			logger.error("Inside Exception");
+			logger.error(e);
 			e.printStackTrace();
 			return new UserStatus(0, e.getCause().getMessage());
 		}
@@ -112,15 +112,15 @@ public class ProductRMAssoController {
 			productRMAssoService.addMultipleRawmaterialorder(productRMAssociationDTO, request.getAttribute("current_user").toString());
 			return new UserStatus(1, "Multiple Rawmaterialorder added Successfully !");
 		} catch (ConstraintViolationException cve) {
-			logger.error("Inside ConstraintViolationException");
+			logger.error(cve);
 			cve.printStackTrace();
 			return new UserStatus(0, cve.getCause().getMessage());
 		} catch (PersistenceException pe) {
-			logger.error("Inside PersistenceException");
+			logger.error(pe);
 			pe.printStackTrace();
 			return new UserStatus(0, pe.getCause().getMessage());
 		} catch (Exception e) {
-			logger.error("Inside Exception");
+			logger.error(e);
 			e.printStackTrace();
 			return new UserStatus(0, e.getCause().getMessage());
 		}
@@ -133,6 +133,7 @@ public class ProductRMAssoController {
 		try {
 			productrawmaterialassociation = productRMAssoService.getProductRMAsooById(id);
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 		}
 		return productrawmaterialassociation;
@@ -145,6 +146,7 @@ public class ProductRMAssoController {
 			productRMAssoService.updateEntity(ProductRMAssoRequestResponseFactory.setProductRMAssoUpdate(productRMAssociationDTO, request));
 			return new UserStatus(1,"Productrawmaterialassociation update Successfully !");
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 			return new UserStatus(0, e.toString());
 		}
@@ -161,6 +163,7 @@ public class ProductRMAssoController {
 			productRMAssoService.addMultipleRawmaterialorder(productRMAssociationDTO, request.getAttribute("current_user").toString());
 			return new UserStatus(1,"Productrawmaterialassociation update Successfully !");
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 			return new UserStatus(0, e.toString());
 		}
@@ -172,6 +175,7 @@ public class ProductRMAssoController {
 		try {
 			productrawmaterialassociationList = productRMAssoService.getProductRMAssoList();
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 		}
 		return productrawmaterialassociationList;
@@ -193,6 +197,7 @@ public class ProductRMAssoController {
 				}
 			}
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 		}
 		return new Response(1,"RMList and VendorList",rmVendorDatas);
@@ -230,6 +235,7 @@ public class ProductRMAssoController {
 				productRMAssociationModels.add(productRMAssociationModel);
 			}
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 		}
 		return new Response(1,productRMAssociationModels);
@@ -242,6 +248,7 @@ public class ProductRMAssoController {
 		try {
 			productrawmaterialassociationList = productRMAssoService.getProductRMAssoList(productId);
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 		}
 		return new Response(1,"Productionplanning List and Productrawmaterialassociation List",productrawmaterialassociationList);
@@ -255,6 +262,7 @@ public class ProductRMAssoController {
 			productIdList = productRMAssoService.getProductList();
 			products = productService.getProductList(productIdList);
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 		}
 		Response response = null; 
@@ -277,6 +285,7 @@ public class ProductRMAssoController {
 			}
 			return new Response(1,"Productrawmaterialassociation deleted Successfully !");
 		} catch (Exception e) {
+			logger.error(e);
 			return new Response(0, e.toString());
 		}
 	}
@@ -295,6 +304,7 @@ public class ProductRMAssoController {
 			}
 			return new Response(1,"Product Raw Material Associations deleted Successfully !");
 		} catch (Exception e) {
+			logger.error(e);
 			return new Response(0, e.toString());
 		}
 	}

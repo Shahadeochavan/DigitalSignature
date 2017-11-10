@@ -48,15 +48,15 @@ public class RMTypeController {
 			rmTypeService.addEntity(RMTypeRequestResponseFactory.setRMType(rmTypeDTO, request));
 			return new UserStatus(1, "RM Type added Successfully !");
 		} catch (ConstraintViolationException cve) {
-			logger.error("Inside ConstraintViolationException");
+			logger.error(cve);
 			cve.printStackTrace();
 			return new UserStatus(0, cve.getCause().getMessage());
 		} catch (PersistenceException pe) {
-			logger.error("Inside PersistenceException");
+			logger.error(pe);
 			pe.printStackTrace();
 			return new UserStatus(0, pe.getCause().getMessage());
 		} catch (Exception e) {
-			logger.error("Inside Exception");
+			logger.error(e);
 			e.printStackTrace();
 			return new UserStatus(0, e.getCause().getMessage());
 		}
@@ -72,6 +72,7 @@ public class RMTypeController {
 				return new Response(1,"There is no any rm type ");
 			}
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 		}
 		return new Response(1,rmTypeDTO);
@@ -83,6 +84,7 @@ public class RMTypeController {
 			rmTypeService.updateEntity(RMTypeRequestResponseFactory.setRMTypeUpdate(rmTypeDTO, request));
 			return new UserStatus(1, "RM Type update Successfully !");
 		} catch (Exception e) {
+			logger.error(e);
 			 e.printStackTrace();
 			return new UserStatus(0, e.toString());
 		}
@@ -100,6 +102,7 @@ public class RMTypeController {
 			}
 
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 		}
 
@@ -117,6 +120,7 @@ public class RMTypeController {
 			}
 			return new Response(1, "RM Type deleted Successfully !");
 		} catch (Exception e) {
+			logger.error(e);
 			return new Response(0, e.toString());
 		}
 

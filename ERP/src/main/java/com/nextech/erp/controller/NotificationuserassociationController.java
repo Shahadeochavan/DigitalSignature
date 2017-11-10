@@ -47,15 +47,15 @@ public class NotificationuserassociationController {
 			notificationservice.addEntity(NotificationUserAssRequestResponseFactory.setNotificationUserAss(notificationUserAssociatinsDTO));
 			return new UserStatus(1, "Notification added Successfully !");
 		} catch (ConstraintViolationException cve) {
-			logger.error("Inside ConstraintViolationException");
+			logger.error(cve);
 			cve.printStackTrace();
 			return new UserStatus(0, cve.getCause().getMessage());
 		} catch (PersistenceException pe) {
-			logger.error("Inside PersistenceException");
+			logger.error(pe);
 			pe.printStackTrace();
 			return new UserStatus(0, pe.getCause().getMessage());
 		} catch (Exception e) {
-			logger.error("Inside Exception");
+			logger.error(e);
 			e.printStackTrace();
 			return new UserStatus(0, e.getCause().getMessage());
 		}
@@ -71,6 +71,7 @@ public class NotificationuserassociationController {
 				return new Response(1,"There is no any notification user assocition");
 			}
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 		}
 		return new Response(1,notification);
@@ -84,7 +85,7 @@ public class NotificationuserassociationController {
 			notificationservice.updateEntity(NotificationUserAssRequestResponseFactory.setNotificationUserAss(notificationUserAssociatinsDTO));
 			return new UserStatus(1, "Notification update Successfully !");
 		} catch (Exception e) {
-			// e.printStackTrace();
+			logger.error(e);
 			return new UserStatus(0, e.toString());
 		}
 	}
@@ -101,7 +102,7 @@ public class NotificationuserassociationController {
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e);
 		}
 
 		return new Response(1,notificationList);
@@ -114,6 +115,7 @@ public class NotificationuserassociationController {
 			notificationservice.deleteNotificationUserAsso(id);
 			return new Response(1, "Notification deleted Successfully !");
 		} catch (Exception e) {
+			logger.error(e);
 			return new Response(0, e.toString());
 		}
 

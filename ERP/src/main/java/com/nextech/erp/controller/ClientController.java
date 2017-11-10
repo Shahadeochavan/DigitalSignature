@@ -77,14 +77,15 @@ public class ClientController {
 		       mailSending(clientDTO,notificationDTO);
 			     return new UserStatus(1, messageSource.getMessage(ERPConstants.CLIENT_ADDED, null, null));
 		} catch (ConstraintViolationException cve) {
+			logger.error(cve);
 			cve.printStackTrace();
 			return new UserStatus(0, cve.getCause().getMessage());
 		} catch (PersistenceException pe) {
-			logger.error("Inside PersistenceException");
+			logger.error(pe);
 			pe.printStackTrace();
 			return new UserStatus(0, pe.getCause().getMessage());
 		} catch (Exception e) {
-			logger.error("Inside Exception");
+			logger.error(e);
 			e.printStackTrace();
 			return new UserStatus(0, e.getCause().getMessage());
 		}
@@ -141,6 +142,7 @@ public class ClientController {
 				return new Response(1,"There is no client list");
 			}
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 		}
 		return new Response(1,clientList);
@@ -157,6 +159,7 @@ public class ClientController {
 			}
 			return new Response(1, messageSource.getMessage(ERPConstants.CLIENT_DELETE, null, null));
 		} catch (Exception e) {
+			logger.error(e);
 			return new Response(0, e.toString());
 		}
 	}

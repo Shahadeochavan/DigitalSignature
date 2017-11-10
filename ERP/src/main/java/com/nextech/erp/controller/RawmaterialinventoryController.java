@@ -81,15 +81,15 @@ public class RawmaterialinventoryController {
 			rawmaterialinventoryService.addEntity(RMInventoryRequestResponseFactory.setRMInventory(rmInventoryDTO, request));
 			return new UserStatus(1, "Rawmaterialinventory added Successfully !");
 		} catch (ConstraintViolationException cve) {
-			logger.error("Inside ConstraintViolationException");
+			logger.error(cve);
 			cve.printStackTrace();
 			return new UserStatus(0, cve.getCause().getMessage());
 		} catch (PersistenceException pe) {
-			logger.error("Inside PersistenceException");
+			logger.error(pe);
 			pe.printStackTrace();
 			return new UserStatus(0, pe.getCause().getMessage());
 		} catch (Exception e) {
-			logger.error("Inside Exception");
+			logger.error(e);
 			e.printStackTrace();
 			return new UserStatus(0, e.getCause().getMessage());
 		}
@@ -105,6 +105,7 @@ public class RawmaterialinventoryController {
 				return new Response(1,"There is no rm inventory");
 			}
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 		}
 		return new Response(1,rawmaterialinventory);
@@ -116,6 +117,7 @@ public class RawmaterialinventoryController {
 			rawmaterialinventoryService.updateEntity(RMInventoryRequestResponseFactory.setRMInventoryUpdate(rmInventoryDTO, request));
 			return new UserStatus(1, "Rawmaterialinventory update Successfully !");
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 			return new UserStatus(0, e.toString());
 		}
@@ -132,6 +134,7 @@ public class RawmaterialinventoryController {
 				return new Response(1,"There is no rm inventory");
 			}
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 		}
 		return new Response(1,rawmaterialinventoryList);
@@ -146,6 +149,7 @@ public class RawmaterialinventoryController {
 			}
 			return new Response(1, "Rawmaterialinventory deleted Successfully !");
 		} catch (Exception e) {
+			logger.error(e);
 			return new Response(0, e.toString());
 		}
 	}
@@ -177,6 +181,7 @@ public class RawmaterialinventoryController {
 				emailNotificationRMInventory(rmInventoryDTOs);
 			}
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 		}
 	}

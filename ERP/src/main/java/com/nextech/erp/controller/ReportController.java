@@ -266,10 +266,13 @@ public class ReportController {
 			FileCopyUtils.copy(in, response.getOutputStream());
 			
 		} catch (FileNotFoundException e) {
+			logger.error(e);
 			e.printStackTrace();
 		} catch (IOException e) {
+			logger.error(e);
 			e.printStackTrace();
 		} catch (DRException e) {
+			logger.error(e);
 			e.printStackTrace();
 		}
 		return fileName;

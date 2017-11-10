@@ -74,15 +74,15 @@ public class UsertypepageassociationController {
 			}
 			return new UserStatus(1,"User Type Page Association added uccessfully !");
 		} catch (ConstraintViolationException cve) {
-			logger.error("Inside ConstraintViolationException");
+			logger.error(cve);
 			cve.printStackTrace();
 			return new UserStatus(0, cve.getCause().getMessage());
 		} catch (PersistenceException pe) {
-			logger.error("Inside PersistenceException");
+			logger.error(pe);
 			pe.printStackTrace();
 			return new UserStatus(0, pe.getCause().getMessage());
 		} catch (Exception e) {
-			logger.error("Inside Exception");
+			logger.error(e);
 			e.printStackTrace();
 			return new UserStatus(0, e.getCause().getMessage());
 		}
@@ -99,6 +99,7 @@ public class UsertypepageassociationController {
 				return new Response(1,"There is no any user type page association");
 			}
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 		}
 		return new Response(1,userTypePageAssoDTO);
@@ -111,6 +112,7 @@ public class UsertypepageassociationController {
 			usertypepageassociationService.addEntity(UserTypePageAssoFactory.setUserTypePageAssUpdate(userTypePageAssoDTO, request));
 			return new UserStatus(1,"Usertypepageassociation update Successfully !");
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 			return new UserStatus(0, e.toString());
 		}
@@ -146,6 +148,7 @@ public class UsertypepageassociationController {
 			}
 
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 		}
 
@@ -165,7 +168,7 @@ public class UsertypepageassociationController {
 			String message = "From User Type Pagee Association "+pageDTO.getPageName()+" page deleted successfully ";
 			return new Response(1,message);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e);
 			return new Response(0, e.toString());
 		}
 

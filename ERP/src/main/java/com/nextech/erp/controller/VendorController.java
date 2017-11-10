@@ -80,18 +80,16 @@ public class VendorController {
               NotificationDTO  notificationDTO = notificationService.getNotificationByCode((messageSource.getMessage(ERPConstants.VENDOR_ADDED_SUCCESSFULLY, null, null)));
               emailNotificationVendor(vendorDTO, notificationDTO);
 			return new UserStatus(1, "vendor added Successfully !");
-		}
-		catch (ConstraintViolationException cve) {
-			logger.info("Inside ConstraintViolationException ");
-			throw new DuplicateEnteryException("ConstraintViolationException");
-			//return new UserStatus(0, cve.getCause().getMessage());
-		} 
-		catch (PersistenceException pe) {
-			logger.info("Inside PersistenceException ");
+		} catch (ConstraintViolationException cve) {
+			logger.error(cve);
+			cve.printStackTrace();
+			return new UserStatus(0, cve.getCause().getMessage());
+		} catch (PersistenceException pe) {
+			logger.error(pe);
 			pe.printStackTrace();
 			return new UserStatus(0, pe.getCause().getMessage());
 		} catch (Exception e) {
-			logger.info("Inside Exception ");
+			logger.error(e);
 			e.printStackTrace();
 			return new UserStatus(0, e.getCause().getMessage());
 		}
@@ -106,7 +104,7 @@ public class VendorController {
 				return new Response(1,"There is no vendor");
 			}
 		} catch (Exception e) {
-			logger.error("Exception in vendor ");
+			logger.error(e);
 			e.printStackTrace();
 		}
 		return new Response(1,vendorDTO);
@@ -131,7 +129,7 @@ public class VendorController {
             emailNotificationVendor(vendorDTO, notificationDTO);
 			return new UserStatus(1, "Vendor update Successfully !");
 		} catch (Exception e) {
-			logger.error("Exception in vendor update");
+			logger.error(e);
 			e.printStackTrace();
 			return new UserStatus(0, e.toString());
 		}
@@ -147,7 +145,7 @@ public class VendorController {
 				return new Response(1,"There is no vendor list");
 			}
 		} catch (Exception e) {
-			logger.error("Exception in vendor delete");
+			logger.error(e);
 			e.printStackTrace();
 		}
 		return new Response(1,vendorDTOs);
@@ -164,7 +162,7 @@ public class VendorController {
 			}
 			return new Response(1, "Vendor deleted Successfully !");
 		} catch (Exception e) {
-			logger.error("Exception in vendor delete");
+			logger.error(e);
 			return new Response(0, e.toString());
 		}
 

@@ -130,15 +130,15 @@ public class DispatchController {
 			
 			return new UserStatus(1, "Dispatch added Successfully !");
 		} catch (ConstraintViolationException cve) {
-			logger.error("Inside ConstraintViolationException");
+			logger.error(cve);
 			cve.printStackTrace();
 			return new UserStatus(0, cve.getCause().getMessage());
 		} catch (PersistenceException pe) {
-			logger.error("Inside PersistenceException");
+			logger.error(pe);
 			pe.printStackTrace();
 			return new UserStatus(0, pe.getCause().getMessage());
 		} catch (Exception e) {
-			logger.error("Inside Exception");
+			logger.error(e);
 			e.printStackTrace();
 			return new UserStatus(0, e.getCause().getMessage());
 		}
@@ -154,6 +154,7 @@ public class DispatchController {
 				return new Response(1,"There is no any dispatch product");
 			}
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 		}
 		return new Response(1,dispatch);
@@ -167,6 +168,7 @@ public class DispatchController {
 			dispatchservice.updateEntity(DispatchRequestResponseFactory.setdispatch(dispatchDTO, request));
 			return new UserStatus(1, "Dispatch update Successfully !");
 		} catch (Exception e) {
+			logger.error(e);
 			 e.printStackTrace();
 			return new UserStatus(0, e.toString());
 		}
@@ -183,6 +185,7 @@ public class DispatchController {
 				return new Response(1,"There is no any dispatch product list");
 			}
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 		}
 		return new Response(1,dispatchList);
@@ -199,6 +202,7 @@ public class DispatchController {
 			}
 			return new Response(1, "Dispatch deleted Successfully !");
 		} catch (Exception e) {
+			logger.error(e);
 			return new Response(0, e.toString());
 		}
 
@@ -230,6 +234,7 @@ public class DispatchController {
 	   StatusDTO status = statusService.getStatusById(productorder.getStatusId().getId());
 	   mailSending(productorder, client, status, dispatchPdfFile, dispatchProductDTOs, dispatchDTO);
 	    } catch (Exception e1) {
+	    	logger.error(e1);
 	        e1.printStackTrace();
 	    }
 

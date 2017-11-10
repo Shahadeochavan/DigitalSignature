@@ -57,15 +57,15 @@ public class ProductorderassociationController {
 			productorderassociationService.addEntity(ProductOrderAssoRequestResponseFactory.setProductPrderAsso(productOrderAssociationDTO, request));
 			return new UserStatus(1, "Productorderassociation added Successfully !");
 		} catch (ConstraintViolationException cve) {
-			logger.error("Inside ConstraintViolationException");
+			logger.error(cve);
 			cve.printStackTrace();
 			return new UserStatus(0, cve.getCause().getMessage());
 		} catch (PersistenceException pe) {
-			logger.error("Inside PersistenceException");
+			logger.error(pe);
 			pe.printStackTrace();
 			return new UserStatus(0, pe.getCause().getMessage());
 		} catch (Exception e) {
-			logger.error("Inside Exception");
+			logger.error(e);
 			e.printStackTrace();
 			return new UserStatus(0, e.getCause().getMessage());
 		}
@@ -93,6 +93,7 @@ public class ProductorderassociationController {
 			productorderassociationService.updateEntity(ProductOrderAssoRequestResponseFactory.setProductPrderAssoUpdate(productOrderAssociationDTO, request));
 			return new UserStatus(1, "Productorderassociation update Successfully !");
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 			return new UserStatus(0, e.toString());
 		}
@@ -108,6 +109,7 @@ public class ProductorderassociationController {
 				return new Response(1,"There is no any product order assocition list");
 			}
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 		}
 		return new Response(1,productorderassociationList);
@@ -141,6 +143,7 @@ public class ProductorderassociationController {
 				return new Response(1,"There is no any product rm assocition");
 			}
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 		}
 		return new Response(1,"ProductorderList and ProductInventoryList",productOrderInventoryList);
@@ -155,6 +158,7 @@ public class ProductorderassociationController {
 			}
 			return new Response(1, "Productorderassociation deleted Successfully !");
 		} catch (Exception e) {
+			logger.error(e);
 			return new Response(0, e.toString());
 		}
 	}

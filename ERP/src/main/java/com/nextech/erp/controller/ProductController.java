@@ -135,15 +135,15 @@ public class ProductController {
 			}
 			return new UserStatus(1, "product added Successfully !");
 		} catch (ConstraintViolationException cve) {
-			logger.error("Inside ConstraintViolationException");
+			logger.error(cve);
 			cve.printStackTrace();
 			return new UserStatus(0, cve.getCause().getMessage());
 		} catch (PersistenceException pe) {
-			logger.error("Inside PersistenceException");
+			logger.error(pe);
 			pe.printStackTrace();
 			return new UserStatus(0, pe.getCause().getMessage());
 		} catch (Exception e) {
-			logger.error("Inside Exception");
+			logger.error(e);
 			e.printStackTrace();
 			return new UserStatus(0, e.getCause().getMessage());
 		}
@@ -158,6 +158,7 @@ public class ProductController {
 				return new UserStatus(1,"There is no any product");
 			}
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 		}
 		return new UserStatus(1,product);
@@ -203,15 +204,15 @@ public class ProductController {
 				}
 			return new UserStatus(1, "product update Successfully !");
 		} catch (ConstraintViolationException cve) {
-			logger.error("Inside ConstraintViolationException");
+			logger.error(cve);
 			cve.printStackTrace();
 			return new UserStatus(0, cve.getCause().getMessage());
 		} catch (PersistenceException pe) {
-			logger.error("Inside PersistenceException");
+			logger.error(pe);
 			pe.printStackTrace();
 			return new UserStatus(0, pe.getCause().getMessage());
 		} catch (Exception e) {
-			logger.error("Inside Exception");
+			logger.error(e);
 			e.printStackTrace();
 			return new UserStatus(0, e.getCause().getMessage());
 		}
@@ -228,6 +229,7 @@ public class ProductController {
 				return new Response(1,"There is no product list");
 			}
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 		}
 		return new Response(1,productList);
@@ -249,6 +251,7 @@ public class ProductController {
 				}
 			}
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 		}
 		return new Response(1,"New Productrawmaterialassociation List",productNewAssoicatedLists);
@@ -265,6 +268,7 @@ public class ProductController {
 			}
 			return new Response(1, "Product deleted Successfully !");
 		} catch (Exception e) {
+			logger.error(e);
 			return new Response(0, e.toString());
 		}
 
@@ -282,6 +286,7 @@ public class ProductController {
 		    headers.setContentType(MediaType.IMAGE_PNG);
 		    return new ResponseEntity<byte[]>(IOUtils.toByteArray(in), headers, HttpStatus.CREATED);
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 			return null;
 		}

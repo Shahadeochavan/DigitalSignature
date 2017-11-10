@@ -118,18 +118,18 @@ public class UserController {
 				new UserStatus(0, "User is not authenticated.");
 			}
 		} catch (ConstraintViolationException cve) {
-			System.out.println("Inside ConstraintViolationException");
+			logger.error(cve);
 			cve.printStackTrace();
 			return new UserStatus(0, cve.getCause().getMessage());
 		} catch (PersistenceException pe) {
-			System.out.println("Inside PersistenceException");
+			logger.error(pe);
 			pe.printStackTrace();
 			return new UserStatus(0, pe.getCause().getMessage());
 		} catch (AuthenticationException authException) {
-
+			logger.error(authException);
 			return new UserStatus(0, authException.getCause().getMessage());
 		} catch (Exception e) {
-			System.out.println("Inside Exception");
+			logger.error(e);
 			e.printStackTrace();
 			return new UserStatus(0, e.getCause().getMessage());
 		}
@@ -185,7 +185,7 @@ public class UserController {
 		} catch (AuthenticationException authException) {
 			return new UserStatus(0, authException.getCause().getMessage());
 		} catch (Exception e) {
-			logger.error("Inside Exception");
+			logger.error(e);
 			e.printStackTrace();
 			return new UserStatus(0, e.getCause().getMessage());
 		}
@@ -220,7 +220,7 @@ public class UserController {
 				return new Response(1, "There is no any user");
 			}
 		} catch (Exception e) {
-			logger.error("Exception in user");
+			logger.error(e);
 			e.printStackTrace();
 		}
 		return new Response(1, userDTO);
@@ -265,6 +265,7 @@ public class UserController {
 			emailNotificationUser(userDTO, request, response, notificationDTO);
 			return new UserStatus(1, "User update Successfully !");
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 			return new UserStatus(0, e.toString());
 		}
@@ -280,7 +281,7 @@ public class UserController {
 				return new Response(1, "There is no any user list");
 			}
 		} catch (Exception e) {
-			logger.info("Exception in user list");
+			logger.error(e);
 			e.printStackTrace();
 		}
 		return new Response(1, userList);
@@ -297,6 +298,7 @@ public class UserController {
 			}
 			return new Response(1, "User deleted Successfully !");
 		} catch (Exception e) {
+			logger.error(e);
 			return new Response(0, e.toString());
 		}
 	}

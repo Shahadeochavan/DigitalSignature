@@ -80,15 +80,15 @@ public class StoreoutController {
 			
 			return new UserStatus(1, "Storeout added Successfully !");
 		} catch (ConstraintViolationException cve) {
-			logger.error("Inside ConstraintViolationException");
+			logger.error(cve);
 			cve.printStackTrace();
 			return new UserStatus(0, cve.getCause().getMessage());
 		} catch (PersistenceException pe) {
-			logger.error("Inside PersistenceException");
+			logger.error(pe);
 			pe.printStackTrace();
 			return new UserStatus(0, pe.getCause().getMessage());
 		} catch (Exception e) {
-			logger.error("Inside Exception");
+			logger.error(e);
 			e.printStackTrace();
 			return new UserStatus(0, e.getCause().getMessage());
 		}
@@ -104,6 +104,7 @@ public class StoreoutController {
 				return  new Response(1,"There is no any store out rm");
 			}
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 		}
 		return new Response(1,Storeout);
@@ -116,6 +117,7 @@ public class StoreoutController {
 			storeoutService.updateEntity(StoreoutRequestResponseFactory.setStoreOut(storeOutDTO, request));
 			return new UserStatus(1, "Storeout update Successfully !");
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 			return new UserStatus(0, e.toString());
 		}
@@ -133,6 +135,7 @@ public class StoreoutController {
 			 }
 
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 		}
 
@@ -150,6 +153,7 @@ public class StoreoutController {
 			}
 			return new Response(1, "Storeout deleted Successfully !");
 		} catch (Exception e) {
+			logger.error(e);
 			return new Response(0, e.toString());
 		}
 

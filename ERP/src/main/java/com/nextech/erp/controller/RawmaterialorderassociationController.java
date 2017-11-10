@@ -53,15 +53,15 @@ public class RawmaterialorderassociationController {
 			rawmaterialorderassociationService.addEntity(RMOrderAssociationRequestResponseFactory.setRMOrderAssocition(rmOrderAssociationDTO, request));
 			return new UserStatus(1,"Rawmaterialorderassociation added Successfully !");
 		} catch (ConstraintViolationException cve) {
-			logger.error("Inside ConstraintViolationException");
+			logger.error(cve);
 			cve.printStackTrace();
 			return new UserStatus(0, cve.getCause().getMessage());
 		} catch (PersistenceException pe) {
-			logger.error("Inside PersistenceException");
+			logger.error(pe);
 			pe.printStackTrace();
 			return new UserStatus(0, pe.getCause().getMessage());
 		} catch (Exception e) {
-			logger.error("Inside Exception");
+			logger.error(e);
 			e.printStackTrace();
 			return new UserStatus(0, e.getCause().getMessage());
 		}
@@ -78,6 +78,7 @@ public class RawmaterialorderassociationController {
 				return new UserStatus(1,"There is no rm association");
 			}
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 		}
 		return new UserStatus(1,rawmaterialorderassociation);
@@ -90,6 +91,7 @@ public class RawmaterialorderassociationController {
 			rawmaterialorderassociationService.updateEntity(RMOrderAssociationRequestResponseFactory.setRMOrderAssocitionUpdate(rmOrderAssociationDTO, request));
 			return new UserStatus(1,"Rawmaterialorderassociation update Successfully !");
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 			return new UserStatus(0, e.toString());
 		}
@@ -105,6 +107,7 @@ public class RawmaterialorderassociationController {
 				return new Response(1,"There is no any rm assocition list");
 			}
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 		}
 		return new Response(1,rawmaterialorderassociationList);
@@ -141,6 +144,7 @@ public class RawmaterialorderassociationController {
 			return new Response(1,
 					"Rawmaterialorderassociation deleted Successfully !");
 		} catch (Exception e) {
+			logger.error(e);
 			return new Response(0, e.toString());
 		}
 	}
