@@ -2,7 +2,10 @@ package com.nextech.dscrm.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.PersistenceException;
 import javax.servlet.ServletContext;
@@ -18,6 +21,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
@@ -29,14 +33,17 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nextech.dscrm.constants.ERPConstants;
 import com.nextech.dscrm.dto.Mail;
+import com.nextech.dscrm.dto.ProductInventoryDTO;
 import com.nextech.dscrm.dto.ProductOrderDTO;
 import com.nextech.dscrm.dto.ProductOrderData;
 import com.nextech.dscrm.dto.ProductOrderPdf;
 import com.nextech.dscrm.factory.MailResponseRequestFactory;
+import com.nextech.dscrm.model.Client;
 import com.nextech.dscrm.model.Productinventory;
 import com.nextech.dscrm.model.Productorder;
 import com.nextech.dscrm.newDTO.ClientDTO;
 import com.nextech.dscrm.newDTO.NotificationDTO;
+import com.nextech.dscrm.newDTO.ProductDTO;
 import com.nextech.dscrm.newDTO.ProductOrderAssociationDTO;
 import com.nextech.dscrm.newDTO.StatusDTO;
 import com.nextech.dscrm.service.ClientService;
@@ -197,7 +204,7 @@ public class ProductorderController {
 	public @ResponseBody Response getPendingsProductorders() {
 		List<ProductOrderDTO> productorderList = null;
 		try {
-			productorderList = productorderService.getPendingProductOrders(Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_NEW_PRODUCT_ORDER, null, null)),
+			productorderList = productorderService.getPendingProductOrders(Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_NO_PAYMENT, null, null)),
 					Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_PRODUCT_ORDER_INCOMPLETE, null, null)));
 			if(productorderList==null){
 				logger.error("There is no any pending list");
@@ -272,21 +279,47 @@ public class ProductorderController {
         mail.setModel(MailResponseRequestFactory.setMailDetailsProductOrder(notification, productOrderDatas, client, productOrderDTO));
         mailService.sendEmail(mail,notification);
 	}
-	@RequestMapping(value="/getpdf1", method=RequestMethod.GET)
-	public ResponseEntity<byte[]> getPDF1() {
-
-
-	    HttpHeaders headers = new HttpHeaders();
-	    String str = "C:/Users/welcome/Downloads/scjp.pdf";
-	    byte[] documentInBytes = str.getBytes();
-	    String filename = "scjp.pdf";
-
-	   headers.add("content-disposition", "inline;filename=" + filename);
-
-	   // headers.setContentDispositionFormData(filename, filename);
-	    headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
-	    ResponseEntity<byte[]> response = new ResponseEntity<byte[]>(documentInBytes, headers, HttpStatus.OK);
-	    return response;
+	
+//	@Scheduled(initialDelay=600000, fixedRate=600000)
+	public void executeSchedular() throws Exception{
+		logger.info("Client payment email notification");
+		
+		List<Client> clients = clientService.getEntityList(Client.class);
+		try {
+			for (Client client : clients) {
+				long quantityCount = 0;
+				List<Productorder> productorders = productorderService.getProductOrderListByClientId(client.getId());
+				if(productorders !=null&&!productorders.isEmpty()){
+				for (Productorder productorder : productorders) {
+					long id =3;
+					if(productorder.getStatus().getId()!=id){
+						quantityCount = quantityCount+productorder.getQuantity();
+					 }
+				   }
+				}
+				if(quantityCount>=5){
+					clientEmailNotifiactionPayment(client);
+				}
+			}
+		} catch (Exception e) {
+			logger.error(e);
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public void clientEmailNotifiactionPayment(Client client) throws Exception{
+		   NotificationDTO  notificationDTO = notificationService.getNotificationByCode((messageSource.getMessage(ERPConstants.CLIENT_PAYMENT_NOTIFICATION, null, null)));
+		   Mail mail = mailService.setMailCCBCCAndTO(notificationDTO);
+		   String clientTO = mail.getMailTo()+","+client.getEmailid();
+		    mail.setMailTo(clientTO);
+	        mail.setMailSubject(notificationDTO.getSubject());
+	        Map < String, Object > model = new HashMap < String, Object > ();
+	        model.put("companyname", client.getCompanyname());
+	        model.put("location", "Pune");
+	        model.put("signature", "www.NextechServices.in");
+	        mail.setModel(model);
+		   mailService.sendEmailWithoutPdF(mail, notificationDTO);
 	}
 }
 

@@ -6,7 +6,9 @@ public class ERPConstants {
 	public static String FIRSTNAME="firstName";
 	public static String STATUS_READY_STORE_IN="readyStoreIn";
     public static String STATUS_RAW_MATERIAL_INVENTORY_ADD="statusRMInventoryAdd";
-    public static String STATUS_NEW_PRODUCT_ORDER="newProductOrder";
+    public static String STATUS_NO_PAYMENT="noPayment";
+    public static String STATUS_PAYMENT_COMPLETE ="completePayment";
+    public static String STATUS_PAYMNET_INCOMPLETE="IncompletePayment";
     public static String STATUS_NEW_RM_ORDER="newRMOrder";
     public static String EMAIL_SHOULD_BE_UNIQUE="emailExit";
     public static String VENDOR_ADDED_SUCCESSFULLY="vendorAddedSuccessfully";
@@ -75,6 +77,7 @@ public class ERPConstants {
    public static String RM_NOTIFICATION ="rmNotification";
    
    public static String UPLOAD_IMAGE="UPLOADIMAGE";
+   public static String CLIENT_PAYMENT_NOTIFICATION="clientEmailNotifiactionPaymet";
 
 
 }

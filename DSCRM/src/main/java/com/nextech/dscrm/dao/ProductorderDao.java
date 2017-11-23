@@ -15,5 +15,7 @@ public interface ProductorderDao extends SuperDao<Productorder> {
 	public List<Productorder> getInCompleteProductOrders(long statusId);
 	
 	public List<Productorder> getNewAndInCompleteProductOrders(long newStatus,long inCompleteStatus) throws Exception;
+	
+	List<Productorder> getProductOrderListByClientId(long clientId) throws Exception;
 
 }

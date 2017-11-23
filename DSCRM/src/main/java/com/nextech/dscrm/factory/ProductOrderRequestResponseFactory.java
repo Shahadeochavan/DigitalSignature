@@ -15,8 +15,9 @@ public class ProductOrderRequestResponseFactory {
 		productorder.setClient(productOrderDTO.getClientId());
 		productorder.setCreateDate(productOrderDTO.getCreateDate());
 		productorder.setDescription(productOrderDTO.getDescription());
-		productorder.setExpecteddeliveryDate(productOrderDTO.getExpectedDeliveryDate());
-		productorder.setPoNO(productOrderDTO.getPoNO());
+		productorder.setProduct(productOrderDTO.getProduct());
+	//	productorder.setExpecteddeliveryDate(productOrderDTO.getExpectedDeliveryDate());
+		//productorder.setPoNO(productOrderDTO.getPoNO());
 		productorder.setId(productOrderDTO.getId());
 		productorder.setQuantity(productOrderDTO.getQuantity());
 		productorder.setTotalAmount(productOrderDTO.getTotalAmount());

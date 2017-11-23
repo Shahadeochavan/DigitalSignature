@@ -12,6 +12,7 @@ import javax.persistence.metamodel.Metamodel;
 import org.springframework.stereotype.Repository;
 
 import com.nextech.dscrm.dao.ProductorderDao;
+import com.nextech.dscrm.model.Clientproductasso;
 import com.nextech.dscrm.model.Productorder;
 
 @Repository
@@ -85,6 +86,19 @@ public class ProductorderDaoImpl extends SuperDaoImpl<Productorder> implements
 	    criteriaQuery.where(root.get("status").in(newStatus,inCompleteStatus));
 	    TypedQuery<Productorder> typedQuery = session.createQuery(criteriaQuery);
 	    return typedQuery.getResultList();
+	}
+
+	@Override
+	public List<Productorder> getProductOrderListByClientId(long clientId)
+			throws Exception {
+		// TODO Auto-generated method stub
+		session = sessionFactory.openSession();
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<Productorder> criteria = builder.createQuery(Productorder.class);
+		Root<Productorder> userRoot  = (Root<Productorder>) criteria.from(Productorder.class);
+		criteria.select(userRoot).where(builder.equal(userRoot.get("client"), clientId),builder.equal(userRoot.get("isactive"), true));
+		TypedQuery<Productorder> query = session.createQuery(criteria);
+		return query.getResultList();
 	}
 
 }

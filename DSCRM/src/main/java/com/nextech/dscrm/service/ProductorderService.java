@@ -31,4 +31,6 @@ public interface ProductorderService extends CRUDService<Productorder>{
 	List<ProductOrderDTO> getInCompleteProductOrders(long statusId);
 	
 	List<ProductOrderDTO> getNewAndInCompleteProductOrders(long newStatus,long inCompleteStatus) throws Exception;
+	
+	List<Productorder> getProductOrderListByClientId(long clientId) throws Exception;
 }

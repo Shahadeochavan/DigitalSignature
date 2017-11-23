@@ -120,7 +120,14 @@ public class ProductorderServiceImpl extends CRUDServiceImpl<Productorder> imple
 		productorder.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 		productorder.setClient(clientDao.getById(Client.class,productOrderDTO.getClientId().getId()));
 		productorder.setProduct(product);
-		productorder.setStatus(statusDao.getById(Status.class,Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_NEW_PRODUCT_ORDER, null, null))));
+
+		if(productorder.getTotalAmount()==productorder.getReceivedAmount()){
+			productorder.setStatus(statusDao.getById(Status.class,Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_PAYMENT_COMPLETE, null, null))));
+			}else if(productorder.getTotalAmount()<productorder.getReceivedAmount()){
+				productorder.setStatus(statusDao.getById(Status.class,Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_PAYMNET_INCOMPLETE, null, null))));	
+			}else{
+				productorder.setStatus(statusDao.getById(Status.class,Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_NO_PAYMENT, null, null))));
+			}
 	long id =	productorderDao.add(productorder);
 		System.out.println(productorder);
 		String innoiceNo = generateProductOrderInvoiceNumber() + productorder.getId();
@@ -200,7 +207,11 @@ public class ProductorderServiceImpl extends CRUDServiceImpl<Productorder> imple
 			return null;
 		}
 		productorder.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-		productorder.setStatus(statusDao.getById(Status.class,Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_NEW_PRODUCT_ORDER, null, null))));
+		if(productorder.getTotalAmount()==productorder.getReceivedAmount()){
+		productorder.setStatus(statusDao.getById(Status.class,Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_PAYMENT_COMPLETE, null, null))));
+		}else{
+			productorder.setStatus(statusDao.getById(Status.class,Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_PAYMNET_INCOMPLETE, null, null))));	
+		}
 		productorderDao.update(productorder);
 		return productOrderDTO;
 	}
@@ -235,5 +246,11 @@ public class ProductorderServiceImpl extends CRUDServiceImpl<Productorder> imple
 			productOrderDTOs.add(productOrderDTO);
 		}
 		return productOrderDTOs;
+	}
+	@Override
+	public List<Productorder> getProductOrderListByClientId(long clientId)
+			throws Exception {
+		// TODO Auto-generated method stub
+		return productorderDao.getProductOrderListByClientId(clientId);
 	}
 }
