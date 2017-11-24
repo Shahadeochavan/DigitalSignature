@@ -33,7 +33,9 @@ import com.nextech.dscrm.factory.ApplicantRequestResponseFactory;
 import com.nextech.dscrm.model.Applicant;
 import com.nextech.dscrm.model.Client;
 import com.nextech.dscrm.model.Product;
+import com.nextech.dscrm.model.User;
 import com.nextech.dscrm.service.ApplicantService;
+import com.nextech.dscrm.service.UserService;
 import com.nextech.dscrm.status.Response;
 import com.nextech.dscrm.status.UserStatus;
 
@@ -44,6 +46,9 @@ public class ApplicantController {
 	ApplicantService applicantService;
 	
 	static Logger logger = Logger.getLogger(ApplicantController.class);
+	
+	@Autowired
+	UserService userService;
 	
 	
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
@@ -149,7 +154,7 @@ public class ApplicantController {
 	}
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody Response getUserType() {
+	public @ResponseBody Response getUserType(HttpServletRequest request) {
 
 		List<Applicant> applicants = null;
 		try {
@@ -158,6 +163,15 @@ public class ApplicantController {
 				 logger.info("there is no any Applicant list");
 				return new Response(1,"There is no any Applicant list");
 			}
+			User user =  new User();
+			user.setId(Long.parseLong(request.getAttribute("current_user").toString()));
+			System.out.println("User id is"+user.getId());
+			User user2 =  userService.getEntityById(User.class, user.getId());
+			if(user2.getUsertype().getId()==11){
+				applicants = applicantService.getApplicantsByClientId(user2.getClientId());
+				return new Response(1,applicants);
+			}
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

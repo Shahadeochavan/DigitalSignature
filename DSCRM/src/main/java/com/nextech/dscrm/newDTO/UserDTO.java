@@ -14,6 +14,7 @@ public class UserDTO extends AbstractDTO {
 	private Date dob;
 	private Date doj;
 	private String emailId;
+	private long clientId;
 	private List<NotificationUserAssociatinsDTO> notificationUserAssociatinsDTOs;
 	public UserDTO(int id){
 		this.setId(id);
@@ -81,6 +82,12 @@ public class UserDTO extends AbstractDTO {
 	}
 	public void setUserTypeDTO(UserTypeDTO userTypeDTO) {
 		this.userTypeDTO = userTypeDTO;
+	}
+	public long getClientId() {
+		return clientId;
+	}
+	public void setClientId(long clientId) {
+		this.clientId = clientId;
 	}
 	
 }

@@ -77,6 +77,8 @@ public class User implements Serializable {
 	@ManyToOne
 	@JoinColumn(name="usertypeid")
 	private Usertype usertype;
+	
+	private long clientId;
 
 	@JsonIgnore
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL)
@@ -227,6 +229,12 @@ public class User implements Serializable {
 		notificationuserassociation.setUser(null);
 
 		return notificationuserassociation;
+	}
+	public long getClientId() {
+		return clientId;
+	}
+	public void setClientId(long clientId) {
+		this.clientId = clientId;
 	}
 	
 }

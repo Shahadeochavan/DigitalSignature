@@ -23,7 +23,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.nextech.dscrm.dto.ClientproductassoDTO;
 import com.nextech.dscrm.factory.ClientProductAssoRequestResponseFactory;
 import com.nextech.dscrm.model.Clientproductasso;
+import com.nextech.dscrm.model.User;
 import com.nextech.dscrm.service.ClientproductassoService;
+import com.nextech.dscrm.service.UserService;
 import com.nextech.dscrm.status.Response;
 import com.nextech.dscrm.status.UserStatus;
 
@@ -33,7 +35,11 @@ public class ClientproductassoController {
 	
 	@Autowired 
 	ClientproductassoService clientproductassoService;
+	
     static Logger logger = Logger.getLogger(BankdetailController.class);
+    
+    @Autowired
+	UserService userService;
     
     @RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addBankdetail(@Valid @RequestBody ClientproductassoDTO clientproductassoDTO,
@@ -68,6 +74,7 @@ public class ClientproductassoController {
 			if(clientproductasso==null){
 				return new Response(1,"There is no any clientproductasso");
 			}
+			
 		} catch (Exception e) {
 			logger.error(e);
 			e.printStackTrace();
@@ -89,7 +96,7 @@ public class ClientproductassoController {
 	}
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody Response getClientproductasso() {
+	public @ResponseBody Response getClientproductasso(HttpServletRequest request) {
 
 		List<Clientproductasso> clientproductassos = null;
 		try {
@@ -98,7 +105,14 @@ public class ClientproductassoController {
 				 logger.info("there is no any Clientproductasso list");
 				return new Response(1,"There is no any Clientproductasso list");
 			}
-
+			
+			User user =  new User();
+			user.setId(Long.parseLong(request.getAttribute("current_user").toString()));
+			System.out.println("User id is"+user.getId());
+			User user2 =  userService.getEntityById(User.class, user.getId());
+			if(user2.getUsertype().getId()==11){
+				clientproductassos = clientproductassoService.getClientProductAssoListByClientId(user2.getClientId());
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

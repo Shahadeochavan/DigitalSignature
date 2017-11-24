@@ -63,6 +63,7 @@ public class UserFactory {
 		userTypeDTO.setUsertypeName(user.getUsertype().getUsertypeName());
 		userTypeDTO.setId(user.getUsertype().getId());
 		userDTO.setUserTypeDTO(userTypeDTO);
+		userDTO.setClientId(user.getClientId());
 		userDTO.setActive(true);
 		return userDTO;
 	}

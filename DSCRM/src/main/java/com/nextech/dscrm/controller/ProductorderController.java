@@ -29,6 +29,7 @@ import com.nextech.dscrm.dto.ProductOrderDTO;
 import com.nextech.dscrm.model.Client;
 import com.nextech.dscrm.model.Productinventory;
 import com.nextech.dscrm.model.Productorder;
+import com.nextech.dscrm.model.User;
 import com.nextech.dscrm.newDTO.NotificationDTO;
 import com.nextech.dscrm.newDTO.ProductOrderAssociationDTO;
 import com.nextech.dscrm.service.ClientService;
@@ -168,7 +169,7 @@ public class ProductorderController {
 	}
 
 	@Transactional @RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody Response getProductorder() {
+	public @ResponseBody Response getProductorder(HttpServletRequest request) {
 		List<ProductOrderDTO> productorderList = null;
 		try {
 			productorderList = productorderService.getProductOrderList();
@@ -176,7 +177,10 @@ public class ProductorderController {
 				logger.error("There is no product order list");
 				return new Response(1,"There is no product order list");
 			}
-
+			User user =  new User();
+			user.setId(Long.parseLong(request.getAttribute("current_user").toString()));
+			System.out.println("User id is"+user.getId());
+	
 		} catch (Exception e) {
 			logger.error(e);
 			e.printStackTrace();
