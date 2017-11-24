@@ -3,7 +3,6 @@ package com.nextech.dscrm.dao;
 import java.util.Date;
 import java.util.List;
 
-import com.nextech.dscrm.model.Productionplanning;
 import com.nextech.dscrm.model.Productorderassociation;
 
 public interface ProductorderassociationDao extends SuperDao<Productorderassociation>{
@@ -16,7 +15,6 @@ public interface ProductorderassociationDao extends SuperDao<Productorderassocia
 
 	public List<Productorderassociation> getIncompleteProductOrderAssoByProductId(long productId) throws Exception;
 
-	public Productionplanning getProductionPlanningforCurrentMonthByProductIdAndDate(long pId,Date date)throws Exception;
 
 	public List<Productorderassociation> getProductOrderAssoByOrderId(long orderId) throws Exception;
 	

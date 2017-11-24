@@ -61,10 +61,7 @@ public class Product implements Serializable {
 	@JsonIgnore
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "product", cascade = CascadeType.ALL)
 	private List<Applicant> applicants;
-	
-	@JsonIgnore
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "product", cascade = CascadeType.ALL)
-	private List<Dispatch> dispatches;
+
 
 	@JsonIgnore
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "product", cascade = CascadeType.ALL)
@@ -72,15 +69,7 @@ public class Product implements Serializable {
 
 	@JsonIgnore
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "product", cascade = CascadeType.ALL)
-	private List<Productionplanning> productionplannings;
-
-	@JsonIgnore
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "product", cascade = CascadeType.ALL)
 	private List<Productorderassociation> productorderassociations;
-
-	@JsonIgnore
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "product", cascade = CascadeType.ALL)
-	private List<Productquality> productqualities;
 	
 	@JsonIgnore
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "product", cascade = CascadeType.ALL)
@@ -167,28 +156,6 @@ public class Product implements Serializable {
 		this.updatedDate = updatedDate;
 	}
 
-	public List<Dispatch> getDispatches() {
-		return this.dispatches;
-	}
-
-	public void setDispatches(List<Dispatch> dispatches) {
-		this.dispatches = dispatches;
-	}
-
-	public Dispatch addDispatch(Dispatch dispatch) {
-		getDispatches().add(dispatch);
-		dispatch.setProduct(this);
-
-		return dispatch;
-	}
-
-	public Dispatch removeDispatch(Dispatch dispatch) {
-		getDispatches().remove(dispatch);
-		dispatch.setProduct(null);
-
-		return dispatch;
-	}
-
 	public List<Productinventory> getProductinventories() {
 		return this.productinventories;
 	}
@@ -211,28 +178,6 @@ public class Product implements Serializable {
 		return productinventory;
 	}
 
-	public List<Productionplanning> getProductionplannings() {
-		return this.productionplannings;
-	}
-
-	public void setProductionplannings(List<Productionplanning> productionplannings) {
-		this.productionplannings = productionplannings;
-	}
-
-	public Productionplanning addProductionplanning(Productionplanning productionplanning) {
-		getProductionplannings().add(productionplanning);
-		productionplanning.setProduct(this);
-
-		return productionplanning;
-	}
-
-	public Productionplanning removeProductionplanning(Productionplanning productionplanning) {
-		getProductionplannings().remove(productionplanning);
-		productionplanning.setProduct(null);
-
-		return productionplanning;
-	}
-
 	public List<Productorderassociation> getProductorderassociations() {
 		return this.productorderassociations;
 	}
@@ -253,28 +198,6 @@ public class Product implements Serializable {
 		productorderassociation.setProduct(null);
 
 		return productorderassociation;
-	}
-
-	public List<Productquality> getProductqualities() {
-		return this.productqualities;
-	}
-
-	public void setProductqualities(List<Productquality> productqualities) {
-		this.productqualities = productqualities;
-	}
-
-	public Productquality addProductquality(Productquality productquality) {
-		getProductqualities().add(productquality);
-		productquality.setProduct(this);
-
-		return productquality;
-	}
-
-	public Productquality removeProductquality(Productquality productquality) {
-		getProductqualities().remove(productquality);
-		productquality.setProduct(null);
-
-		return productquality;
 	}
 
 	public float getPricePerUnit() {

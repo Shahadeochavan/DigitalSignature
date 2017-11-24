@@ -1,6 +1,5 @@
 package com.nextech.dscrm.daoImpl;
 
-import java.util.Date;
 import java.util.List;
 
 import javax.persistence.TypedQuery;
@@ -12,7 +11,6 @@ import javax.persistence.criteria.Root;
 import org.springframework.stereotype.Repository;
 
 import com.nextech.dscrm.dao.ProductorderassociationDao;
-import com.nextech.dscrm.model.Productionplanning;
 import com.nextech.dscrm.model.Productorderassociation;
 
 @Repository
@@ -73,23 +71,6 @@ public class ProductorderassociationDaoImpl extends
 		TypedQuery<Productorderassociation> query = session.createQuery(criteria);
 		return query.getResultList();
 	}
-
-	@Override
-	public Productionplanning getProductionPlanningforCurrentMonthByProductIdAndDate(
-			long pId, Date date) throws Exception {
-		session = sessionFactory.openSession();
-		CriteriaBuilder builder = session.getCriteriaBuilder();
-		CriteriaQuery<Productionplanning> criteria = builder.createQuery(Productionplanning.class);
-		Root<Productionplanning> userRoot = (Root<Productionplanning>) criteria.from(Productionplanning.class);
-		criteria.select(userRoot).where(builder.equal(userRoot.get("product"), pId),builder.equal(userRoot.get("date"), date),builder.equal(userRoot.get("isactive"), true));
-		TypedQuery<Productionplanning> query = session.createQuery(criteria);
-		  List<Productionplanning> list = query.getResultList();
-		  if (list.isEmpty()) {
-		        return null;
-		    }
-		    return list.get(0);
-	}
-
 	@Override
 	public List<Productorderassociation> getProductOrderAssoByOrderId(
 			long orderId) throws Exception {

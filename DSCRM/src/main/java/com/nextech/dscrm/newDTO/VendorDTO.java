@@ -4,7 +4,6 @@ package com.nextech.dscrm.newDTO;
 import java.util.List;
 
 import com.nextech.dscrm.dto.AbstractDTO;
-import com.nextech.dscrm.dto.RawmaterialOrderDTO;
 
 public class VendorDTO extends AbstractDTO{
 
@@ -25,9 +24,6 @@ public class VendorDTO extends AbstractDTO{
 	private String renge; 
 	private String state;
 	private String vatNo;
-	private List<BomRMVendorAssociationsDTO> bomRMVendorAssociationsDTOs;
-	private List<RMVendorAssociationDTO> rawmaterialvendorassociations;
-	private List<RawmaterialOrderDTO> rawmaterialOrderDTOs;
 	
 	public VendorDTO(){
 		
@@ -171,33 +167,5 @@ public class VendorDTO extends AbstractDTO{
 	public void setVatNo(String vatNo) {
 		this.vatNo = vatNo;
 	}
-
-	public List<BomRMVendorAssociationsDTO> getBomRMVendorAssociationsDTOs() {
-		return bomRMVendorAssociationsDTOs;
-	}
-
-	public void setBomRMVendorAssociationsDTOs(
-			List<BomRMVendorAssociationsDTO> bomRMVendorAssociationsDTOs) {
-		this.bomRMVendorAssociationsDTOs = bomRMVendorAssociationsDTOs;
-	}
-
-	public List<RMVendorAssociationDTO> getRawmaterialvendorassociations() {
-		return rawmaterialvendorassociations;
-	}
-
-	public void setRawmaterialvendorassociations(
-			List<RMVendorAssociationDTO> rawmaterialvendorassociations) {
-		this.rawmaterialvendorassociations = rawmaterialvendorassociations;
-	}
-
-	public List<RawmaterialOrderDTO> getRawmaterialOrderDTOs() {
-		return rawmaterialOrderDTOs;
-	}
-
-	public void setRawmaterialOrderDTOs(
-			List<RawmaterialOrderDTO> rawmaterialOrderDTOs) {
-		this.rawmaterialOrderDTOs = rawmaterialOrderDTOs;
-	}
-
 	
 }

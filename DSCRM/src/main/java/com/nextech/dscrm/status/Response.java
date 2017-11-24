@@ -2,12 +2,6 @@ package com.nextech.dscrm.status;
 
 import java.util.List;
 
-import com.nextech.dscrm.dto.DispatchProductDTO;
-import com.nextech.dscrm.dto.RMReqirementDTO;
-
-
-
-
 public class Response {
 	private int code;
 	private String message;

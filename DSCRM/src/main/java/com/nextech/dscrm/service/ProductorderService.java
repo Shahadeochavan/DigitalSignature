@@ -6,7 +6,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.nextech.dscrm.dto.ProductOrderDTO;
-import com.nextech.dscrm.dto.ProductOrderData;
 import com.nextech.dscrm.model.Productorder;
 
 public interface ProductorderService extends CRUDService<Productorder>{
@@ -26,7 +25,6 @@ public interface ProductorderService extends CRUDService<Productorder>{
 	
 	public ProductOrderDTO deleteProductOrder(long id) throws Exception;
 	
-	public List<ProductOrderData> createProductorderAsso(ProductOrderDTO productOrderDTO,HttpServletRequest request) throws Exception;
 
 	List<ProductOrderDTO> getInCompleteProductOrders(long statusId);
 	

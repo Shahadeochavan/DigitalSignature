@@ -1,4 +1,4 @@
-package com.nextech.dscrm.dto;
+/*package com.nextech.dscrm.dto;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -36,9 +36,9 @@ public class ProductOrderPdf {
 	public String cgst ="";
 	public String sgst ="";
 	public String subtoatl ="";
-	/**
+	*//**
 	 * @param args
-	 */
+	 *//*
   
 
 	public  Document createPDF(String file,ProductOrderDTO productOrderDTO,List<ProductOrderData> productOrderDatas,ClientDTO client) throws Exception {
@@ -462,3 +462,4 @@ public class ProductOrderPdf {
 			return answer;
 		}
 }
+*/

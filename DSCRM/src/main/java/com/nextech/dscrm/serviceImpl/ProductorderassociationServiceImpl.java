@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import com.nextech.dscrm.dao.ProductorderassociationDao;
 import com.nextech.dscrm.factory.ProductOrderAssoRequestResponseFactory;
-import com.nextech.dscrm.model.Productionplanning;
 import com.nextech.dscrm.model.Productorderassociation;
 import com.nextech.dscrm.newDTO.ProductOrderAssociationDTO;
 import com.nextech.dscrm.service.ProductorderassociationService;
@@ -75,13 +74,6 @@ ProductorderassociationDao productorderassociationDao;
 		}
 		return productOrderAssociationDTOs;
 	}
-
-	@Override
-	public Productionplanning getProductionPlanningforCurrentMonthByProductIdAndDate(
-			long pId, Date date) throws Exception {
-		return productorderassociationDao.getProductionPlanningforCurrentMonthByProductIdAndDate(pId, date);
-	}
-
 	@Override
 	public List<Productorderassociation> getProductOrderAssoByOrderId(
 			long orderId) throws Exception {

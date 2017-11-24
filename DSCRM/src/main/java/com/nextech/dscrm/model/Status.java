@@ -43,33 +43,15 @@ public class Status implements Serializable {
 	@Column(name="updated_date")
 	private Timestamp updatedDate;
 
-	@JsonIgnore
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "status", cascade = CascadeType.ALL)
-	private List<Dailyproduction> dailyproductions;
-
-	@JsonIgnore
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "status", cascade = CascadeType.ALL)
-	private List<Dispatch> dispatches;
-
 	//bi-directional many-to-one association to Productinventoryhistory
 	@JsonIgnore
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "status", cascade = CascadeType.ALL)
 	private List<Productinventoryhistory> productinventoryhistories;
 
-	//bi-directional many-to-one association to Productionplanning
-	@JsonIgnore
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "status", cascade = CascadeType.ALL)
-	private List<Productionplanning> productionplannings;
-
 	//bi-directional many-to-one association to Productorder
 	@JsonIgnore
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "status", cascade = CascadeType.ALL)
 	private List<Productorder> productorders;
-
-	//bi-directional many-to-one association to Securitycheckout
-	@JsonIgnore
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "status", cascade = CascadeType.ALL)
-	private List<Securitycheckout> securitycheckouts;
 
 
 	@JsonIgnore
@@ -160,50 +142,6 @@ public class Status implements Serializable {
 		this.updatedDate = updatedDate;
 	}
 
-	public List<Dailyproduction> getDailyproductions() {
-		return this.dailyproductions;
-	}
-
-	public void setDailyproductions(List<Dailyproduction> dailyproductions) {
-		this.dailyproductions = dailyproductions;
-	}
-
-	public Dailyproduction addDailyproduction(Dailyproduction dailyproduction) {
-		getDailyproductions().add(dailyproduction);
-		dailyproduction.setStatus(this);
-
-		return dailyproduction;
-	}
-
-	public Dailyproduction removeDailyproduction(Dailyproduction dailyproduction) {
-		getDailyproductions().remove(dailyproduction);
-		dailyproduction.setStatus(null);
-
-		return dailyproduction;
-	}
-
-	public List<Dispatch> getDispatches() {
-		return this.dispatches;
-	}
-
-	public void setDispatches(List<Dispatch> dispatches) {
-		this.dispatches = dispatches;
-	}
-
-	public Dispatch addDispatch(Dispatch dispatch) {
-		getDispatches().add(dispatch);
-		dispatch.setStatus(this);
-
-		return dispatch;
-	}
-
-	public Dispatch removeDispatch(Dispatch dispatch) {
-		getDispatches().remove(dispatch);
-		dispatch.setStatus(null);
-
-		return dispatch;
-	}
-
 	public List<Productinventoryhistory> getProductinventoryhistories() {
 		return this.productinventoryhistories;
 	}
@@ -225,28 +163,7 @@ public class Status implements Serializable {
 
 		return productinventoryhistory;
 	}
-
-	public List<Productionplanning> getProductionplannings() {
-		return this.productionplannings;
-	}
-
-	public void setProductionplannings(List<Productionplanning> productionplannings) {
-		this.productionplannings = productionplannings;
-	}
-
-	public Productionplanning addProductionplanning(Productionplanning productionplanning) {
-		getProductionplannings().add(productionplanning);
-		productionplanning.setStatus(this);
-
-		return productionplanning;
-	}
-
-	public Productionplanning removeProductionplanning(Productionplanning productionplanning) {
-		getProductionplannings().remove(productionplanning);
-		productionplanning.setStatus(null);
-
-		return productionplanning;
-	}
+	
 
 	public List<Productorder> getProductorders() {
 		return this.productorders;
@@ -268,28 +185,6 @@ public class Status implements Serializable {
 		productorder.setStatus(null);
 
 		return productorder;
-	}
-
-	public List<Securitycheckout> getSecuritycheckouts() {
-		return this.securitycheckouts;
-	}
-
-	public void setSecuritycheckouts(List<Securitycheckout> securitycheckouts) {
-		this.securitycheckouts = securitycheckouts;
-	}
-
-	public Securitycheckout addSecuritycheckout(Securitycheckout securitycheckout) {
-		getSecuritycheckouts().add(securitycheckout);
-		securitycheckout.setStatus(this);
-
-		return securitycheckout;
-	}
-
-	public Securitycheckout removeSecuritycheckout(Securitycheckout securitycheckout) {
-		getSecuritycheckouts().remove(securitycheckout);
-		securitycheckout.setStatus(null);
-
-		return securitycheckout;
 	}
 
 	public List<Notification> getNotifications1() {

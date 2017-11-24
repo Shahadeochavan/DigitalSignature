@@ -1,14 +1,10 @@
 package com.nextech.dscrm.controller;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.persistence.PersistenceException;
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -17,11 +13,7 @@ import org.apache.log4j.Logger;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
@@ -33,19 +25,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nextech.dscrm.constants.ERPConstants;
 import com.nextech.dscrm.dto.Mail;
-import com.nextech.dscrm.dto.ProductInventoryDTO;
 import com.nextech.dscrm.dto.ProductOrderDTO;
-import com.nextech.dscrm.dto.ProductOrderData;
-import com.nextech.dscrm.dto.ProductOrderPdf;
-import com.nextech.dscrm.factory.MailResponseRequestFactory;
 import com.nextech.dscrm.model.Client;
 import com.nextech.dscrm.model.Productinventory;
 import com.nextech.dscrm.model.Productorder;
-import com.nextech.dscrm.newDTO.ClientDTO;
 import com.nextech.dscrm.newDTO.NotificationDTO;
-import com.nextech.dscrm.newDTO.ProductDTO;
 import com.nextech.dscrm.newDTO.ProductOrderAssociationDTO;
-import com.nextech.dscrm.newDTO.StatusDTO;
 import com.nextech.dscrm.service.ClientService;
 import com.nextech.dscrm.service.ClientproductassoService;
 import com.nextech.dscrm.service.MailService;
@@ -59,7 +44,6 @@ import com.nextech.dscrm.service.StatusService;
 import com.nextech.dscrm.service.UserService;
 import com.nextech.dscrm.status.Response;
 import com.nextech.dscrm.status.UserStatus;
-import com.nextech.dscrm.util.PDFToByteArrayOutputStreamUtil;
 
 @Controller
 @Transactional @RequestMapping("/productorder")
@@ -249,7 +233,7 @@ public class ProductorderController {
 			return new Response(0, e.toString());
 		}
 	}
-
+/*
 	public void createPdfProductOrder(HttpServletRequest request, HttpServletResponse response,ProductOrderDTO productOrderDTO,List<ProductOrderData> productOrderDatas,ClientDTO client) throws IOException {
 		final ServletContext servletContext = request.getSession().getServletContext();
 	    final File tempDirectory = (File) servletContext.getAttribute("javax.servlet.context.tempdir");
@@ -278,7 +262,7 @@ public class ProductorderController {
 	    mail.setAttachment(fileName);
         mail.setModel(MailResponseRequestFactory.setMailDetailsProductOrder(notification, productOrderDatas, client, productOrderDTO));
         mailService.sendEmail(mail,notification);
-	}
+	}*/
 	
 //	@Scheduled(initialDelay=600000, fixedRate=600000)
 	public void executeSchedular() throws Exception{
